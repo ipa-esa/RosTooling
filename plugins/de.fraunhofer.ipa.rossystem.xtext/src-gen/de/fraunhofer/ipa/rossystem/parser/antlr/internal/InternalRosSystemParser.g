@@ -261,9 +261,9 @@ ruleRosSystem returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getRosSystemAccess().getParameterParameterParserRuleCall_4_3_2_0());
+							newCompositeNode(grammarAccess.getRosSystemAccess().getParameterAbstractParameterParserRuleCall_4_3_2_0());
 						}
-						lv_parameter_19_0=ruleParameter
+						lv_parameter_19_0=ruleAbstractParameter
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getRosSystemRule());
@@ -272,7 +272,7 @@ ruleRosSystem returns [EObject current=null]
 								$current,
 								"parameter",
 								lv_parameter_19_0,
-								"de.fraunhofer.ipa.ros.Basics.Parameter");
+								"de.fraunhofer.ipa.rossystem.RosSystem.AbstractParameter");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -1161,6 +1161,42 @@ ruleRosParameter returns [EObject current=null]
 		this_END_7=RULE_END
 		{
 			newLeafNode(this_END_7, grammarAccess.getRosParameterAccess().getENDTerminalRuleCall_7());
+		}
+	)
+;
+
+// Entry rule entryRuleAbstractParameter
+entryRuleAbstractParameter returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getAbstractParameterRule()); }
+	iv_ruleAbstractParameter=ruleAbstractParameter
+	{ $current=$iv_ruleAbstractParameter.current; }
+	EOF;
+
+// Rule AbstractParameter
+ruleAbstractParameter returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getAbstractParameterAccess().getRosParameterParserRuleCall_0());
+		}
+		this_RosParameter_0=ruleRosParameter
+		{
+			$current = $this_RosParameter_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractParameterAccess().getParameterParserRuleCall_1());
+		}
+		this_Parameter_1=ruleParameter
+		{
+			$current = $this_Parameter_1.current;
+			afterParserOrEnumRuleCall();
 		}
 	)
 ;

@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.util.Switch;
 import primitives.AbstractType;
+import ros.AbstractParameter;
 import ros.ActionClient;
 import ros.ActionServer;
 import ros.ActionSpec;
@@ -322,6 +323,7 @@ public class RosSwitch<T> extends Switch<T> {
                 Parameter parameter = (Parameter)theEObject;
                 T result = caseParameter(parameter);
                 if (result == null) result = caseInterfaceType(parameter);
+                if (result == null) result = caseAbstractParameter(parameter);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -465,6 +467,12 @@ public class RosSwitch<T> extends Switch<T> {
                 ArrayTopicSpecMsgRef arrayTopicSpecMsgRef = (ArrayTopicSpecMsgRef)theEObject;
                 T result = caseArrayTopicSpecMsgRef(arrayTopicSpecMsgRef);
                 if (result == null) result = caseAbstractType(arrayTopicSpecMsgRef);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case RosPackage.ABSTRACT_PARAMETER: {
+                AbstractParameter abstractParameter = (AbstractParameter)theEObject;
+                T result = caseAbstractParameter(abstractParameter);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -1253,6 +1261,21 @@ public class RosSwitch<T> extends Switch<T> {
     }
 
                                                                 /**
+     * Returns the result of interpreting the object as an instance of '<em>Abstract Parameter</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Abstract Parameter</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseAbstractParameter(AbstractParameter object) {
+        return null;
+    }
+
+                                                                                                                                                                                                                                                                /**
      * Returns the result of interpreting the object as an instance of '<em>Abstract Type</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;

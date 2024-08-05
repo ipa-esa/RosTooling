@@ -140,7 +140,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="default" eType="#//ParameterDouble"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//InterfaceType">
+  <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//InterfaceType #//AbstractParameter">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//ParameterType"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//ParameterValue"
@@ -230,4 +230,5 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="Reference" lowerBound="1"
         eType="#//SpecBase"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractParameter" abstract="true"/>
 </ecore:EPackage>

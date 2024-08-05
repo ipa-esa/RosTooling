@@ -484,6 +484,31 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+// Entry rule entryRuleAbstractParameter
+entryRuleAbstractParameter
+:
+{ before(grammarAccess.getAbstractParameterRule()); }
+	 ruleAbstractParameter
+{ after(grammarAccess.getAbstractParameterRule()); } 
+	 EOF 
+;
+
+// Rule AbstractParameter
+ruleAbstractParameter 
+	@init {
+		int stackSize = keepStackSize();
+	}
+	:
+	(
+		{ before(grammarAccess.getAbstractParameterAccess().getAlternatives()); }
+		(rule__AbstractParameter__Alternatives)
+		{ after(grammarAccess.getAbstractParameterAccess().getAlternatives()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 // Entry rule entryRuleConnection
 entryRuleConnection
 :
@@ -2412,6 +2437,27 @@ rule__InterfaceReference__Alternatives
 		{ before(grammarAccess.getInterfaceReferenceAccess().getRosActionClientReferenceParserRuleCall_5()); }
 		ruleRosActionClientReference
 		{ after(grammarAccess.getInterfaceReferenceAccess().getRosActionClientReferenceParserRuleCall_5()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__AbstractParameter__Alternatives
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getAbstractParameterAccess().getRosParameterParserRuleCall_0()); }
+		ruleRosParameter
+		{ after(grammarAccess.getAbstractParameterAccess().getRosParameterParserRuleCall_0()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getAbstractParameterAccess().getParameterParserRuleCall_1()); }
+		ruleParameter
+		{ after(grammarAccess.getAbstractParameterAccess().getParameterParserRuleCall_1()); }
 	)
 ;
 finally {
@@ -10923,9 +10969,9 @@ rule__RosSystem__ParameterAssignment_4_3_2
 	}
 :
 	(
-		{ before(grammarAccess.getRosSystemAccess().getParameterParameterParserRuleCall_4_3_2_0()); }
-		ruleParameter
-		{ after(grammarAccess.getRosSystemAccess().getParameterParameterParserRuleCall_4_3_2_0()); }
+		{ before(grammarAccess.getRosSystemAccess().getParameterAbstractParameterParserRuleCall_4_3_2_0()); }
+		ruleAbstractParameter
+		{ after(grammarAccess.getRosSystemAccess().getParameterAbstractParameterParserRuleCall_4_3_2_0()); }
 	)
 ;
 finally {

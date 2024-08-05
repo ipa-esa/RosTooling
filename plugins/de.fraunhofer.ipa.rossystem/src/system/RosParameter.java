@@ -2,8 +2,7 @@
  */
 package system;
 
-import org.eclipse.emf.ecore.EObject;
-
+import ros.AbstractParameter;
 import ros.Parameter;
 import ros.ParameterValue;
 
@@ -25,7 +24,7 @@ import ros.ParameterValue;
  * @model
  * @generated
  */
-public interface RosParameter extends EObject {
+public interface RosParameter extends AbstractParameter {
     /**
      * Returns the value of the '<em><b>Name</b></em>' attribute.
      * <!-- begin-user-doc -->

@@ -9,6 +9,7 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 import primitives.AbstractType;
+import ros.AbstractParameter;
 import ros.ActionClient;
 import ros.ActionServer;
 import ros.ActionSpec;
@@ -325,6 +326,10 @@ public class RosAdapterFactory extends AdapterFactoryImpl {
             @Override
             public Adapter caseArrayTopicSpecMsgRef(ArrayTopicSpecMsgRef object) {
                 return createArrayTopicSpecMsgRefAdapter();
+            }
+            @Override
+            public Adapter caseAbstractParameter(AbstractParameter object) {
+                return createAbstractParameterAdapter();
             }
             @Override
             public Adapter caseAbstractType(AbstractType object) {
@@ -1079,6 +1084,20 @@ public class RosAdapterFactory extends AdapterFactoryImpl {
     }
 
                                                                 /**
+     * Creates a new adapter for an object of class '{@link ros.AbstractParameter <em>Abstract Parameter</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see ros.AbstractParameter
+     * @generated
+     */
+    public Adapter createAbstractParameterAdapter() {
+        return null;
+    }
+
+                                                                                                                                                                                                                                                                /**
      * Creates a new adapter for an object of class '{@link primitives.AbstractType <em>Abstract Type</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;

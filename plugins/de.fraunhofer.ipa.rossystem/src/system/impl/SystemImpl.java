@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import ros.Parameter;
+import ros.AbstractParameter;
 import system.Component;
 import system.Connection;
 import system.RossystemPackage;
@@ -117,7 +117,7 @@ public class SystemImpl extends ComponentImpl implements system.System {
      * @generated
      * @ordered
      */
-    protected EList<Parameter> parameter;
+    protected EList<AbstractParameter> parameter;
 
     /**
      * <!-- begin-user-doc -->
@@ -229,9 +229,9 @@ public class SystemImpl extends ComponentImpl implements system.System {
      * @generated
      */
     @Override
-    public EList<Parameter> getParameter() {
+    public EList<AbstractParameter> getParameter() {
         if (parameter == null) {
-            parameter = new EObjectContainmentEList<Parameter>(Parameter.class, this, RossystemPackage.SYSTEM__PARAMETER);
+            parameter = new EObjectContainmentEList<AbstractParameter>(AbstractParameter.class, this, RossystemPackage.SYSTEM__PARAMETER);
         }
         return parameter;
     }
@@ -309,7 +309,7 @@ public class SystemImpl extends ComponentImpl implements system.System {
                 return;
             case RossystemPackage.SYSTEM__PARAMETER:
                 getParameter().clear();
-                getParameter().addAll((Collection<? extends Parameter>)newValue);
+                getParameter().addAll((Collection<? extends AbstractParameter>)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

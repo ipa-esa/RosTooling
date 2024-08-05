@@ -9,11 +9,10 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import ros.Parameter;
 import ros.ParameterValue;
 
+import ros.impl.AbstractParameterImpl;
 import system.RosParameter;
 import system.RossystemPackage;
 
@@ -32,7 +31,7 @@ import system.RossystemPackage;
  *
  * @generated
  */
-public class RosParameterImpl extends MinimalEObjectImpl.Container implements RosParameter {
+public class RosParameterImpl extends AbstractParameterImpl implements RosParameter {
     /**
      * The default value of the '{@link #getName() <em>Name</em>}' attribute.
      * <!-- begin-user-doc -->

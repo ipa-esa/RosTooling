@@ -462,6 +462,7 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 * <pre>
 	 * Contexts:
 	 *     RosParameter returns RosParameter
+	 *     AbstractParameter returns RosParameter
 	 *
 	 * Constraint:
 	 *     (name=EString from=[Parameter|EString] value=ParameterValue)
@@ -627,7 +628,7 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 *     (
 	 *         name=EString 
 	 *         fromFile=EString? 
-	 *         (components+=SubSystem | processes+=Process | components+=RosNode | parameter+=Parameter | connections+=Connection)*
+	 *         (components+=SubSystem | processes+=Process | components+=RosNode | parameter+=AbstractParameter | connections+=Connection)*
 	 *     )
 	 * </pre>
 	 */

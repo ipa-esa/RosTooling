@@ -35,6 +35,7 @@ public class RosSystemParser extends AbstractContentAssistParser {
 		private static void init(ImmutableMap.Builder<AbstractElement, String> builder, RosSystemGrammarAccess grammarAccess) {
 			builder.put(grammarAccess.getRosSystemAccess().getAlternatives_4(), "rule__RosSystem__Alternatives_4");
 			builder.put(grammarAccess.getInterfaceReferenceAccess().getAlternatives(), "rule__InterfaceReference__Alternatives");
+			builder.put(grammarAccess.getAbstractParameterAccess().getAlternatives(), "rule__AbstractParameter__Alternatives");
 			builder.put(grammarAccess.getConnectionAccess().getAlternatives(), "rule__Connection__Alternatives");
 			builder.put(grammarAccess.getRosConnectionAccess().getAlternatives(), "rule__RosConnection__Alternatives");
 			builder.put(grammarAccess.getNamespaceAccess().getAlternatives(), "rule__Namespace__Alternatives");

@@ -2559,6 +2559,34 @@ public interface RosPackage extends EPackage {
     int ARRAY_TOPIC_SPEC_MSG_REF_OPERATION_COUNT = PrimitivesPackage.ABSTRACT_TYPE_OPERATION_COUNT + 0;
 
                                                                 /**
+     * The meta object id for the '{@link ros.impl.AbstractParameterImpl <em>Abstract Parameter</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see ros.impl.AbstractParameterImpl
+     * @see ros.impl.RosPackageImpl#getAbstractParameter()
+     * @generated
+     */
+    int ABSTRACT_PARAMETER = 52;
+
+                                                                                                                                                                                                                                                                /**
+     * The number of structural features of the '<em>Abstract Parameter</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_PARAMETER_FEATURE_COUNT = 0;
+
+                                                                                                                                                                                                                                                                /**
+     * The number of operations of the '<em>Abstract Parameter</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_PARAMETER_OPERATION_COUNT = 0;
+
+                                                                                                                                                                                                                                                                /**
      * The meta object id for the '<em>Graph Name</em>' data type.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2566,7 +2594,7 @@ public interface RosPackage extends EPackage {
      * @see ros.impl.RosPackageImpl#getGraphName()
      * @generated
      */
-    int GRAPH_NAME = 52;
+    int GRAPH_NAME = 53;
 
 
     /**
@@ -3893,6 +3921,16 @@ public interface RosPackage extends EPackage {
     EReference getArrayTopicSpecMsgRef_Reference();
 
                                                                 /**
+     * Returns the meta object for class '{@link ros.AbstractParameter <em>Abstract Parameter</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Abstract Parameter</em>'.
+     * @see ros.AbstractParameter
+     * @generated
+     */
+    EClass getAbstractParameter();
+
+                                                                                                                                                                                                                                                                /**
      * Returns the meta object for data type '{@link java.lang.String <em>Graph Name</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -5031,6 +5069,16 @@ public interface RosPackage extends EPackage {
         EReference ARRAY_TOPIC_SPEC_MSG_REF__REFERENCE = eINSTANCE.getArrayTopicSpecMsgRef_Reference();
 
                                                                                                                                 /**
+         * The meta object literal for the '{@link ros.impl.AbstractParameterImpl <em>Abstract Parameter</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see ros.impl.AbstractParameterImpl
+         * @see ros.impl.RosPackageImpl#getAbstractParameter()
+         * @generated
+         */
+        EClass ABSTRACT_PARAMETER = eINSTANCE.getAbstractParameter();
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                /**
          * The meta object literal for the '<em>Graph Name</em>' data type.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->

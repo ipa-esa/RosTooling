@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.util.Switch;
 
+import ros.AbstractParameter;
 import system.Component;
 import system.Connection;
 import system.InterfaceReference;
@@ -190,6 +191,7 @@ public class RossystemSwitch<T> extends Switch<T> {
             case RossystemPackage.ROS_PARAMETER: {
                 RosParameter rosParameter = (RosParameter)theEObject;
                 T result = caseRosParameter(rosParameter);
+                if (result == null) result = caseAbstractParameter(rosParameter);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -573,6 +575,21 @@ public class RossystemSwitch<T> extends Switch<T> {
     }
 
                                                                 /**
+     * Returns the result of interpreting the object as an instance of '<em>Abstract Parameter</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Abstract Parameter</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseAbstractParameter(AbstractParameter object) {
+        return null;
+    }
+
+                                                                                                                                                                                                                                                                /**
      * Returns the result of interpreting the object as an instance of '<em>EObject</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;

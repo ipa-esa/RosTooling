@@ -3,7 +3,7 @@
 package system;
 
 import org.eclipse.emf.common.util.EList;
-import ros.Parameter;
+import ros.AbstractParameter;
 
 /**
  * <!-- begin-user-doc -->
@@ -109,14 +109,14 @@ public interface System extends Component {
 
     /**
      * Returns the value of the '<em><b>Parameter</b></em>' containment reference list.
-     * The list contents are of type {@link ros.Parameter}.
+     * The list contents are of type {@link ros.AbstractParameter}.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @return the value of the '<em>Parameter</em>' containment reference list.
      * @see system.RossystemPackage#getSystem_Parameter()
-     * @model containment="true" derived="true"
+     * @model containment="true"
      * @generated
      */
-    EList<Parameter> getParameter();
+    EList<AbstractParameter> getParameter();
 
 } // System

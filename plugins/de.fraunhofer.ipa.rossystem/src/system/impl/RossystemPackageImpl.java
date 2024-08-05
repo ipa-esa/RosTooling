@@ -985,6 +985,7 @@ public class RossystemPackageImpl extends EPackageImpl implements RossystemPacka
         rosActionServerReferenceEClass.getESuperTypes().add(this.getInterfaceReference());
         rosActionClientReferenceEClass.getESuperTypes().add(this.getInterfaceReference());
         rosParameterReferenceEClass.getESuperTypes().add(this.getInterfaceReference());
+        rosParameterEClass.getESuperTypes().add(theRosPackage.getAbstractParameter());
         rosSystemConnectionEClass.getESuperTypes().add(this.getConnection());
         rosConnectionEClass.getESuperTypes().add(this.getConnection());
         rosTopicConnectionEClass.getESuperTypes().add(this.getRosConnection());
@@ -999,7 +1000,7 @@ public class RossystemPackageImpl extends EPackageImpl implements RossystemPacka
         initEReference(getSystem_Processes(), this.getProcess(), null, "processes", null, 0, -1, system.System.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getSystem_Components(), this.getComponent(), null, "components", null, 0, -1, system.System.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getSystem_Connections(), this.getConnection(), null, "connections", null, 0, -1, system.System.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getSystem_Parameter(), theRosPackage.getParameter(), null, "parameter", null, 0, -1, system.System.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+        initEReference(getSystem_Parameter(), theRosPackage.getAbstractParameter(), null, "parameter", null, 0, -1, system.System.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(rossystemEClass, Rossystem.class, "Rossystem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

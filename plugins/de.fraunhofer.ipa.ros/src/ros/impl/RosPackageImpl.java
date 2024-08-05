@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 
 import primitives.PrimitivesPackage;
 import primitives.impl.PrimitivesPackageImpl;
+import ros.AbstractParameter;
 import ros.ActionClient;
 import ros.ActionServer;
 import ros.ActionSpec;
@@ -440,6 +441,13 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
     private EClass arrayTopicSpecMsgRefEClass = null;
 
                                                                 /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass abstractParameterEClass = null;
+
+                                                                                                                                                                                                                                                                /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -1772,6 +1780,16 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
      * @generated
      */
     @Override
+    public EClass getAbstractParameter() {
+        return abstractParameterEClass;
+    }
+
+                                                                                                                                                                                                                                                                /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
     public EDataType getGraphName() {
         return graphNameEDataType;
     }
@@ -1982,6 +2000,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
         arrayTopicSpecMsgRefEClass = createEClass(ARRAY_TOPIC_SPEC_MSG_REF);
         createEReference(arrayTopicSpecMsgRefEClass, ARRAY_TOPIC_SPEC_MSG_REF__REFERENCE);
 
+        abstractParameterEClass = createEClass(ABSTRACT_PARAMETER);
+
         // Create data types
         graphNameEDataType = createEDataType(GRAPH_NAME);
     }
@@ -2039,6 +2059,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
         parameterStringTypeEClass.getESuperTypes().add(this.getParameterType());
         parameterDoubleTypeEClass.getESuperTypes().add(this.getParameterType());
         parameterEClass.getESuperTypes().add(this.getInterfaceType());
+        parameterEClass.getESuperTypes().add(this.getAbstractParameter());
         parameterDateTypeEClass.getESuperTypes().add(this.getParameterType());
         parameterBooleanTypeEClass.getESuperTypes().add(this.getParameterType());
         parameterBase64TypeEClass.getESuperTypes().add(this.getParameterType());
@@ -2234,6 +2255,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 
         initEClass(arrayTopicSpecMsgRefEClass, ArrayTopicSpecMsgRef.class, "ArrayTopicSpecMsgRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getArrayTopicSpecMsgRef_Reference(), this.getSpecBase(), null, "Reference", null, 1, 1, ArrayTopicSpecMsgRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(abstractParameterEClass, AbstractParameter.class, "AbstractParameter", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Initialize data types
         initEDataType(graphNameEDataType, String.class, "GraphName", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

@@ -33,7 +33,7 @@ RosSystem returns System:
 
         ('parameters:'
             BEGIN
-            parameter+=Parameter*
+            parameter+=AbstractParameter*
             END
         ) |
         ('connections:'
@@ -117,6 +117,10 @@ RosParameter returns RosParameter:
     'value:'value=ParameterValue
     END
 ;
+
+AbstractParameter returns ros::AbstractParameter:
+RosParameter | Parameter;
+
 
 //By default the grammar will parser RosSystemConnection, i.e., connections of ports
 // explicitly referenced within the system model. RosConnections are also implemented but not used for now.

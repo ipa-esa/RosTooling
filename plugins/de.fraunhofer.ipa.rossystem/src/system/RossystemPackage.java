@@ -6,6 +6,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import ros.RosPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -754,7 +755,7 @@ int PROCESS_FEATURE_COUNT = 3;
      * @generated
      * @ordered
      */
-    int ROS_PARAMETER__NAME = 0;
+    int ROS_PARAMETER__NAME = RosPackage.ABSTRACT_PARAMETER_FEATURE_COUNT + 0;
 
     /**
      * The feature id for the '<em><b>Value</b></em>' containment reference.
@@ -763,7 +764,7 @@ int PROCESS_FEATURE_COUNT = 3;
      * @generated
      * @ordered
      */
-    int ROS_PARAMETER__VALUE = 1;
+    int ROS_PARAMETER__VALUE = RosPackage.ABSTRACT_PARAMETER_FEATURE_COUNT + 1;
 
     /**
      * The feature id for the '<em><b>From</b></em>' reference.
@@ -772,7 +773,7 @@ int PROCESS_FEATURE_COUNT = 3;
      * @generated
      * @ordered
      */
-    int ROS_PARAMETER__FROM = 2;
+    int ROS_PARAMETER__FROM = RosPackage.ABSTRACT_PARAMETER_FEATURE_COUNT + 2;
 
     /**
      * The number of structural features of the '<em>Ros Parameter</em>' class.
@@ -781,7 +782,7 @@ int PROCESS_FEATURE_COUNT = 3;
      * @generated
      * @ordered
      */
-    int ROS_PARAMETER_FEATURE_COUNT = 3;
+    int ROS_PARAMETER_FEATURE_COUNT = RosPackage.ABSTRACT_PARAMETER_FEATURE_COUNT + 3;
 
     /**
      * The number of operations of the '<em>Ros Parameter</em>' class.
@@ -790,7 +791,7 @@ int PROCESS_FEATURE_COUNT = 3;
      * @generated
      * @ordered
      */
-    int ROS_PARAMETER_OPERATION_COUNT = 0;
+    int ROS_PARAMETER_OPERATION_COUNT = RosPackage.ABSTRACT_PARAMETER_OPERATION_COUNT + 0;
 
     /**
      * The meta object id for the '{@link system.impl.RosSystemConnectionImpl <em>Ros System Connection</em>}' class.

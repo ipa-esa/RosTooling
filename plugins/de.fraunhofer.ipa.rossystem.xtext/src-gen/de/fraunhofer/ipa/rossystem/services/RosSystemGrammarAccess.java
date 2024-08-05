@@ -71,7 +71,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		private final Keyword cParametersKeyword_4_3_0 = (Keyword)cGroup_4_3.eContents().get(0);
 		private final RuleCall cBEGINTerminalRuleCall_4_3_1 = (RuleCall)cGroup_4_3.eContents().get(1);
 		private final Assignment cParameterAssignment_4_3_2 = (Assignment)cGroup_4_3.eContents().get(2);
-		private final RuleCall cParameterParameterParserRuleCall_4_3_2_0 = (RuleCall)cParameterAssignment_4_3_2.eContents().get(0);
+		private final RuleCall cParameterAbstractParameterParserRuleCall_4_3_2_0 = (RuleCall)cParameterAssignment_4_3_2.eContents().get(0);
 		private final RuleCall cENDTerminalRuleCall_4_3_3 = (RuleCall)cGroup_4_3.eContents().get(3);
 		private final Group cGroup_4_4 = (Group)cAlternatives_4.eContents().get(4);
 		private final Keyword cConnectionsKeyword_4_4_0 = (Keyword)cGroup_4_4.eContents().get(0);
@@ -103,7 +103,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		//        ) |
 		//        ('parameters:'
 		//            BEGIN
-		//            parameter+=Parameter*
+		//            parameter+=AbstractParameter*
 		//            END
 		//        ) |
 		//        ('connections:'
@@ -136,7 +136,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		//    ) |
 		//    ('parameters:'
 		//        BEGIN
-		//        parameter+=Parameter*
+		//        parameter+=AbstractParameter*
 		//        END
 		//    ) |
 		//    ('connections:'
@@ -190,7 +190,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		//) |
 		//('parameters:'
 		//    BEGIN
-		//    parameter+=Parameter*
+		//    parameter+=AbstractParameter*
 		//    END
 		//) |
 		//('connections:'
@@ -269,7 +269,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		
 		//('parameters:'
 		//    BEGIN
-		//    parameter+=Parameter*
+		//    parameter+=AbstractParameter*
 		//    END
 		//)
 		public Group getGroup_4_3() { return cGroup_4_3; }
@@ -280,11 +280,11 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		//BEGIN
 		public RuleCall getBEGINTerminalRuleCall_4_3_1() { return cBEGINTerminalRuleCall_4_3_1; }
 		
-		//parameter+=Parameter*
+		//parameter+=AbstractParameter*
 		public Assignment getParameterAssignment_4_3_2() { return cParameterAssignment_4_3_2; }
 		
-		//Parameter
-		public RuleCall getParameterParameterParserRuleCall_4_3_2_0() { return cParameterParameterParserRuleCall_4_3_2_0; }
+		//AbstractParameter
+		public RuleCall getParameterAbstractParameterParserRuleCall_4_3_2_0() { return cParameterAbstractParameterParserRuleCall_4_3_2_0; }
 		
 		//END
 		public RuleCall getENDTerminalRuleCall_4_3_3() { return cENDTerminalRuleCall_4_3_3; }
@@ -931,6 +931,25 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		//END
 		public RuleCall getENDTerminalRuleCall_7() { return cENDTerminalRuleCall_7; }
 	}
+	public class AbstractParameterElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.rossystem.RosSystem.AbstractParameter");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cRosParameterParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cParameterParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		
+		//AbstractParameter returns ros::AbstractParameter:
+		//RosParameter | Parameter;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//RosParameter | Parameter
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//RosParameter
+		public RuleCall getRosParameterParserRuleCall_0() { return cRosParameterParserRuleCall_0; }
+		
+		//Parameter
+		public RuleCall getParameterParserRuleCall_1() { return cParameterParserRuleCall_1; }
+	}
 	public class ConnectionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.rossystem.RosSystem.Connection");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
@@ -1201,6 +1220,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	private final RosActionServerReferenceElements pRosActionServerReference;
 	private final RosActionClientReferenceElements pRosActionClientReference;
 	private final RosParameterElements pRosParameter;
+	private final AbstractParameterElements pAbstractParameter;
 	private final ConnectionElements pConnection;
 	private final RosSystemConnectionElements pRosSystemConnection;
 	private final RosConnectionElements pRosConnection;
@@ -1235,6 +1255,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		this.pRosActionServerReference = new RosActionServerReferenceElements();
 		this.pRosActionClientReference = new RosActionClientReferenceElements();
 		this.pRosParameter = new RosParameterElements();
+		this.pAbstractParameter = new AbstractParameterElements();
 		this.pConnection = new ConnectionElements();
 		this.pRosSystemConnection = new RosSystemConnectionElements();
 		this.pRosConnection = new RosConnectionElements();
@@ -1307,7 +1328,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	//        ) |
 	//        ('parameters:'
 	//            BEGIN
-	//            parameter+=Parameter*
+	//            parameter+=AbstractParameter*
 	//            END
 	//        ) |
 	//        ('connections:'
@@ -1480,6 +1501,16 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	public ParserRule getRosParameterRule() {
 		return getRosParameterAccess().getRule();
+	}
+	
+	//AbstractParameter returns ros::AbstractParameter:
+	//RosParameter | Parameter;
+	public AbstractParameterElements getAbstractParameterAccess() {
+		return pAbstractParameter;
+	}
+	
+	public ParserRule getAbstractParameterRule() {
+		return getAbstractParameterAccess().getRule();
 	}
 	
 	////By default the grammar will parser RosSystemConnection, i.e., connections of ports
