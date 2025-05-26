@@ -48,10 +48,19 @@ class RosSystemGenerator extends AbstractGenerator {
                     if(component.eClass.name == "RosNode"){
                         if(!(component as RosNode).rosparameters.nullOrEmpty){
                             yaml_gen=true
-                            fsa.generateFile(
+                            if ((component as RosNode).namespace !== null){
+                                fsa.generateFile(
+                                system.getName().toLowerCase+"/config/"+(component as RosNode).namespace+"_"+(component as RosNode).getName()+".yaml",
+                                compile_toROS2yaml(component as RosNode).toString().replace("\t","  ")
+                                )
+                            }
+                            else{
+                                fsa.generateFile(
                                 system.getName().toLowerCase+"/config/"+(component as RosNode).getName()+".yaml",
                                 compile_toROS2yaml(component as RosNode).toString().replace("\t","  ")
                             )
+                            }
+
                     }}
                 }
                 fsa.generateFile(
@@ -89,4 +98,3 @@ class RosSystemGenerator extends AbstractGenerator {
     }
 
 }
-
