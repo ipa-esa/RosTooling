@@ -10,6 +10,7 @@ import system.impl.RosServiceClientReferenceImpl
 import system.impl.RosServiceServerReferenceImpl
 import system.impl.RosSubscriberReferenceImpl
 import com.google.inject.Inject
+import system.RosParameter
 
 class READMECompiler {
 
@@ -23,11 +24,13 @@ This package has be created automatically using the [RosTooling](https://github.
 
 It holds the launch file to run the following nodes:
 «FOR node:getRos2Nodes(system)»
-- «(node as RosNode).name»
+«IF !node.namespace.nullOrEmpty»- «GeneratorHelpers.removeLeadingSlash(node.namespace)»_«(node as RosNode).name»«ELSE»
+- «(node as RosNode).name»«ENDIF»
 «ENDFOR»
 «FOR subsystem:system.subsystems»
 «FOR node:getRos2Nodes(subsystem)»
-- «(node as RosNode).name»
+«IF !node.namespace.nullOrEmpty»- «GeneratorHelpers.removeLeadingSlash(node.namespace)»_«(node as RosNode).name»«ELSE»
+- «(node as RosNode).name»«ENDIF»
 «ENDFOR»
 «ENDFOR»
 
@@ -43,7 +46,7 @@ It holds the launch file to run the following nodes:
 ### Using release
 
 «IF system.fromFile.nullOrEmpty»
-This package can be copied to a valid ROS 2 workspace. To be sure that all the related dependencies are intalles the command **rosdep install** can be used.
+This package can be copied to a valid ROS 2 workspace. To be sure that all the related dependencies are installed and the command **rosdep install** can be used.
 Then the workspace must be compiled using the common ROS 2 build command:
 
 ```
@@ -85,7 +88,7 @@ source install/setup.bash
 To execute the launch file, the following command can be called:
 
 ```
-ros2 launch «system.name» «system.name».launch.py «FOR param:system.parameter»«param.name»:=«get_param_value(param.value,param.name)» «ENDFOR»
+ros2 launch «system.name» «system.name».launch.py «FOR param:system.parameter»«(param as RosParameter).name»:=«get_param_value((param as RosParameter).value,(param as RosParameter).name)» «ENDFOR»
 ```
 
 The generated launch files requires the xterm package, it can be installed by:
@@ -98,13 +101,13 @@ sudo apt install xterm
 To launch this system there is already an existing package that contains the launch file. It can be started by:
 
 ```
-ros2 launch «system.fromFile.split("/",2).get(0)» «system.fromFile.substring(system.fromFile.lastIndexOf('/') + 1)» «FOR param:system.parameter»«param.name»:=«get_param_value(param.value,param.name)» «ENDFOR»
+ros2 launch «system.fromFile.split("/",2).get(0)» «system.fromFile.substring(system.fromFile.lastIndexOf('/') + 1)» «FOR param:system.parameter»«(param as RosParameter).name»:=«get_param_value((param as RosParameter).value,(param as RosParameter).name)» «ENDFOR»
 ```
 «ENDIF»
 
 
      '''
-     
+
      def IsInterfacesEmpty(System system){
          for(node: getRos2Nodes(system)){
              if (!(node as RosNode).rosinterfaces.empty){
@@ -118,10 +121,10 @@ ros2 launch «system.fromFile.split("/",2).get(0)» «system.fromFile.substring(
              }
          }
          }
-         
+
          return true
      }
-     
+
      def getPortInfo(RosInterface port ){
          if(port.reference.eClass.toString.contains("RosPublisherReference") && (port.reference as RosPublisherReferenceImpl).basicGetFrom.message !== null){
              return "- Publisher: "+ port.name+" ["+(port.reference as RosPublisherReferenceImpl).basicGetFrom.message.fullname+"]"
@@ -144,5 +147,3 @@ ros2 launch «system.fromFile.split("/",2).get(0)» «system.fromFile.substring(
      }
 
     }
-    
-    

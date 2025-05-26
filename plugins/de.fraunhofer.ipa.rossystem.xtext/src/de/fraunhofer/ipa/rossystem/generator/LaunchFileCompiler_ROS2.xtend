@@ -41,7 +41,7 @@ from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoin
 
 def generate_launch_description():
   ld = LaunchDescription()
-  
+
   # *** PARAMETERS ***
   «FOR component:getRos2Nodes(system)»«IF generate_yaml(component)»
   «component.name»_config = os.path.join(
@@ -61,11 +61,11 @@ def generate_launch_description():
 
   # *** ROS 2 nodes ***
   «FOR component:getRos2Nodes(system)»
-  «(component as RosNode).name» = Node(
+  «IF !component.namespace.nullOrEmpty»«GeneratorHelpers.removeLeadingSlash(component.namespace)»_«(component as RosNode).name» = Node(«ELSE»
+  «(component as RosNode).name» = Node(«ENDIF»
     package="«((component as RosNode).from.eContainer.eContainer as AmentPackageImpl).name»",«IF !component.namespace.nullOrEmpty»
     namespace="«component.namespace»",«ENDIF»
     executable="«((component as RosNode).from.eContainer as Artifact).name»",
-    prefix = 'xterm -e',
     output='screen',
     name="«(component as RosNode).name»"«compile_remappings_str(component as RosNode, system.connections)»«IF !component.rosparameters.nullOrEmpty»«IF generate_yaml(component)»,
     parameters = [«component.name»_config]«ELSE»,
@@ -88,13 +88,19 @@ def generate_launch_description():
 
   # *** Add actions ***
   «FOR component:getRos2Nodes(system)»
+  «IF !component.namespace.nullOrEmpty»
+  ld.add_action(«GeneratorHelpers.removeLeadingSlash(component.namespace)»_«(component as RosNode).name»)
+  «ELSE»
   ld.add_action(«(component as RosNode).name»)
+  «ENDIF»
   «ENDFOR»«FOR subsystem:getSubsystems(system)»
   ld.add_action(include_«subsystem.name»)
   «ENDFOR»
 
   return ld
     '''
+
+
 
 //    def void compile_list_of_ROS2components(RosSystem system, ComponentStack stack) {
 //        components_tmp_.clear;
@@ -150,7 +156,7 @@ def generate_launch_description():
 
         var rename = ""
 
-        
+
         for (connection : connections){
             var rosconnection = connection as RosSystemConnectionImpl
             if (rosconnection.from.reference.eClass.toString.contains("RosPublisherReference")){
@@ -236,14 +242,14 @@ def generate_launch_description():
         }
 
         }
-                
+
         for (interface : node.rosinterfaces){
             if (!remapped_interfaces.contains(interface)){
                 var origin = interface.reference.eCrossReferences.toString
                 var origin_name = origin.substring(origin.indexOf("name: ") + 6, origin.lastIndexOf(")]"))
                 if (interface.name !== origin_name){
                     remap_str += "\t(\"" + origin_name + "\", \"" + interface.name + "\"),\n";
-                } 
+                }
             }
         }
 //        for (rosPublisher : interfaces.toList) {
