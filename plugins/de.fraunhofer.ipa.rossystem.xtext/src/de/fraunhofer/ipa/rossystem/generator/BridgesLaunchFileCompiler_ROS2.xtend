@@ -20,7 +20,7 @@ from launch.event_handlers import OnProcessExit, OnExecutionComplete
 
 def generate_launch_description():
   ld = LaunchDescription()
-  
+
   # *** ROS 1 to ROS 2 bridges ***
   «IF TopicBridgeGenerated(system) || ServiceFromBridgeGenerated(system)|| ServiceToBridgeGenerated(system) »
   «system.name»_ros1_bridge_config = os.path.join(

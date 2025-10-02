@@ -4,11 +4,11 @@ import system.System
 import com.google.inject.Inject
 
 class SetupPyCompiler{
-	
-	@Inject extension GeneratorHelpers
-	
-	
-		def compile_setup_py(System system, boolean gen_yaml) '''«init_pkg()»
+
+    @Inject extension GeneratorHelpers
+
+
+        def compile_setup_py(System system, boolean gen_yaml) '''«init_pkg()»
 import os
 from glob import glob
 from setuptools import setup
@@ -32,4 +32,4 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True
 )'''
-		}
+        }

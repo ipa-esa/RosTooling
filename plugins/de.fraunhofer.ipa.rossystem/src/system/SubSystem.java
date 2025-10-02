@@ -20,26 +20,26 @@ package system;
  * @generated
  */
 public interface SubSystem extends Component {
-	/**
-	 * Returns the value of the '<em><b>System</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>System</em>' reference.
-	 * @see #setSystem(system.System)
-	 * @see system.RossystemPackage#getSubSystem_System()
-	 * @model
-	 * @generated
-	 */
-	system.System getSystem();
+    /**
+     * Returns the value of the '<em><b>System</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>System</em>' reference.
+     * @see #setSystem(system.System)
+     * @see system.RossystemPackage#getSubSystem_System()
+     * @model
+     * @generated
+     */
+    system.System getSystem();
 
-	/**
-	 * Sets the value of the '{@link system.SubSystem#getSystem <em>System</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>System</em>' reference.
-	 * @see #getSystem()
-	 * @generated
-	 */
-	void setSystem(system.System value);
+    /**
+     * Sets the value of the '{@link system.SubSystem#getSystem <em>System</em>}' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>System</em>' reference.
+     * @see #getSystem()
+     * @generated
+     */
+    void setSystem(system.System value);
 
 } // SubSystem

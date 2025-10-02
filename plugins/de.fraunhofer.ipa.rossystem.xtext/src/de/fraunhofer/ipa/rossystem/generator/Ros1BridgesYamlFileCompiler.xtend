@@ -5,7 +5,7 @@ import system.System
 import system.RosSystemConnection
 
 class Ros1BridgesYamlFileCompiler {
-    
+
     @Inject extension GeneratorHelpers
 
     def compile_ROS1bridges_config(System system)'''«IF TopicBridgeGenerated(system)»
@@ -22,5 +22,5 @@ bridge_«system.name»_to_services/services_2_to_1:«FOR connection:system.conne
     type: «getServiceToBridgeInterfaces(connection as RosSystemConnection).get(1)»
 «ENDIF»«ENDFOR»«ENDIF»
     '''
-    
+
 }
