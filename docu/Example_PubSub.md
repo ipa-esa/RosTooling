@@ -1,6 +1,6 @@
 # Tutorial: How to create a simple Publisher-Subscriber example.
 
-In this tutorial we just want to show how the models can be used to define ROS nodes. 
+In this tutorial we just want to show how the models can be used to define ROS nodes.
 For this we will see how two simple nodes can be defined, one that acts as a publisher of a "Hello World!" message and another that receives it as a subscriber.
 
 This tutorial is fictitious, it is not based on any existing ROS node. The ROS example is reflected in the models of the example [pub_sub_ros2](https://github.com/ipa-nhg/ros-model-examples/tree/main/pub_sub_ros2).
@@ -24,7 +24,7 @@ publisher_package:
 
 ```
 
-Then we need the artifact, a runnable to execute the node. As every YAML format file we have to add identantion to the secon line. Then pressing the keys "Ctrl"+Space bar the menu will suggest us as an option the text "artifacts:". We select it and go to the next line. 
+Then we need the artifact, a runnable to execute the node. As every YAML format file we have to add identantion to the secon line. Then pressing the keys "Ctrl"+Space bar the menu will suggest us as an option the text "artifacts:". We select it and go to the next line.
 
 In the third line we must add a douple identation, we will create an object under artifacts. The next object will be a name for the artifact, for example "pub_artifact":
 
@@ -42,7 +42,7 @@ publisher:
     pub_artifact:
       node: pub_node
 ```
-Now that we have the node, we can define the interfaces that offers this node as inputs and output to connect to it. In our case we want to create a publisher, which the type **String** . 
+Now that we have the node, we can define the interfaces that offers this node as inputs and output to connect to it. In our case we want to create a publisher, which the type **String** .
 
 ![alt text](images/pubsub_tutorial3.gif)
 
@@ -79,7 +79,7 @@ Now that we have already the components we can compose them. For that we have to
 
 In [RosSystem description](RosSystemModelDescription.md) we explain the format of a system and the editor will support you to write the model properly.
 
-The first that must be given is a name and then a ":" is required. In the next line you must add identation and you can press the keys "Ctrl" + Space bar for help. 
+The first that must be given is a name and then a ":" is required. In the next line you must add identation and you can press the keys "Ctrl" + Space bar for help.
 Then we will define the nodes that compose the system. Here under "from" we will link our previously created nodes, the grammar for the references is **PackageName.NodeName**.
 
 ![alt text](images/pubsub_tutorial5.gif)

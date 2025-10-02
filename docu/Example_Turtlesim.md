@@ -62,7 +62,7 @@ Now that we have already the components we can compose them. For that we have to
 
 In [RosSystem description](RosSystemModelDescription.md) we explain the format of a system and the editor will support you to write the model properly.
 
-The first that must be given is a name and then a ":" is required. In the next line you must add identation and you can press the keys "Ctrl" + Space bar for help. 
+The first that must be given is a name and then a ":" is required. In the next line you must add identation and you can press the keys "Ctrl" + Space bar for help.
 Firstly, we will add the 2 nodes that compose our system.
 
 ![alt text](images/turtlesim_tutorial1.gif)
@@ -123,7 +123,7 @@ source /opt/ros/ROSDISTRO/setup.bash
 ros2 launch PATH_TO_LAUNCH_PY_FILE
 ```
 
-Using the terminal of the keyboard node you can use the arrows to send new commands to the turtle. 
+Using the terminal of the keyboard node you can use the arrows to send new commands to the turtle.
 
 ![alt text](images/turtlesim_tutorial4.gif)
 
