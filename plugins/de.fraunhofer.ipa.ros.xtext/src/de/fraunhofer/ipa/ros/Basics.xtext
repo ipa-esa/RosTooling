@@ -142,7 +142,7 @@ ParameterBoolean returns ParameterBoolean:
 
 ParameterStruct returns ParameterStruct:
     {ParameterStruct}
-        ('[' 
+        ('['
         BEGIN
         (value+=ParameterStructMember)* ']'
         END

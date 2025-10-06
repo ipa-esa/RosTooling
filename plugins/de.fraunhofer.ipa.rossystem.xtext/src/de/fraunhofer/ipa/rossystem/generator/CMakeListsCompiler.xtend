@@ -4,11 +4,11 @@ import com.google.inject.Inject
 import system.System
 
 class CMakeListsCompiler {
-	
-	@Inject extension GeneratorHelpers
-	
-	
-//	def compile_CMakeLists_ROS1(RosSystem system, ComponentStack stack) '''«init_pkg()»
+
+    @Inject extension GeneratorHelpers
+
+
+//  def compile_CMakeLists_ROS1(RosSystem system, ComponentStack stack) '''«init_pkg()»
 //cmake_minimum_required(VERSION 2.8.3)
 //project(«IF stack===null»«system.name.toLowerCase»«ELSE»«system.name.toLowerCase»_«stack.name.toLowerCase»«ENDIF»)
 //
@@ -22,7 +22,7 @@ class CMakeListsCompiler {
 //  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 //)'''
 
-	def compile_CMakeLists_ROS2(System system, boolean gen_yaml) '''«init_pkg()»
+    def compile_CMakeLists_ROS2(System system, boolean gen_yaml) '''«init_pkg()»
 cmake_minimum_required(VERSION 3.5)
 project(«system.name.toLowerCase»)
 

@@ -8,7 +8,7 @@ import system.RosInterface
 import system.impl.RosSystemConnectionImpl
 
 class PlantUMLCompiler{
-	
+
 	@Inject extension GeneratorHelpers
 
 		def compile_plantuml(System system) '''«init_pkg()»
@@ -33,7 +33,7 @@ component «subsystem.name» {
 
     def compile_ports(RosNode component)'''
       component «(component as RosNode).name» {
-    
+
     /' PORTS DEFINED AS AVAILABLE IN THE ROSSYSTEM FILE '/
     «FOR port:(component as RosNode).rosinterfaces»
     «IF port_type(port)=="INPUT"»    portin «get_valid_name(component.name, port.name)» as "«port.name»"«
@@ -45,7 +45,7 @@ component «subsystem.name» {
         IF (port as RosInterfaceImpl).reference.toString.contains("RosServiceClientReference")» #orange«ENDIF»«
         IF (port as RosInterfaceImpl).reference.toString.contains("RosActionClientReference")» #green«ENDIF»«ENDIF»
     «ENDFOR»
-    
+
     /' PORTS FROM THE ORIGINAL NODE '/
 «««    «FOR sub:(component as RosNode).from.subscriber»    portin «get_valid_name(component.name, sub.name)» as "«sub.name»" #line:blue
 «««    «ENDFOR»
@@ -70,17 +70,14 @@ component «subsystem.name» {
          return "OUTPUT"
         }
     }
-    
+
     def get_valid_name (String componentName, String PortName){
         val identifier = (componentName+"."+PortName).replace("/","_").replace("~","_")
-        return identifier        
+        return identifier
     }
-    
+
     def get_connection_port (RosInterface port){
         val componentName=(port.eContainer as RosNode).name
-        return get_valid_name (componentName, port.name)       
+        return get_valid_name (componentName, port.name)
     }
 }
-
-		
-		

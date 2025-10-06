@@ -3,15 +3,15 @@
 The types of parameters supported by the ROS tooling are the following:
 
 * Boolean (true or false)
-* Integer 
+* Integer
 * Double
 * String
 * Base64
-* List 
+* List
 * Array
 * Struct
 
-and their description is allowed at ROS and ROSSystem model level. 
+and their description is allowed at ROS and ROSSystem model level.
 
 For the complete definition of parameters the user has to open the ROS model editor, where the language format is the following:
 ```
@@ -25,9 +25,9 @@ For example (for a .ros2 file):
 
 ```
 test_parameters:
-  artifacts: 
+  artifacts:
     test_parameters:
-      node: params_example 
+      node: params_example
       parameters:
         string_test:
           type: String
@@ -78,8 +78,7 @@ test:
           value: ["hello", "hola", "hallo"]
         - test_st: "test_parameters::struct_test"
           value: [
-            hello: 1 
+            hello: 1
             what: "test"]
 ```
 The model definition of parameters is also consider for the autogeneration of launch files and the component interfaces. Complementarily, and because of the complexity of the format, the .ros, the .componentinterface and the .rossystem language validators contain rules to check that the value given to the parameter has the correct type and also help messages that together with the auto-complete function (Ctrl+Space) facilitate to the user the creation of parameters.
-

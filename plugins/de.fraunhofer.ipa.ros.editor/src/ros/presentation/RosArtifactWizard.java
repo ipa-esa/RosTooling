@@ -115,49 +115,49 @@ public class RosArtifactWizard extends Wizard implements INewWizard {
             if (!project.isOpen()) {
                 project.open(IResource.BACKGROUND_REFRESH, monitor);
             }
-	        //IProject project = ModelingProjectManager.INSTANCE.createNewModelingProject(ProjectName, null, true, monitor);
-	        IProjectDescription description = project.getDescription();
-	        String[] natures = description.getNatureIds();
-	        String[] newNatures = new String[natures.length + 1];
-	        System.arraycopy(natures, 0, newNatures, 0, natures.length);
-	        newNatures[natures.length] = "org.eclipse.xtext.ui.shared.xtextNature";
-	
-	        //clone, import and add reference to Communication Objects
-	        try {
-	            ImportCommObjectsHandler.CloneAndImport();
-	        } catch (InvocationTargetException e) {
-	            // TODO Auto-generated catch block
-	            //e.printStackTrace();
-	        } catch (InterruptedException e) {
-	            // TODO Auto-generated catch block
-	            //e.printStackTrace();
-	        }
-	        IProject ObjectsProject = ResourcesPlugin.getWorkspace().getRoot().getProject("de.fraunhofer.ipa.ros.communication.objects");
-	        description.setReferencedProjects(new IProject[] {ObjectsProject});
-	        description.setNatureIds(newNatures);
-	        project.setDescription(description, monitor);
-	
-	        IFolder dir = project.getFolder("rosnodes");
-	        dir.create(true, true, null);
-	        IFile file = project.getFile("rosnodes/"+ProjectName+".ros2");
-	        //System.out.println(file.getFullPath());
-	        project.open(IResource.BACKGROUND_REFRESH, monitor);
-	
-	        ResourceSet resourceSet = new ResourceSetImpl();
-	        Resource resource = resourceSet.createResource(URI.createPlatformResourceURI(file.getFullPath().toOSString(),true));
-	        EObject PackageRootObject = RosFactory.eINSTANCE.createAmentPackage();
-	        //EObject PackageSetRootObject = RosFactory.eINSTANCE.createPackageSet();
-	
-	        if (PackageRootObject != null) {
-	            resource.getContents().add(PackageRootObject);
-	        }
-	        //PackageSet packageSet_model = (PackageSetImpl) resource.getContents().get(0);
-	        AmentPackageImpl pkg = (AmentPackageImpl) resource.getContents().get(0);
-	        //Artifact artifact = new ArtifactImpl();
-	        //artifact.setName(project.getName());
-	        pkg.setName(project.getName());
-	        //pkg.getArtifact().add(artifact);
-	        //packageSet_model.getPackage().add(pkg);
+            //IProject project = ModelingProjectManager.INSTANCE.createNewModelingProject(ProjectName, null, true, monitor);
+            IProjectDescription description = project.getDescription();
+            String[] natures = description.getNatureIds();
+            String[] newNatures = new String[natures.length + 1];
+            System.arraycopy(natures, 0, newNatures, 0, natures.length);
+            newNatures[natures.length] = "org.eclipse.xtext.ui.shared.xtextNature";
+
+            //clone, import and add reference to Communication Objects
+            try {
+                ImportCommObjectsHandler.CloneAndImport();
+            } catch (InvocationTargetException e) {
+                // TODO Auto-generated catch block
+                //e.printStackTrace();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                //e.printStackTrace();
+            }
+            IProject ObjectsProject = ResourcesPlugin.getWorkspace().getRoot().getProject("de.fraunhofer.ipa.ros.communication.objects");
+            description.setReferencedProjects(new IProject[] {ObjectsProject});
+            description.setNatureIds(newNatures);
+            project.setDescription(description, monitor);
+
+            IFolder dir = project.getFolder("rosnodes");
+            dir.create(true, true, null);
+            IFile file = project.getFile("rosnodes/"+ProjectName+".ros2");
+            //System.out.println(file.getFullPath());
+            project.open(IResource.BACKGROUND_REFRESH, monitor);
+
+            ResourceSet resourceSet = new ResourceSetImpl();
+            Resource resource = resourceSet.createResource(URI.createPlatformResourceURI(file.getFullPath().toOSString(),true));
+            EObject PackageRootObject = RosFactory.eINSTANCE.createAmentPackage();
+            //EObject PackageSetRootObject = RosFactory.eINSTANCE.createPackageSet();
+
+            if (PackageRootObject != null) {
+                resource.getContents().add(PackageRootObject);
+            }
+            //PackageSet packageSet_model = (PackageSetImpl) resource.getContents().get(0);
+            AmentPackageImpl pkg = (AmentPackageImpl) resource.getContents().get(0);
+            //Artifact artifact = new ArtifactImpl();
+            //artifact.setName(project.getName());
+            pkg.setName(project.getName());
+            //pkg.getArtifact().add(artifact);
+            //packageSet_model.getPackage().add(pkg);
             resource.save(null);
         } catch (IOException e) {
             // TODO Auto-generated catch block
