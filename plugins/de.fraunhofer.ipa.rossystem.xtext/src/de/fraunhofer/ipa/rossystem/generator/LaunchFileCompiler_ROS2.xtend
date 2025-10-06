@@ -1,29 +1,22 @@
 package de.fraunhofer.ipa.rossystem.generator
 
-import system.RosNode
+import com.google.inject.Inject
+import java.util.ArrayList
+import org.eclipse.emf.common.util.EList
 import ros.Artifact
-import system.System
 import ros.impl.AmentPackageImpl
 import system.Connection
-import org.eclipse.emf.common.util.EList
-import system.impl.RosSystemConnectionImpl
-import system.impl.RosPublisherReferenceImpl
-import system.impl.RosInterfaceImpl
-import system.impl.RosSubscriberReferenceImpl
-import system.impl.RosServiceServerReferenceImpl
-import system.impl.RosServiceClientReferenceImpl
-import system.impl.RosActionServerReferenceImpl
+import system.RosActionServerReference
+import system.RosNode
+import system.System
 import system.impl.RosActionClientReferenceImpl
-import com.google.inject.Inject
-import ros.ParameterValue
-import ros.impl.ParameterStringImpl
-import ros.impl.ParameterIntegerImpl
-import ros.impl.ParameterDoubleImpl
-import ros.impl.ParameterBooleanImpl
-import ros.impl.ParameterSequenceImpl
-import ros.impl.ParameterStructImpl
-import ros.impl.ParameterStructMemberImpl
-import java.util.ArrayList
+import system.impl.RosActionServerReferenceImpl
+import system.impl.RosInterfaceImpl
+import system.impl.RosPublisherReferenceImpl
+import system.impl.RosServiceClientReferenceImpl
+import system.impl.RosServiceServerReferenceImpl
+import system.impl.RosSubscriberReferenceImpl
+import system.impl.RosSystemConnectionImpl
 
 class LaunchFileCompiler_ROS2 {
 
@@ -247,8 +240,22 @@ def generate_launch_description():
             if (!remapped_interfaces.contains(interface)){
                 var origin = interface.reference.eCrossReferences.toString
                 var origin_name = origin.substring(origin.indexOf("name: ") + 6, origin.lastIndexOf(")]"))
-                if (interface.name !== origin_name){
-                    remap_str += "\t(\"" + origin_name + "\", \"" + interface.name + "\"),\n";
+                if (interface.name.equals(origin_name)){
+                    if (interface.reference instanceof RosActionServerReference){
+                    	val actionSuffixes = new ArrayList
+							actionSuffixes.add("/_action/feedback")
+							actionSuffixes.add("/_action/status")
+							actionSuffixes.add("/_action/cancel_goal")
+							actionSuffixes.add("/_action/get_result")
+							actionSuffixes.add("/_action/send_goal")
+							for (suf : actionSuffixes) {
+ 							   remap_str += "\t(\"" + origin_name + suf + "\", \"" + interface.name + suf + "\"),\n";
+							}
+                    }
+                    else{
+	                    remap_str += "\t(\"" + origin_name + "\", \"" + interface.name + "\"),\n";
+
+                    }
                 }
             }
         }
