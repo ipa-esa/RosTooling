@@ -361,7 +361,12 @@ class GeneratorHelpers {
         package_impl = node.eContainer.eContainer as AmentPackageImpl;
         return package_impl;
     }
-
+    def static String removeLeadingSlash(String input) {
+        if (input !== null && input.startsWith("/")) {
+            return input.substring(1)
+    }
+        return input
+    }
     //Launch files generators
 //  def check_ns(ComponentInterface component){
 //      if (component.hasNS){
