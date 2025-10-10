@@ -15,6 +15,8 @@ Technical Maintainer: [**ipa-nhg**](https://github.com/ipa-nhg/) (**Nadia Hammou
 
 The **documentation** of the RosTooling is available under [https://ipa320.github.io/RosTooling.github.io/](https://ipa320.github.io/RosTooling.github.io/).
 
+
+**Note on source installation:** Source installation documentation is slightly outdated. The ROS xtext plugin is built against newer Eclipse platforms than the one stated in the documentation. Please use Eclipse 2024-09 with maven version 3.9.9.
 ---------------------------------------------------------
 
 

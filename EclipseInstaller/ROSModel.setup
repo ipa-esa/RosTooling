@@ -50,7 +50,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="2021-12"
+      defaultValue="2024-09"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup.p2:P2Task">
@@ -78,9 +78,15 @@
       <requirement
           name="org.eclipse.egit.feature.group"/>
       <repositoryList
-          name="2021-12">
+          name="2024-09">
         <repository
-            url="https://download.eclipse.org/releases/2021-12"/>
+            url="https://download.eclipse.org/releases/2024-09"/>
+        <repository
+            url="https://download.eclipse.org/eclipse/updates/4.33"/>
+        <repository 
+            url="https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
+        <repository 
+            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/"/>
       </repositoryList>
     </targlet>
   </setupTask>
@@ -146,6 +152,25 @@
             rootFolder="${ros-model.location}/plugins/">
           <excludedPath>.</excludedPath>
         </sourceLocator>
+        <repositoryList 
+            name="2024-09">
+          <repository 
+            url="https://download.eclipse.org/releases/2024-09"/>
+          <repository
+            url="https://download.eclipse.org/eclipse/updates/4.33"/>
+          <repository
+            url="https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
+          <repository
+            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/"/>
+        </repositoryList>
+        <repositoryList name="2021-12">
+          <repository
+            url="https://download.eclipse.org/releases/2021-12"/>
+          <repository
+            url="https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
+          <repository
+            url="https://download.eclipse.org/modeling/emft/mwe/updates/releases/"/>
+        </repositoryList>
       </targlet>
       <implicitDependency
           id="org.eclipse.sirius.runtime.ide.ui"/>
