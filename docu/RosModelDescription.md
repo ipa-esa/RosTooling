@@ -14,22 +14,22 @@ my_awesome_pkg: #Name of the package
   **artifacts:**
     awesome: # Name of the artifact (as it is named in the CMakeLists)
       **node:** awesome_node # Name of the node
-      **publishers:** # (Optional) List of publishers 
+      **publishers:** # (Optional) List of publishers
         awesome_pub:
           **type:** "std_msgs/msg/Bool"
-      **subscribers:** # (Optional) List of subscribers 
+      **subscribers:** # (Optional) List of subscribers
         awesome_sub:
           **type:** "std_msgs/msg/Bool"
-      **serviceclients:** # (Optional) List of service clients 
+      **serviceclients:** # (Optional) List of service clients
         awesome_client:
           **type:** "std_srvs/srv/Empty"
-      **serviceservers:** # (Optional) List of service servers 
+      **serviceservers:** # (Optional) List of service servers
         awesome_server:
           **type:** "std_srvs/srv/Empty"
-      **actionclients:** # (Optional) List of action clients 
+      **actionclients:** # (Optional) List of action clients
         awesome_action:
           **type:** "control_msgs/action/JointTrajectory"
-      **actionservers:** # (Optional) List of action servers 
+      **actionservers:** # (Optional) List of action servers
         awesome_action:
           **type:** "control_msgs/action/JointTrajectory"
       **parameters:** # (Optional) List of parameters
@@ -39,7 +39,7 @@ my_awesome_pkg: #Name of the package
 ```
 
 
-The format is based the YAML file format. All the words marked in the template with '**' are keywords that compose the model, they can't be modified. 
+The format is based the YAML file format. All the words marked in the template with '**' are keywords that compose the model, they can't be modified.
 
 
 See the following model exmaple for the known teleop ROS package:
@@ -54,7 +54,7 @@ teleop:
           type: "geometry_msgs/msg/Twist"
       subscribers:
         joy:
-          type:"sensor_msgs/msg/Joy" 
+          type:"sensor_msgs/msg/Joy"
 ```
 
 ## ROS 2
@@ -69,67 +69,67 @@ my_awesome_pkg:
       **publishers:**
         awesome_pub:
           **type:** "std_msgs/msg/Bool"
-          **qos:** 
+          **qos:**
             **depth:** 10
             **durability:** volatile
             **history:** keep_all
             **profile:** default_qos
-            **reliability:** best_effort 
+            **reliability:** best_effort
       **subscribers:**
         awesome_sub:
           **type:** "std_msgs/msg/Bool"
-          **qos:** 
+          **qos:**
             **depth:** 10
             **durability:** transient_local
             **history:** keep_last
             **profile:** sensor_qos
-            **reliability:** reliable 
+            **reliability:** reliable
       **serviceclients:**
         awesome_client:
           **type:** "std_srvs/srv/Empty"
-          **qos:** 
+          **qos:**
             **depth:** 10
             **durability:** volatile
             **history:** keep_all
             **profile:** services_qos
-            **reliability:** best_effort 
+            **reliability:** best_effort
       **serviceservers:**
         awesome_server:
           **type:** "std_srvs/srv/Empty"
-          **qos:** 
+          **qos:**
             **depth:** 10
             **durability:** volatile
             **history:** keep_all
             **profile:** services_qos
-            **reliability:** best_effort 
+            **reliability:** best_effort
       **actionclients:**
         awesome_action:
           **type:** "control_msgs/action/JointTrajectory"
-          **qos:** 
+          **qos:**
             **depth:** 10
             **durability:** volatile
             **history:** keep_all
             **profile:** default_qos
-            **reliability:** best_effort 
+            **reliability:** best_effort
       **actionservers:**
         awesome_action:
           **type:** "control_msgs/action/JointTrajectory"
-          **qos:** 
+          **qos:**
             **depth:** 10
             **durability:** volatile
             **history:** keep_all
             **profile:** default_qos
-            **reliability:** best_effort 
+            **reliability:** best_effort
       **parameters:**
         awesome_param:
           **type:** String
           **default:** "Hello"
-          **qos:** 
+          **qos:**
             **depth:** 10
             **durability:** volatile
             **history:** keep_all
             **profile:** parameter_qos
-            **reliability:** best_effort 
+            **reliability:** best_effort
 ```
 
 The only remarkable difference with the ROS 1 model is that the quality of service can be defined for all the different interfaces. The quality of service atrributes are optional and they allow the following options:
@@ -141,7 +141,7 @@ The only remarkable difference with the ROS 1 model is that the quality of servi
 - reliability: best_effort / reliable
 
 The type of supported parameters are:
-- Boolean 
+- Boolean
 - Double
 - String
 - Integer

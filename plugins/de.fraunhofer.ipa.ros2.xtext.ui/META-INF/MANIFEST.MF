@@ -19,10 +19,10 @@ Require-Bundle: de.fraunhofer.ipa.ros2.xtext,
  org.eclipse.ui,
  org.eclipse.compare,
  org.eclipse.xtext.builder,
- org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
- org.eclipse.xtend.lib;bundle-version="2.14.0";resolution:=optional
+ org.eclipse.xtext.xbase.lib;bundle-version="2.39.0",
+ org.eclipse.xtend.lib;bundle-version="2.39.0";resolution:=optional
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-19
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: de.fraunhofer.ipa.ros2.ui.quickfix,
  de.fraunhofer.ipa.ros2.ui.contentassist,
  de.fraunhofer.ipa.ros2.xtext.ui.internal

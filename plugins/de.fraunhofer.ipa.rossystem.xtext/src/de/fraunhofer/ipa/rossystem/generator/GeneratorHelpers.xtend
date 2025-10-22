@@ -39,16 +39,16 @@ class GeneratorHelpers {
     RosNode node
     String[] FromFileInfo
     Boolean os_import
-    
+
     String ros1_bridge_name
     String ros1_bridge_type
     List<EObject> Ros1Ports
-        
+
 
     def void init_pkg(){
         PackageSet=false
     }
-    
+
     def boolean generate_yaml(RosNode component){
         var yaml_gen=false
         for(param:component.rosparameters){
@@ -61,7 +61,7 @@ class GeneratorHelpers {
         }
         return  yaml_gen
     }
-    
+
     def boolean YamlFileGenerated(System rossystem) {
         os_import=false
         for (component: getRos2Nodes(rossystem)){
@@ -87,7 +87,7 @@ class GeneratorHelpers {
         }}
         return nodeList
     }
-    
+
     def <Components> getRos1Nodes (System rossystem) {
         val nodeList = new ArrayList<RosNode>
         if (!rossystem.components.nullOrEmpty){
@@ -110,7 +110,7 @@ class GeneratorHelpers {
         }
         return subSystemsList
     }
-    
+
     def boolean TopicBridgeGenerated(System rossystem){
         for (connection: rossystem.connections){
             if (!getTopicBridgeInterfaces(connection as RosSystemConnection).get(0).empty){
@@ -119,21 +119,21 @@ class GeneratorHelpers {
         }
         return false
     }
-    
+
     def boolean ServiceFromBridgeGenerated(System rossystem){
         for (connection: rossystem.connections){
             if (!getServiceFromBridgeInterfaces(connection as RosSystemConnection).get(0).empty){
                 return true
-            } 
+            }
         }
         return false
     }
-    
+
     def boolean ServiceToBridgeGenerated(System rossystem){
         for (connection: rossystem.connections){
             if (!getServiceToBridgeInterfaces(connection as RosSystemConnection).get(0).empty){
                 return true
-            } 
+            }
         }
         return false
     }
@@ -159,7 +159,7 @@ class GeneratorHelpers {
         }
         return Arrays.asList(ros1_bridge_name, ros1_bridge_type);
     }
-    
+
     def List<String> getServiceFromBridgeInterfaces(RosSystemConnection connection){
         val from_connection=(connection as RosSystemConnection).from
         ros1_bridge_name=""
@@ -173,7 +173,7 @@ class GeneratorHelpers {
         }
         return Arrays.asList(ros1_bridge_name, ros1_bridge_type);
     }
-    
+
     def List<String> getServiceToBridgeInterfaces(RosSystemConnection connection){
         val to_connection=(connection as RosSystemConnection).to
         ros1_bridge_name=""
@@ -187,8 +187,8 @@ class GeneratorHelpers {
         }
         return Arrays.asList(ros1_bridge_name, ros1_bridge_type);
     }
-    
-    
+
+
     def boolean fromRos1Node(EObject bridge_interface){
         if (bridge_interface.eContainer.eContainer.eContainer.eClass.toString.contains("CatkinPackage")){
             Ros1Ports.add(bridge_interface)
@@ -361,7 +361,12 @@ class GeneratorHelpers {
         package_impl = node.eContainer.eContainer as AmentPackageImpl;
         return package_impl;
     }
-
+    def static String removeLeadingSlash(String input) {
+        if (input !== null && input.startsWith("/")) {
+            return input.substring(1)
+    }
+        return input
+    }
     //Launch files generators
 //  def check_ns(ComponentInterface component){
 //      if (component.hasNS){
@@ -408,6 +413,5 @@ class GeneratorHelpers {
 //  def getPackageType_node (Node node){
 //      return node.eContainer.eContainer as PackageImpl;
 //  }
-
 
 }

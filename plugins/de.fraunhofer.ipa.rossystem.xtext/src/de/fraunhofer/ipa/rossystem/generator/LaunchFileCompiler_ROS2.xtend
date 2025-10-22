@@ -1,29 +1,22 @@
 package de.fraunhofer.ipa.rossystem.generator
 
-import system.RosNode
+import com.google.inject.Inject
+import java.util.ArrayList
+import org.eclipse.emf.common.util.EList
 import ros.Artifact
-import system.System
 import ros.impl.AmentPackageImpl
 import system.Connection
-import org.eclipse.emf.common.util.EList
-import system.impl.RosSystemConnectionImpl
-import system.impl.RosPublisherReferenceImpl
-import system.impl.RosInterfaceImpl
-import system.impl.RosSubscriberReferenceImpl
-import system.impl.RosServiceServerReferenceImpl
-import system.impl.RosServiceClientReferenceImpl
-import system.impl.RosActionServerReferenceImpl
+import system.RosActionServerReference
+import system.RosNode
+import system.System
 import system.impl.RosActionClientReferenceImpl
-import com.google.inject.Inject
-import ros.ParameterValue
-import ros.impl.ParameterStringImpl
-import ros.impl.ParameterIntegerImpl
-import ros.impl.ParameterDoubleImpl
-import ros.impl.ParameterBooleanImpl
-import ros.impl.ParameterSequenceImpl
-import ros.impl.ParameterStructImpl
-import ros.impl.ParameterStructMemberImpl
-import java.util.ArrayList
+import system.impl.RosActionServerReferenceImpl
+import system.impl.RosInterfaceImpl
+import system.impl.RosPublisherReferenceImpl
+import system.impl.RosServiceClientReferenceImpl
+import system.impl.RosServiceServerReferenceImpl
+import system.impl.RosSubscriberReferenceImpl
+import system.impl.RosSystemConnectionImpl
 
 class LaunchFileCompiler_ROS2 {
 
@@ -41,7 +34,7 @@ from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoin
 
 def generate_launch_description():
   ld = LaunchDescription()
-  
+
   # *** PARAMETERS ***
   «FOR component:getRos2Nodes(system)»«IF generate_yaml(component)»
   «component.name»_config = os.path.join(
@@ -61,11 +54,11 @@ def generate_launch_description():
 
   # *** ROS 2 nodes ***
   «FOR component:getRos2Nodes(system)»
-  «(component as RosNode).name» = Node(
+  «IF !component.namespace.nullOrEmpty»«GeneratorHelpers.removeLeadingSlash(component.namespace)»_«(component as RosNode).name» = Node(«ELSE»
+  «(component as RosNode).name» = Node(«ENDIF»
     package="«((component as RosNode).from.eContainer.eContainer as AmentPackageImpl).name»",«IF !component.namespace.nullOrEmpty»
     namespace="«component.namespace»",«ENDIF»
     executable="«((component as RosNode).from.eContainer as Artifact).name»",
-    prefix = 'xterm -e',
     output='screen',
     name="«(component as RosNode).name»"«compile_remappings_str(component as RosNode, system.connections)»«IF !component.rosparameters.nullOrEmpty»«IF generate_yaml(component)»,
     parameters = [«component.name»_config]«ELSE»,
@@ -88,13 +81,19 @@ def generate_launch_description():
 
   # *** Add actions ***
   «FOR component:getRos2Nodes(system)»
+  «IF !component.namespace.nullOrEmpty»
+  ld.add_action(«GeneratorHelpers.removeLeadingSlash(component.namespace)»_«(component as RosNode).name»)
+  «ELSE»
   ld.add_action(«(component as RosNode).name»)
+  «ENDIF»
   «ENDFOR»«FOR subsystem:getSubsystems(system)»
   ld.add_action(include_«subsystem.name»)
   «ENDFOR»
 
   return ld
     '''
+
+
 
 //    def void compile_list_of_ROS2components(RosSystem system, ComponentStack stack) {
 //        components_tmp_.clear;
@@ -150,7 +149,7 @@ def generate_launch_description():
 
         var rename = ""
 
-        
+
         for (connection : connections){
             var rosconnection = connection as RosSystemConnectionImpl
             if (rosconnection.from.reference.eClass.toString.contains("RosPublisherReference")){
@@ -236,14 +235,28 @@ def generate_launch_description():
         }
 
         }
-                
+
         for (interface : node.rosinterfaces){
             if (!remapped_interfaces.contains(interface)){
                 var origin = interface.reference.eCrossReferences.toString
                 var origin_name = origin.substring(origin.indexOf("name: ") + 6, origin.lastIndexOf(")]"))
-                if (interface.name !== origin_name){
-                    remap_str += "\t(\"" + origin_name + "\", \"" + interface.name + "\"),\n";
-                } 
+                if (interface.name.equals(origin_name)){
+                    if (interface.reference instanceof RosActionServerReference){
+                    	val actionSuffixes = new ArrayList
+							actionSuffixes.add("/_action/feedback")
+							actionSuffixes.add("/_action/status")
+							actionSuffixes.add("/_action/cancel_goal")
+							actionSuffixes.add("/_action/get_result")
+							actionSuffixes.add("/_action/send_goal")
+							for (suf : actionSuffixes) {
+ 							   remap_str += "\t(\"" + origin_name + suf + "\", \"" + interface.name + suf + "\"),\n";
+							}
+                    }
+                    else{
+	                    remap_str += "\t(\"" + origin_name + "\", \"" + interface.name + "\"),\n";
+
+                    }
+                }
             }
         }
 //        for (rosPublisher : interfaces.toList) {

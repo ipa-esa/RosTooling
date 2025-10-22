@@ -199,7 +199,7 @@ my_msgs:
   msgs:
    hello:
     message
-     String data 
+     String data
   srvs:
    hello
      request
