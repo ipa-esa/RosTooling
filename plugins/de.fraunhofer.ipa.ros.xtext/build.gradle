@@ -1,0 +1,37 @@
+dependencies {
+	api "org.eclipse.xtext:org.eclipse.xtext:${xtextVersion}"
+
+}
+configurations {
+	mwe2 {
+		extendsFrom compileClasspath
+	}
+}
+
+dependencies {
+	mwe2 'org.eclipse.emf:org.eclipse.emf.mwe2.launch'
+	mwe2 "org.eclipse.xtext:org.eclipse.xtext.common.types:${xtextVersion}"
+	mwe2 "org.eclipse.xtext:org.eclipse.xtext.xtext.generator:${xtextVersion}"
+	mwe2 'org.eclipse.xtext:xtext-antlr-generator'
+}
+
+dependencies {
+    implementation project(':de.fraunhofer.ipa.ros')
+}
+
+task generateXtextLanguage(type: JavaExec) {
+	mainClass = 'org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher'
+	classpath = configurations.mwe2
+	inputs.file "src/de/fraunhofer/ipa/ros/GenerateRos.mwe2"
+	inputs.file "src/de/fraunhofer/ipa/ros/Basics.xtext"
+	inputs.file "src/de/fraunhofer/ipa/ros/Ros.xtext"
+	outputs.dir "src-gen"
+	args += "src/de/fraunhofer/ipa/ros/GenerateRos.mwe2"
+	args += "-p"
+	args += "rootPath=/${projectDir}/.."
+}
+
+processResources.dependsOn(generateXtextLanguage)
+generateXtext.dependsOn(generateXtextLanguage)
+clean.dependsOn(cleanGenerateXtextLanguage)
+eclipse.classpath.plusConfigurations += [configurations.mwe2]
