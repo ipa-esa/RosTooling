@@ -3,28 +3,52 @@ plugins {
 }
 
 dependencies {
-	api project(':de.fraunhofer.ipa.ros.xtext')
-	api "org.eclipse.xtext:org.eclipse.xtext.ide:${xtextVersion}"
+    api project(':de.fraunhofer.ipa.ros.xtext')
+    api "org.eclipse.xtext:org.eclipse.xtext.ide:${xtextVersion}"
+    implementation project(':de.fraunhofer.ipa.ros.xtext')
 }
-
 
 application {
-	// Add a start script for the socket case
-	mainClass = 'de.fraunhofer.ipa.ros.ide.launch.ServerLauncher'
-	startScripts {
-		applicationName = 'ros-lsp-socket'
-	}
+    mainClass = 'de.fraunhofer.ipa.ros.ide.launch.ServerLauncher'
+    startScripts {
+        applicationName = 'ros-lsp-socket'
+    }
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs += ['src-gen', 'xtend-gen']
+        }
+    }
+}
 
 // Add another start script for the standalone / self-contained case
 task standaloneStartScript(type: CreateStartScripts) {
-	mainClass = 'org.eclipse.xtext.ide.server.ServerLauncher'
-	applicationName = 'ros-lsp-standalone'
-	def t = project.tasks.getByPath('startScripts');
-    classpath = t.classpath;
-    outputDir = t.outputDir;
+    mainClass = 'org.eclipse.xtext.ide.server.ServerLauncher'
+    applicationName = 'ros-lsp-standalone'
+    classpath = tasks.startScripts.classpath
+    outputDir = tasks.startScripts.outputDir
 }
 
-def t = project.tasks.getByPath('startScripts')
-t.dependsOn(standaloneStartScript) // trigger 'secondaryStartScript' execution automatically
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'de.fraunhofer.ipa.ros.ide.launch.ServerLauncher'
+        )
+    }
+}
+
+// Ensure standaloneStartScript runs before startScripts
+tasks.startScripts.configure {
+    dependsOn tasks.standaloneStartScript
+}
+
+// --- FIX: Ensure generated sources are included and built before Java compilation ---
+tasks.named('compileJava') {
+    dependsOn ':de.fraunhofer.ipa.ros.xtext:generateXtextLanguage'
+}
