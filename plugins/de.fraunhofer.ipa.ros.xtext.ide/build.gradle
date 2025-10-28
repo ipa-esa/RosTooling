@@ -19,6 +19,7 @@ sourceSets {
     main {
         java {
             srcDirs += ['src-gen', 'xtend-gen']
+            srcDirs += ['src']
         }
     }
 }
@@ -27,8 +28,9 @@ sourceSets {
 task standaloneStartScript(type: CreateStartScripts) {
     mainClass = 'org.eclipse.xtext.ide.server.ServerLauncher'
     applicationName = 'ros-lsp-standalone'
-    classpath = tasks.startScripts.classpath
-    outputDir = tasks.startScripts.outputDir
+    def t = project.tasks.getByPath('startScripts')
+    classpath = t.classpath
+    outputDir = t.outputDir
 }
 
 tasks.withType(Jar).configureEach {
@@ -43,12 +45,47 @@ jar {
     }
 }
 
+clean {
+    delete 'xtend-gen', 'src-gen'
+}
 // Ensure standaloneStartScript runs before startScripts
 tasks.startScripts.configure {
     dependsOn tasks.standaloneStartScript
 }
 
-// --- FIX: Ensure generated sources are included and built before Java compilation ---
-tasks.named('compileJava') {
-    dependsOn ':de.fraunhofer.ipa.ros.xtext:generateXtextLanguage'
+
+// // Ensure generateXtext waits for code generation and compilation in dependencies
+tasks.named('generateXtext') {
+    dependsOn project(':de.fraunhofer.ipa.ros.xtext').tasks.named('generateXtextLanguage')
+    dependsOn project(':de.fraunhofer.ipa.ros.xtext').tasks.named('generateXtext')
+    // dependsOn project(':de.fraunhofer.ipa.ros').tasks.named('compileJava')
 }
+
+// // Ensure Java compilation waits for code generation in xtext
+tasks.named('compileJava') {
+    dependsOn('generateXtext')
+    dependsOn project(':de.fraunhofer.ipa.ros.xtext').tasks.named('compileJava')
+   
+}
+// // Ensure build waits for everything
+// tasks.named('build') {
+//     dependsOn project(':de.fraunhofer.ipa.ros.xtext').tasks.named('generateXtextLanguage')
+//     dependsOn project(':de.fraunhofer.ipa.ros.xtext').tasks.named('compileJava')
+//     dependsOn project(':de.fraunhofer.ipa.ros').tasks.named('compileJava')
+// }
+
+// // Ensure run waits for everything
+// tasks.named('run') {
+//     dependsOn project(':de.fraunhofer.ipa.ros.xtext').tasks.named('generateXtextLanguage')
+//     dependsOn project(':de.fraunhofer.ipa.ros.xtext').tasks.named('compileJava')
+//     dependsOn project(':de.fraunhofer.ipa.ros').tasks.named('compileJava')
+// }
+
+// .ros compileJava
+// -ros.xtext generateXtextLanguage
+// .ros.xtext generateXtext
+// .ros.xtext compileJava (also failed once)
+// .ros.xtext.ide generateXtext (is the one that fails)
+// .ros.xtext.ide compileJava
+// .ros.xtext.ide jar
+// .ros.xtext.ide standaloneScript 12 12 12
