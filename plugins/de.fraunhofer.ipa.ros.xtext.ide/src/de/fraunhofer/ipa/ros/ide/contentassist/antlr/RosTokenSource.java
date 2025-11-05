@@ -27,7 +27,7 @@ public class RosTokenSource extends AbstractIndentationTokenSource {
 	}
 
 	@Override
-	protected int getEndTokenType() {s
+	protected int getEndTokenType() {
 		// TODO Review assumption
 		return InternalRosParser.RULE_END;
 	}
