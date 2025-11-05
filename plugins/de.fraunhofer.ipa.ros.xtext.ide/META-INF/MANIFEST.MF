@@ -11,6 +11,9 @@ Require-Bundle: de.fraunhofer.ipa.ros.xtext,
  org.eclipse.xtext.xbase.ide,
  org.antlr.runtime;bundle-version="4.7.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
+ org.eclipse.lsp4j.jsonrpc,
+ org.eclipse.lsp4j,
+ com.google.gson
 Export-Package: de.fraunhofer.ipa.ros.ide.contentassist.antlr.internal,
  de.fraunhofer.ipa.ros.ide.contentassist.antlr,
  de.fraunhofer.ipa.ros.ide.contentassist.antlr.lexer

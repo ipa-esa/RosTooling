@@ -14,6 +14,9 @@ Require-Bundle: de.fraunhofer.ipa.ros1.xtext,
  de.fraunhofer.ipa.ros.xtext,
  de.fraunhofer.ipa.ros.xtext.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-21
+ org.eclipse.lsp4j.jsonrpc,
+ org.eclipse.lsp4j,
+ com.google.gson
 Export-Package: de.fraunhofer.ipa.ros1.ide.contentassist.antlr.internal,
  de.fraunhofer.ipa.ros1.ide.contentassist.antlr.lexer,
  de.fraunhofer.ipa.ros1.ide.contentassist.antlr
