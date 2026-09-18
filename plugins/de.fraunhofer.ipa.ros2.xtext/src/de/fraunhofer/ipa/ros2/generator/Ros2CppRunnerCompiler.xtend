@@ -1,0 +1,161 @@
+package de.fraunhofer.ipa.ros2.generator
+
+import com.google.inject.Inject
+import ros.Node
+import ros.Package
+
+class Ros2CppRunnerCompiler {
+
+    @Inject extension Ros2GeneratorHelpers
+
+    def String compileCppRunner(Package pkg, Node node) '''
+#include <memory>
+#include <thread>
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_components/register_node_macro.hpp"
+#include "«pkg.name.toLowerCase»/«node.name»Wrapper.hpp"
+#include "«pkg.name.toLowerCase»/«node.name»Algorithm.hpp"
+
+// Composable Component Registration for zero-copy ROS 2 container loading
+RCLCPP_COMPONENTS_REGISTER_NODE(«pkg.name.toLowerCase»::«node.name»Wrapper)
+
+/**
+ * @brief Default Derived Implementation coupling the pure algorithm with the ROS 2 wrapper
+ */
+class «node.name»Node : public «pkg.name.toLowerCase»::«node.name»Wrapper {
+public:
+    explicit «node.name»Node(const rclcpp::NodeOptions & options = rclcpp::NodeOptions())
+    : «node.name»Wrapper(options), algorithm_(std::make_shared<«pkg.name.toLowerCase»::«node.name»Algorithm>())
+    {
+        // Inject publisher delegates
+        «FOR pub : node.publisher»
+        algorithm_->set_«sanitizeName(pub.name)»_publisher([this](const auto & msg) {
+            this->publish_«sanitizeName(pub.name)»(msg);
+        });
+        «ENDFOR»
+
+        // Inject service client callers
+        «FOR client : node.serviceclient»
+        algorithm_->set_«sanitizeName(client.name)»_client(
+            [this](const auto & req) {
+                return this->call_«sanitizeName(client.name)»_sync(req);
+            },
+            [this](const auto & req, auto cb) {
+                auto req_ptr = std::make_shared<«client.service.specName»::Request>(req);
+                this->call_«sanitizeName(client.name)»_async(req_ptr, [cb](auto future) {
+                    if (cb) cb(*future.get());
+                });
+            }
+        );
+        «ENDFOR»
+
+        // Inject action client callers
+        «FOR actClient : node.actionclient»
+        algorithm_->set_«sanitizeName(actClient.name)»_client(
+            [this](const auto & goal, auto fb_cb, auto res_cb) {
+                auto fb_adapter = [fb_cb](auto, auto fb_ptr) {
+                    if (fb_cb && fb_ptr) fb_cb(*fb_ptr);
+                };
+                auto res_adapter = [res_cb](const auto & wrapped_result) {
+                    if (res_cb && wrapped_result.result) res_cb(*wrapped_result.result);
+                };
+                this->send_«sanitizeName(actClient.name)»_goal_async(goal, fb_adapter, res_adapter);
+            },
+            [this]() {
+                // Cancel active action client goals
+            }
+        );
+        «ENDFOR»
+    }
+
+protected:
+    «FOR sub : node.subscriber»
+    void on_«sanitizeName(sub.name)»_msg(
+        const «sub.message.specPackage»::msg::«sub.message.specName»::SharedPtr msg) override
+    {
+        algorithm_->on_«sanitizeName(sub.name)»_received(*msg);
+    }
+    «ENDFOR»
+
+    «FOR srv : node.serviceserver»
+    void handle_«sanitizeName(srv.name)»(
+        const std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Request> req,
+        std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Response> res) override
+    {
+        algorithm_->handle_«sanitizeName(srv.name)»(*req, *res);
+    }
+    «ENDFOR»
+
+    «FOR act : node.actionserver»
+    rclcpp_action::GoalResponse on_«sanitizeName(act.name)»_goal(
+        const rclcpp_action::GoalUUID & uuid,
+        std::shared_ptr<const «act.action.specName»::Goal> goal) override
+    {
+        (void)uuid;
+        bool accept = algorithm_->handle_goal_«sanitizeName(act.name)»(*goal);
+        return accept ? rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE
+                      : rclcpp_action::GoalResponse::REJECT;
+    }
+
+    rclcpp_action::CancelResponse on_«sanitizeName(act.name)»_cancel(
+        const std::shared_ptr<GoalHandle«act.action.specName»> goal_handle) override
+    {
+        (void)goal_handle;
+        bool accept = algorithm_->handle_cancel_«sanitizeName(act.name)»();
+        return accept ? rclcpp_action::CancelResponse::ACCEPT
+                      : rclcpp_action::CancelResponse::REJECT;
+    }
+
+    void execute_«sanitizeName(act.name)»(
+        const std::shared_ptr<GoalHandle«act.action.specName»> goal_handle) override
+    {
+        auto publish_fb = [goal_handle](const «act.action.specName»::Feedback & fb) {
+            goal_handle->publish_feedback(std::make_shared<«act.action.specName»::Feedback>(fb));
+        };
+        auto is_canceling = [goal_handle]() {
+            return goal_handle->is_canceling();
+        };
+        «act.action.specName»::Result result;
+        bool success = algorithm_->execute_«sanitizeName(act.name)»(
+            *goal_handle->get_goal(),
+            publish_fb,
+            is_canceling,
+            result);
+        auto res_ptr = std::make_shared<«act.action.specName»::Result>(result);
+        if (goal_handle->is_canceling()) {
+            goal_handle->canceled(res_ptr);
+        } else if (success) {
+            goal_handle->succeed(res_ptr);
+        } else {
+            goal_handle->abort(res_ptr);
+        }
+    }
+    «ENDFOR»
+
+private:
+    std::shared_ptr<«pkg.name.toLowerCase»::«node.name»Algorithm> algorithm_;
+};
+
+int main(int argc, char * argv[])
+{
+    rclcpp::init(argc, argv);
+    auto node = std::make_shared<«node.name»Node>();
+
+    «IF node.hasActionServer || node.hasServiceClients»
+    // Automated Executor Selection: MultiThreadedExecutor selected for concurrency
+    rclcpp::executors::MultiThreadedExecutor executor(
+        rclcpp::ExecutorOptions(),
+        std::max(2u, std::thread::hardware_concurrency()));
+    executor.add_node(node);
+    executor.spin();
+    «ELSE»
+    // Automated Executor Selection: SingleThreadedExecutor selected
+    rclcpp::spin(node);
+    «ENDIF»
+
+    rclcpp::shutdown();
+    return 0;
+}
+'''
+
+}
