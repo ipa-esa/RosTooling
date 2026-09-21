@@ -48,9 +48,9 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
 
     @Override
     public List<String> initialize() {
-        log("Advertising commands: ros2.generateWrappers, ros2.generateCppWrapper, ros2.generatePythonWrapper");
+        log("Advertising commands: ros2.generateWrappersServer, ros2.generateCppWrapper, ros2.generatePythonWrapper");
         return Lists.newArrayList(
-            "ros2.generateWrappers",
+            "ros2.generateWrappersServer",
             "ros2.generateCppWrapper",
             "ros2.generatePythonWrapper"
         );
@@ -60,7 +60,8 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
     public Object execute(ExecuteCommandParams params, ILanguageServerAccess access, CancelIndicator cancelIndicator) {
         String command = params.getCommand();
         log("Executing command: " + command);
-        if (!"ros2.generateWrappers".equals(command) &&
+        if (!"ros2.generateWrappersServer".equals(command) &&
+            !"ros2.generateWrappers".equals(command) &&
             !"ros2.generateCppWrapper".equals(command) &&
             !"ros2.generatePythonWrapper".equals(command)) {
             return Map.of("error", "Unknown command: " + command);
