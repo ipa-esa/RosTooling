@@ -8,24 +8,28 @@ class Ros2CppRunnerCompiler {
 
     @Inject extension Ros2GeneratorHelpers
 
-    def String compileCppRunner(Package pkg, Node node) '''
+    def String compileCppRunner(Package pkg, Node node) {
+        compileCppRunner(pkg, node, toCamelCase(node.artifactName))
+    }
+
+    def String compileCppRunner(Package pkg, Node node, String artCamel) '''
 #include <memory>
 #include <thread>
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_components/register_node_macro.hpp"
-#include "«pkg.name.toLowerCase»/«node.name»Wrapper.hpp"
-#include "«pkg.name.toLowerCase»/«node.name»Algorithm.hpp"
+#include "«pkg.name.toLowerCase»/«artCamel»Wrapper.hpp"
+#include "«pkg.name.toLowerCase»/«artCamel»Algorithm.hpp"
 
 // Composable Component Registration for zero-copy ROS 2 container loading
-RCLCPP_COMPONENTS_REGISTER_NODE(«pkg.name.toLowerCase»::«node.name»Wrapper)
+RCLCPP_COMPONENTS_REGISTER_NODE(«pkg.name.toLowerCase»::«artCamel»Wrapper)
 
 /**
  * @brief Default Derived Implementation coupling the pure algorithm with the ROS 2 wrapper
  */
-class «node.name»Node : public «pkg.name.toLowerCase»::«node.name»Wrapper {
+class «artCamel»Node : public «pkg.name.toLowerCase»::«artCamel»Wrapper {
 public:
-    explicit «node.name»Node(const rclcpp::NodeOptions & options = rclcpp::NodeOptions())
-    : «node.name»Wrapper(options), algorithm_(std::make_shared<«pkg.name.toLowerCase»::«node.name»Algorithm>())
+    explicit «artCamel»Node(const rclcpp::NodeOptions & options = rclcpp::NodeOptions())
+    : «artCamel»Wrapper(options), algorithm_(std::make_shared<«pkg.name.toLowerCase»::«artCamel»Algorithm>())
     {
         // Inject publisher delegates
         «FOR pub : node.publisher»
@@ -133,13 +137,13 @@ protected:
     «ENDFOR»
 
 private:
-    std::shared_ptr<«pkg.name.toLowerCase»::«node.name»Algorithm> algorithm_;
+    std::shared_ptr<«pkg.name.toLowerCase»::«artCamel»Algorithm> algorithm_;
 };
 
 int main(int argc, char * argv[])
 {
     rclcpp::init(argc, argv);
-    auto node = std::make_shared<«node.name»Node>();
+    auto node = std::make_shared<«artCamel»Node>();
 
     «IF node.hasActionServer || node.hasServiceClients»
     // Automated Executor Selection: MultiThreadedExecutor selected for concurrency

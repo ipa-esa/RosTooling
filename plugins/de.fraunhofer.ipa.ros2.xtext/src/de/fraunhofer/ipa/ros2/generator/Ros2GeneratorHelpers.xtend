@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros2.generator
 
+import ros.Artifact
 import ros.Node
 import ros.Package
 import ros.Publisher
@@ -79,6 +80,16 @@ class Ros2GeneratorHelpers {
             }
         }
         return result.toString()
+    }
+
+    def String getArtifactName(Node node) {
+        if (node !== null && node.eContainer instanceof Artifact) {
+            val art = node.eContainer as Artifact
+            if (art.name !== null && !art.name.trim.empty) {
+                return art.name.trim
+            }
+        }
+        return if (node !== null && node.name !== null) node.name else "node"
     }
 
     def String getSpecPackage(TopicSpec spec) {

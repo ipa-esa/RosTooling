@@ -119,17 +119,18 @@ find_package(«dep» REQUIRED)
 «ENDFOR»
 
 «FOR node : cppNodes»
+«val artCamel = toCamelCase(node.artifactName)»
 # -----------------------------------------------------------------------------
-# C++ Component Library: «node.name»_component
+# C++ Component Library: «artCamel»_component
 # -----------------------------------------------------------------------------
-add_library(«node.name»_component SHARED
-  src/«node.name»Wrapper.cpp
+add_library(«artCamel»_component SHARED
+  src/«artCamel»Wrapper.cpp
 )
-target_include_directories(«node.name»_component PUBLIC
+target_include_directories(«artCamel»_component PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
-ament_target_dependencies(«node.name»_component
+ament_target_dependencies(«artCamel»_component
   rclcpp
   rclcpp_components
   «IF node.hasActions»rclcpp_action«ENDIF»
@@ -137,18 +138,18 @@ ament_target_dependencies(«node.name»_component
   «dep»
   «ENDFOR»
 )
-rclcpp_components_register_nodes(«node.name»_component "«pkg.name.toLowerCase»::«node.name»Wrapper")
+rclcpp_components_register_nodes(«artCamel»_component "«pkg.name.toLowerCase»::«artCamel»Wrapper")
 
 # -----------------------------------------------------------------------------
-# Standalone Executable: «node.name»_node
+# Standalone Executable: «artCamel»_node
 # -----------------------------------------------------------------------------
-add_executable(«node.name»_node
-  src/«node.name»Runner.cpp
+add_executable(«artCamel»_node
+  src/«artCamel»Runner.cpp
 )
-target_link_libraries(«node.name»_node
-  «node.name»_component
+target_link_libraries(«artCamel»_node
+  «artCamel»_component
 )
-ament_target_dependencies(«node.name»_node
+ament_target_dependencies(«artCamel»_node
   rclcpp
 )
 «ENDFOR»
@@ -173,8 +174,9 @@ install(PROGRAMS
 «IF !cppNodes.empty»
 install(TARGETS
   «FOR node : cppNodes»
-  «node.name»_component
-  «node.name»_node
+  «val artCamel = toCamelCase(node.artifactName)»
+  «artCamel»_component
+  «artCamel»_node
   «ENDFOR»
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib

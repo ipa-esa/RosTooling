@@ -8,7 +8,11 @@ class Ros2CppWrapperCompiler {
 
     @Inject extension Ros2GeneratorHelpers
 
-    def String compileHeader(Package pkg, Node node) '''
+    def String compileHeader(Package pkg, Node node) {
+        compileHeader(pkg, node, toCamelCase(node.artifactName))
+    }
+
+    def String compileHeader(Package pkg, Node node, String artCamel) '''
 #pragma once
 
 #include <chrono>
@@ -48,14 +52,14 @@ class Ros2CppWrapperCompiler {
 namespace «pkg.name.toLowerCase» {
 
 /**
- * @brief Generated ROS 2 Node wrapper for '«node.name»'.
+ * @brief Generated ROS 2 Node wrapper for '«node.name»' (Artifact: '«node.artifactName»').
  * DO NOT DIRECTLY EDIT THIS FILE - it will be overwritten on generation.
  * Domain logic should inherit from this class or implement the pure virtual callbacks.
  */
-class «node.name»Wrapper : public rclcpp::Node {
+class «artCamel»Wrapper : public rclcpp::Node {
 public:
-    explicit «node.name»Wrapper(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
-    virtual ~«node.name»Wrapper() = default;
+    explicit «artCamel»Wrapper(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+    virtual ~«artCamel»Wrapper() = default;
 
     // ==========================================
     // SUBSCRIBER CACHED DATA ACCESSORS
@@ -282,12 +286,16 @@ private:
 } // namespace «pkg.name.toLowerCase»
 '''
 
-    def String compileSource(Package pkg, Node node) '''
-#include "«pkg.name.toLowerCase»/«node.name»Wrapper.hpp"
+    def String compileSource(Package pkg, Node node) {
+        compileSource(pkg, node, toCamelCase(node.artifactName))
+    }
+
+    def String compileSource(Package pkg, Node node, String artCamel) '''
+#include "«pkg.name.toLowerCase»/«artCamel»Wrapper.hpp"
 
 namespace «pkg.name.toLowerCase» {
 
-«node.name»Wrapper::«node.name»Wrapper(const rclcpp::NodeOptions & options)
+«artCamel»Wrapper::«artCamel»Wrapper(const rclcpp::NodeOptions & options)
 : rclcpp::Node("«node.name»", options)
 {
     client_cb_group_ = this->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
@@ -319,7 +327,7 @@ namespace «pkg.name.toLowerCase» {
     «ENDFOR»
 
     param_cb_handle_ = this->add_on_set_parameters_callback(
-        std::bind(&«node.name»Wrapper::internal_on_set_parameters, this, std::placeholders::_1));
+        std::bind(&«artCamel»Wrapper::internal_on_set_parameters, this, std::placeholders::_1));
 
     // ----------------------------------------------------
     // 2. Publishers Initialization
@@ -374,8 +382,8 @@ namespace «pkg.name.toLowerCase» {
     action_server_«sanitizeName(act.name)»_ = rclcpp_action::create_server<«act.action.specName»>(
         this,
         "«act.name»",
-        std::bind(&«node.name»Wrapper::on_«sanitizeName(act.name)»_goal, this, std::placeholders::_1, std::placeholders::_2),
-        std::bind(&«node.name»Wrapper::on_«sanitizeName(act.name)»_cancel, this, std::placeholders::_1),
+        std::bind(&«artCamel»Wrapper::on_«sanitizeName(act.name)»_goal, this, std::placeholders::_1, std::placeholders::_2),
+        std::bind(&«artCamel»Wrapper::on_«sanitizeName(act.name)»_cancel, this, std::placeholders::_1),
         [this](const std::shared_ptr<GoalHandle«act.action.specName»> handle) {
             std::thread([this, handle]() {
                 this->execute_«sanitizeName(act.name)»(handle);
@@ -394,7 +402,7 @@ namespace «pkg.name.toLowerCase» {
 
 // Outgoing Publisher implementations
 «FOR pub : node.publisher»
-void «node.name»Wrapper::publish_«sanitizeName(pub.name)»(const «pub.message.specPackage»::msg::«pub.message.specName» & msg) {
+void «artCamel»Wrapper::publish_«sanitizeName(pub.name)»(const «pub.message.specPackage»::msg::«pub.message.specName» & msg) {
     if (pub_«sanitizeName(pub.name)»_) {
         pub_«sanitizeName(pub.name)»_->publish(msg);
     }
@@ -403,24 +411,24 @@ void «node.name»Wrapper::publish_«sanitizeName(pub.name)»(const «pub.messag
 
 // Outgoing Service Client implementations
 «FOR client : node.serviceclient»
-bool «node.name»Wrapper::is_«sanitizeName(client.name)»_ready(std::chrono::milliseconds timeout) {
+bool «artCamel»Wrapper::is_«sanitizeName(client.name)»_ready(std::chrono::milliseconds timeout) {
     return client_«sanitizeName(client.name)»_->wait_for_service(timeout);
 }
 
-rclcpp::Client<«node.name»Wrapper::«client.service.specName»>::SharedFuture 
-«node.name»Wrapper::call_«sanitizeName(client.name)»_async(std::shared_ptr<«client.service.specName»::Request> request) {
+rclcpp::Client<«artCamel»Wrapper::«client.service.specName»>::SharedFuture 
+«artCamel»Wrapper::call_«sanitizeName(client.name)»_async(std::shared_ptr<«client.service.specName»::Request> request) {
     return client_«sanitizeName(client.name)»_->async_send_request(request);
 }
 
-void «node.name»Wrapper::call_«sanitizeName(client.name)»_async(
+void «artCamel»Wrapper::call_«sanitizeName(client.name)»_async(
     std::shared_ptr<«client.service.specName»::Request> request,
     std::function<void(rclcpp::Client<«client.service.specName»>::SharedFuture)> callback)
 {
     client_«sanitizeName(client.name)»_->async_send_request(request, std::move(callback));
 }
 
-std::optional<«node.name»Wrapper::«client.service.specName»::Response> 
-«node.name»Wrapper::call_«sanitizeName(client.name)»_sync(
+std::optional<«artCamel»Wrapper::«client.service.specName»::Response> 
+«artCamel»Wrapper::call_«sanitizeName(client.name)»_sync(
     const «client.service.specName»::Request & request,
     std::chrono::milliseconds timeout)
 {
@@ -440,8 +448,8 @@ std::optional<«node.name»Wrapper::«client.service.specName»::Response>
 
 // Outgoing Action Client implementations
 «FOR actClient : node.actionclient»
-std::shared_future<«node.name»Wrapper::ClientGoalHandle«actClient.action.specName»::SharedPtr> 
-«node.name»Wrapper::send_«sanitizeName(actClient.name)»_goal_async(
+std::shared_future<«artCamel»Wrapper::ClientGoalHandle«actClient.action.specName»::SharedPtr> 
+«artCamel»Wrapper::send_«sanitizeName(actClient.name)»_goal_async(
     const «actClient.action.specName»Client::Goal & goal,
     std::function<void(ClientGoalHandle«actClient.action.specName»::SharedPtr, const std::shared_ptr<const «actClient.action.specName»Client::Feedback>)> feedback_cb,
     std::function<void(const ClientGoalHandle«actClient.action.specName»::WrappedResult &)> result_cb)
@@ -452,7 +460,7 @@ std::shared_future<«node.name»Wrapper::ClientGoalHandle«actClient.action.spec
     return action_client_«sanitizeName(actClient.name)»_->async_send_goal(goal, send_goal_options);
 }
 
-void «node.name»Wrapper::cancel_«sanitizeName(actClient.name)»_goal_async(
+void «artCamel»Wrapper::cancel_«sanitizeName(actClient.name)»_goal_async(
     std::shared_ptr<ClientGoalHandle«actClient.action.specName»> goal_handle)
 {
     if (action_client_«sanitizeName(actClient.name)»_ && goal_handle) {
@@ -463,7 +471,7 @@ void «node.name»Wrapper::cancel_«sanitizeName(actClient.name)»_goal_async(
 
 // Action Server Feedback helper
 «FOR act : node.actionserver»
-void «node.name»Wrapper::publish_«sanitizeName(act.name)»_feedback(
+void «artCamel»Wrapper::publish_«sanitizeName(act.name)»_feedback(
     std::shared_ptr<GoalHandle«act.action.specName»> goal_handle,
     std::shared_ptr<«act.action.specName»::Feedback> feedback)
 {
@@ -474,7 +482,7 @@ void «node.name»Wrapper::publish_«sanitizeName(act.name)»_feedback(
 «ENDFOR»
 
 // Dynamic parameter update handling
-rcl_interfaces::msg::SetParametersResult «node.name»Wrapper::internal_on_set_parameters(
+rcl_interfaces::msg::SetParametersResult «artCamel»Wrapper::internal_on_set_parameters(
     const std::vector<rclcpp::Parameter> & parameters)
 {
     auto validation_res = this->on_parameters_changed(parameters);
@@ -498,7 +506,11 @@ rcl_interfaces::msg::SetParametersResult «node.name»Wrapper::internal_on_set_p
 } // namespace «pkg.name.toLowerCase»
 '''
 
-    def String compileCoreLogicStub(Package pkg, Node node) '''
+    def String compileCoreLogicStub(Package pkg, Node node) {
+        compileCoreLogicStub(pkg, node, toCamelCase(node.artifactName))
+    }
+
+    def String compileCoreLogicStub(Package pkg, Node node, String artCamel) '''
 #pragma once
 
 #include <iostream>
@@ -531,15 +543,15 @@ rcl_interfaces::msg::SetParametersResult «node.name»Wrapper::internal_on_set_p
 namespace «pkg.name.toLowerCase» {
 
 /**
- * @brief Pure Core Logic class for '«node.name»'.
+ * @brief Pure Core Logic class for '«node.name»' (Artifact: '«node.artifactName»').
  * Contains ZERO ROS 2 runtime node / executor dependencies!
  * Implement your business logic, algorithms, and signal handling here.
  * This file is generated once and will NEVER be overwritten.
  */
-class «node.name»Algorithm {
+class «artCamel»Algorithm {
 public:
-    «node.name»Algorithm() = default;
-    virtual ~«node.name»Algorithm() = default;
+    «artCamel»Algorithm() = default;
+    virtual ~«artCamel»Algorithm() = default;
 
     // ==========================================
     // 1. INBOUND SUBSCRIBER MESSAGE HANDLERS
