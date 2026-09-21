@@ -110,25 +110,25 @@ class Ros2Generator extends AbstractGenerator {
 
                         // Wrapper Header (Overwritten on generation)
                         fsa.generateFile(
-                            pkgName + "/include/" + pkgName + "/" + node.name + "Wrapper.hpp",
+                            pkgName + "/include/" + pkgName + "/" + toCamelCase(node.name) + "Wrapper.hpp",
                             compileHeader(pkg, node)
                         )
 
                         // Wrapper Source (Overwritten on generation)
                         fsa.generateFile(
-                            pkgName + "/src/" + node.name + "Wrapper.cpp",
+                            pkgName + "/src/" + toCamelCase(node.name) + "Wrapper.cpp",
                             compileSource(pkg, node)
                         )
 
                         // Standalone Runner & Component Export (Overwritten on generation)
                         fsa.generateFile(
-                            pkgName + "/src/" + node.name + "Runner.cpp",
+                            pkgName + "/src/" + toCamelCase(node.name) + "Runner.cpp",
                             compileCppRunner(pkg, node)
                         )
 
                         // Pure Algorithm Template (Protected: only if not already existing)
-                        val algoHeaderPath = pkgName + "/include/" + pkgName + "/" + node.name + "Algorithm.hpp"
-                        val alreadyExists = existingList.exists[contains(node.name + "Algorithm.hpp")]
+                        val algoHeaderPath = pkgName + "/include/" + pkgName + "/" + toCamelCase(node.name) + "Algorithm.hpp"
+                        val alreadyExists = existingList.exists[contains(toCamelCase(node.name) + "Algorithm.hpp")]
                         if (!alreadyExists) {
                             fsa.generateFile(algoHeaderPath, compileCoreLogicStub(pkg, node))
                         }
