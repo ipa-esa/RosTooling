@@ -316,12 +316,14 @@ class «node.name»Wrapper(Node):
         res = self.on_parameters_changed(parameters)
         if not res.successful:
             return res
+        «IF !node.parameter.empty»
         for param in parameters:
             «FOR param : node.parameter»
             if param.name == "«param.name»":
                 self._param_«sanitizeName(param.name)» = param.value
                 self.get_logger().info(f"Parameter '«param.name»' updated to: {param.value}")
             «ENDFOR»
+        «ENDIF»
         success_res = SetParametersResult()
         success_res.successful = True
         return success_res
