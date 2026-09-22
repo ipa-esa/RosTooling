@@ -341,6 +341,7 @@ This file is created only once and will NEVER be overwritten by the generator.
 """
 
 from typing import Optional, Callable, Any
+from enum import Enum
 
 
 class «node.name»Logic:
@@ -350,6 +351,7 @@ class «node.name»Logic:
 
     def __init__(self):
         self._timer_factory: Optional[Callable[[float, Callable[[], None]], Any]] = None
+        self._logger: Optional[Callable[[self.LogLevel, str], None]] = None        
         «FOR pub : node.publisher»
         self._publish_«sanitizeName(pub.name)»_fn: Optional[Callable[[Any], None]] = None
         «ENDFOR»
@@ -485,6 +487,51 @@ class «node.name»Logic:
         if self._timer_factory:
             return self._timer_factory(period_sec, callback)
         return None
+        
+    # ==========================================
+    # 8. LOGGER FACTORY INTERFACE
+    # ==========================================
+    class LogLevel(Enum):
+        DEBUG = 0
+        INFO = 1
+        WARN = 2
+        ERROR = 3
+    
+    def set_logger(self, func: Callable[[LogLevel, str], Any]) -> None:
+        """Inject the platform/ROS logger method"""
+        self._logger = func
+    
+    def log_debug(self, message: str):
+        """
+        Logs a debug level message via the platform logger
+
+        :param message: String message to be logged
+        """
+        self._logger(self.LogLevel.DEBUG, message)
+
+    def log_info(self, message: str):
+        """
+        Logs a info level message via the platform logger
+
+        :param message: String message to be logged
+        """
+        self._logger(self.LogLevel.INFO, message)
+    
+    def log_warn(self, message: str):
+        """
+        Logs a warn level message via the platform logger
+
+        :param message: String message to be logged
+        """
+        self._logger(self.LogLevel.WARN, message)
+
+    def log_error(self, message: str):
+        """
+        Logs a error level message via the platform logger
+
+        :param message: String message to be logged
+        """
+        self._logger(self.LogLevel.ERROR, message)
 '''
 
     def String compilePythonRunner(Package pkg, Node node) '''
@@ -510,6 +557,9 @@ class «node.name»Node(«node.name»Wrapper):
 
         # Inject simulation-synchronized timer factory
         self.logic.set_timer_factory(lambda period_sec, callback: self.create_timer(period_sec, callback))
+        
+        # Inject ROS2 rclpy logger
+        self.logic.set_logger(lambda log_level, msg: self.log(log_level, msg))
 
         # Inject publisher delegates
         «FOR pub : node.publisher»
@@ -595,6 +645,18 @@ class «node.name»Node(«node.name»Wrapper):
         return result
 
     «ENDFOR»
+    
+    # Helper function executed during logger injection
+    def log(self, log_level: «node.name»Logic.LogLevel, msg: str) -> None:
+        match log_level:
+            case «node.name»Logic.LogLevel.DEBUG:
+                self.get_logger().debug(msg)
+            case «node.name»Logic.LogLevel.INFO:
+                self.get_logger().info(msg)
+            case «node.name»Logic.LogLevel.WARN:
+                self.get_logger().warn(msg)
+            case «node.name»Logic.LogLevel.ERROR:
+                self.get_logger().error(msg)
 
 def main(args=None):
     rclpy.init(args=args)
