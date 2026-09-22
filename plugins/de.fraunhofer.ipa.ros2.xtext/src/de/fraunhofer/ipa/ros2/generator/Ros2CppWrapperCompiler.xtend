@@ -754,9 +754,57 @@ public:
         }
         return nullptr;
     }
+    // ==========================================
+    // 8. LOGGER FACTORY INTERFACE
+    // ==========================================
+    enum class LogLevel {
+        DEBUG,
+        INFO,
+        WARN,
+        ERROR
+    };
+     
+    using LogFunction = std::function<void(LogLevel level, const std::string & message)>;
 
+    /**
+     *@brief Injects the ROS/platform logger macro.
+     */
+    void set_logger(LogFunction logger_func) {
+        logger_ = logger_func;
+    }
+
+    /**
+    * @brief Logs a debug level message via platform logger
+    * @param message the std::string to be logged
+    */
+    void log_debug(const std::string & message) {
+        logger_(LogLevel::DEBUG, message);
+    }
+    /**
+    * @brief Logs an info level message via platform logger
+    * @param message the std::string to be logged
+    */
+    void log_info(const std::string & message) {
+        logger_(LogLevel::INFO, message);
+    }
+    /**
+    * @brief Logs a warn level message via platform logger
+    * @param message the std::string to be logged
+    */
+    void log_warn(const std::string & message) {
+        logger_(LogLevel::WARN, message);
+    }
+    /**
+    * @brief Logs an error level message via platform logger
+    * @param message the std::string to be logged
+    */
+    void log_error(const std::string & message) {
+        logger_(LogLevel::ERROR, message);
+    }
+    
 private:
     TimerFactory timer_factory_;
+    LogFunction logger_;
     «FOR pub : node.publisher»
     «pub.name»PubFn publish_«sanitizeName(pub.name)»_fn_;
     «ENDFOR»

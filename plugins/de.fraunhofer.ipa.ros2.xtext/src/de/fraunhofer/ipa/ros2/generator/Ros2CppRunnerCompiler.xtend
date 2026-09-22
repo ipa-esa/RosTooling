@@ -36,6 +36,32 @@ public:
         algorithm_->set_timer_factory([this](auto period, auto callback) -> std::shared_ptr<void> {
             return this->create_wall_timer(period, callback);
         });
+        
+        // Inject the ROS2 logger
+        algorithm_->set_logger([this](auto log_level, const std::string & msg) {
+            switch (log_level) {
+                case «pkg.name.toLowerCase»::«artCamel»Algorithm::LogLevel::DEBUG:
+                {
+                    RCLCPP_DEBUG(this->get_logger(), "%s", msg.c_str());
+                    break;
+                };
+                case «pkg.name.toLowerCase»::«artCamel»Algorithm::LogLevel::INFO:
+                {
+                    RCLCPP_INFO(this->get_logger(), "%s", msg.c_str());
+                    break;
+                };
+                case «pkg.name.toLowerCase»::«artCamel»Algorithm::LogLevel::WARN:
+                {
+                    RCLCPP_WARN(this->get_logger(), "%s", msg.c_str());
+                    break;
+                };
+                case «pkg.name.toLowerCase»::«artCamel»Algorithm::LogLevel::ERROR:
+                {
+                    RCLCPP_ERROR(this->get_logger(), "%s", msg.c_str());
+                    break;
+                };
+            }
+        });
 
         // Inject publisher delegates
         «FOR pub : node.publisher»
