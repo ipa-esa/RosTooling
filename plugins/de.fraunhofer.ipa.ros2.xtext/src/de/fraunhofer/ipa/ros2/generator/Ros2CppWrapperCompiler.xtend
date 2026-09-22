@@ -101,7 +101,10 @@ protected:
      * @brief Inbound subscriber callback hook for topic '«sub.name»'
      */
     virtual void on_«sanitizeName(sub.name)»_msg(
-        const «sub.message.specPackage»::msg::«sub.message.specName»::SharedPtr msg) = 0;
+        const «sub.message.specPackage»::msg::«sub.message.specName»::SharedPtr msg) {
+        	(void)msg;
+        	RCLCPP_ERROR(this->get_logger(), "The abstract method on_«sanitizeName(sub.name)» needs to be overriden!");
+        };
 
     «ENDFOR»
     «FOR srv : node.serviceserver»
@@ -110,7 +113,11 @@ protected:
      */
     virtual void handle_«sanitizeName(srv.name)»(
         const std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Request> request,
-        std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Response> response) = 0;
+        std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Response> response) {
+        	(void)request;
+        	(void)response;
+        	RCLCPP_ERROR(this->get_logger(), "The abstract method handle_«sanitizeName(srv.name)» needs to be overriden!");
+        };
 
     «ENDFOR»
     «FOR act : node.actionserver»
@@ -143,7 +150,10 @@ protected:
      * @brief Execute callback for Action '«act.name»' - Pure virtual (Domain execution logic)
      */
     virtual void execute_«sanitizeName(act.name)»(
-        const std::shared_ptr<GoalHandle«act.action.specName»> goal_handle) = 0;
+        const std::shared_ptr<GoalHandle«act.action.specName»> goal_handle) {
+        	(void)goal_handle;
+        	RCLCPP_ERROR(this->get_logger(), "The abstract method execute_«sanitizeName(act.name)» needs to be overriden!");        	
+        };
 
     «ENDFOR»
     /**
@@ -175,7 +185,7 @@ protected:
     /**
      * @brief Check if service '«client.name»' is available
      */
-    bool is_«sanitizeName(client.name)»_ready(std::chrono::milliseconds timeout = std::chrono::milliseconds(1000));
+    bool is_«sanitizeName(client.name)»_ready(std::chrono::nanoseconds timeout = std::chrono::nanoseconds(1000));
 
     /**
      * @brief Asynchronous call to service '«client.name»' returning a SharedFuture
@@ -195,7 +205,7 @@ protected:
      */
     std::optional<«client.service.specName»::Response> call_«sanitizeName(client.name)»_sync(
         const «client.service.specName»::Request & request,
-        std::chrono::milliseconds timeout = std::chrono::milliseconds(5000));
+        std::chrono::nanoseconds timeout = std::chrono::nanoseconds(5000));
 
     «ENDFOR»
     «FOR actClient : node.actionclient»
@@ -411,7 +421,7 @@ void «artCamel»Wrapper::publish_«sanitizeName(pub.name)»(const «pub.message
 
 // Outgoing Service Client implementations
 «FOR client : node.serviceclient»
-bool «artCamel»Wrapper::is_«sanitizeName(client.name)»_ready(std::chrono::milliseconds timeout) {
+bool «artCamel»Wrapper::is_«sanitizeName(client.name)»_ready(std::chrono::nanoseconds timeout) {
     return client_«sanitizeName(client.name)»_->wait_for_service(timeout);
 }
 
@@ -430,9 +440,9 @@ void «artCamel»Wrapper::call_«sanitizeName(client.name)»_async(
 std::optional<«artCamel»Wrapper::«client.service.specName»::Response> 
 «artCamel»Wrapper::call_«sanitizeName(client.name)»_sync(
     const «client.service.specName»::Request & request,
-    std::chrono::milliseconds timeout)
+    std::chrono::nanoseconds timeout)
 {
-    if (!is_«sanitizeName(client.name)»_ready(std::chrono::milliseconds(500))) {
+    if (!is_«sanitizeName(client.name)»_ready(std::chrono::nanoseconds(500))) {
         RCLCPP_ERROR(this->get_logger(), "Service '«client.name»' is not available for sync call.");
         return std::nullopt;
     }
@@ -519,6 +529,7 @@ rcl_interfaces::msg::SetParametersResult «artCamel»Wrapper::internal_on_set_pa
 #include <vector>
 #include <optional>
 #include <functional>
+#include <chrono>
 
 // Interface message/service/action headers for pure data structs
 «FOR pub : node.publisher»
@@ -699,7 +710,53 @@ public:
     }
 
     «ENDFOR»
+    // ==========================================
+    // 7. TIMER FACTORY INTERFACE
+    // ==========================================
+    using TimerHandle = std::shared_ptr<void>;
+    using TimerFactory = std::function<TimerHandle(std::chrono::nanoseconds, std::function<void()>)>;
+
+    /**
+     * @brief Injects the platform/ROS timer creation factory.
+     */
+    void set_timer_factory(TimerFactory factory) {
+        timer_factory_ = factory;
+    }
+
+    /**
+     * @brief Spawns a periodic timer driven by the node executor (respects simulation time /clock).
+     * @tparam Rep Duration representation
+     * @tparam Period Duration ratio
+     * @param period Timer interval duration (e.g. std::chrono::milliseconds(100))
+     * @param callback Callback executed on every tick
+     * @return TimerHandle RAII handle keeping the timer alive
+     */
+    template <typename Rep, typename Period>
+    TimerHandle create_timer(std::chrono::duration<Rep, Period> period, std::function<void()> callback) {
+        if (timer_factory_) {
+            return timer_factory_(std::chrono::duration_cast<std::chrono::nanoseconds>(period), callback);
+        }
+        return nullptr;
+    }
+
+    /**
+     * @brief Spawns a periodic timer specified in fractional seconds (e.g. 0.5 for 500ms).
+     * @param period_seconds Timer interval in seconds
+     * @param callback Callback executed on every tick
+     * @return TimerHandle RAII handle keeping the timer alive
+     */
+    TimerHandle create_timer(double period_seconds, std::function<void()> callback) {
+        if (timer_factory_) {
+            auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::duration<double>(period_seconds)
+            );
+            return timer_factory_(nanos, callback);
+        }
+        return nullptr;
+    }
+
 private:
+    TimerFactory timer_factory_;
     «FOR pub : node.publisher»
     «pub.name»PubFn publish_«sanitizeName(pub.name)»_fn_;
     «ENDFOR»

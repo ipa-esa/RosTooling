@@ -13,6 +13,7 @@ class Ros2CppRunnerCompiler {
     }
 
     def String compileCppRunner(Package pkg, Node node, String artCamel) '''
+#include <chrono>
 #include <memory>
 #include <thread>
 #include "rclcpp/rclcpp.hpp"
@@ -31,6 +32,11 @@ public:
     explicit «artCamel»Node(const rclcpp::NodeOptions & options = rclcpp::NodeOptions())
     : «artCamel»Wrapper(options), algorithm_(std::make_shared<«pkg.name.toLowerCase»::«artCamel»Algorithm>())
     {
+        // Inject simulation-synchronized timer factory
+        algorithm_->set_timer_factory([this](auto period, auto callback) -> std::shared_ptr<void> {
+            return this->create_wall_timer(period, callback);
+        });
+
         // Inject publisher delegates
         «FOR pub : node.publisher»
         algorithm_->set_«sanitizeName(pub.name)»_publisher([this](const auto & msg) {

@@ -347,6 +347,7 @@ class «node.name»Logic:
     """
 
     def __init__(self):
+        self._timer_factory: Optional[Callable[[float, Callable[[], None]], Any]] = None
         «FOR pub : node.publisher»
         self._publish_«sanitizeName(pub.name)»_fn: Optional[Callable[[Any], None]] = None
         «ENDFOR»
@@ -358,9 +359,6 @@ class «node.name»Logic:
         self._send_«sanitizeName(actClient.name)»_goal_fn: Optional[Callable] = None
         self._cancel_«sanitizeName(actClient.name)»_goal_fn: Optional[Callable] = None
         «ENDFOR»
-        «IF node.publisher.empty && node.serviceclient.empty && node.actionclient.empty»
-        pass
-        «ENDIF»
 
     # ==========================================
     # 1. INBOUND SUBSCRIBER MESSAGE HANDLERS
@@ -467,6 +465,24 @@ class «node.name»Logic:
         return None
 
     «ENDFOR»
+    # ==========================================
+    # 7. TIMER FACTORY INTERFACE
+    # ==========================================
+    def set_timer_factory(self, factory: Callable[[float, Callable[[], None]], Any]) -> None:
+        """Inject the platform/ROS timer creation factory."""
+        self._timer_factory = factory
+
+    def create_timer(self, period_sec: float, callback: Callable[[], None]) -> Any:
+        """
+        Spawn a periodic timer driven by the node executor (respects simulation time /clock).
+
+        :param period_sec: Timer interval in seconds (float)
+        :param callback: Zero-argument callable executed on every tick
+        :return: Platform timer handle keeping the timer active
+        """
+        if self._timer_factory:
+            return self._timer_factory(period_sec, callback)
+        return None
 '''
 
     def String compilePythonRunner(Package pkg, Node node) '''
@@ -489,6 +505,9 @@ class «node.name»Node(«node.name»Wrapper):
     def __init__(self):
         super().__init__()
         self.logic = «node.name»Logic()
+
+        # Inject simulation-synchronized timer factory
+        self.logic.set_timer_factory(lambda period_sec, callback: self.create_timer(period_sec, callback))
 
         # Inject publisher delegates
         «FOR pub : node.publisher»
