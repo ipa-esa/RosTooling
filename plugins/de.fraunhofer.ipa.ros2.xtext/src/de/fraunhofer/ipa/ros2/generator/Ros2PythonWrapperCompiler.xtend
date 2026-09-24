@@ -342,7 +342,41 @@ This file is created only once and will NEVER be overwritten by the generator.
 
 from typing import Optional, Callable, Any
 from enum import Enum
+# ROS 2 Interfaces imports
+«FOR pub : node.publisher»
+from «pub.message.specPackage».msg import «pub.message.specName»
+«ENDFOR»
+«FOR sub : node.subscriber»
+from «sub.message.specPackage».msg import «sub.message.specName»
+«ENDFOR»
+«FOR srv : node.serviceserver»
+from «srv.service.specPackage».srv import «srv.service.specName»
+«ENDFOR»
+«FOR client : node.serviceclient»
+from «client.service.specPackage».srv import «client.service.specName»
+«ENDFOR»
+«FOR act : node.actionserver»
+from «act.action.specPackage».action import «act.action.specName»
+«ENDFOR»
+«FOR actClient : node.actionclient»
+from «actClient.action.specPackage».action import «actClient.action.specName»
+«ENDFOR»
 
+class ValidationResult:
+    """
+    Struct to provide result after validating a parameter update
+    """
+    def __init__(self, successfull: bool = True, reason: str = ""):
+        self.successfull = successfull
+        self.reason = reason
+    
+    @classmethod
+    def ok(cls):
+        return cls(True)
+    
+    @classmethod
+    def reject(cls, reason: str):
+        return cls(False, reason)
 
 class «node.name»Logic:
     """
@@ -352,6 +386,7 @@ class «node.name»Logic:
     def __init__(self):
         self._timer_factory: Optional[Callable[[float, Callable[[], None]], Any]] = None
         self._logger: Optional[Callable[[self.LogLevel, str], None]] = None        
+        self.parameters_ = {}
         «FOR pub : node.publisher»
         self._publish_«sanitizeName(pub.name)»_fn: Optional[Callable[[Any], None]] = None
         «ENDFOR»
@@ -532,6 +567,45 @@ class «node.name»Logic:
         :param message: String message to be logged
         """
         self._logger(self.LogLevel.ERROR, message)
+    # ==========================================
+    # 9. PARAMETER HOOKS
+    # ==========================================
+    def set_parameter(self, name: str, value: Any) -> None:
+        """
+        Parameter setter used by the runner
+        :param name: String name of the parameter
+        :param value: Value of the parameter
+        """
+        self.parameters_[name] = value
+    
+    def get_parameter(self, name: str) -> Any:
+        """
+        Parameter getter based on parameter name
+        :param name: String name of the parameter
+        :return: Parameter value or None if nonexistant
+        """
+        if name not in self.parameters_.keys():
+            return None
+        return self.parameters_.get(name)
+    
+    def validate_parameter(self, name: str, proposed_value: Any) -> ValidationResult:
+        """
+        Validation hook to instpect proposed parameter values and reject invalid ones
+        :param name: String name of the parameter
+        :param proposed_value: The new value proposed
+        :return: ValidationResult.ok() to accept or ValidationResult.reject("reason") to reject
+        """
+        # Override or change to validate any incoming parameter changes
+        return ValidationResult.ok()
+    
+    def on_parameter_changed(self, name: str, value: Any):
+        """
+        Method to carry out reactive changes based on parameter updates
+        :param name: Name of the changed parameter
+        :param value: New value of the paramtere.
+        """
+        # Override or change to change code behaviour based on param changes
+        pass
 '''
 
     def String compilePythonRunner(Package pkg, Node node) '''
@@ -541,7 +615,10 @@ class «node.name»Logic:
 import sys
 import rclpy
 from rclpy.executors import MultiThreadedExecutor, SingleThreadedExecutor
-
+«IF !node.parameter.empty»
+from rcl_interfaces.msg import SetParametersResult
+from typing import List
+«ENDIF»
 from «pkg.name.toLowerCase».«toSnakeCase(node.name)»_wrapper import «node.name»Wrapper
 from «pkg.name.toLowerCase».«toSnakeCase(node.name)»_logic import «node.name»Logic
 
@@ -560,6 +637,11 @@ class «node.name»Node(«node.name»Wrapper):
         
         # Inject ROS2 rclpy logger
         self.logic.set_logger(lambda log_level, msg: self.log(log_level, msg))
+        
+        # Inject parameters via setter
+        «FOR param : node.parameter»
+        self.logic.set_parameter("«param.name»", self.get_param_«param.name»())
+        «ENDFOR»
 
         # Inject publisher delegates
         «FOR pub : node.publisher»
@@ -657,6 +739,21 @@ class «node.name»Node(«node.name»Wrapper):
                 self.get_logger().warn(msg)
             case «node.name»Logic.LogLevel.ERROR:
                 self.get_logger().error(msg)
+    
+    #Helper function to request parameter validation from logic
+    «IF !node.parameter.empty»
+    def on_parameters_changed(self, parameters: List[rclpy.Parameter]) -> SetParametersResult:
+        result = super().on_parameters_changed()
+        for param in parameters:
+            val = param.get_parameter_value()
+            validation = self.logic.validate_parameter(param.name, val)
+            if not validation.successfull:
+                result.successful = False
+                result.reason = validation.reason if len(validation.reason) > 0 else f"Validation failed for parameter '{param.name}'"
+                return result
+        
+        return result
+    «ENDIF»
 
 def main(args=None):
     rclpy.init(args=args)
