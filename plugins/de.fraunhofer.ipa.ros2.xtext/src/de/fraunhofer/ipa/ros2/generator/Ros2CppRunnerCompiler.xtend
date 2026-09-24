@@ -62,6 +62,11 @@ public:
                 };
             }
         });
+        
+        // Inject params via setter
+        «FOR param : node.parameter»
+        algorithm_->set_parameter("«param.name»", this->get_param_«param.name»());
+        «ENDFOR»
 
         // Inject publisher delegates
         «FOR pub : node.publisher»
@@ -73,8 +78,8 @@ public:
         // Inject service client callers
         «FOR client : node.serviceclient»
         algorithm_->set_«sanitizeName(client.name)»_client(
-            [this](const auto & req) {
-                return this->call_«sanitizeName(client.name)»_sync(req);
+            [this](const auto & req, const auto & timeout) {
+                return this->call_«sanitizeName(client.name)»_sync(req, timeout);
             },
             [this](const auto & req, auto cb) {
                 auto req_ptr = std::make_shared<«client.service.specName»::Request>(req);
@@ -167,9 +172,56 @@ protected:
         }
     }
     «ENDFOR»
+    «IF !node.parameter.empty»
+    rcl_interfaces::msg::SetParametersResult on_parameters_changed(
+        const std::vector<rclcpp::Parameter> & parameters) override
+    {
+        rcl_interfaces::msg::SetParametersResult result = 
+            «pkg.name.toLowerCase»::«artCamel»Wrapper::on_parameters_changed(parameters);
+        for (const auto & param : parameters) {
+            «pkg.name.toLowerCase»::«artCamel»Algorithm::ParameterValue val = to_parameter_value(param);
+            «pkg.name.toLowerCase»::ValidationResult validation = algorithm_->validate_parameter(param.get_name(), val);
+            if (!validation.successful) {
+                result.successful = false;
+                result.reason = validation.reason.empty() ?
+                    ("Validation failed for parameter '" + param.get_name() + "'") :
+                    validation.reason;
+                return result;
+            }
+        }
+        return result;        
+    }
+    «ENDIF»
 
 private:
     std::shared_ptr<«pkg.name.toLowerCase»::«artCamel»Algorithm> algorithm_;
+    «pkg.name.toLowerCase»::«artCamel»Algorithm::ParameterValue
+        to_parameter_value(const rclcpp::Parameter & param)
+    {
+        switch (param.get_type()) {
+            case rclcpp::ParameterType::PARAMETER_BOOL:
+                return param.as_bool();
+                case rclcpp::ParameterType::PARAMETER_INTEGER:
+                return param.as_int();
+            case rclcpp::ParameterType::PARAMETER_DOUBLE:
+                return param.as_double();
+            case rclcpp::ParameterType::PARAMETER_STRING:
+                return param.as_string();
+            case rclcpp::ParameterType::PARAMETER_BYTE_ARRAY:
+                return param.as_byte_array();
+            case rclcpp::ParameterType::PARAMETER_BOOL_ARRAY:
+                return param.as_bool_array();
+            case rclcpp::ParameterType::PARAMETER_INTEGER_ARRAY:
+                return param.as_integer_array();
+            case rclcpp::ParameterType::PARAMETER_DOUBLE_ARRAY:
+                return param.as_double_array();
+            case rclcpp::ParameterType::PARAMETER_STRING_ARRAY:
+                return param.as_string_array();
+            case rclcpp::ParameterType::PARAMETER_NOT_SET:
+            default:
+                return std::monostate{}; // or default fallback
+        }        
+    }
 };
 
 int main(int argc, char * argv[])

@@ -152,10 +152,11 @@ protected:
     virtual void execute_«sanitizeName(act.name)»(
         const std::shared_ptr<GoalHandle«act.action.specName»> goal_handle) {
         	(void)goal_handle;
-        	RCLCPP_ERROR(this->get_logger(), "The abstract method execute_«sanitizeName(act.name)» needs to be overriden!");        	
+        	RCLCPP_ERROR(this->get_logger(), "The abstract method execute_«sanitizeName(act.name)» needs to be overriden!")
         };
 
     «ENDFOR»
+    «IF !node.parameter.empty»
     /**
      * @brief Dynamic parameter validation callback hook
      */
@@ -167,7 +168,7 @@ protected:
         (void)parameters;
         return result;
     }
-
+    «ENDIF»
     // ==========================================
     // OUTGOING INTERFACE METHODS (Invoked by Core Logic)
     // ==========================================
@@ -288,9 +289,10 @@ private:
     std::optional<«cppType»> param_«sanitizeName(param.name)»_;
     «ENDIF»
     «ENDFOR»
-
+    «IF !node.parameter.empty»
     rcl_interfaces::msg::SetParametersResult internal_on_set_parameters(
         const std::vector<rclcpp::Parameter> & parameters);
+    «ENDIF»
 };
 
 } // namespace «pkg.name.toLowerCase»
@@ -335,10 +337,10 @@ namespace «pkg.name.toLowerCase» {
         «ENDIF»
     }
     «ENDFOR»
-
+    «IF !node.parameter.empty»
     param_cb_handle_ = this->add_on_set_parameters_callback(
         std::bind(&«artCamel»Wrapper::internal_on_set_parameters, this, std::placeholders::_1));
-
+    «ENDIF»
     // ----------------------------------------------------
     // 2. Publishers Initialization
     // ----------------------------------------------------
@@ -373,7 +375,7 @@ namespace «pkg.name.toLowerCase» {
                std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Response> res) {
             this->handle_«sanitizeName(srv.name)»(req, res);
         },
-        rmw_qos_profile_services_default,
+        rclcpp::ServicesQoS(),
         client_cb_group_);
     «ENDFOR»
 
@@ -382,7 +384,7 @@ namespace «pkg.name.toLowerCase» {
     // ----------------------------------------------------
     «FOR client : node.serviceclient»
     client_«sanitizeName(client.name)»_ = this->create_client<«client.service.specPackage»::srv::«client.service.specName»>(
-        "«client.name»", rmw_qos_profile_services_default, client_cb_group_);
+        "«client.name»", rclcpp::ServicesQoS(), client_cb_group_);
     «ENDFOR»
 
     // ----------------------------------------------------
@@ -427,7 +429,7 @@ bool «artCamel»Wrapper::is_«sanitizeName(client.name)»_ready(std::chrono::na
 
 rclcpp::Client<«artCamel»Wrapper::«client.service.specName»>::SharedFuture 
 «artCamel»Wrapper::call_«sanitizeName(client.name)»_async(std::shared_ptr<«client.service.specName»::Request> request) {
-    return client_«sanitizeName(client.name)»_->async_send_request(request);
+    return client_«sanitizeName(client.name)»_->async_send_request(request).future.share();
 }
 
 void «artCamel»Wrapper::call_«sanitizeName(client.name)»_async(
@@ -442,7 +444,7 @@ std::optional<«artCamel»Wrapper::«client.service.specName»::Response>
     const «client.service.specName»::Request & request,
     std::chrono::nanoseconds timeout)
 {
-    if (!is_«sanitizeName(client.name)»_ready(std::chrono::nanoseconds(500))) {
+    if (!is_«sanitizeName(client.name)»_ready(std::chrono::microseconds(500))) {
         RCLCPP_ERROR(this->get_logger(), "Service '«client.name»' is not available for sync call.");
         return std::nullopt;
     }
@@ -492,6 +494,7 @@ void «artCamel»Wrapper::publish_«sanitizeName(act.name)»_feedback(
 «ENDFOR»
 
 // Dynamic parameter update handling
+«IF !node.parameter.empty»
 rcl_interfaces::msg::SetParametersResult «artCamel»Wrapper::internal_on_set_parameters(
     const std::vector<rclcpp::Parameter> & parameters)
 {
@@ -512,6 +515,7 @@ rcl_interfaces::msg::SetParametersResult «artCamel»Wrapper::internal_on_set_pa
     res.successful = true;
     return res;
 }
+«ENDIF»
 
 } // namespace «pkg.name.toLowerCase»
 '''
@@ -552,6 +556,20 @@ rcl_interfaces::msg::SetParametersResult «artCamel»Wrapper::internal_on_set_pa
 «ENDFOR»
 
 namespace «pkg.name.toLowerCase» {
+
+/**
+ * @brief Pure C++ validation result (no rcl_interfaces dependencies)
+ */
+struct ValidationResult {
+    bool successful{true};
+    std::string reason{""};
+    static ValidationResult ok() {
+        return {true, ""};
+    }
+    static ValidationResult reject(const std::string & reason) {
+        return {false, reason};
+    }
+};
 
 /**
  * @brief Pure Core Logic class for '«node.name»' (Artifact: '«node.artifactName»').
@@ -659,7 +677,7 @@ public:
     // 5. OUTBOUND SERVICE CLIENT CALLERS
     // ==========================================
     «FOR client : node.serviceclient»
-    using «client.name»SyncCaller = std::function<std::optional<«client.service.specPackage»::srv::«client.service.specName»::Response>(const «client.service.specPackage»::srv::«client.service.specName»::Request &)>;
+    using «client.name»SyncCaller = std::function<std::optional<«client.service.specPackage»::srv::«client.service.specName»::Response>(const «client.service.specPackage»::srv::«client.service.specName»::Request &, const std::chrono::nanoseconds &)>;
     using «client.name»AsyncCaller = std::function<void(const «client.service.specPackage»::srv::«client.service.specName»::Request &, std::function<void(const «client.service.specPackage»::srv::«client.service.specName»::Response &)>)>;
 
     void set_«sanitizeName(client.name)»_client(«client.name»SyncCaller sync_fn, «client.name»AsyncCaller async_fn) {
@@ -668,9 +686,10 @@ public:
     }
 
     std::optional<«client.service.specPackage»::srv::«client.service.specName»::Response> call_«sanitizeName(client.name)»_sync(
-        const «client.service.specPackage»::srv::«client.service.specName»::Request & req)
+        const «client.service.specPackage»::srv::«client.service.specName»::Request & req,
+        const std::chrono::milliseconds & timeout) // Can be changed to any other duration form.
     {
-        if (call_«sanitizeName(client.name)»_sync_fn_) return call_«sanitizeName(client.name)»_sync_fn_(req);
+        if (call_«sanitizeName(client.name)»_sync_fn_) return call_«sanitizeName(client.name)»_sync_fn_(req, timeout);
         return std::nullopt;
     }
 
@@ -802,9 +821,74 @@ public:
         logger_(LogLevel::ERROR, message);
     }
     
+    // ==========================================
+    // 9. PARAMETER HOOKS
+    // ==========================================
+    
+    using ParameterValue = std::variant<
+    std::monostate,
+    bool,
+    int64_t,
+    double,
+    std::string,
+    std::vector<uint8_t>,
+    std::vector<bool>,
+    std::vector<int64_t>,
+    std::vector<double>,
+    std::vector<std::string>
+    >;
+    
+    /**
+     * @brief Parameter setter used by the runner
+     * @param name Name of the parameter
+     * @param value Value of the paramter
+     */
+    void set_parameter(const std::string & name, const ParameterValue & value) {
+        parameters_[name] = value;
+    }
+
+    /**
+     * @brief  Parameter getter based on parameter name
+     * @param name Name of the parameter
+     * @param default_val Default value to return in paramter nonexistant
+     * @return Parameter value or default value
+     */
+    template<typename T>
+    T get_param(const std::string & name, const T & default_val) const {
+        auto it = parameters_.find(name);
+        if (it != parameters_.cend()) {
+            if (auto val_ptr = std::get_if<T>(&it->second))
+            return *val_ptr;
+        }
+        return default_val;
+    }
+
+    /**
+     * @brief Validation Hook to inspect proposed parameter values and reject invalid ones.
+     * @param name Name of parameter being validated
+     * @param proposed_value The new value requested
+     * @return ValidationResult::ok() to accept, or ValidationResult::reject("reason") to reject
+     */
+    virtual ValidationResult validate_parameter(const std::string & name, const ParameterValue & proposed_value) {
+        (void)name;
+        (void)proposed_value;
+        return ValidationResult::ok();
+    }
+    
+    /**
+    * @brief Method to carry out reactive changes based on parameter changes
+    * @param name Name of changed parameter
+    * @param value Value of the changed parameter
+    */
+    virtual void on_parameter_changed(const std::string & name, const ParameterValue & value) {
+        (void)name;
+        (void)value;
+    }
+        
 private:
     TimerFactory timer_factory_;
     LogFunction logger_;
+    std::unordered_map<std::string, ParameterValue> parameters_;
     «FOR pub : node.publisher»
     «pub.name»PubFn publish_«sanitizeName(pub.name)»_fn_;
     «ENDFOR»
