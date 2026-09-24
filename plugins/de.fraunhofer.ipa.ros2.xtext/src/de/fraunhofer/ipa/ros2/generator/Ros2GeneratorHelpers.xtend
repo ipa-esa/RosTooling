@@ -31,6 +31,15 @@ import java.util.Set
 import java.util.HashSet
 import java.util.List
 import java.util.ArrayList
+import ros.ParameterBooleanType
+import ros.ParameterIntegerType
+import ros.ParameterStringType
+import ros.ParameterDoubleType
+import ros.ParameterArrayType
+import ros.ParameterListType
+import ros.ParameterDateType
+import ros.ParameterBase64Type
+import ros.ParameterAnyType
 
 class Ros2GeneratorHelpers {
 
@@ -235,7 +244,7 @@ class Ros2GeneratorHelpers {
     }
 
     def String getParamDefaultValueCpp(Parameter param) {
-        val valObj = param.value
+        val valObj = getEffectiveParameterValue(param)
         if (valObj === null) return null
         val pType = param.type
         if (valObj instanceof ParameterStringImpl) {
@@ -285,7 +294,7 @@ class Ros2GeneratorHelpers {
     }
 
     def String getParamDefaultValuePython(Parameter param) {
-        val valObj = param.value
+        val valObj = getEffectiveParameterValue(param)
         if (valObj === null) return null
         val pType = param.type
         if (valObj instanceof ParameterStringImpl) {
@@ -412,5 +421,25 @@ class Ros2GeneratorHelpers {
 
     def boolean hasServiceClients(Node node) {
         return node.serviceclient !== null && !node.serviceclient.empty
+    }
+    
+    def ParameterValue getEffectiveParameterValue(Parameter param) {
+        if (param.value !== null) {
+            return param.value
+        }
+        
+        val t = param.type
+        switch(t) {
+          ParameterBooleanType: t.getDefault()
+          ParameterIntegerType: t.getDefault()
+          ParameterStringType: t.getDefault()
+          ParameterDoubleType: t.getDefault()
+          ParameterArrayType: t.getDefault()
+          ParameterListType: t.getDefault()
+          ParameterDateType: t.getDefault()
+          ParameterBase64Type: t.getDefault()
+          ParameterAnyType: t.getDefault()
+          default: null
+        }
     }
 }
