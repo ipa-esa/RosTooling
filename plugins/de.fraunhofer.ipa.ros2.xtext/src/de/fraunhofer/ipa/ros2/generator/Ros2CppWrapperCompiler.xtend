@@ -152,7 +152,7 @@ protected:
     virtual void execute_«sanitizeName(act.name)»(
         const std::shared_ptr<GoalHandle«act.action.specName»> goal_handle) {
         	(void)goal_handle;
-        	RCLCPP_ERROR(this->get_logger(), "The abstract method execute_«sanitizeName(act.name)» needs to be overriden!")
+        	RCLCPP_ERROR(this->get_logger(), "The abstract method execute_«sanitizeName(act.name)» needs to be overriden!");
         };
 
     «ENDFOR»
