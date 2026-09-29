@@ -93,14 +93,17 @@ public:
         // Inject action client callers
         «FOR actClient : node.actionclient»
         algorithm_->set_«sanitizeName(actClient.name)»_client(
-            [this](const auto & goal, auto fb_cb, auto res_cb) {
+            [this](const auto & goal, auto resp_cb, auto fb_cb, auto res_cb) {
+                auto resp_adapter = [resp_cb](auto goal_handle) {
+                    if (resp_cb) resp_cb(goal_handle != nullptr);
+                };
                 auto fb_adapter = [fb_cb](auto, auto fb_ptr) {
                     if (fb_cb && fb_ptr) fb_cb(*fb_ptr);
                 };
                 auto res_adapter = [res_cb](const auto & wrapped_result) {
                     if (res_cb && wrapped_result.result) res_cb(*wrapped_result.result);
                 };
-                this->send_«sanitizeName(actClient.name)»_goal_async(goal, fb_adapter, res_adapter);
+                this->send_«sanitizeName(actClient.name)»_goal_async(goal, resp_adapter, fb_adapter, res_adapter);
             },
             [this]() {
                 // Cancel active action client goals

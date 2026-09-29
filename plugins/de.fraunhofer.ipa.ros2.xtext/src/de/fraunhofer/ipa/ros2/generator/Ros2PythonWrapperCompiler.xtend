@@ -491,10 +491,10 @@ class «node.name»Logic:
         self._send_«sanitizeName(actClient.name)»_goal_fn = goal_fn
         self._cancel_«sanitizeName(actClient.name)»_goal_fn = cancel_fn
 
-    def send_«sanitizeName(actClient.name)»_goal_async(self, goal, feedback_callback: Optional[Callable] = None, result_callback: Optional[Callable] = None):
+    def send_«sanitizeName(actClient.name)»_goal_async(self, goal, response_callback: Optional[Callable[[bool], None]] = None, feedback_callback: Optional[Callable] = None, result_callback: Optional[Callable] = None):
         """Asynchronously send goal to action server '«actClient.name»'."""
         if self._send_«sanitizeName(actClient.name)»_goal_fn:
-            return self._send_«sanitizeName(actClient.name)»_goal_fn(goal, feedback_callback, result_callback)
+            return self._send_«sanitizeName(actClient.name)»_goal_fn(goal, response_callback, feedback_callback, result_callback)
         return None
 
     def cancel_«sanitizeName(actClient.name)»_goal_async(self, goal_handle=None):
@@ -665,18 +665,24 @@ class «node.name»Node(«node.name»Wrapper):
         «ENDFOR»
 
     «FOR actClient : node.actionclient»
-    def _wrap_send_«sanitizeName(actClient.name)»_goal_async(self, goal, feedback_callback=None, result_callback=None):
+    def _wrap_send_«sanitizeName(actClient.name)»_goal_async(self, goal, response_callback=None, feedback_callback=None, result_callback=None):
         future = self.send_«sanitizeName(actClient.name)»_goal_async(goal, feedback_callback=feedback_callback)
         if future is None:
+            if response_callback:
+                response_callback(False)
             return None
-        if result_callback:
+        if response_callback or result_callback:
             def _goal_response_cb(fut):
                 goal_handle = fut.result()
-                if not goal_handle.accepted:
+                accepted = bool(goal_handle and goal_handle.accepted)
+                if response_callback:
+                    response_callback(accepted)
+                if not accepted:
                     self.get_logger().warn("Goal rejected by action server '«actClient.name»'")
                     return
-                res_fut = goal_handle.get_result_async()
-                res_fut.add_done_callback(lambda rf: result_callback(rf.result().result))
+                if result_callback and goal_handle:
+                    res_fut = goal_handle.get_result_async()
+                    res_fut.add_done_callback(lambda rf: result_callback(rf.result().result))
             future.add_done_callback(_goal_response_cb)
         return future
 

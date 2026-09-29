@@ -218,6 +218,7 @@ protected:
      */
     std::shared_future<ClientGoalHandle«actClient.action.specName»::SharedPtr> send_«sanitizeName(actClient.name)»_goal_async(
         const «actClient.action.specName»Client::Goal & goal,
+        std::function<void(ClientGoalHandle«actClient.action.specName»::SharedPtr)> goal_response_cb = nullptr,
         std::function<void(ClientGoalHandle«actClient.action.specName»::SharedPtr, const std::shared_ptr<const «actClient.action.specName»Client::Feedback>)> feedback_cb = nullptr,
         std::function<void(const ClientGoalHandle«actClient.action.specName»::WrappedResult &)> result_cb = nullptr);
 
@@ -463,10 +464,12 @@ std::optional<«artCamel»Wrapper::«client.service.specName»::Response>
 std::shared_future<«artCamel»Wrapper::ClientGoalHandle«actClient.action.specName»::SharedPtr> 
 «artCamel»Wrapper::send_«sanitizeName(actClient.name)»_goal_async(
     const «actClient.action.specName»Client::Goal & goal,
+    std::function<void(ClientGoalHandle«actClient.action.specName»::SharedPtr)> goal_response_cb,
     std::function<void(ClientGoalHandle«actClient.action.specName»::SharedPtr, const std::shared_ptr<const «actClient.action.specName»Client::Feedback>)> feedback_cb,
     std::function<void(const ClientGoalHandle«actClient.action.specName»::WrappedResult &)> result_cb)
 {
     auto send_goal_options = rclcpp_action::Client<«actClient.action.specName»Client>::SendGoalOptions();
+    if (goal_response_cb) send_goal_options.goal_response_callback = goal_response_cb;
     if (feedback_cb) send_goal_options.feedback_callback = feedback_cb;
     if (result_cb) send_goal_options.result_callback = result_cb;
     return action_client_«sanitizeName(actClient.name)»_->async_send_goal(goal, send_goal_options);
@@ -707,6 +710,7 @@ public:
     «FOR actClient : node.actionclient»
     using «actClient.name»GoalCaller = std::function<void(
         const «actClient.action.specPackage»::action::«actClient.action.specName»::Goal &,
+        std::function<void(bool)>,
         std::function<void(const «actClient.action.specPackage»::action::«actClient.action.specName»::Feedback &)>,
         std::function<void(const «actClient.action.specPackage»::action::«actClient.action.specName»::Result &)>)>;
     using «actClient.name»CancelCaller = std::function<void()>;
@@ -718,10 +722,11 @@ public:
 
     void send_«sanitizeName(actClient.name)»_goal_async(
         const «actClient.action.specPackage»::action::«actClient.action.specName»::Goal & goal,
+        std::function<void(bool)> response_cb = nullptr,
         std::function<void(const «actClient.action.specPackage»::action::«actClient.action.specName»::Feedback &)> feedback_cb = nullptr,
         std::function<void(const «actClient.action.specPackage»::action::«actClient.action.specName»::Result &)> result_cb = nullptr)
     {
-        if (send_«sanitizeName(actClient.name)»_goal_fn_) send_«sanitizeName(actClient.name)»_goal_fn_(goal, feedback_cb, result_cb);
+        if (send_«sanitizeName(actClient.name)»_goal_fn_) send_«sanitizeName(actClient.name)»_goal_fn_(goal, response_cb, feedback_cb, result_cb);
     }
 
     void cancel_«sanitizeName(actClient.name)»_goal_async() {
