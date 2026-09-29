@@ -101,7 +101,29 @@ public:
                     if (fb_cb && fb_ptr) fb_cb(*fb_ptr);
                 };
                 auto res_adapter = [res_cb](const auto & wrapped_result) {
-                    if (res_cb && wrapped_result.result) res_cb(*wrapped_result.result);
+                    if (!res_cb) return;
+                    «pkg.name.toLowerCase»::GoalStatus status = «pkg.name.toLowerCase»::GoalStatus::UNKNOWN;
+                    switch (wrapped_result.code) {
+                        case rclcpp_action::ResultCode::SUCCEEDED:
+                            status = «pkg.name.toLowerCase»::GoalStatus::SUCCEEDED;
+                            break;
+                        case rclcpp_action::ResultCode::ABORTED:
+                            status = «pkg.name.toLowerCase»::GoalStatus::ABORTED;
+                            break;
+                        case rclcpp_action::ResultCode::CANCELED:
+                            status = «pkg.name.toLowerCase»::GoalStatus::CANCELED;
+                            break;
+                        default:
+                            status = «pkg.name.toLowerCase»::GoalStatus::UNKNOWN;
+                            break;
+                    }
+                    using ResultT = std::decay_t<decltype(*wrapped_result.result)>;
+                    if (wrapped_result.result) {
+                        res_cb(status, *wrapped_result.result);
+                    } else {
+                        ResultT empty_result{};
+                        res_cb(status, empty_result);
+                    }
                 };
                 this->send_«sanitizeName(actClient.name)»_goal_async(goal, resp_adapter, fb_adapter, res_adapter);
             },

@@ -575,6 +575,16 @@ struct ValidationResult {
 };
 
 /**
+ * @brief Pure C++ action goal terminal status (no rclcpp_action or action_msgs dependencies)
+ */
+enum class GoalStatus {
+    UNKNOWN = 0,
+    SUCCEEDED = 1,
+    CANCELED = 2,
+    ABORTED = 3
+};
+
+/**
  * @brief Pure Core Logic class for '«node.name»' (Artifact: '«node.artifactName»').
  * Contains ZERO ROS 2 runtime node / executor dependencies!
  * Implement your business logic, algorithms, and signal handling here.
@@ -712,7 +722,7 @@ public:
         const «actClient.action.specPackage»::action::«actClient.action.specName»::Goal &,
         std::function<void(bool)>,
         std::function<void(const «actClient.action.specPackage»::action::«actClient.action.specName»::Feedback &)>,
-        std::function<void(const «actClient.action.specPackage»::action::«actClient.action.specName»::Result &)>)>;
+        std::function<void(GoalStatus, const «actClient.action.specPackage»::action::«actClient.action.specName»::Result &)>)>;
     using «actClient.name»CancelCaller = std::function<void()>;
 
     void set_«sanitizeName(actClient.name)»_client(«actClient.name»GoalCaller goal_fn, «actClient.name»CancelCaller cancel_fn) {
@@ -724,7 +734,7 @@ public:
         const «actClient.action.specPackage»::action::«actClient.action.specName»::Goal & goal,
         std::function<void(bool)> response_cb = nullptr,
         std::function<void(const «actClient.action.specPackage»::action::«actClient.action.specName»::Feedback &)> feedback_cb = nullptr,
-        std::function<void(const «actClient.action.specPackage»::action::«actClient.action.specName»::Result &)> result_cb = nullptr)
+        std::function<void(GoalStatus, const «actClient.action.specPackage»::action::«actClient.action.specName»::Result &)> result_cb = nullptr)
     {
         if (send_«sanitizeName(actClient.name)»_goal_fn_) send_«sanitizeName(actClient.name)»_goal_fn_(goal, response_cb, feedback_cb, result_cb);
     }

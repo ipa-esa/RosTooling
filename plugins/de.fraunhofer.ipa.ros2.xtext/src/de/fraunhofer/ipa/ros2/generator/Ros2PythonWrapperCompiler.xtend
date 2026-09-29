@@ -378,6 +378,13 @@ class ValidationResult:
     def reject(cls, reason: str):
         return cls(False, reason)
 
+class GoalStatus(Enum):
+    """Action goal terminal execution status."""
+    UNKNOWN = 0
+    SUCCEEDED = 1
+    CANCELED = 2
+    ABORTED = 3
+
 class «node.name»Logic:
     """
     Pure business logic for «node.name».
@@ -491,7 +498,7 @@ class «node.name»Logic:
         self._send_«sanitizeName(actClient.name)»_goal_fn = goal_fn
         self._cancel_«sanitizeName(actClient.name)»_goal_fn = cancel_fn
 
-    def send_«sanitizeName(actClient.name)»_goal_async(self, goal, response_callback: Optional[Callable[[bool], None]] = None, feedback_callback: Optional[Callable] = None, result_callback: Optional[Callable] = None):
+    def send_«sanitizeName(actClient.name)»_goal_async(self, goal, response_callback: Optional[Callable[[bool], None]] = None, feedback_callback: Optional[Callable] = None, result_callback: Optional[Callable[[GoalStatus, Any], None]] = None):
         """Asynchronously send goal to action server '«actClient.name»'."""
         if self._send_«sanitizeName(actClient.name)»_goal_fn:
             return self._send_«sanitizeName(actClient.name)»_goal_fn(goal, response_callback, feedback_callback, result_callback)
@@ -620,7 +627,7 @@ from rcl_interfaces.msg import SetParametersResult
 from typing import List
 «ENDIF»
 from «pkg.name.toLowerCase».«toSnakeCase(node.name)»_wrapper import «node.name»Wrapper
-from «pkg.name.toLowerCase».«toSnakeCase(node.name)»_logic import «node.name»Logic
+from «pkg.name.toLowerCase».«toSnakeCase(node.name)»_logic import «node.name»Logic, GoalStatus
 
 
 class «node.name»Node(«node.name»Wrapper):
@@ -682,7 +689,15 @@ class «node.name»Node(«node.name»Wrapper):
                     return
                 if result_callback and goal_handle:
                     res_fut = goal_handle.get_result_async()
-                    res_fut.add_done_callback(lambda rf: result_callback(rf.result().result))
+                    def _on_result(rf):
+                        status_map = {
+                            4: GoalStatus.SUCCEEDED,
+                            5: GoalStatus.CANCELED,
+                            6: GoalStatus.ABORTED,
+                        }
+                        status = status_map.get(rf.result().status, GoalStatus.UNKNOWN)
+                        result_callback(status, rf.result().result)
+                    res_fut.add_done_callback(_on_result)
             future.add_done_callback(_goal_response_cb)
         return future
 
