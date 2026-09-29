@@ -17,12 +17,34 @@ class Ros2CppRunnerCompiler {
 #include <memory>
 #include <thread>
 #include "rclcpp/rclcpp.hpp"
+#include "rclcpp/rate.hpp"
 #include "rclcpp_components/register_node_macro.hpp"
 #include "«pkg.name.toLowerCase»/«artCamel»Wrapper.hpp"
 #include "«pkg.name.toLowerCase»/«artCamel»Algorithm.hpp"
 
 // Composable Component Registration for zero-copy ROS 2 container loading
 RCLCPP_COMPONENTS_REGISTER_NODE(«pkg.name.toLowerCase»::«artCamel»Wrapper)
+
+/**
+ * @brief Adapter wrapping rclcpp::Rate with the node's ROS clock
+ */
+class Ros2RateAdapter : public «pkg.name.toLowerCase»::Rate {
+public:
+    Ros2RateAdapter(double hz, rclcpp::Clock::SharedPtr clock)
+    : rate_(hz, clock)
+    {}
+
+    bool sleep() override {
+        return rate_.sleep();
+    }
+
+    void reset() override {
+        rate_.reset();
+    }
+
+private:
+    rclcpp::Rate rate_;
+};
 
 /**
  * @brief Default Derived Implementation coupling the pure algorithm with the ROS 2 wrapper
@@ -35,6 +57,11 @@ public:
         // Inject simulation-synchronized timer factory
         algorithm_->set_timer_factory([this](auto period, auto callback) -> std::shared_ptr<void> {
             return this->create_wall_timer(period, callback);
+        });
+
+        // Inject simulation-synchronized rate factory using the Node's clock
+        algorithm_->set_rate_factory([this](double hz) -> std::shared_ptr<«pkg.name.toLowerCase»::Rate> {
+            return std::make_shared<Ros2RateAdapter>(hz, this->get_clock());
         });
         
         // Inject the ROS2 logger

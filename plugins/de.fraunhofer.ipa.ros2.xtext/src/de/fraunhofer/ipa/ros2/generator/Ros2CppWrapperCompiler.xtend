@@ -537,6 +537,7 @@ rcl_interfaces::msg::SetParametersResult «artCamel»Wrapper::internal_on_set_pa
 #include <optional>
 #include <functional>
 #include <chrono>
+#include <thread>
 
 // Interface message/service/action headers for pure data structs
 «FOR pub : node.publisher»
@@ -582,6 +583,49 @@ enum class GoalStatus {
     SUCCEEDED = 1,
     CANCELED = 2,
     ABORTED = 3
+};
+
+/**
+ * @brief Abstract Rate interface with zero ROS 2 dependencies
+ */
+class Rate {
+public:
+    virtual ~Rate() = default;
+    virtual bool sleep() = 0;
+    virtual void reset() = 0;
+};
+
+using RatePtr = std::shared_ptr<Rate>;
+using RateFactory = std::function<RatePtr(double hz)>;
+
+/**
+ * @brief Default fallback rate using standard C++ steady_clock (used in unit tests / standalone)
+ */
+class DefaultSteadyRate : public Rate {
+public:
+    explicit DefaultSteadyRate(double hz)
+    : period_(std::chrono::duration_cast<std::chrono::nanoseconds>(
+          std::chrono::duration<double>(1.0 / hz))),
+      last_time_(std::chrono::steady_clock::now())
+    {}
+
+    bool sleep() override {
+        auto now = std::chrono::steady_clock::now();
+        auto next = last_time_ + period_;
+        if (now < next) {
+            std::this_thread::sleep_for(next - now);
+        }
+        last_time_ = std::chrono::steady_clock::now();
+        return true;
+    }
+
+    void reset() override {
+        last_time_ = std::chrono::steady_clock::now();
+    }
+
+private:
+    std::chrono::nanoseconds period_;
+    std::chrono::steady_clock::time_point last_time_;
 };
 
 /**
@@ -788,8 +832,32 @@ public:
         }
         return nullptr;
     }
+
     // ==========================================
-    // 8. LOGGER FACTORY INTERFACE
+    // 8. RATE FACTORY INTERFACE
+    // ==========================================
+    /**
+     * @brief Injects the platform/ROS rate creation factory.
+     */
+    void set_rate_factory(RateFactory factory) {
+        rate_factory_ = factory;
+    }
+
+    /**
+     * @brief Creates a rate object. In ROS 2, respects simulation clock (/clock).
+     * In unit tests / standalone, falls back to steady wall clock.
+     * @param frequency_hz Desired execution frequency in Hertz
+     * @return RatePtr RAII handle providing sleep() and reset()
+     */
+    RatePtr create_rate(double frequency_hz) {
+        if (rate_factory_) {
+            return rate_factory_(frequency_hz);
+        }
+        return std::make_shared<DefaultSteadyRate>(frequency_hz);
+    }
+
+    // ==========================================
+    // 9. LOGGER FACTORY INTERFACE
     // ==========================================
     enum class LogLevel {
         DEBUG,
@@ -902,6 +970,7 @@ public:
         
 private:
     TimerFactory timer_factory_;
+    RateFactory rate_factory_;
     LogFunction logger_;
     std::unordered_map<std::string, ParameterValue> parameters_;
     «FOR pub : node.publisher»

@@ -340,6 +340,7 @@ Edit this file to implement your core algorithms, data processing, and business 
 This file is created only once and will NEVER be overwritten by the generator.
 """
 
+import time
 from typing import Optional, Callable, Any
 from enum import Enum
 # ROS 2 Interfaces imports
@@ -385,6 +386,23 @@ class GoalStatus(Enum):
     CANCELED = 2
     ABORTED = 3
 
+class DefaultRate:
+    """Default rate limiter using time.monotonic and time.sleep (used in unit tests / standalone)."""
+    def __init__(self, frequency: float):
+        self.period = 1.0 / frequency
+        self.last_time = time.monotonic()
+
+    def sleep(self) -> bool:
+        elapsed = time.monotonic() - self.last_time
+        remaining = self.period - elapsed
+        if remaining > 0:
+            time.sleep(remaining)
+        self.last_time = time.monotonic()
+        return True
+
+    def reset(self) -> None:
+        self.last_time = time.monotonic()
+
 class «node.name»Logic:
     """
     Pure business logic for «node.name».
@@ -392,6 +410,7 @@ class «node.name»Logic:
 
     def __init__(self):
         self._timer_factory: Optional[Callable[[float, Callable[[], None]], Any]] = None
+        self._rate_factory: Optional[Callable[[float], Any]] = None
         self._logger: Optional[Callable[[self.LogLevel, str], None]] = None        
         self.parameters_ = {}
         «FOR pub : node.publisher»
@@ -529,9 +548,28 @@ class «node.name»Logic:
         if self._timer_factory:
             return self._timer_factory(period_sec, callback)
         return None
-        
+
     # ==========================================
-    # 8. LOGGER FACTORY INTERFACE
+    # 8. RATE FACTORY INTERFACE
+    # ==========================================
+    def set_rate_factory(self, factory: Callable[[float], Any]) -> None:
+        """Inject the platform/ROS rate creation factory."""
+        self._rate_factory = factory
+
+    def create_rate(self, frequency_hz: float) -> Any:
+        """
+        Spawn a rate limiter respecting simulation clock.
+        In unit tests, falls back to time.sleep.
+
+        :param frequency_hz: Rate frequency in Hz
+        :return: Rate object with a sleep() method
+        """
+        if self._rate_factory:
+            return self._rate_factory(frequency_hz)
+        return DefaultRate(frequency_hz)
+
+    # ==========================================
+    # 9. LOGGER FACTORY INTERFACE
     # ==========================================
     class LogLevel(Enum):
         DEBUG = 0
@@ -641,6 +679,9 @@ class «node.name»Node(«node.name»Wrapper):
 
         # Inject simulation-synchronized timer factory
         self.logic.set_timer_factory(lambda period_sec, callback: self.create_timer(period_sec, callback))
+
+        # Inject simulation-synchronized rate factory using Node's clock
+        self.logic.set_rate_factory(lambda hz: self.create_rate(hz))
         
         # Inject ROS2 rclpy logger
         self.logic.set_logger(lambda log_level, msg: self.log(log_level, msg))
