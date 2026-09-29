@@ -538,6 +538,7 @@ rcl_interfaces::msg::SetParametersResult «artCamel»Wrapper::internal_on_set_pa
 #include <functional>
 #include <chrono>
 #include <thread>
+#include <stdexcept>
 
 // Interface message/service/action headers for pure data structs
 «FOR pub : node.publisher»
@@ -967,11 +968,90 @@ public:
         (void)name;
         (void)value;
     }
+
+    // ==========================================
+    // 10. RUNTIME & PLATFORM SERVICES (ok, shutdown, now)
+    // ==========================================
+    using OkHandler = std::function<bool()>;
+    using ShutdownHandler = std::function<void(const std::string &)>;
+    using ClockHandler = std::function<std::chrono::nanoseconds()>;
+
+    /**
+     * @brief Injects the runtime liveness check handler.
+     */
+    void set_ok_handler(OkHandler handler) {
+        ok_handler_ = std::move(handler);
+    }
+
+    /**
+     * @brief Check if the runtime platform is still healthy/running.
+     * @throws std::logic_error if no mock or runner has injected the predicate.
+     */
+    bool ok() const {
+        if (!ok_handler_) {
+            throw std::logic_error(
+                "Liveness predicate not injected. In unit tests, configure a mock via set_ok_handler()."
+            );
+        }
+        return ok_handler_();
+    }
+
+    /**
+     * @brief Injects the runtime shutdown handler.
+     */
+    void set_shutdown_handler(ShutdownHandler handler) {
+        shutdown_handler_ = std::move(handler);
+    }
+
+    /**
+     * @brief Request graceful shutdown of the node/system.
+     * @param reason Optional human-readable reason for shutdown.
+     * @throws std::logic_error if no mock or runner has injected the handler.
+     */
+    void shutdown(const std::string & reason = "") {
+        if (!shutdown_handler_) {
+            throw std::logic_error(
+                "Shutdown handler not injected. In unit tests, configure a mock via set_shutdown_handler()."
+            );
+        }
+        shutdown_handler_(reason);
+    }
+
+    /**
+     * @brief Injects the simulation-aware clock query handler.
+     */
+    void set_clock_handler(ClockHandler handler) {
+        clock_handler_ = std::move(handler);
+    }
+
+    /**
+     * @brief Current time respecting simulation clock (/clock).
+     * @return Nanoseconds since epoch.
+     * @throws std::logic_error if no mock or runner has injected the handler.
+     */
+    std::chrono::nanoseconds now() const {
+        if (!clock_handler_) {
+            throw std::logic_error(
+                "Clock handler not injected. In unit tests, configure a mock via set_clock_handler()."
+            );
+        }
+        return clock_handler_();
+    }
+
+    /**
+     * @brief Current time in fractional seconds respecting simulation clock.
+     */
+    double now_seconds() const {
+        return std::chrono::duration<double>(now()).count();
+    }
         
 private:
     TimerFactory timer_factory_;
     RateFactory rate_factory_;
     LogFunction logger_;
+    OkHandler ok_handler_;
+    ShutdownHandler shutdown_handler_;
+    ClockHandler clock_handler_;
     std::unordered_map<std::string, ParameterValue> parameters_;
     «FOR pub : node.publisher»
     «pub.name»PubFn publish_«sanitizeName(pub.name)»_fn_;

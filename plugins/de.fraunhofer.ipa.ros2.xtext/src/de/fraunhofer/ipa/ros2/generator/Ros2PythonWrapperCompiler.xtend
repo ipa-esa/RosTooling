@@ -411,7 +411,10 @@ class «node.name»Logic:
     def __init__(self):
         self._timer_factory: Optional[Callable[[float, Callable[[], None]], Any]] = None
         self._rate_factory: Optional[Callable[[float], Any]] = None
-        self._logger: Optional[Callable[[self.LogLevel, str], None]] = None        
+        self._logger: Optional[Callable[[self.LogLevel, str], None]] = None
+        self._ok_handler: Optional[Callable[[], bool]] = None
+        self._shutdown_handler: Optional[Callable[[str], None]] = None
+        self._clock_handler: Optional[Callable[[], float]] = None
         self.parameters_ = {}
         «FOR pub : node.publisher»
         self._publish_«sanitizeName(pub.name)»_fn: Optional[Callable[[Any], None]] = None
@@ -651,6 +654,58 @@ class «node.name»Logic:
         """
         # Override or change to change code behaviour based on param changes
         pass
+
+    # ==========================================
+    # 10. RUNTIME & PLATFORM SERVICES (ok, shutdown, now)
+    # ==========================================
+    def set_ok_handler(self, handler: Callable[[], bool]) -> None:
+        """Inject the runtime liveness check handler."""
+        self._ok_handler = handler
+
+    def ok(self) -> bool:
+        """
+        Check if the runtime environment is active.
+        Raises RuntimeError if no runner or mock platform was injected.
+        """
+        if self._ok_handler is None:
+            raise RuntimeError(
+                "Liveness predicate not injected. In unit tests, configure a mock via set_ok_handler()."
+            )
+        return self._ok_handler()
+
+    def set_shutdown_handler(self, handler: Callable[[str], None]) -> None:
+        """Inject the runtime shutdown handler."""
+        self._shutdown_handler = handler
+
+    def shutdown(self, reason: str = "") -> None:
+        """
+        Request graceful shutdown of the node/system.
+        Raises RuntimeError if no runner or mock platform was injected.
+        """
+        if self._shutdown_handler is None:
+            raise RuntimeError(
+                "Shutdown handler not injected. In unit tests, configure a mock via set_shutdown_handler()."
+            )
+        self._shutdown_handler(reason)
+
+    def set_clock_handler(self, handler: Callable[[], float]) -> None:
+        """Inject the runtime clock handler returning current time in seconds."""
+        self._clock_handler = handler
+
+    def now(self) -> float:
+        """
+        Get current time in seconds (respects simulation time /clock).
+        Raises RuntimeError if no runner or mock platform was injected.
+        """
+        if self._clock_handler is None:
+            raise RuntimeError(
+                "Clock handler not injected. In unit tests, configure a mock via set_clock_handler()."
+            )
+        return self._clock_handler()
+
+    def now_nanoseconds(self) -> int:
+        """Get current time in nanoseconds."""
+        return int(self.now() * 1e9)
 '''
 
     def String compilePythonRunner(Package pkg, Node node) '''
@@ -685,6 +740,19 @@ class «node.name»Node(«node.name»Wrapper):
         
         # Inject ROS2 rclpy logger
         self.logic.set_logger(lambda log_level, msg: self.log(log_level, msg))
+
+        # Inject runtime liveness check
+        self.logic.set_ok_handler(lambda: rclpy.ok())
+
+        # Inject runtime shutdown handler
+        def _on_shutdown(reason: str = "") -> None:
+            if reason:
+                self.get_logger().info(f"Shutdown requested by logic: {reason}")
+            rclpy.shutdown()
+        self.logic.set_shutdown_handler(_on_shutdown)
+
+        # Inject simulation-synchronized clock
+        self.logic.set_clock_handler(lambda: self.get_clock().now().nanoseconds / 1e9)
         
         # Inject parameters via setter
         «FOR param : node.parameter»

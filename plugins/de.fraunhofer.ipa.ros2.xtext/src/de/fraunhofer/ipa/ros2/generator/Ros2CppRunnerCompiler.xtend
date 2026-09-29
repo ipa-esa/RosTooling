@@ -89,6 +89,24 @@ public:
                 };
             }
         });
+
+        // Inject runtime liveness check
+        algorithm_->set_ok_handler([]() {
+            return rclcpp::ok();
+        });
+
+        // Inject runtime shutdown handler
+        algorithm_->set_shutdown_handler([this](const std::string & reason) {
+            if (!reason.empty()) {
+                RCLCPP_INFO(this->get_logger(), "Shutdown requested by algorithm: %s", reason.c_str());
+            }
+            rclcpp::shutdown();
+        });
+
+        // Inject simulation-synchronized clock
+        algorithm_->set_clock_handler([this]() -> std::chrono::nanoseconds {
+            return std::chrono::nanoseconds(this->now().nanoseconds());
+        });
         
         // Inject params via setter
         «FOR param : node.parameter»
