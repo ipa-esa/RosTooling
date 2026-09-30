@@ -349,7 +349,13 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *     ActionClient returns ActionClient
 	 *
 	 * Constraint:
-	 *     (name=EString action=[ActionSpec|EString] namespace=Namespace? qos=QualityOfService?)
+	 *     (
+	 *         name=EString 
+	 *         action=[ActionSpec|EString] 
+	 *         namespace=Namespace? 
+	 *         qos=QualityOfService? 
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_ActionClient(ISerializationContext context, ActionClient semanticObject) {
@@ -363,7 +369,13 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *     ActionServer returns ActionServer
 	 *
 	 * Constraint:
-	 *     (name=EString action=[ActionSpec|EString] namespace=Namespace? qos=QualityOfService?)
+	 *     (
+	 *         name=EString 
+	 *         action=[ActionSpec|EString] 
+	 *         namespace=Namespace? 
+	 *         qos=QualityOfService? 
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_ActionServer(ISerializationContext context, ActionServer semanticObject) {
@@ -389,6 +401,32 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     Node returns Node
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=RosNames 
+	 *         (
+	 *             isLifecycle=boolean0 | 
+	 *             publisher+=Publisher | 
+	 *             subscriber+=Subscriber | 
+	 *             serviceserver+=ServiceServer | 
+	 *             serviceclient+=ServiceClient | 
+	 *             actionserver+=ActionServer | 
+	 *             actionclient+=ActionClient | 
+	 *             parameter+=Parameter
+	 *         )*
+	 *     )
+	 * </pre>
+	 */
+	protected void sequence_Node(ISerializationContext context, Node semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     Parameter returns Parameter
 	 *
 	 * Constraint:
@@ -406,7 +444,13 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *     Publisher returns Publisher
 	 *
 	 * Constraint:
-	 *     (name=EString message=[TopicSpec|EString] namespace=Namespace? qos=QualityOfService?)
+	 *     (
+	 *         name=EString 
+	 *         message=[TopicSpec|EString] 
+	 *         namespace=Namespace? 
+	 *         qos=QualityOfService? 
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_Publisher(ISerializationContext context, Publisher semanticObject) {
@@ -454,7 +498,13 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *     ServiceClient returns ServiceClient
 	 *
 	 * Constraint:
-	 *     (name=EString service=[ServiceSpec|EString] namespace=Namespace? qos=QualityOfService?)
+	 *     (
+	 *         name=EString 
+	 *         service=[ServiceSpec|EString] 
+	 *         namespace=Namespace? 
+	 *         qos=QualityOfService? 
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_ServiceClient(ISerializationContext context, ServiceClient semanticObject) {
@@ -468,7 +518,13 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *     ServiceServer returns ServiceServer
 	 *
 	 * Constraint:
-	 *     (name=EString service=[ServiceSpec|EString] namespace=Namespace? qos=QualityOfService?)
+	 *     (
+	 *         name=EString 
+	 *         service=[ServiceSpec|EString] 
+	 *         namespace=Namespace? 
+	 *         qos=QualityOfService? 
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_ServiceServer(ISerializationContext context, ServiceServer semanticObject) {
@@ -482,7 +538,13 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *     Subscriber returns Subscriber
 	 *
 	 * Constraint:
-	 *     (name=EString message=[TopicSpec|EString] namespace=Namespace? qos=QualityOfService?)
+	 *     (
+	 *         name=EString 
+	 *         message=[TopicSpec|EString] 
+	 *         namespace=Namespace? 
+	 *         qos=QualityOfService? 
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_Subscriber(ISerializationContext context, Subscriber semanticObject) {
