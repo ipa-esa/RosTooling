@@ -11,7 +11,8 @@ The models have associated tools, the following are some examples:
 - Textual editors with grammar highlight, debug functionalities and auto-complete helpers.
 - Validators to check the corretness and check the use of best practices
 - Code geneators to automatically generate code, documentation, helper scripts...
-- (ToBeDone) Graphical editor
+- [Graphical editor](https://github.com/ipa-esa/RosTooling_Extension.git) (external)
+- [Agentic studio](https://github.com/Mohamedgalil/ipa-rostooling-studio.git) (external)
 
 Technical Maintainer: [**ipa-nhg**](https://github.com/ipa-nhg/) (**Nadia Hammoudeh Garcia**, **Fraunhofer IPA**) - **nadia.hammoudeh.garcia@ipa.fraunhofer.de**
 
