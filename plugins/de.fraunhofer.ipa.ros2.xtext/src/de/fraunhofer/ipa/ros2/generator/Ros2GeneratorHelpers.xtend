@@ -442,4 +442,24 @@ class Ros2GeneratorHelpers {
           default: null
         }
     }
+
+    def boolean isLifecycle(Node node) {
+        return node !== null && node.isIsLifecycle
+    }
+
+    def boolean hasLifecycle(List<Node> nodes) {
+        if (nodes === null) return false
+        for (node : nodes) {
+            if (node.isLifecycle) return true
+        }
+        return false
+    }
+
+    def boolean isPubActiveIn(Publisher pub, String stateName) {
+        if (pub === null) return false
+        if (pub.activeStates === null || pub.activeStates.empty) {
+            return "ACTIVE".equalsIgnoreCase(stateName)
+        }
+        return pub.activeStates.exists[literal.equalsIgnoreCase(stateName) || getName().equalsIgnoreCase(stateName)]
+    }
 }

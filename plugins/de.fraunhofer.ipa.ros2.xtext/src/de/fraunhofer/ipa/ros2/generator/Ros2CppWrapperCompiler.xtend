@@ -25,6 +25,9 @@ class Ros2CppWrapperCompiler {
 #include <vector>
 
 #include "rclcpp/rclcpp.hpp"
+«IF node.isLifecycle»
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
+«ENDIF»
 «IF node.hasActions»
 #include "rclcpp_action/rclcpp_action.hpp"
 «ENDIF»
@@ -56,10 +59,24 @@ namespace «pkg.name.toLowerCase» {
  * DO NOT DIRECTLY EDIT THIS FILE - it will be overwritten on generation.
  * Domain logic should inherit from this class or implement the pure virtual callbacks.
  */
-class «artCamel»Wrapper : public rclcpp::Node {
+class «artCamel»Wrapper : public «IF node.isLifecycle»rclcpp_lifecycle::LifecycleNode«ELSE»rclcpp::Node«ENDIF» {
 public:
     explicit «artCamel»Wrapper(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
     virtual ~«artCamel»Wrapper() = default;
+
+    «IF node.isLifecycle»
+    using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
+
+    // ==========================================
+    // LIFECYCLE TRANSITION CALLBACKS
+    // ==========================================
+    virtual CallbackReturn on_configure(const rclcpp_lifecycle::State & state);
+    virtual CallbackReturn on_activate(const rclcpp_lifecycle::State & state);
+    virtual CallbackReturn on_deactivate(const rclcpp_lifecycle::State & state);
+    virtual CallbackReturn on_cleanup(const rclcpp_lifecycle::State & state);
+    virtual CallbackReturn on_shutdown(const rclcpp_lifecycle::State & state);
+    virtual CallbackReturn on_error(const rclcpp_lifecycle::State & state);
+    «ENDIF»
 
     // ==========================================
     // SUBSCRIBER CACHED DATA ACCESSORS
@@ -259,7 +276,11 @@ private:
 
     // ROS 2 interface handles
     «FOR pub : node.publisher»
+    «IF node.isLifecycle»
+    rclcpp_lifecycle::LifecyclePublisher<«pub.message.specPackage»::msg::«pub.message.specName»>::SharedPtr pub_«sanitizeName(pub.name)»_;
+    «ELSE»
     rclcpp::Publisher<«pub.message.specPackage»::msg::«pub.message.specName»>::SharedPtr pub_«sanitizeName(pub.name)»_;
+    «ENDIF»
     «ENDFOR»
     «FOR sub : node.subscriber»
     rclcpp::Subscription<«sub.message.specPackage»::msg::«sub.message.specName»>::SharedPtr sub_«sanitizeName(sub.name)»_;
@@ -309,7 +330,7 @@ private:
 namespace «pkg.name.toLowerCase» {
 
 «artCamel»Wrapper::«artCamel»Wrapper(const rclcpp::NodeOptions & options)
-: rclcpp::Node("«node.name»", options)
+: «IF node.isLifecycle»rclcpp_lifecycle::LifecycleNode«ELSE»rclcpp::Node«ENDIF»("«node.name»", options)
 {
     client_cb_group_ = this->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
 
@@ -520,6 +541,64 @@ rcl_interfaces::msg::SetParametersResult «artCamel»Wrapper::internal_on_set_pa
 }
 «ENDIF»
 
+«IF node.isLifecycle»
+«artCamel»Wrapper::CallbackReturn «artCamel»Wrapper::on_configure(const rclcpp_lifecycle::State & state)
+{
+    (void)state;
+    RCLCPP_INFO(this->get_logger(), "Configuring node '%s'", this->get_name());
+    return CallbackReturn::SUCCESS;
+}
+
+«artCamel»Wrapper::CallbackReturn «artCamel»Wrapper::on_activate(const rclcpp_lifecycle::State & state)
+{
+    (void)state;
+    RCLCPP_INFO(this->get_logger(), "Activating node '%s'", this->get_name());
+    «FOR pub : node.publisher»
+    «IF isPubActiveIn(pub, "ACTIVE")»
+    if (pub_«sanitizeName(pub.name)»_) {
+        pub_«sanitizeName(pub.name)»_->on_activate();
+    }
+    «ENDIF»
+    «ENDFOR»
+    return CallbackReturn::SUCCESS;
+}
+
+«artCamel»Wrapper::CallbackReturn «artCamel»Wrapper::on_deactivate(const rclcpp_lifecycle::State & state)
+{
+    (void)state;
+    RCLCPP_INFO(this->get_logger(), "Deactivating node '%s'", this->get_name());
+    «FOR pub : node.publisher»
+    «IF isPubActiveIn(pub, "ACTIVE")»
+    if (pub_«sanitizeName(pub.name)»_) {
+        pub_«sanitizeName(pub.name)»_->on_deactivate();
+    }
+    «ENDIF»
+    «ENDFOR»
+    return CallbackReturn::SUCCESS;
+}
+
+«artCamel»Wrapper::CallbackReturn «artCamel»Wrapper::on_cleanup(const rclcpp_lifecycle::State & state)
+{
+    (void)state;
+    RCLCPP_INFO(this->get_logger(), "Cleaning up node '%s'", this->get_name());
+    return CallbackReturn::SUCCESS;
+}
+
+«artCamel»Wrapper::CallbackReturn «artCamel»Wrapper::on_shutdown(const rclcpp_lifecycle::State & state)
+{
+    (void)state;
+    RCLCPP_INFO(this->get_logger(), "Shutting down node '%s'", this->get_name());
+    return CallbackReturn::SUCCESS;
+}
+
+«artCamel»Wrapper::CallbackReturn «artCamel»Wrapper::on_error(const rclcpp_lifecycle::State & state)
+{
+    (void)state;
+    RCLCPP_ERROR(this->get_logger(), "Error in lifecycle node '%s'", this->get_name());
+    return CallbackReturn::SUCCESS;
+}
+«ENDIF»
+
 } // namespace «pkg.name.toLowerCase»
 '''
 
@@ -639,6 +718,35 @@ class «artCamel»Algorithm {
 public:
     «artCamel»Algorithm() = default;
     virtual ~«artCamel»Algorithm() = default;
+
+    «IF node.isLifecycle»
+    // ==========================================
+    // LIFECYCLE TRANSITION HOOKS (Pure C++ / Zero ROS 2 dependencies)
+    // ==========================================
+    virtual bool on_configure() {
+        return true;
+    }
+
+    virtual bool on_activate() {
+        return true;
+    }
+
+    virtual bool on_deactivate() {
+        return true;
+    }
+
+    virtual bool on_cleanup() {
+        return true;
+    }
+
+    virtual bool on_shutdown() {
+        return true;
+    }
+
+    virtual bool on_error() {
+        return true;
+    }
+    «ENDIF»
 
     // ==========================================
     // 1. INBOUND SUBSCRIBER MESSAGE HANDLERS
