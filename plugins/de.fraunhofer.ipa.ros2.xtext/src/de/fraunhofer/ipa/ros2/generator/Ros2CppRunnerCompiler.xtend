@@ -185,6 +185,55 @@ public:
     }
 
 protected:
+    «IF node.isLifecycle»
+    using CallbackReturn = «pkg.name.toLowerCase»::«artCamel»Wrapper::CallbackReturn;
+
+    CallbackReturn on_configure(const rclcpp_lifecycle::State & state) override {
+        (void)state;
+        if («pkg.name.toLowerCase»::«artCamel»Wrapper::on_configure(state) != CallbackReturn::SUCCESS) {
+            return CallbackReturn::FAILURE;
+        }
+        return algorithm_->on_configure() ? CallbackReturn::SUCCESS : CallbackReturn::FAILURE;
+    }
+
+    CallbackReturn on_activate(const rclcpp_lifecycle::State & state) override {
+        (void)state;
+        if («pkg.name.toLowerCase»::«artCamel»Wrapper::on_activate(state) != CallbackReturn::SUCCESS) {
+            return CallbackReturn::FAILURE;
+        }
+        return algorithm_->on_activate() ? CallbackReturn::SUCCESS : CallbackReturn::FAILURE;
+    }
+
+    CallbackReturn on_deactivate(const rclcpp_lifecycle::State & state) override {
+        (void)state;
+        if («pkg.name.toLowerCase»::«artCamel»Wrapper::on_deactivate(state) != CallbackReturn::SUCCESS) {
+            return CallbackReturn::FAILURE;
+        }
+        return algorithm_->on_deactivate() ? CallbackReturn::SUCCESS : CallbackReturn::FAILURE;
+    }
+
+    CallbackReturn on_cleanup(const rclcpp_lifecycle::State & state) override {
+        (void)state;
+        if («pkg.name.toLowerCase»::«artCamel»Wrapper::on_cleanup(state) != CallbackReturn::SUCCESS) {
+            return CallbackReturn::FAILURE;
+        }
+        return algorithm_->on_cleanup() ? CallbackReturn::SUCCESS : CallbackReturn::FAILURE;
+    }
+
+    CallbackReturn on_shutdown(const rclcpp_lifecycle::State & state) override {
+        (void)state;
+        if («pkg.name.toLowerCase»::«artCamel»Wrapper::on_shutdown(state) != CallbackReturn::SUCCESS) {
+            return CallbackReturn::FAILURE;
+        }
+        return algorithm_->on_shutdown() ? CallbackReturn::SUCCESS : CallbackReturn::FAILURE;
+    }
+
+    CallbackReturn on_error(const rclcpp_lifecycle::State & state) override {
+        (void)state;
+        return algorithm_->on_error() ? CallbackReturn::SUCCESS : CallbackReturn::FAILURE;
+    }
+    «ENDIF»
+
     «FOR sub : node.subscriber»
     void on_«sanitizeName(sub.name)»_msg(
         const «sub.message.specPackage»::msg::«sub.message.specName»::SharedPtr msg) override
@@ -309,11 +358,19 @@ int main(int argc, char * argv[])
     rclcpp::executors::MultiThreadedExecutor executor(
         rclcpp::ExecutorOptions(),
         std::max(2u, std::thread::hardware_concurrency()));
+    «IF node.isLifecycle»
+    executor.add_node(node->get_node_base_interface());
+    «ELSE»
     executor.add_node(node);
+    «ENDIF»
     executor.spin();
     «ELSE»
     // Automated Executor Selection: SingleThreadedExecutor selected
+    «IF node.isLifecycle»
+    rclcpp::spin(node->get_node_base_interface());
+    «ELSE»
     rclcpp::spin(node);
+    «ENDIF»
     «ENDIF»
 
     rclcpp::shutdown();

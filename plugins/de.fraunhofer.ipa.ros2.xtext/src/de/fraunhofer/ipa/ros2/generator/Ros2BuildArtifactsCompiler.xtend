@@ -34,6 +34,7 @@ class Ros2BuildArtifactsCompiler {
         allNodes.addAll(pythonNodes)
         val deps = getAllDependencies(allNodes)
         val hasActions = hasAnyActions(allNodes)
+        val hasLifecycle = hasLifecycle(cppNodes)
 
         return '''
 <?xml version="1.0"?>
@@ -51,6 +52,7 @@ class Ros2BuildArtifactsCompiler {
 
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
+  «IF hasLifecycle»<depend>rclcpp_lifecycle</depend>«ENDIF»
   «IF hasActions»<depend>rclcpp_action</depend>«ENDIF»
   <depend>rclpy</depend>
   «ELSEIF isPurePython»
@@ -60,6 +62,7 @@ class Ros2BuildArtifactsCompiler {
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
+  «IF hasLifecycle»<depend>rclcpp_lifecycle</depend>«ENDIF»
   «IF hasActions»<depend>rclcpp_action</depend>«ENDIF»
   «ENDIF»
 
@@ -88,6 +91,7 @@ class Ros2BuildArtifactsCompiler {
         allNodes.addAll(pythonNodes)
         val deps = getAllDependencies(allNodes)
         val hasActions = hasAnyActions(allNodes)
+        val hasLifecycle = hasLifecycle(cppNodes)
         val isJazzyOrRolling = "jazzy".equalsIgnoreCase(distro) || "rolling".equalsIgnoreCase(distro)
 
         return '''
@@ -111,6 +115,9 @@ find_package(ament_cmake_python REQUIRED)
 «ENDIF»
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
+«IF hasLifecycle»
+find_package(rclcpp_lifecycle REQUIRED)
+«ENDIF»
 «IF hasActions»
 find_package(rclcpp_action REQUIRED)
 «ENDIF»
@@ -133,6 +140,7 @@ target_include_directories(«artCamel»_component PUBLIC
 ament_target_dependencies(«artCamel»_component
   rclcpp
   rclcpp_components
+  «IF node.isLifecycle»rclcpp_lifecycle«ENDIF»
   «IF node.hasActions»rclcpp_action«ENDIF»
   «FOR dep : node.dependencies»
   «dep»
@@ -151,6 +159,7 @@ target_link_libraries(«artCamel»_node
 )
 ament_target_dependencies(«artCamel»_node
   rclcpp
+  «IF node.isLifecycle»rclcpp_lifecycle«ENDIF»
 )
 «ENDFOR»
 
