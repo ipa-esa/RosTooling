@@ -4,6 +4,7 @@
 package de.fraunhofer.ipa.ros2.ide
 
 import org.eclipse.xtext.resource.ILocationInFileProvider
+import org.eclipse.xtext.ide.server.commands.IExecutableCommandService
 import de.fraunhofer.ipa.ros.SafeLocationInFileProvider
 
 /**
@@ -12,5 +13,9 @@ import de.fraunhofer.ipa.ros.SafeLocationInFileProvider
 class Ros2IdeModule extends AbstractRos2IdeModule {
 	def Class<? extends ILocationInFileProvider> bindILocationInFileProvider() {
         SafeLocationInFileProvider;
+    }
+
+    def Class<? extends IExecutableCommandService> bindIExecutableCommandService() {
+        Ros2GeneratorCommandService
     }
 }

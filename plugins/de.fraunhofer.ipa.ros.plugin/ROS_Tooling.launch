@@ -328,9 +328,7 @@
         <setEntry value="de.fraunhofer.ipa.ros.edit@default:default"/>
         <setEntry value="de.fraunhofer.ipa.ros.editor@default:default"/>
         <setEntry value="de.fraunhofer.ipa.ros.plugin@default:default"/>
-        <setEntry value="de.fraunhofer.ipa.ros.rostooling2sysml@default:default"/>
         <setEntry value="de.fraunhofer.ipa.ros.sirius@default:default"/>
-        <setEntry value="de.fraunhofer.ipa.ros.sysml2rostooling@default:default"/>
         <setEntry value="de.fraunhofer.ipa.ros.xtext.ide@default:default"/>
         <setEntry value="de.fraunhofer.ipa.ros.xtext.ui@default:default"/>
         <setEntry value="de.fraunhofer.ipa.ros.xtext@default:default"/>
