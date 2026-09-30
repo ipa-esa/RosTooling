@@ -415,6 +415,7 @@ class «node.name»Logic:
         self._ok_handler: Optional[Callable[[], bool]] = None
         self._shutdown_handler: Optional[Callable[[str], None]] = None
         self._clock_handler: Optional[Callable[[], float]] = None
+        self._sleep_handler: Optional[Callable[[float], bool]] = None
         self.parameters_ = {}
         «FOR pub : node.publisher»
         self._publish_«sanitizeName(pub.name)»_fn: Optional[Callable[[Any], None]] = None
@@ -656,7 +657,7 @@ class «node.name»Logic:
         pass
 
     # ==========================================
-    # 10. RUNTIME & PLATFORM SERVICES (ok, shutdown, now)
+    # 10. RUNTIME & PLATFORM SERVICES (ok, shutdown, now, sleep_for)
     # ==========================================
     def set_ok_handler(self, handler: Callable[[], bool]) -> None:
         """Inject the runtime liveness check handler."""
@@ -706,6 +707,22 @@ class «node.name»Logic:
     def now_nanoseconds(self) -> int:
         """Get current time in nanoseconds."""
         return int(self.now() * 1e9)
+
+    def set_sleep_handler(self, handler: Callable[[float], bool]) -> None:
+        """Inject the runtime sleep handler (accepts duration in seconds)."""
+        self._sleep_handler = handler
+
+    def sleep_for(self, seconds: float) -> bool:
+        """
+        Sleep for a duration in seconds respecting simulation clock (/clock).
+        Returns True if full duration slept, False if interrupted/shutdown.
+        Raises RuntimeError if no runner or mock platform was injected.
+        """
+        if self._sleep_handler is None:
+            raise RuntimeError(
+                "Sleep handler not injected. In unit tests, configure a mock via set_sleep_handler()."
+            )
+        return self._sleep_handler(seconds)
 '''
 
     def String compilePythonRunner(Package pkg, Node node) '''
@@ -714,6 +731,7 @@ class «node.name»Logic:
 
 import sys
 import rclpy
+from rclpy.duration import Duration
 from rclpy.executors import MultiThreadedExecutor, SingleThreadedExecutor
 «IF !node.parameter.empty»
 from rcl_interfaces.msg import SetParametersResult
@@ -753,6 +771,9 @@ class «node.name»Node(«node.name»Wrapper):
 
         # Inject simulation-synchronized clock
         self.logic.set_clock_handler(lambda: self.get_clock().now().nanoseconds / 1e9)
+
+        # Inject simulation-synchronized sleep
+        self.logic.set_sleep_handler(lambda sec: self.get_clock().sleep_for(Duration(seconds=sec)))
         
         # Inject parameters via setter
         «FOR param : node.parameter»

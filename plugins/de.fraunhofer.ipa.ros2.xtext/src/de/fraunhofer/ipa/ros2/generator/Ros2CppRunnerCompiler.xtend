@@ -107,6 +107,11 @@ public:
         algorithm_->set_clock_handler([this]() -> std::chrono::nanoseconds {
             return std::chrono::nanoseconds(this->now().nanoseconds());
         });
+
+        // Inject simulation-synchronized sleep
+        algorithm_->set_sleep_handler([this](std::chrono::nanoseconds duration) -> bool {
+            return this->get_clock()->sleep_for(rclcpp::Duration(duration));
+        });
         
         // Inject params via setter
         «FOR param : node.parameter»

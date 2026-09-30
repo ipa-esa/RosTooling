@@ -970,11 +970,12 @@ public:
     }
 
     // ==========================================
-    // 10. RUNTIME & PLATFORM SERVICES (ok, shutdown, now)
+    // 10. RUNTIME & PLATFORM SERVICES (ok, shutdown, now, sleep_for)
     // ==========================================
     using OkHandler = std::function<bool()>;
     using ShutdownHandler = std::function<void(const std::string &)>;
     using ClockHandler = std::function<std::chrono::nanoseconds()>;
+    using SleepHandler = std::function<bool(std::chrono::nanoseconds)>;
 
     /**
      * @brief Injects the runtime liveness check handler.
@@ -1044,6 +1045,38 @@ public:
     double now_seconds() const {
         return std::chrono::duration<double>(now()).count();
     }
+
+    /**
+     * @brief Injects the simulation-aware sleep handler.
+     */
+    void set_sleep_handler(SleepHandler handler) {
+        sleep_handler_ = std::move(handler);
+    }
+
+    /**
+     * @brief Sleep for a duration respecting simulation clock (/clock).
+     * @param duration Duration to sleep (e.g. std::chrono::milliseconds(500))
+     * @return true if full duration slept, false if interrupted/shutdown.
+     * @throws std::logic_error if no mock or runner has injected the handler.
+     */
+    bool sleep_for(std::chrono::nanoseconds duration) {
+        if (!sleep_handler_) {
+            throw std::logic_error(
+                "Sleep handler not injected. In unit tests, configure a mock via set_sleep_handler()."
+            );
+        }
+        return sleep_handler_(duration);
+    }
+
+    /**
+     * @brief Sleep for a duration in seconds respecting simulation clock.
+     * @param seconds Duration in seconds (e.g. 0.5)
+     * @return true if full duration slept, false if interrupted/shutdown.
+     */
+    bool sleep_for_seconds(double seconds) {
+        return sleep_for(std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::duration<double>(seconds)));
+    }
         
 private:
     TimerFactory timer_factory_;
@@ -1052,6 +1085,7 @@ private:
     OkHandler ok_handler_;
     ShutdownHandler shutdown_handler_;
     ClockHandler clock_handler_;
+    SleepHandler sleep_handler_;
     std::unordered_map<std::string, ParameterValue> parameters_;
     «FOR pub : node.publisher»
     «pub.name»PubFn publish_«sanitizeName(pub.name)»_fn_;
