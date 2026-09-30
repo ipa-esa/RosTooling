@@ -37,6 +37,8 @@ Parameter_qos : 'parameter_qos';
 
 ParameterAny : 'ParameterAny';
 
+Unconfigured : 'Unconfigured';
+
 FromGitRepo : 'fromGitRepo:';
 
 Reliability : 'reliability:';
@@ -57,9 +59,15 @@ Parameters : 'parameters:';
 
 Publishers : 'publishers:';
 
+Active_in : 'active_in:';
+
 Artifacts : 'artifacts:';
 
+Lifecycle : 'lifecycle:';
+
 Sensor_qos : 'sensor_qos';
+
+Finalized : 'Finalized';
 
 GraphName : 'GraphName';
 
@@ -74,6 +82,8 @@ Float64_1 : 'float64[]';
 Keep_last : 'keep_last';
 
 Lifespan : 'lifespan:';
+
+Inactive : 'Inactive';
 
 Actions : 'actions:';
 
@@ -126,6 +136,8 @@ Request : 'request';
 Service : 'service';
 
 Uint8_1 : 'uint8[]';
+
+Active : 'Active';
 
 Base64 : 'Base64';
 
