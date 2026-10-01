@@ -1110,45 +1110,20 @@ rulePublisher returns [EObject current=null]
 			)
 		)?
 		(
-			otherlv_8=Qos
+			otherlv_8=Active_in
 			{
-				newLeafNode(otherlv_8, grammarAccess.getPublisherAccess().getQosKeyword_7_0());
+				newLeafNode(otherlv_8, grammarAccess.getPublisherAccess().getActive_inKeyword_7_0());
+			}
+			otherlv_9=LeftSquareBracket
+			{
+				newLeafNode(otherlv_9, grammarAccess.getPublisherAccess().getLeftSquareBracketKeyword_7_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getPublisherAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
+						newCompositeNode(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
 					}
-					lv_qos_9_0=ruleQualityOfService
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getPublisherRule());
-						}
-						set(
-							$current,
-							"qos",
-							lv_qos_9_0,
-							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)?
-		(
-			otherlv_10=Active_in
-			{
-				newLeafNode(otherlv_10, grammarAccess.getPublisherAccess().getActive_inKeyword_8_0());
-			}
-			otherlv_11=LeftSquareBracket
-			{
-				newLeafNode(otherlv_11, grammarAccess.getPublisherAccess().getLeftSquareBracketKeyword_8_1());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
-					}
-					lv_activeStates_12_0=ruleLifecycleState
+					lv_activeStates_10_0=ruleLifecycleState
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getPublisherRule());
@@ -1156,23 +1131,23 @@ rulePublisher returns [EObject current=null]
 						add(
 							$current,
 							"activeStates",
-							lv_activeStates_12_0,
+							lv_activeStates_10_0,
 							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 			(
-				otherlv_13=Comma
+				otherlv_11=Comma
 				{
-					newLeafNode(otherlv_13, grammarAccess.getPublisherAccess().getCommaKeyword_8_3_0());
+					newLeafNode(otherlv_11, grammarAccess.getPublisherAccess().getCommaKeyword_7_3_0());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+							newCompositeNode(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
 						}
-						lv_activeStates_14_0=ruleLifecycleState
+						lv_activeStates_12_0=ruleLifecycleState
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getPublisherRule());
@@ -1180,17 +1155,42 @@ rulePublisher returns [EObject current=null]
 							add(
 								$current,
 								"activeStates",
-								lv_activeStates_14_0,
+								lv_activeStates_12_0,
 								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
 			)*
-			otherlv_15=RightSquareBracket
+			otherlv_13=RightSquareBracket
 			{
-				newLeafNode(otherlv_15, grammarAccess.getPublisherAccess().getRightSquareBracketKeyword_8_4());
+				newLeafNode(otherlv_13, grammarAccess.getPublisherAccess().getRightSquareBracketKeyword_7_4());
 			}
+		)?
+		(
+			otherlv_14=Qos
+			{
+				newLeafNode(otherlv_14, grammarAccess.getPublisherAccess().getQosKeyword_8_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getPublisherAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+					}
+					lv_qos_15_0=ruleQualityOfService
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getPublisherRule());
+						}
+						set(
+							$current,
+							"qos",
+							lv_qos_15_0,
+							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
 		)?
 		this_END_16=RULE_END
 		{
@@ -1295,45 +1295,20 @@ ruleSubscriber returns [EObject current=null]
 			)
 		)?
 		(
-			otherlv_8=Qos
+			otherlv_8=Active_in
 			{
-				newLeafNode(otherlv_8, grammarAccess.getSubscriberAccess().getQosKeyword_7_0());
+				newLeafNode(otherlv_8, grammarAccess.getSubscriberAccess().getActive_inKeyword_7_0());
+			}
+			otherlv_9=LeftSquareBracket
+			{
+				newLeafNode(otherlv_9, grammarAccess.getSubscriberAccess().getLeftSquareBracketKeyword_7_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getSubscriberAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
+						newCompositeNode(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
 					}
-					lv_qos_9_0=ruleQualityOfService
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSubscriberRule());
-						}
-						set(
-							$current,
-							"qos",
-							lv_qos_9_0,
-							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)?
-		(
-			otherlv_10=Active_in
-			{
-				newLeafNode(otherlv_10, grammarAccess.getSubscriberAccess().getActive_inKeyword_8_0());
-			}
-			otherlv_11=LeftSquareBracket
-			{
-				newLeafNode(otherlv_11, grammarAccess.getSubscriberAccess().getLeftSquareBracketKeyword_8_1());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
-					}
-					lv_activeStates_12_0=ruleLifecycleState
+					lv_activeStates_10_0=ruleLifecycleState
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getSubscriberRule());
@@ -1341,23 +1316,23 @@ ruleSubscriber returns [EObject current=null]
 						add(
 							$current,
 							"activeStates",
-							lv_activeStates_12_0,
+							lv_activeStates_10_0,
 							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 			(
-				otherlv_13=Comma
+				otherlv_11=Comma
 				{
-					newLeafNode(otherlv_13, grammarAccess.getSubscriberAccess().getCommaKeyword_8_3_0());
+					newLeafNode(otherlv_11, grammarAccess.getSubscriberAccess().getCommaKeyword_7_3_0());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+							newCompositeNode(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
 						}
-						lv_activeStates_14_0=ruleLifecycleState
+						lv_activeStates_12_0=ruleLifecycleState
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getSubscriberRule());
@@ -1365,17 +1340,42 @@ ruleSubscriber returns [EObject current=null]
 							add(
 								$current,
 								"activeStates",
-								lv_activeStates_14_0,
+								lv_activeStates_12_0,
 								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
 			)*
-			otherlv_15=RightSquareBracket
+			otherlv_13=RightSquareBracket
 			{
-				newLeafNode(otherlv_15, grammarAccess.getSubscriberAccess().getRightSquareBracketKeyword_8_4());
+				newLeafNode(otherlv_13, grammarAccess.getSubscriberAccess().getRightSquareBracketKeyword_7_4());
 			}
+		)?
+		(
+			otherlv_14=Qos
+			{
+				newLeafNode(otherlv_14, grammarAccess.getSubscriberAccess().getQosKeyword_8_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getSubscriberAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+					}
+					lv_qos_15_0=ruleQualityOfService
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getSubscriberRule());
+						}
+						set(
+							$current,
+							"qos",
+							lv_qos_15_0,
+							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
 		)?
 		this_END_16=RULE_END
 		{
@@ -1480,45 +1480,20 @@ ruleServiceServer returns [EObject current=null]
 			)
 		)?
 		(
-			otherlv_8=Qos
+			otherlv_8=Active_in
 			{
-				newLeafNode(otherlv_8, grammarAccess.getServiceServerAccess().getQosKeyword_7_0());
+				newLeafNode(otherlv_8, grammarAccess.getServiceServerAccess().getActive_inKeyword_7_0());
+			}
+			otherlv_9=LeftSquareBracket
+			{
+				newLeafNode(otherlv_9, grammarAccess.getServiceServerAccess().getLeftSquareBracketKeyword_7_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getServiceServerAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
+						newCompositeNode(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
 					}
-					lv_qos_9_0=ruleQualityOfService
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getServiceServerRule());
-						}
-						set(
-							$current,
-							"qos",
-							lv_qos_9_0,
-							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)?
-		(
-			otherlv_10=Active_in
-			{
-				newLeafNode(otherlv_10, grammarAccess.getServiceServerAccess().getActive_inKeyword_8_0());
-			}
-			otherlv_11=LeftSquareBracket
-			{
-				newLeafNode(otherlv_11, grammarAccess.getServiceServerAccess().getLeftSquareBracketKeyword_8_1());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
-					}
-					lv_activeStates_12_0=ruleLifecycleState
+					lv_activeStates_10_0=ruleLifecycleState
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getServiceServerRule());
@@ -1526,23 +1501,23 @@ ruleServiceServer returns [EObject current=null]
 						add(
 							$current,
 							"activeStates",
-							lv_activeStates_12_0,
+							lv_activeStates_10_0,
 							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 			(
-				otherlv_13=Comma
+				otherlv_11=Comma
 				{
-					newLeafNode(otherlv_13, grammarAccess.getServiceServerAccess().getCommaKeyword_8_3_0());
+					newLeafNode(otherlv_11, grammarAccess.getServiceServerAccess().getCommaKeyword_7_3_0());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+							newCompositeNode(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
 						}
-						lv_activeStates_14_0=ruleLifecycleState
+						lv_activeStates_12_0=ruleLifecycleState
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getServiceServerRule());
@@ -1550,17 +1525,42 @@ ruleServiceServer returns [EObject current=null]
 							add(
 								$current,
 								"activeStates",
-								lv_activeStates_14_0,
+								lv_activeStates_12_0,
 								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
 			)*
-			otherlv_15=RightSquareBracket
+			otherlv_13=RightSquareBracket
 			{
-				newLeafNode(otherlv_15, grammarAccess.getServiceServerAccess().getRightSquareBracketKeyword_8_4());
+				newLeafNode(otherlv_13, grammarAccess.getServiceServerAccess().getRightSquareBracketKeyword_7_4());
 			}
+		)?
+		(
+			otherlv_14=Qos
+			{
+				newLeafNode(otherlv_14, grammarAccess.getServiceServerAccess().getQosKeyword_8_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getServiceServerAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+					}
+					lv_qos_15_0=ruleQualityOfService
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getServiceServerRule());
+						}
+						set(
+							$current,
+							"qos",
+							lv_qos_15_0,
+							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
 		)?
 		this_END_16=RULE_END
 		{
@@ -1665,45 +1665,20 @@ ruleServiceClient returns [EObject current=null]
 			)
 		)?
 		(
-			otherlv_8=Qos
+			otherlv_8=Active_in
 			{
-				newLeafNode(otherlv_8, grammarAccess.getServiceClientAccess().getQosKeyword_7_0());
+				newLeafNode(otherlv_8, grammarAccess.getServiceClientAccess().getActive_inKeyword_7_0());
+			}
+			otherlv_9=LeftSquareBracket
+			{
+				newLeafNode(otherlv_9, grammarAccess.getServiceClientAccess().getLeftSquareBracketKeyword_7_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getServiceClientAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
+						newCompositeNode(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
 					}
-					lv_qos_9_0=ruleQualityOfService
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getServiceClientRule());
-						}
-						set(
-							$current,
-							"qos",
-							lv_qos_9_0,
-							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)?
-		(
-			otherlv_10=Active_in
-			{
-				newLeafNode(otherlv_10, grammarAccess.getServiceClientAccess().getActive_inKeyword_8_0());
-			}
-			otherlv_11=LeftSquareBracket
-			{
-				newLeafNode(otherlv_11, grammarAccess.getServiceClientAccess().getLeftSquareBracketKeyword_8_1());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
-					}
-					lv_activeStates_12_0=ruleLifecycleState
+					lv_activeStates_10_0=ruleLifecycleState
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getServiceClientRule());
@@ -1711,23 +1686,23 @@ ruleServiceClient returns [EObject current=null]
 						add(
 							$current,
 							"activeStates",
-							lv_activeStates_12_0,
+							lv_activeStates_10_0,
 							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 			(
-				otherlv_13=Comma
+				otherlv_11=Comma
 				{
-					newLeafNode(otherlv_13, grammarAccess.getServiceClientAccess().getCommaKeyword_8_3_0());
+					newLeafNode(otherlv_11, grammarAccess.getServiceClientAccess().getCommaKeyword_7_3_0());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+							newCompositeNode(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
 						}
-						lv_activeStates_14_0=ruleLifecycleState
+						lv_activeStates_12_0=ruleLifecycleState
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getServiceClientRule());
@@ -1735,17 +1710,42 @@ ruleServiceClient returns [EObject current=null]
 							add(
 								$current,
 								"activeStates",
-								lv_activeStates_14_0,
+								lv_activeStates_12_0,
 								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
 			)*
-			otherlv_15=RightSquareBracket
+			otherlv_13=RightSquareBracket
 			{
-				newLeafNode(otherlv_15, grammarAccess.getServiceClientAccess().getRightSquareBracketKeyword_8_4());
+				newLeafNode(otherlv_13, grammarAccess.getServiceClientAccess().getRightSquareBracketKeyword_7_4());
 			}
+		)?
+		(
+			otherlv_14=Qos
+			{
+				newLeafNode(otherlv_14, grammarAccess.getServiceClientAccess().getQosKeyword_8_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getServiceClientAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+					}
+					lv_qos_15_0=ruleQualityOfService
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getServiceClientRule());
+						}
+						set(
+							$current,
+							"qos",
+							lv_qos_15_0,
+							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
 		)?
 		this_END_16=RULE_END
 		{
@@ -1850,45 +1850,20 @@ ruleActionServer returns [EObject current=null]
 			)
 		)?
 		(
-			otherlv_8=Qos
+			otherlv_8=Active_in
 			{
-				newLeafNode(otherlv_8, grammarAccess.getActionServerAccess().getQosKeyword_7_0());
+				newLeafNode(otherlv_8, grammarAccess.getActionServerAccess().getActive_inKeyword_7_0());
+			}
+			otherlv_9=LeftSquareBracket
+			{
+				newLeafNode(otherlv_9, grammarAccess.getActionServerAccess().getLeftSquareBracketKeyword_7_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getActionServerAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
+						newCompositeNode(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
 					}
-					lv_qos_9_0=ruleQualityOfService
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getActionServerRule());
-						}
-						set(
-							$current,
-							"qos",
-							lv_qos_9_0,
-							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)?
-		(
-			otherlv_10=Active_in
-			{
-				newLeafNode(otherlv_10, grammarAccess.getActionServerAccess().getActive_inKeyword_8_0());
-			}
-			otherlv_11=LeftSquareBracket
-			{
-				newLeafNode(otherlv_11, grammarAccess.getActionServerAccess().getLeftSquareBracketKeyword_8_1());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
-					}
-					lv_activeStates_12_0=ruleLifecycleState
+					lv_activeStates_10_0=ruleLifecycleState
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getActionServerRule());
@@ -1896,23 +1871,23 @@ ruleActionServer returns [EObject current=null]
 						add(
 							$current,
 							"activeStates",
-							lv_activeStates_12_0,
+							lv_activeStates_10_0,
 							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 			(
-				otherlv_13=Comma
+				otherlv_11=Comma
 				{
-					newLeafNode(otherlv_13, grammarAccess.getActionServerAccess().getCommaKeyword_8_3_0());
+					newLeafNode(otherlv_11, grammarAccess.getActionServerAccess().getCommaKeyword_7_3_0());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+							newCompositeNode(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
 						}
-						lv_activeStates_14_0=ruleLifecycleState
+						lv_activeStates_12_0=ruleLifecycleState
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getActionServerRule());
@@ -1920,17 +1895,42 @@ ruleActionServer returns [EObject current=null]
 							add(
 								$current,
 								"activeStates",
-								lv_activeStates_14_0,
+								lv_activeStates_12_0,
 								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
 			)*
-			otherlv_15=RightSquareBracket
+			otherlv_13=RightSquareBracket
 			{
-				newLeafNode(otherlv_15, grammarAccess.getActionServerAccess().getRightSquareBracketKeyword_8_4());
+				newLeafNode(otherlv_13, grammarAccess.getActionServerAccess().getRightSquareBracketKeyword_7_4());
 			}
+		)?
+		(
+			otherlv_14=Qos
+			{
+				newLeafNode(otherlv_14, grammarAccess.getActionServerAccess().getQosKeyword_8_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getActionServerAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+					}
+					lv_qos_15_0=ruleQualityOfService
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getActionServerRule());
+						}
+						set(
+							$current,
+							"qos",
+							lv_qos_15_0,
+							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
 		)?
 		this_END_16=RULE_END
 		{
@@ -2035,45 +2035,20 @@ ruleActionClient returns [EObject current=null]
 			)
 		)?
 		(
-			otherlv_8=Qos
+			otherlv_8=Active_in
 			{
-				newLeafNode(otherlv_8, grammarAccess.getActionClientAccess().getQosKeyword_7_0());
+				newLeafNode(otherlv_8, grammarAccess.getActionClientAccess().getActive_inKeyword_7_0());
+			}
+			otherlv_9=LeftSquareBracket
+			{
+				newLeafNode(otherlv_9, grammarAccess.getActionClientAccess().getLeftSquareBracketKeyword_7_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getActionClientAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
+						newCompositeNode(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
 					}
-					lv_qos_9_0=ruleQualityOfService
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getActionClientRule());
-						}
-						set(
-							$current,
-							"qos",
-							lv_qos_9_0,
-							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)?
-		(
-			otherlv_10=Active_in
-			{
-				newLeafNode(otherlv_10, grammarAccess.getActionClientAccess().getActive_inKeyword_8_0());
-			}
-			otherlv_11=LeftSquareBracket
-			{
-				newLeafNode(otherlv_11, grammarAccess.getActionClientAccess().getLeftSquareBracketKeyword_8_1());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
-					}
-					lv_activeStates_12_0=ruleLifecycleState
+					lv_activeStates_10_0=ruleLifecycleState
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getActionClientRule());
@@ -2081,23 +2056,23 @@ ruleActionClient returns [EObject current=null]
 						add(
 							$current,
 							"activeStates",
-							lv_activeStates_12_0,
+							lv_activeStates_10_0,
 							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 			(
-				otherlv_13=Comma
+				otherlv_11=Comma
 				{
-					newLeafNode(otherlv_13, grammarAccess.getActionClientAccess().getCommaKeyword_8_3_0());
+					newLeafNode(otherlv_11, grammarAccess.getActionClientAccess().getCommaKeyword_7_3_0());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+							newCompositeNode(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
 						}
-						lv_activeStates_14_0=ruleLifecycleState
+						lv_activeStates_12_0=ruleLifecycleState
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getActionClientRule());
@@ -2105,17 +2080,42 @@ ruleActionClient returns [EObject current=null]
 							add(
 								$current,
 								"activeStates",
-								lv_activeStates_14_0,
+								lv_activeStates_12_0,
 								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
 			)*
-			otherlv_15=RightSquareBracket
+			otherlv_13=RightSquareBracket
 			{
-				newLeafNode(otherlv_15, grammarAccess.getActionClientAccess().getRightSquareBracketKeyword_8_4());
+				newLeafNode(otherlv_13, grammarAccess.getActionClientAccess().getRightSquareBracketKeyword_7_4());
 			}
+		)?
+		(
+			otherlv_14=Qos
+			{
+				newLeafNode(otherlv_14, grammarAccess.getActionClientAccess().getQosKeyword_8_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getActionClientAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+					}
+					lv_qos_15_0=ruleQualityOfService
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getActionClientRule());
+						}
+						set(
+							$current,
+							"qos",
+							lv_qos_15_0,
+							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
 		)?
 		this_END_16=RULE_END
 		{

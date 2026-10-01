@@ -353,8 +353,8 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *         name=EString 
 	 *         action=[ActionSpec|EString] 
 	 *         namespace=Namespace? 
-	 *         qos=QualityOfService? 
-	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)? 
+	 *         qos=QualityOfService?
 	 *     )
 	 * </pre>
 	 */
@@ -373,8 +373,8 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *         name=EString 
 	 *         action=[ActionSpec|EString] 
 	 *         namespace=Namespace? 
-	 *         qos=QualityOfService? 
-	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)? 
+	 *         qos=QualityOfService?
 	 *     )
 	 * </pre>
 	 */
@@ -448,8 +448,8 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *         name=EString 
 	 *         message=[TopicSpec|EString] 
 	 *         namespace=Namespace? 
-	 *         qos=QualityOfService? 
-	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)? 
+	 *         qos=QualityOfService?
 	 *     )
 	 * </pre>
 	 */
@@ -502,8 +502,8 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *         name=EString 
 	 *         service=[ServiceSpec|EString] 
 	 *         namespace=Namespace? 
-	 *         qos=QualityOfService? 
-	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)? 
+	 *         qos=QualityOfService?
 	 *     )
 	 * </pre>
 	 */
@@ -522,8 +522,8 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *         name=EString 
 	 *         service=[ServiceSpec|EString] 
 	 *         namespace=Namespace? 
-	 *         qos=QualityOfService? 
-	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)? 
+	 *         qos=QualityOfService?
 	 *     )
 	 * </pre>
 	 */
@@ -542,8 +542,8 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *         name=EString 
 	 *         message=[TopicSpec|EString] 
 	 *         namespace=Namespace? 
-	 *         qos=QualityOfService? 
-	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)?
+	 *         (activeStates+=LifecycleState activeStates+=LifecycleState*)? 
+	 *         qos=QualityOfService?
 	 *     )
 	 * </pre>
 	 */

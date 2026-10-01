@@ -2672,7 +2672,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePublisher"
-    // InternalRos2Parser.g:1025:1: rulePublisher returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) ;
+    // InternalRos2Parser.g:1025:1: rulePublisher returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) ;
     public final EObject rulePublisher() throws RecognitionException {
         EObject current = null;
 
@@ -2681,31 +2681,31 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         Token otherlv_4=null;
         Token otherlv_6=null;
         Token otherlv_8=null;
-        Token otherlv_10=null;
+        Token otherlv_9=null;
         Token otherlv_11=null;
         Token otherlv_13=null;
-        Token otherlv_15=null;
+        Token otherlv_14=null;
         Token this_END_16=null;
         AntlrDatatypeRuleToken lv_name_1_0 = null;
 
         EObject lv_namespace_7_0 = null;
 
-        EObject lv_qos_9_0 = null;
+        Enumerator lv_activeStates_10_0 = null;
 
         Enumerator lv_activeStates_12_0 = null;
 
-        Enumerator lv_activeStates_14_0 = null;
+        EObject lv_qos_15_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:1031:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) )
-            // InternalRos2Parser.g:1032:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1031:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) )
+            // InternalRos2Parser.g:1032:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
             {
-            // InternalRos2Parser.g:1032:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
-            // InternalRos2Parser.g:1033:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END
+            // InternalRos2Parser.g:1032:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1033:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END
             {
             // InternalRos2Parser.g:1033:3: ()
             // InternalRos2Parser.g:1034:4: 
@@ -2841,88 +2841,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalRos2Parser.g:1112:3: (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )?
-            int alt24=2;
-            int LA24_0 = input.LA(1);
+            // InternalRos2Parser.g:1112:3: (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )?
+            int alt25=2;
+            int LA25_0 = input.LA(1);
 
-            if ( (LA24_0==Qos) ) {
-                alt24=1;
+            if ( (LA25_0==Active_in) ) {
+                alt25=1;
             }
-            switch (alt24) {
+            switch (alt25) {
                 case 1 :
-                    // InternalRos2Parser.g:1113:4: otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:1113:4: otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket
                     {
-                    otherlv_8=(Token)match(input,Qos,FOLLOW_4); 
+                    otherlv_8=(Token)match(input,Active_in,FOLLOW_10); 
 
-                    				newLeafNode(otherlv_8, grammarAccess.getPublisherAccess().getQosKeyword_7_0());
+                    				newLeafNode(otherlv_8, grammarAccess.getPublisherAccess().getActive_inKeyword_7_0());
                     			
-                    // InternalRos2Parser.g:1117:4: ( (lv_qos_9_0= ruleQualityOfService ) )
-                    // InternalRos2Parser.g:1118:5: (lv_qos_9_0= ruleQualityOfService )
-                    {
-                    // InternalRos2Parser.g:1118:5: (lv_qos_9_0= ruleQualityOfService )
-                    // InternalRos2Parser.g:1119:6: lv_qos_9_0= ruleQualityOfService
-                    {
+                    otherlv_9=(Token)match(input,LeftSquareBracket,FOLLOW_30); 
 
-                    						newCompositeNode(grammarAccess.getPublisherAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
-                    					
-                    pushFollow(FOLLOW_30);
-                    lv_qos_9_0=ruleQualityOfService();
-
-                    state._fsp--;
-
-
-                    						if (current==null) {
-                    							current = createModelElementForParent(grammarAccess.getPublisherRule());
-                    						}
-                    						set(
-                    							current,
-                    							"qos",
-                    							lv_qos_9_0,
-                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-                    						afterParserOrEnumRuleCall();
-                    					
-
-                    }
-
-
-                    }
-
-
-                    }
-                    break;
-
-            }
-
-            // InternalRos2Parser.g:1137:3: (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )?
-            int alt26=2;
-            int LA26_0 = input.LA(1);
-
-            if ( (LA26_0==Active_in) ) {
-                alt26=1;
-            }
-            switch (alt26) {
-                case 1 :
-                    // InternalRos2Parser.g:1138:4: otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket
-                    {
-                    otherlv_10=(Token)match(input,Active_in,FOLLOW_10); 
-
-                    				newLeafNode(otherlv_10, grammarAccess.getPublisherAccess().getActive_inKeyword_8_0());
+                    				newLeafNode(otherlv_9, grammarAccess.getPublisherAccess().getLeftSquareBracketKeyword_7_1());
                     			
-                    otherlv_11=(Token)match(input,LeftSquareBracket,FOLLOW_31); 
-
-                    				newLeafNode(otherlv_11, grammarAccess.getPublisherAccess().getLeftSquareBracketKeyword_8_1());
-                    			
-                    // InternalRos2Parser.g:1146:4: ( (lv_activeStates_12_0= ruleLifecycleState ) )
-                    // InternalRos2Parser.g:1147:5: (lv_activeStates_12_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:1121:4: ( (lv_activeStates_10_0= ruleLifecycleState ) )
+                    // InternalRos2Parser.g:1122:5: (lv_activeStates_10_0= ruleLifecycleState )
                     {
-                    // InternalRos2Parser.g:1147:5: (lv_activeStates_12_0= ruleLifecycleState )
-                    // InternalRos2Parser.g:1148:6: lv_activeStates_12_0= ruleLifecycleState
+                    // InternalRos2Parser.g:1122:5: (lv_activeStates_10_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:1123:6: lv_activeStates_10_0= ruleLifecycleState
                     {
 
-                    						newCompositeNode(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
+                    						newCompositeNode(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
                     					
                     pushFollow(FOLLOW_12);
-                    lv_activeStates_12_0=ruleLifecycleState();
+                    lv_activeStates_10_0=ruleLifecycleState();
 
                     state._fsp--;
 
@@ -2933,7 +2881,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     						add(
                     							current,
                     							"activeStates",
-                    							lv_activeStates_12_0,
+                    							lv_activeStates_10_0,
                     							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     						afterParserOrEnumRuleCall();
                     					
@@ -2943,36 +2891,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalRos2Parser.g:1165:4: (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )*
-                    loop25:
+                    // InternalRos2Parser.g:1140:4: (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )*
+                    loop24:
                     do {
-                        int alt25=2;
-                        int LA25_0 = input.LA(1);
+                        int alt24=2;
+                        int LA24_0 = input.LA(1);
 
-                        if ( (LA25_0==Comma) ) {
-                            alt25=1;
+                        if ( (LA24_0==Comma) ) {
+                            alt24=1;
                         }
 
 
-                        switch (alt25) {
+                        switch (alt24) {
                     	case 1 :
-                    	    // InternalRos2Parser.g:1166:5: otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:1141:5: otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) )
                     	    {
-                    	    otherlv_13=(Token)match(input,Comma,FOLLOW_31); 
+                    	    otherlv_11=(Token)match(input,Comma,FOLLOW_30); 
 
-                    	    					newLeafNode(otherlv_13, grammarAccess.getPublisherAccess().getCommaKeyword_8_3_0());
+                    	    					newLeafNode(otherlv_11, grammarAccess.getPublisherAccess().getCommaKeyword_7_3_0());
                     	    				
-                    	    // InternalRos2Parser.g:1170:5: ( (lv_activeStates_14_0= ruleLifecycleState ) )
-                    	    // InternalRos2Parser.g:1171:6: (lv_activeStates_14_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:1145:5: ( (lv_activeStates_12_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:1146:6: (lv_activeStates_12_0= ruleLifecycleState )
                     	    {
-                    	    // InternalRos2Parser.g:1171:6: (lv_activeStates_14_0= ruleLifecycleState )
-                    	    // InternalRos2Parser.g:1172:7: lv_activeStates_14_0= ruleLifecycleState
+                    	    // InternalRos2Parser.g:1146:6: (lv_activeStates_12_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:1147:7: lv_activeStates_12_0= ruleLifecycleState
                     	    {
 
-                    	    							newCompositeNode(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+                    	    							newCompositeNode(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
                     	    						
                     	    pushFollow(FOLLOW_12);
-                    	    lv_activeStates_14_0=ruleLifecycleState();
+                    	    lv_activeStates_12_0=ruleLifecycleState();
 
                     	    state._fsp--;
 
@@ -2983,7 +2931,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    							add(
                     	    								current,
                     	    								"activeStates",
-                    	    								lv_activeStates_14_0,
+                    	    								lv_activeStates_12_0,
                     	    								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     	    							afterParserOrEnumRuleCall();
                     	    						
@@ -2998,14 +2946,66 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop25;
+                    	    break loop24;
                         }
                     } while (true);
 
-                    otherlv_15=(Token)match(input,RightSquareBracket,FOLLOW_13); 
+                    otherlv_13=(Token)match(input,RightSquareBracket,FOLLOW_31); 
 
-                    				newLeafNode(otherlv_15, grammarAccess.getPublisherAccess().getRightSquareBracketKeyword_8_4());
+                    				newLeafNode(otherlv_13, grammarAccess.getPublisherAccess().getRightSquareBracketKeyword_7_4());
                     			
+
+                    }
+                    break;
+
+            }
+
+            // InternalRos2Parser.g:1170:3: (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )?
+            int alt26=2;
+            int LA26_0 = input.LA(1);
+
+            if ( (LA26_0==Qos) ) {
+                alt26=1;
+            }
+            switch (alt26) {
+                case 1 :
+                    // InternalRos2Parser.g:1171:4: otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) )
+                    {
+                    otherlv_14=(Token)match(input,Qos,FOLLOW_4); 
+
+                    				newLeafNode(otherlv_14, grammarAccess.getPublisherAccess().getQosKeyword_8_0());
+                    			
+                    // InternalRos2Parser.g:1175:4: ( (lv_qos_15_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:1176:5: (lv_qos_15_0= ruleQualityOfService )
+                    {
+                    // InternalRos2Parser.g:1176:5: (lv_qos_15_0= ruleQualityOfService )
+                    // InternalRos2Parser.g:1177:6: lv_qos_15_0= ruleQualityOfService
+                    {
+
+                    						newCompositeNode(grammarAccess.getPublisherAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+                    					
+                    pushFollow(FOLLOW_13);
+                    lv_qos_15_0=ruleQualityOfService();
+
+                    state._fsp--;
+
+
+                    						if (current==null) {
+                    							current = createModelElementForParent(grammarAccess.getPublisherRule());
+                    						}
+                    						set(
+                    							current,
+                    							"qos",
+                    							lv_qos_15_0,
+                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+                    						afterParserOrEnumRuleCall();
+                    					
+
+                    }
+
+
+                    }
+
 
                     }
                     break;
@@ -3075,7 +3075,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleSubscriber"
-    // InternalRos2Parser.g:1210:1: ruleSubscriber returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) ;
+    // InternalRos2Parser.g:1210:1: ruleSubscriber returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) ;
     public final EObject ruleSubscriber() throws RecognitionException {
         EObject current = null;
 
@@ -3084,31 +3084,31 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         Token otherlv_4=null;
         Token otherlv_6=null;
         Token otherlv_8=null;
-        Token otherlv_10=null;
+        Token otherlv_9=null;
         Token otherlv_11=null;
         Token otherlv_13=null;
-        Token otherlv_15=null;
+        Token otherlv_14=null;
         Token this_END_16=null;
         AntlrDatatypeRuleToken lv_name_1_0 = null;
 
         EObject lv_namespace_7_0 = null;
 
-        EObject lv_qos_9_0 = null;
+        Enumerator lv_activeStates_10_0 = null;
 
         Enumerator lv_activeStates_12_0 = null;
 
-        Enumerator lv_activeStates_14_0 = null;
+        EObject lv_qos_15_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:1216:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) )
-            // InternalRos2Parser.g:1217:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1216:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) )
+            // InternalRos2Parser.g:1217:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
             {
-            // InternalRos2Parser.g:1217:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
-            // InternalRos2Parser.g:1218:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END
+            // InternalRos2Parser.g:1217:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1218:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END
             {
             // InternalRos2Parser.g:1218:3: ()
             // InternalRos2Parser.g:1219:4: 
@@ -3244,88 +3244,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalRos2Parser.g:1297:3: (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )?
-            int alt28=2;
-            int LA28_0 = input.LA(1);
+            // InternalRos2Parser.g:1297:3: (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )?
+            int alt29=2;
+            int LA29_0 = input.LA(1);
 
-            if ( (LA28_0==Qos) ) {
-                alt28=1;
+            if ( (LA29_0==Active_in) ) {
+                alt29=1;
             }
-            switch (alt28) {
+            switch (alt29) {
                 case 1 :
-                    // InternalRos2Parser.g:1298:4: otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:1298:4: otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket
                     {
-                    otherlv_8=(Token)match(input,Qos,FOLLOW_4); 
+                    otherlv_8=(Token)match(input,Active_in,FOLLOW_10); 
 
-                    				newLeafNode(otherlv_8, grammarAccess.getSubscriberAccess().getQosKeyword_7_0());
+                    				newLeafNode(otherlv_8, grammarAccess.getSubscriberAccess().getActive_inKeyword_7_0());
                     			
-                    // InternalRos2Parser.g:1302:4: ( (lv_qos_9_0= ruleQualityOfService ) )
-                    // InternalRos2Parser.g:1303:5: (lv_qos_9_0= ruleQualityOfService )
-                    {
-                    // InternalRos2Parser.g:1303:5: (lv_qos_9_0= ruleQualityOfService )
-                    // InternalRos2Parser.g:1304:6: lv_qos_9_0= ruleQualityOfService
-                    {
+                    otherlv_9=(Token)match(input,LeftSquareBracket,FOLLOW_30); 
 
-                    						newCompositeNode(grammarAccess.getSubscriberAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
-                    					
-                    pushFollow(FOLLOW_30);
-                    lv_qos_9_0=ruleQualityOfService();
-
-                    state._fsp--;
-
-
-                    						if (current==null) {
-                    							current = createModelElementForParent(grammarAccess.getSubscriberRule());
-                    						}
-                    						set(
-                    							current,
-                    							"qos",
-                    							lv_qos_9_0,
-                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-                    						afterParserOrEnumRuleCall();
-                    					
-
-                    }
-
-
-                    }
-
-
-                    }
-                    break;
-
-            }
-
-            // InternalRos2Parser.g:1322:3: (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )?
-            int alt30=2;
-            int LA30_0 = input.LA(1);
-
-            if ( (LA30_0==Active_in) ) {
-                alt30=1;
-            }
-            switch (alt30) {
-                case 1 :
-                    // InternalRos2Parser.g:1323:4: otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket
-                    {
-                    otherlv_10=(Token)match(input,Active_in,FOLLOW_10); 
-
-                    				newLeafNode(otherlv_10, grammarAccess.getSubscriberAccess().getActive_inKeyword_8_0());
+                    				newLeafNode(otherlv_9, grammarAccess.getSubscriberAccess().getLeftSquareBracketKeyword_7_1());
                     			
-                    otherlv_11=(Token)match(input,LeftSquareBracket,FOLLOW_31); 
-
-                    				newLeafNode(otherlv_11, grammarAccess.getSubscriberAccess().getLeftSquareBracketKeyword_8_1());
-                    			
-                    // InternalRos2Parser.g:1331:4: ( (lv_activeStates_12_0= ruleLifecycleState ) )
-                    // InternalRos2Parser.g:1332:5: (lv_activeStates_12_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:1306:4: ( (lv_activeStates_10_0= ruleLifecycleState ) )
+                    // InternalRos2Parser.g:1307:5: (lv_activeStates_10_0= ruleLifecycleState )
                     {
-                    // InternalRos2Parser.g:1332:5: (lv_activeStates_12_0= ruleLifecycleState )
-                    // InternalRos2Parser.g:1333:6: lv_activeStates_12_0= ruleLifecycleState
+                    // InternalRos2Parser.g:1307:5: (lv_activeStates_10_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:1308:6: lv_activeStates_10_0= ruleLifecycleState
                     {
 
-                    						newCompositeNode(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
+                    						newCompositeNode(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
                     					
                     pushFollow(FOLLOW_12);
-                    lv_activeStates_12_0=ruleLifecycleState();
+                    lv_activeStates_10_0=ruleLifecycleState();
 
                     state._fsp--;
 
@@ -3336,7 +3284,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     						add(
                     							current,
                     							"activeStates",
-                    							lv_activeStates_12_0,
+                    							lv_activeStates_10_0,
                     							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     						afterParserOrEnumRuleCall();
                     					
@@ -3346,36 +3294,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalRos2Parser.g:1350:4: (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )*
-                    loop29:
+                    // InternalRos2Parser.g:1325:4: (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )*
+                    loop28:
                     do {
-                        int alt29=2;
-                        int LA29_0 = input.LA(1);
+                        int alt28=2;
+                        int LA28_0 = input.LA(1);
 
-                        if ( (LA29_0==Comma) ) {
-                            alt29=1;
+                        if ( (LA28_0==Comma) ) {
+                            alt28=1;
                         }
 
 
-                        switch (alt29) {
+                        switch (alt28) {
                     	case 1 :
-                    	    // InternalRos2Parser.g:1351:5: otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:1326:5: otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) )
                     	    {
-                    	    otherlv_13=(Token)match(input,Comma,FOLLOW_31); 
+                    	    otherlv_11=(Token)match(input,Comma,FOLLOW_30); 
 
-                    	    					newLeafNode(otherlv_13, grammarAccess.getSubscriberAccess().getCommaKeyword_8_3_0());
+                    	    					newLeafNode(otherlv_11, grammarAccess.getSubscriberAccess().getCommaKeyword_7_3_0());
                     	    				
-                    	    // InternalRos2Parser.g:1355:5: ( (lv_activeStates_14_0= ruleLifecycleState ) )
-                    	    // InternalRos2Parser.g:1356:6: (lv_activeStates_14_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:1330:5: ( (lv_activeStates_12_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:1331:6: (lv_activeStates_12_0= ruleLifecycleState )
                     	    {
-                    	    // InternalRos2Parser.g:1356:6: (lv_activeStates_14_0= ruleLifecycleState )
-                    	    // InternalRos2Parser.g:1357:7: lv_activeStates_14_0= ruleLifecycleState
+                    	    // InternalRos2Parser.g:1331:6: (lv_activeStates_12_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:1332:7: lv_activeStates_12_0= ruleLifecycleState
                     	    {
 
-                    	    							newCompositeNode(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+                    	    							newCompositeNode(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
                     	    						
                     	    pushFollow(FOLLOW_12);
-                    	    lv_activeStates_14_0=ruleLifecycleState();
+                    	    lv_activeStates_12_0=ruleLifecycleState();
 
                     	    state._fsp--;
 
@@ -3386,7 +3334,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    							add(
                     	    								current,
                     	    								"activeStates",
-                    	    								lv_activeStates_14_0,
+                    	    								lv_activeStates_12_0,
                     	    								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     	    							afterParserOrEnumRuleCall();
                     	    						
@@ -3401,14 +3349,66 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop29;
+                    	    break loop28;
                         }
                     } while (true);
 
-                    otherlv_15=(Token)match(input,RightSquareBracket,FOLLOW_13); 
+                    otherlv_13=(Token)match(input,RightSquareBracket,FOLLOW_31); 
 
-                    				newLeafNode(otherlv_15, grammarAccess.getSubscriberAccess().getRightSquareBracketKeyword_8_4());
+                    				newLeafNode(otherlv_13, grammarAccess.getSubscriberAccess().getRightSquareBracketKeyword_7_4());
                     			
+
+                    }
+                    break;
+
+            }
+
+            // InternalRos2Parser.g:1355:3: (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )?
+            int alt30=2;
+            int LA30_0 = input.LA(1);
+
+            if ( (LA30_0==Qos) ) {
+                alt30=1;
+            }
+            switch (alt30) {
+                case 1 :
+                    // InternalRos2Parser.g:1356:4: otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) )
+                    {
+                    otherlv_14=(Token)match(input,Qos,FOLLOW_4); 
+
+                    				newLeafNode(otherlv_14, grammarAccess.getSubscriberAccess().getQosKeyword_8_0());
+                    			
+                    // InternalRos2Parser.g:1360:4: ( (lv_qos_15_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:1361:5: (lv_qos_15_0= ruleQualityOfService )
+                    {
+                    // InternalRos2Parser.g:1361:5: (lv_qos_15_0= ruleQualityOfService )
+                    // InternalRos2Parser.g:1362:6: lv_qos_15_0= ruleQualityOfService
+                    {
+
+                    						newCompositeNode(grammarAccess.getSubscriberAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+                    					
+                    pushFollow(FOLLOW_13);
+                    lv_qos_15_0=ruleQualityOfService();
+
+                    state._fsp--;
+
+
+                    						if (current==null) {
+                    							current = createModelElementForParent(grammarAccess.getSubscriberRule());
+                    						}
+                    						set(
+                    							current,
+                    							"qos",
+                    							lv_qos_15_0,
+                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+                    						afterParserOrEnumRuleCall();
+                    					
+
+                    }
+
+
+                    }
+
 
                     }
                     break;
@@ -3478,7 +3478,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleServiceServer"
-    // InternalRos2Parser.g:1395:1: ruleServiceServer returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) ;
+    // InternalRos2Parser.g:1395:1: ruleServiceServer returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) ;
     public final EObject ruleServiceServer() throws RecognitionException {
         EObject current = null;
 
@@ -3487,31 +3487,31 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         Token otherlv_4=null;
         Token otherlv_6=null;
         Token otherlv_8=null;
-        Token otherlv_10=null;
+        Token otherlv_9=null;
         Token otherlv_11=null;
         Token otherlv_13=null;
-        Token otherlv_15=null;
+        Token otherlv_14=null;
         Token this_END_16=null;
         AntlrDatatypeRuleToken lv_name_1_0 = null;
 
         EObject lv_namespace_7_0 = null;
 
-        EObject lv_qos_9_0 = null;
+        Enumerator lv_activeStates_10_0 = null;
 
         Enumerator lv_activeStates_12_0 = null;
 
-        Enumerator lv_activeStates_14_0 = null;
+        EObject lv_qos_15_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:1401:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) )
-            // InternalRos2Parser.g:1402:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1401:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) )
+            // InternalRos2Parser.g:1402:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
             {
-            // InternalRos2Parser.g:1402:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
-            // InternalRos2Parser.g:1403:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END
+            // InternalRos2Parser.g:1402:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1403:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END
             {
             // InternalRos2Parser.g:1403:3: ()
             // InternalRos2Parser.g:1404:4: 
@@ -3647,88 +3647,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalRos2Parser.g:1482:3: (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )?
-            int alt32=2;
-            int LA32_0 = input.LA(1);
+            // InternalRos2Parser.g:1482:3: (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )?
+            int alt33=2;
+            int LA33_0 = input.LA(1);
 
-            if ( (LA32_0==Qos) ) {
-                alt32=1;
+            if ( (LA33_0==Active_in) ) {
+                alt33=1;
             }
-            switch (alt32) {
+            switch (alt33) {
                 case 1 :
-                    // InternalRos2Parser.g:1483:4: otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:1483:4: otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket
                     {
-                    otherlv_8=(Token)match(input,Qos,FOLLOW_4); 
+                    otherlv_8=(Token)match(input,Active_in,FOLLOW_10); 
 
-                    				newLeafNode(otherlv_8, grammarAccess.getServiceServerAccess().getQosKeyword_7_0());
+                    				newLeafNode(otherlv_8, grammarAccess.getServiceServerAccess().getActive_inKeyword_7_0());
                     			
-                    // InternalRos2Parser.g:1487:4: ( (lv_qos_9_0= ruleQualityOfService ) )
-                    // InternalRos2Parser.g:1488:5: (lv_qos_9_0= ruleQualityOfService )
-                    {
-                    // InternalRos2Parser.g:1488:5: (lv_qos_9_0= ruleQualityOfService )
-                    // InternalRos2Parser.g:1489:6: lv_qos_9_0= ruleQualityOfService
-                    {
+                    otherlv_9=(Token)match(input,LeftSquareBracket,FOLLOW_30); 
 
-                    						newCompositeNode(grammarAccess.getServiceServerAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
-                    					
-                    pushFollow(FOLLOW_30);
-                    lv_qos_9_0=ruleQualityOfService();
-
-                    state._fsp--;
-
-
-                    						if (current==null) {
-                    							current = createModelElementForParent(grammarAccess.getServiceServerRule());
-                    						}
-                    						set(
-                    							current,
-                    							"qos",
-                    							lv_qos_9_0,
-                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-                    						afterParserOrEnumRuleCall();
-                    					
-
-                    }
-
-
-                    }
-
-
-                    }
-                    break;
-
-            }
-
-            // InternalRos2Parser.g:1507:3: (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )?
-            int alt34=2;
-            int LA34_0 = input.LA(1);
-
-            if ( (LA34_0==Active_in) ) {
-                alt34=1;
-            }
-            switch (alt34) {
-                case 1 :
-                    // InternalRos2Parser.g:1508:4: otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket
-                    {
-                    otherlv_10=(Token)match(input,Active_in,FOLLOW_10); 
-
-                    				newLeafNode(otherlv_10, grammarAccess.getServiceServerAccess().getActive_inKeyword_8_0());
+                    				newLeafNode(otherlv_9, grammarAccess.getServiceServerAccess().getLeftSquareBracketKeyword_7_1());
                     			
-                    otherlv_11=(Token)match(input,LeftSquareBracket,FOLLOW_31); 
-
-                    				newLeafNode(otherlv_11, grammarAccess.getServiceServerAccess().getLeftSquareBracketKeyword_8_1());
-                    			
-                    // InternalRos2Parser.g:1516:4: ( (lv_activeStates_12_0= ruleLifecycleState ) )
-                    // InternalRos2Parser.g:1517:5: (lv_activeStates_12_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:1491:4: ( (lv_activeStates_10_0= ruleLifecycleState ) )
+                    // InternalRos2Parser.g:1492:5: (lv_activeStates_10_0= ruleLifecycleState )
                     {
-                    // InternalRos2Parser.g:1517:5: (lv_activeStates_12_0= ruleLifecycleState )
-                    // InternalRos2Parser.g:1518:6: lv_activeStates_12_0= ruleLifecycleState
+                    // InternalRos2Parser.g:1492:5: (lv_activeStates_10_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:1493:6: lv_activeStates_10_0= ruleLifecycleState
                     {
 
-                    						newCompositeNode(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
+                    						newCompositeNode(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
                     					
                     pushFollow(FOLLOW_12);
-                    lv_activeStates_12_0=ruleLifecycleState();
+                    lv_activeStates_10_0=ruleLifecycleState();
 
                     state._fsp--;
 
@@ -3739,7 +3687,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     						add(
                     							current,
                     							"activeStates",
-                    							lv_activeStates_12_0,
+                    							lv_activeStates_10_0,
                     							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     						afterParserOrEnumRuleCall();
                     					
@@ -3749,36 +3697,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalRos2Parser.g:1535:4: (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )*
-                    loop33:
+                    // InternalRos2Parser.g:1510:4: (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )*
+                    loop32:
                     do {
-                        int alt33=2;
-                        int LA33_0 = input.LA(1);
+                        int alt32=2;
+                        int LA32_0 = input.LA(1);
 
-                        if ( (LA33_0==Comma) ) {
-                            alt33=1;
+                        if ( (LA32_0==Comma) ) {
+                            alt32=1;
                         }
 
 
-                        switch (alt33) {
+                        switch (alt32) {
                     	case 1 :
-                    	    // InternalRos2Parser.g:1536:5: otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:1511:5: otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) )
                     	    {
-                    	    otherlv_13=(Token)match(input,Comma,FOLLOW_31); 
+                    	    otherlv_11=(Token)match(input,Comma,FOLLOW_30); 
 
-                    	    					newLeafNode(otherlv_13, grammarAccess.getServiceServerAccess().getCommaKeyword_8_3_0());
+                    	    					newLeafNode(otherlv_11, grammarAccess.getServiceServerAccess().getCommaKeyword_7_3_0());
                     	    				
-                    	    // InternalRos2Parser.g:1540:5: ( (lv_activeStates_14_0= ruleLifecycleState ) )
-                    	    // InternalRos2Parser.g:1541:6: (lv_activeStates_14_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:1515:5: ( (lv_activeStates_12_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:1516:6: (lv_activeStates_12_0= ruleLifecycleState )
                     	    {
-                    	    // InternalRos2Parser.g:1541:6: (lv_activeStates_14_0= ruleLifecycleState )
-                    	    // InternalRos2Parser.g:1542:7: lv_activeStates_14_0= ruleLifecycleState
+                    	    // InternalRos2Parser.g:1516:6: (lv_activeStates_12_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:1517:7: lv_activeStates_12_0= ruleLifecycleState
                     	    {
 
-                    	    							newCompositeNode(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+                    	    							newCompositeNode(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
                     	    						
                     	    pushFollow(FOLLOW_12);
-                    	    lv_activeStates_14_0=ruleLifecycleState();
+                    	    lv_activeStates_12_0=ruleLifecycleState();
 
                     	    state._fsp--;
 
@@ -3789,7 +3737,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    							add(
                     	    								current,
                     	    								"activeStates",
-                    	    								lv_activeStates_14_0,
+                    	    								lv_activeStates_12_0,
                     	    								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     	    							afterParserOrEnumRuleCall();
                     	    						
@@ -3804,14 +3752,66 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop33;
+                    	    break loop32;
                         }
                     } while (true);
 
-                    otherlv_15=(Token)match(input,RightSquareBracket,FOLLOW_13); 
+                    otherlv_13=(Token)match(input,RightSquareBracket,FOLLOW_31); 
 
-                    				newLeafNode(otherlv_15, grammarAccess.getServiceServerAccess().getRightSquareBracketKeyword_8_4());
+                    				newLeafNode(otherlv_13, grammarAccess.getServiceServerAccess().getRightSquareBracketKeyword_7_4());
                     			
+
+                    }
+                    break;
+
+            }
+
+            // InternalRos2Parser.g:1540:3: (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )?
+            int alt34=2;
+            int LA34_0 = input.LA(1);
+
+            if ( (LA34_0==Qos) ) {
+                alt34=1;
+            }
+            switch (alt34) {
+                case 1 :
+                    // InternalRos2Parser.g:1541:4: otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) )
+                    {
+                    otherlv_14=(Token)match(input,Qos,FOLLOW_4); 
+
+                    				newLeafNode(otherlv_14, grammarAccess.getServiceServerAccess().getQosKeyword_8_0());
+                    			
+                    // InternalRos2Parser.g:1545:4: ( (lv_qos_15_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:1546:5: (lv_qos_15_0= ruleQualityOfService )
+                    {
+                    // InternalRos2Parser.g:1546:5: (lv_qos_15_0= ruleQualityOfService )
+                    // InternalRos2Parser.g:1547:6: lv_qos_15_0= ruleQualityOfService
+                    {
+
+                    						newCompositeNode(grammarAccess.getServiceServerAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+                    					
+                    pushFollow(FOLLOW_13);
+                    lv_qos_15_0=ruleQualityOfService();
+
+                    state._fsp--;
+
+
+                    						if (current==null) {
+                    							current = createModelElementForParent(grammarAccess.getServiceServerRule());
+                    						}
+                    						set(
+                    							current,
+                    							"qos",
+                    							lv_qos_15_0,
+                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+                    						afterParserOrEnumRuleCall();
+                    					
+
+                    }
+
+
+                    }
+
 
                     }
                     break;
@@ -3881,7 +3881,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleServiceClient"
-    // InternalRos2Parser.g:1580:1: ruleServiceClient returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) ;
+    // InternalRos2Parser.g:1580:1: ruleServiceClient returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) ;
     public final EObject ruleServiceClient() throws RecognitionException {
         EObject current = null;
 
@@ -3890,31 +3890,31 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         Token otherlv_4=null;
         Token otherlv_6=null;
         Token otherlv_8=null;
-        Token otherlv_10=null;
+        Token otherlv_9=null;
         Token otherlv_11=null;
         Token otherlv_13=null;
-        Token otherlv_15=null;
+        Token otherlv_14=null;
         Token this_END_16=null;
         AntlrDatatypeRuleToken lv_name_1_0 = null;
 
         EObject lv_namespace_7_0 = null;
 
-        EObject lv_qos_9_0 = null;
+        Enumerator lv_activeStates_10_0 = null;
 
         Enumerator lv_activeStates_12_0 = null;
 
-        Enumerator lv_activeStates_14_0 = null;
+        EObject lv_qos_15_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:1586:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) )
-            // InternalRos2Parser.g:1587:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1586:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) )
+            // InternalRos2Parser.g:1587:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
             {
-            // InternalRos2Parser.g:1587:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
-            // InternalRos2Parser.g:1588:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END
+            // InternalRos2Parser.g:1587:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1588:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END
             {
             // InternalRos2Parser.g:1588:3: ()
             // InternalRos2Parser.g:1589:4: 
@@ -4050,88 +4050,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalRos2Parser.g:1667:3: (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )?
-            int alt36=2;
-            int LA36_0 = input.LA(1);
+            // InternalRos2Parser.g:1667:3: (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )?
+            int alt37=2;
+            int LA37_0 = input.LA(1);
 
-            if ( (LA36_0==Qos) ) {
-                alt36=1;
+            if ( (LA37_0==Active_in) ) {
+                alt37=1;
             }
-            switch (alt36) {
+            switch (alt37) {
                 case 1 :
-                    // InternalRos2Parser.g:1668:4: otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:1668:4: otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket
                     {
-                    otherlv_8=(Token)match(input,Qos,FOLLOW_4); 
+                    otherlv_8=(Token)match(input,Active_in,FOLLOW_10); 
 
-                    				newLeafNode(otherlv_8, grammarAccess.getServiceClientAccess().getQosKeyword_7_0());
+                    				newLeafNode(otherlv_8, grammarAccess.getServiceClientAccess().getActive_inKeyword_7_0());
                     			
-                    // InternalRos2Parser.g:1672:4: ( (lv_qos_9_0= ruleQualityOfService ) )
-                    // InternalRos2Parser.g:1673:5: (lv_qos_9_0= ruleQualityOfService )
-                    {
-                    // InternalRos2Parser.g:1673:5: (lv_qos_9_0= ruleQualityOfService )
-                    // InternalRos2Parser.g:1674:6: lv_qos_9_0= ruleQualityOfService
-                    {
+                    otherlv_9=(Token)match(input,LeftSquareBracket,FOLLOW_30); 
 
-                    						newCompositeNode(grammarAccess.getServiceClientAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
-                    					
-                    pushFollow(FOLLOW_30);
-                    lv_qos_9_0=ruleQualityOfService();
-
-                    state._fsp--;
-
-
-                    						if (current==null) {
-                    							current = createModelElementForParent(grammarAccess.getServiceClientRule());
-                    						}
-                    						set(
-                    							current,
-                    							"qos",
-                    							lv_qos_9_0,
-                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-                    						afterParserOrEnumRuleCall();
-                    					
-
-                    }
-
-
-                    }
-
-
-                    }
-                    break;
-
-            }
-
-            // InternalRos2Parser.g:1692:3: (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )?
-            int alt38=2;
-            int LA38_0 = input.LA(1);
-
-            if ( (LA38_0==Active_in) ) {
-                alt38=1;
-            }
-            switch (alt38) {
-                case 1 :
-                    // InternalRos2Parser.g:1693:4: otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket
-                    {
-                    otherlv_10=(Token)match(input,Active_in,FOLLOW_10); 
-
-                    				newLeafNode(otherlv_10, grammarAccess.getServiceClientAccess().getActive_inKeyword_8_0());
+                    				newLeafNode(otherlv_9, grammarAccess.getServiceClientAccess().getLeftSquareBracketKeyword_7_1());
                     			
-                    otherlv_11=(Token)match(input,LeftSquareBracket,FOLLOW_31); 
-
-                    				newLeafNode(otherlv_11, grammarAccess.getServiceClientAccess().getLeftSquareBracketKeyword_8_1());
-                    			
-                    // InternalRos2Parser.g:1701:4: ( (lv_activeStates_12_0= ruleLifecycleState ) )
-                    // InternalRos2Parser.g:1702:5: (lv_activeStates_12_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:1676:4: ( (lv_activeStates_10_0= ruleLifecycleState ) )
+                    // InternalRos2Parser.g:1677:5: (lv_activeStates_10_0= ruleLifecycleState )
                     {
-                    // InternalRos2Parser.g:1702:5: (lv_activeStates_12_0= ruleLifecycleState )
-                    // InternalRos2Parser.g:1703:6: lv_activeStates_12_0= ruleLifecycleState
+                    // InternalRos2Parser.g:1677:5: (lv_activeStates_10_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:1678:6: lv_activeStates_10_0= ruleLifecycleState
                     {
 
-                    						newCompositeNode(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
+                    						newCompositeNode(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
                     					
                     pushFollow(FOLLOW_12);
-                    lv_activeStates_12_0=ruleLifecycleState();
+                    lv_activeStates_10_0=ruleLifecycleState();
 
                     state._fsp--;
 
@@ -4142,7 +4090,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     						add(
                     							current,
                     							"activeStates",
-                    							lv_activeStates_12_0,
+                    							lv_activeStates_10_0,
                     							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     						afterParserOrEnumRuleCall();
                     					
@@ -4152,36 +4100,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalRos2Parser.g:1720:4: (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )*
-                    loop37:
+                    // InternalRos2Parser.g:1695:4: (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )*
+                    loop36:
                     do {
-                        int alt37=2;
-                        int LA37_0 = input.LA(1);
+                        int alt36=2;
+                        int LA36_0 = input.LA(1);
 
-                        if ( (LA37_0==Comma) ) {
-                            alt37=1;
+                        if ( (LA36_0==Comma) ) {
+                            alt36=1;
                         }
 
 
-                        switch (alt37) {
+                        switch (alt36) {
                     	case 1 :
-                    	    // InternalRos2Parser.g:1721:5: otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:1696:5: otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) )
                     	    {
-                    	    otherlv_13=(Token)match(input,Comma,FOLLOW_31); 
+                    	    otherlv_11=(Token)match(input,Comma,FOLLOW_30); 
 
-                    	    					newLeafNode(otherlv_13, grammarAccess.getServiceClientAccess().getCommaKeyword_8_3_0());
+                    	    					newLeafNode(otherlv_11, grammarAccess.getServiceClientAccess().getCommaKeyword_7_3_0());
                     	    				
-                    	    // InternalRos2Parser.g:1725:5: ( (lv_activeStates_14_0= ruleLifecycleState ) )
-                    	    // InternalRos2Parser.g:1726:6: (lv_activeStates_14_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:1700:5: ( (lv_activeStates_12_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:1701:6: (lv_activeStates_12_0= ruleLifecycleState )
                     	    {
-                    	    // InternalRos2Parser.g:1726:6: (lv_activeStates_14_0= ruleLifecycleState )
-                    	    // InternalRos2Parser.g:1727:7: lv_activeStates_14_0= ruleLifecycleState
+                    	    // InternalRos2Parser.g:1701:6: (lv_activeStates_12_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:1702:7: lv_activeStates_12_0= ruleLifecycleState
                     	    {
 
-                    	    							newCompositeNode(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+                    	    							newCompositeNode(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
                     	    						
                     	    pushFollow(FOLLOW_12);
-                    	    lv_activeStates_14_0=ruleLifecycleState();
+                    	    lv_activeStates_12_0=ruleLifecycleState();
 
                     	    state._fsp--;
 
@@ -4192,7 +4140,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    							add(
                     	    								current,
                     	    								"activeStates",
-                    	    								lv_activeStates_14_0,
+                    	    								lv_activeStates_12_0,
                     	    								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     	    							afterParserOrEnumRuleCall();
                     	    						
@@ -4207,14 +4155,66 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop37;
+                    	    break loop36;
                         }
                     } while (true);
 
-                    otherlv_15=(Token)match(input,RightSquareBracket,FOLLOW_13); 
+                    otherlv_13=(Token)match(input,RightSquareBracket,FOLLOW_31); 
 
-                    				newLeafNode(otherlv_15, grammarAccess.getServiceClientAccess().getRightSquareBracketKeyword_8_4());
+                    				newLeafNode(otherlv_13, grammarAccess.getServiceClientAccess().getRightSquareBracketKeyword_7_4());
                     			
+
+                    }
+                    break;
+
+            }
+
+            // InternalRos2Parser.g:1725:3: (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )?
+            int alt38=2;
+            int LA38_0 = input.LA(1);
+
+            if ( (LA38_0==Qos) ) {
+                alt38=1;
+            }
+            switch (alt38) {
+                case 1 :
+                    // InternalRos2Parser.g:1726:4: otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) )
+                    {
+                    otherlv_14=(Token)match(input,Qos,FOLLOW_4); 
+
+                    				newLeafNode(otherlv_14, grammarAccess.getServiceClientAccess().getQosKeyword_8_0());
+                    			
+                    // InternalRos2Parser.g:1730:4: ( (lv_qos_15_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:1731:5: (lv_qos_15_0= ruleQualityOfService )
+                    {
+                    // InternalRos2Parser.g:1731:5: (lv_qos_15_0= ruleQualityOfService )
+                    // InternalRos2Parser.g:1732:6: lv_qos_15_0= ruleQualityOfService
+                    {
+
+                    						newCompositeNode(grammarAccess.getServiceClientAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+                    					
+                    pushFollow(FOLLOW_13);
+                    lv_qos_15_0=ruleQualityOfService();
+
+                    state._fsp--;
+
+
+                    						if (current==null) {
+                    							current = createModelElementForParent(grammarAccess.getServiceClientRule());
+                    						}
+                    						set(
+                    							current,
+                    							"qos",
+                    							lv_qos_15_0,
+                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+                    						afterParserOrEnumRuleCall();
+                    					
+
+                    }
+
+
+                    }
+
 
                     }
                     break;
@@ -4284,7 +4284,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleActionServer"
-    // InternalRos2Parser.g:1765:1: ruleActionServer returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) ;
+    // InternalRos2Parser.g:1765:1: ruleActionServer returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) ;
     public final EObject ruleActionServer() throws RecognitionException {
         EObject current = null;
 
@@ -4293,31 +4293,31 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         Token otherlv_4=null;
         Token otherlv_6=null;
         Token otherlv_8=null;
-        Token otherlv_10=null;
+        Token otherlv_9=null;
         Token otherlv_11=null;
         Token otherlv_13=null;
-        Token otherlv_15=null;
+        Token otherlv_14=null;
         Token this_END_16=null;
         AntlrDatatypeRuleToken lv_name_1_0 = null;
 
         EObject lv_namespace_7_0 = null;
 
-        EObject lv_qos_9_0 = null;
+        Enumerator lv_activeStates_10_0 = null;
 
         Enumerator lv_activeStates_12_0 = null;
 
-        Enumerator lv_activeStates_14_0 = null;
+        EObject lv_qos_15_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:1771:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) )
-            // InternalRos2Parser.g:1772:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1771:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) )
+            // InternalRos2Parser.g:1772:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
             {
-            // InternalRos2Parser.g:1772:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
-            // InternalRos2Parser.g:1773:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END
+            // InternalRos2Parser.g:1772:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1773:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END
             {
             // InternalRos2Parser.g:1773:3: ()
             // InternalRos2Parser.g:1774:4: 
@@ -4453,88 +4453,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalRos2Parser.g:1852:3: (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )?
-            int alt40=2;
-            int LA40_0 = input.LA(1);
+            // InternalRos2Parser.g:1852:3: (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )?
+            int alt41=2;
+            int LA41_0 = input.LA(1);
 
-            if ( (LA40_0==Qos) ) {
-                alt40=1;
+            if ( (LA41_0==Active_in) ) {
+                alt41=1;
             }
-            switch (alt40) {
+            switch (alt41) {
                 case 1 :
-                    // InternalRos2Parser.g:1853:4: otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:1853:4: otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket
                     {
-                    otherlv_8=(Token)match(input,Qos,FOLLOW_4); 
+                    otherlv_8=(Token)match(input,Active_in,FOLLOW_10); 
 
-                    				newLeafNode(otherlv_8, grammarAccess.getActionServerAccess().getQosKeyword_7_0());
+                    				newLeafNode(otherlv_8, grammarAccess.getActionServerAccess().getActive_inKeyword_7_0());
                     			
-                    // InternalRos2Parser.g:1857:4: ( (lv_qos_9_0= ruleQualityOfService ) )
-                    // InternalRos2Parser.g:1858:5: (lv_qos_9_0= ruleQualityOfService )
-                    {
-                    // InternalRos2Parser.g:1858:5: (lv_qos_9_0= ruleQualityOfService )
-                    // InternalRos2Parser.g:1859:6: lv_qos_9_0= ruleQualityOfService
-                    {
+                    otherlv_9=(Token)match(input,LeftSquareBracket,FOLLOW_30); 
 
-                    						newCompositeNode(grammarAccess.getActionServerAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
-                    					
-                    pushFollow(FOLLOW_30);
-                    lv_qos_9_0=ruleQualityOfService();
-
-                    state._fsp--;
-
-
-                    						if (current==null) {
-                    							current = createModelElementForParent(grammarAccess.getActionServerRule());
-                    						}
-                    						set(
-                    							current,
-                    							"qos",
-                    							lv_qos_9_0,
-                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-                    						afterParserOrEnumRuleCall();
-                    					
-
-                    }
-
-
-                    }
-
-
-                    }
-                    break;
-
-            }
-
-            // InternalRos2Parser.g:1877:3: (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )?
-            int alt42=2;
-            int LA42_0 = input.LA(1);
-
-            if ( (LA42_0==Active_in) ) {
-                alt42=1;
-            }
-            switch (alt42) {
-                case 1 :
-                    // InternalRos2Parser.g:1878:4: otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket
-                    {
-                    otherlv_10=(Token)match(input,Active_in,FOLLOW_10); 
-
-                    				newLeafNode(otherlv_10, grammarAccess.getActionServerAccess().getActive_inKeyword_8_0());
+                    				newLeafNode(otherlv_9, grammarAccess.getActionServerAccess().getLeftSquareBracketKeyword_7_1());
                     			
-                    otherlv_11=(Token)match(input,LeftSquareBracket,FOLLOW_31); 
-
-                    				newLeafNode(otherlv_11, grammarAccess.getActionServerAccess().getLeftSquareBracketKeyword_8_1());
-                    			
-                    // InternalRos2Parser.g:1886:4: ( (lv_activeStates_12_0= ruleLifecycleState ) )
-                    // InternalRos2Parser.g:1887:5: (lv_activeStates_12_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:1861:4: ( (lv_activeStates_10_0= ruleLifecycleState ) )
+                    // InternalRos2Parser.g:1862:5: (lv_activeStates_10_0= ruleLifecycleState )
                     {
-                    // InternalRos2Parser.g:1887:5: (lv_activeStates_12_0= ruleLifecycleState )
-                    // InternalRos2Parser.g:1888:6: lv_activeStates_12_0= ruleLifecycleState
+                    // InternalRos2Parser.g:1862:5: (lv_activeStates_10_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:1863:6: lv_activeStates_10_0= ruleLifecycleState
                     {
 
-                    						newCompositeNode(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
+                    						newCompositeNode(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
                     					
                     pushFollow(FOLLOW_12);
-                    lv_activeStates_12_0=ruleLifecycleState();
+                    lv_activeStates_10_0=ruleLifecycleState();
 
                     state._fsp--;
 
@@ -4545,7 +4493,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     						add(
                     							current,
                     							"activeStates",
-                    							lv_activeStates_12_0,
+                    							lv_activeStates_10_0,
                     							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     						afterParserOrEnumRuleCall();
                     					
@@ -4555,36 +4503,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalRos2Parser.g:1905:4: (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )*
-                    loop41:
+                    // InternalRos2Parser.g:1880:4: (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )*
+                    loop40:
                     do {
-                        int alt41=2;
-                        int LA41_0 = input.LA(1);
+                        int alt40=2;
+                        int LA40_0 = input.LA(1);
 
-                        if ( (LA41_0==Comma) ) {
-                            alt41=1;
+                        if ( (LA40_0==Comma) ) {
+                            alt40=1;
                         }
 
 
-                        switch (alt41) {
+                        switch (alt40) {
                     	case 1 :
-                    	    // InternalRos2Parser.g:1906:5: otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:1881:5: otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) )
                     	    {
-                    	    otherlv_13=(Token)match(input,Comma,FOLLOW_31); 
+                    	    otherlv_11=(Token)match(input,Comma,FOLLOW_30); 
 
-                    	    					newLeafNode(otherlv_13, grammarAccess.getActionServerAccess().getCommaKeyword_8_3_0());
+                    	    					newLeafNode(otherlv_11, grammarAccess.getActionServerAccess().getCommaKeyword_7_3_0());
                     	    				
-                    	    // InternalRos2Parser.g:1910:5: ( (lv_activeStates_14_0= ruleLifecycleState ) )
-                    	    // InternalRos2Parser.g:1911:6: (lv_activeStates_14_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:1885:5: ( (lv_activeStates_12_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:1886:6: (lv_activeStates_12_0= ruleLifecycleState )
                     	    {
-                    	    // InternalRos2Parser.g:1911:6: (lv_activeStates_14_0= ruleLifecycleState )
-                    	    // InternalRos2Parser.g:1912:7: lv_activeStates_14_0= ruleLifecycleState
+                    	    // InternalRos2Parser.g:1886:6: (lv_activeStates_12_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:1887:7: lv_activeStates_12_0= ruleLifecycleState
                     	    {
 
-                    	    							newCompositeNode(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+                    	    							newCompositeNode(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
                     	    						
                     	    pushFollow(FOLLOW_12);
-                    	    lv_activeStates_14_0=ruleLifecycleState();
+                    	    lv_activeStates_12_0=ruleLifecycleState();
 
                     	    state._fsp--;
 
@@ -4595,7 +4543,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    							add(
                     	    								current,
                     	    								"activeStates",
-                    	    								lv_activeStates_14_0,
+                    	    								lv_activeStates_12_0,
                     	    								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     	    							afterParserOrEnumRuleCall();
                     	    						
@@ -4610,14 +4558,66 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop41;
+                    	    break loop40;
                         }
                     } while (true);
 
-                    otherlv_15=(Token)match(input,RightSquareBracket,FOLLOW_13); 
+                    otherlv_13=(Token)match(input,RightSquareBracket,FOLLOW_31); 
 
-                    				newLeafNode(otherlv_15, grammarAccess.getActionServerAccess().getRightSquareBracketKeyword_8_4());
+                    				newLeafNode(otherlv_13, grammarAccess.getActionServerAccess().getRightSquareBracketKeyword_7_4());
                     			
+
+                    }
+                    break;
+
+            }
+
+            // InternalRos2Parser.g:1910:3: (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )?
+            int alt42=2;
+            int LA42_0 = input.LA(1);
+
+            if ( (LA42_0==Qos) ) {
+                alt42=1;
+            }
+            switch (alt42) {
+                case 1 :
+                    // InternalRos2Parser.g:1911:4: otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) )
+                    {
+                    otherlv_14=(Token)match(input,Qos,FOLLOW_4); 
+
+                    				newLeafNode(otherlv_14, grammarAccess.getActionServerAccess().getQosKeyword_8_0());
+                    			
+                    // InternalRos2Parser.g:1915:4: ( (lv_qos_15_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:1916:5: (lv_qos_15_0= ruleQualityOfService )
+                    {
+                    // InternalRos2Parser.g:1916:5: (lv_qos_15_0= ruleQualityOfService )
+                    // InternalRos2Parser.g:1917:6: lv_qos_15_0= ruleQualityOfService
+                    {
+
+                    						newCompositeNode(grammarAccess.getActionServerAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+                    					
+                    pushFollow(FOLLOW_13);
+                    lv_qos_15_0=ruleQualityOfService();
+
+                    state._fsp--;
+
+
+                    						if (current==null) {
+                    							current = createModelElementForParent(grammarAccess.getActionServerRule());
+                    						}
+                    						set(
+                    							current,
+                    							"qos",
+                    							lv_qos_15_0,
+                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+                    						afterParserOrEnumRuleCall();
+                    					
+
+                    }
+
+
+                    }
+
 
                     }
                     break;
@@ -4687,7 +4687,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleActionClient"
-    // InternalRos2Parser.g:1950:1: ruleActionClient returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) ;
+    // InternalRos2Parser.g:1950:1: ruleActionClient returns [EObject current=null] : ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) ;
     public final EObject ruleActionClient() throws RecognitionException {
         EObject current = null;
 
@@ -4696,31 +4696,31 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         Token otherlv_4=null;
         Token otherlv_6=null;
         Token otherlv_8=null;
-        Token otherlv_10=null;
+        Token otherlv_9=null;
         Token otherlv_11=null;
         Token otherlv_13=null;
-        Token otherlv_15=null;
+        Token otherlv_14=null;
         Token this_END_16=null;
         AntlrDatatypeRuleToken lv_name_1_0 = null;
 
         EObject lv_namespace_7_0 = null;
 
-        EObject lv_qos_9_0 = null;
+        Enumerator lv_activeStates_10_0 = null;
 
         Enumerator lv_activeStates_12_0 = null;
 
-        Enumerator lv_activeStates_14_0 = null;
+        EObject lv_qos_15_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:1956:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END ) )
-            // InternalRos2Parser.g:1957:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1956:2: ( ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END ) )
+            // InternalRos2Parser.g:1957:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
             {
-            // InternalRos2Parser.g:1957:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END )
-            // InternalRos2Parser.g:1958:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )? (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )? this_END_16= RULE_END
+            // InternalRos2Parser.g:1957:2: ( () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END )
+            // InternalRos2Parser.g:1958:3: () ( (lv_name_1_0= ruleEString ) ) otherlv_2= Colon this_BEGIN_3= RULE_BEGIN otherlv_4= Type_1 ( ( ruleEString ) ) (otherlv_6= Ns ( (lv_namespace_7_0= ruleNamespace ) ) )? (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )? (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )? this_END_16= RULE_END
             {
             // InternalRos2Parser.g:1958:3: ()
             // InternalRos2Parser.g:1959:4: 
@@ -4856,88 +4856,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalRos2Parser.g:2037:3: (otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) ) )?
-            int alt44=2;
-            int LA44_0 = input.LA(1);
+            // InternalRos2Parser.g:2037:3: (otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket )?
+            int alt45=2;
+            int LA45_0 = input.LA(1);
 
-            if ( (LA44_0==Qos) ) {
-                alt44=1;
+            if ( (LA45_0==Active_in) ) {
+                alt45=1;
             }
-            switch (alt44) {
+            switch (alt45) {
                 case 1 :
-                    // InternalRos2Parser.g:2038:4: otherlv_8= Qos ( (lv_qos_9_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:2038:4: otherlv_8= Active_in otherlv_9= LeftSquareBracket ( (lv_activeStates_10_0= ruleLifecycleState ) ) (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )* otherlv_13= RightSquareBracket
                     {
-                    otherlv_8=(Token)match(input,Qos,FOLLOW_4); 
+                    otherlv_8=(Token)match(input,Active_in,FOLLOW_10); 
 
-                    				newLeafNode(otherlv_8, grammarAccess.getActionClientAccess().getQosKeyword_7_0());
+                    				newLeafNode(otherlv_8, grammarAccess.getActionClientAccess().getActive_inKeyword_7_0());
                     			
-                    // InternalRos2Parser.g:2042:4: ( (lv_qos_9_0= ruleQualityOfService ) )
-                    // InternalRos2Parser.g:2043:5: (lv_qos_9_0= ruleQualityOfService )
-                    {
-                    // InternalRos2Parser.g:2043:5: (lv_qos_9_0= ruleQualityOfService )
-                    // InternalRos2Parser.g:2044:6: lv_qos_9_0= ruleQualityOfService
-                    {
+                    otherlv_9=(Token)match(input,LeftSquareBracket,FOLLOW_30); 
 
-                    						newCompositeNode(grammarAccess.getActionClientAccess().getQosQualityOfServiceParserRuleCall_7_1_0());
-                    					
-                    pushFollow(FOLLOW_30);
-                    lv_qos_9_0=ruleQualityOfService();
-
-                    state._fsp--;
-
-
-                    						if (current==null) {
-                    							current = createModelElementForParent(grammarAccess.getActionClientRule());
-                    						}
-                    						set(
-                    							current,
-                    							"qos",
-                    							lv_qos_9_0,
-                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
-                    						afterParserOrEnumRuleCall();
-                    					
-
-                    }
-
-
-                    }
-
-
-                    }
-                    break;
-
-            }
-
-            // InternalRos2Parser.g:2062:3: (otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket )?
-            int alt46=2;
-            int LA46_0 = input.LA(1);
-
-            if ( (LA46_0==Active_in) ) {
-                alt46=1;
-            }
-            switch (alt46) {
-                case 1 :
-                    // InternalRos2Parser.g:2063:4: otherlv_10= Active_in otherlv_11= LeftSquareBracket ( (lv_activeStates_12_0= ruleLifecycleState ) ) (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )* otherlv_15= RightSquareBracket
-                    {
-                    otherlv_10=(Token)match(input,Active_in,FOLLOW_10); 
-
-                    				newLeafNode(otherlv_10, grammarAccess.getActionClientAccess().getActive_inKeyword_8_0());
+                    				newLeafNode(otherlv_9, grammarAccess.getActionClientAccess().getLeftSquareBracketKeyword_7_1());
                     			
-                    otherlv_11=(Token)match(input,LeftSquareBracket,FOLLOW_31); 
-
-                    				newLeafNode(otherlv_11, grammarAccess.getActionClientAccess().getLeftSquareBracketKeyword_8_1());
-                    			
-                    // InternalRos2Parser.g:2071:4: ( (lv_activeStates_12_0= ruleLifecycleState ) )
-                    // InternalRos2Parser.g:2072:5: (lv_activeStates_12_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:2046:4: ( (lv_activeStates_10_0= ruleLifecycleState ) )
+                    // InternalRos2Parser.g:2047:5: (lv_activeStates_10_0= ruleLifecycleState )
                     {
-                    // InternalRos2Parser.g:2072:5: (lv_activeStates_12_0= ruleLifecycleState )
-                    // InternalRos2Parser.g:2073:6: lv_activeStates_12_0= ruleLifecycleState
+                    // InternalRos2Parser.g:2047:5: (lv_activeStates_10_0= ruleLifecycleState )
+                    // InternalRos2Parser.g:2048:6: lv_activeStates_10_0= ruleLifecycleState
                     {
 
-                    						newCompositeNode(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0());
+                    						newCompositeNode(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0());
                     					
                     pushFollow(FOLLOW_12);
-                    lv_activeStates_12_0=ruleLifecycleState();
+                    lv_activeStates_10_0=ruleLifecycleState();
 
                     state._fsp--;
 
@@ -4948,7 +4896,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     						add(
                     							current,
                     							"activeStates",
-                    							lv_activeStates_12_0,
+                    							lv_activeStates_10_0,
                     							"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     						afterParserOrEnumRuleCall();
                     					
@@ -4958,36 +4906,36 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalRos2Parser.g:2090:4: (otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) ) )*
-                    loop45:
+                    // InternalRos2Parser.g:2065:4: (otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) ) )*
+                    loop44:
                     do {
-                        int alt45=2;
-                        int LA45_0 = input.LA(1);
+                        int alt44=2;
+                        int LA44_0 = input.LA(1);
 
-                        if ( (LA45_0==Comma) ) {
-                            alt45=1;
+                        if ( (LA44_0==Comma) ) {
+                            alt44=1;
                         }
 
 
-                        switch (alt45) {
+                        switch (alt44) {
                     	case 1 :
-                    	    // InternalRos2Parser.g:2091:5: otherlv_13= Comma ( (lv_activeStates_14_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:2066:5: otherlv_11= Comma ( (lv_activeStates_12_0= ruleLifecycleState ) )
                     	    {
-                    	    otherlv_13=(Token)match(input,Comma,FOLLOW_31); 
+                    	    otherlv_11=(Token)match(input,Comma,FOLLOW_30); 
 
-                    	    					newLeafNode(otherlv_13, grammarAccess.getActionClientAccess().getCommaKeyword_8_3_0());
+                    	    					newLeafNode(otherlv_11, grammarAccess.getActionClientAccess().getCommaKeyword_7_3_0());
                     	    				
-                    	    // InternalRos2Parser.g:2095:5: ( (lv_activeStates_14_0= ruleLifecycleState ) )
-                    	    // InternalRos2Parser.g:2096:6: (lv_activeStates_14_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:2070:5: ( (lv_activeStates_12_0= ruleLifecycleState ) )
+                    	    // InternalRos2Parser.g:2071:6: (lv_activeStates_12_0= ruleLifecycleState )
                     	    {
-                    	    // InternalRos2Parser.g:2096:6: (lv_activeStates_14_0= ruleLifecycleState )
-                    	    // InternalRos2Parser.g:2097:7: lv_activeStates_14_0= ruleLifecycleState
+                    	    // InternalRos2Parser.g:2071:6: (lv_activeStates_12_0= ruleLifecycleState )
+                    	    // InternalRos2Parser.g:2072:7: lv_activeStates_12_0= ruleLifecycleState
                     	    {
 
-                    	    							newCompositeNode(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0());
+                    	    							newCompositeNode(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0());
                     	    						
                     	    pushFollow(FOLLOW_12);
-                    	    lv_activeStates_14_0=ruleLifecycleState();
+                    	    lv_activeStates_12_0=ruleLifecycleState();
 
                     	    state._fsp--;
 
@@ -4998,7 +4946,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    							add(
                     	    								current,
                     	    								"activeStates",
-                    	    								lv_activeStates_14_0,
+                    	    								lv_activeStates_12_0,
                     	    								"de.fraunhofer.ipa.ros2.Ros2.LifecycleState");
                     	    							afterParserOrEnumRuleCall();
                     	    						
@@ -5013,14 +4961,66 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop45;
+                    	    break loop44;
                         }
                     } while (true);
 
-                    otherlv_15=(Token)match(input,RightSquareBracket,FOLLOW_13); 
+                    otherlv_13=(Token)match(input,RightSquareBracket,FOLLOW_31); 
 
-                    				newLeafNode(otherlv_15, grammarAccess.getActionClientAccess().getRightSquareBracketKeyword_8_4());
+                    				newLeafNode(otherlv_13, grammarAccess.getActionClientAccess().getRightSquareBracketKeyword_7_4());
                     			
+
+                    }
+                    break;
+
+            }
+
+            // InternalRos2Parser.g:2095:3: (otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) ) )?
+            int alt46=2;
+            int LA46_0 = input.LA(1);
+
+            if ( (LA46_0==Qos) ) {
+                alt46=1;
+            }
+            switch (alt46) {
+                case 1 :
+                    // InternalRos2Parser.g:2096:4: otherlv_14= Qos ( (lv_qos_15_0= ruleQualityOfService ) )
+                    {
+                    otherlv_14=(Token)match(input,Qos,FOLLOW_4); 
+
+                    				newLeafNode(otherlv_14, grammarAccess.getActionClientAccess().getQosKeyword_8_0());
+                    			
+                    // InternalRos2Parser.g:2100:4: ( (lv_qos_15_0= ruleQualityOfService ) )
+                    // InternalRos2Parser.g:2101:5: (lv_qos_15_0= ruleQualityOfService )
+                    {
+                    // InternalRos2Parser.g:2101:5: (lv_qos_15_0= ruleQualityOfService )
+                    // InternalRos2Parser.g:2102:6: lv_qos_15_0= ruleQualityOfService
+                    {
+
+                    						newCompositeNode(grammarAccess.getActionClientAccess().getQosQualityOfServiceParserRuleCall_8_1_0());
+                    					
+                    pushFollow(FOLLOW_13);
+                    lv_qos_15_0=ruleQualityOfService();
+
+                    state._fsp--;
+
+
+                    						if (current==null) {
+                    							current = createModelElementForParent(grammarAccess.getActionClientRule());
+                    						}
+                    						set(
+                    							current,
+                    							"qos",
+                    							lv_qos_15_0,
+                    							"de.fraunhofer.ipa.ros2.Ros2.QualityOfService");
+                    						afterParserOrEnumRuleCall();
+                    					
+
+                    }
+
+
+                    }
+
 
                     }
                     break;
@@ -5283,7 +5283,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     						newCompositeNode(grammarAccess.getParameterAccess().getValueParameterValueParserRuleCall_7_1_0());
                     					
-                    pushFollow(FOLLOW_36);
+                    pushFollow(FOLLOW_31);
                     lv_value_9_0=ruleParameterValue();
 
                     state._fsp--;
@@ -5518,7 +5518,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_2, grammarAccess.getPackage_ImplAccess().getColonKeyword_2());
             		
-            this_BEGIN_3=(Token)match(input,RULE_BEGIN,FOLLOW_37); 
+            this_BEGIN_3=(Token)match(input,RULE_BEGIN,FOLLOW_36); 
 
             			newLeafNode(this_BEGIN_3, grammarAccess.getPackage_ImplAccess().getBEGINTerminalRuleCall_3());
             		
@@ -5546,7 +5546,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     						newCompositeNode(grammarAccess.getPackage_ImplAccess().getFromGitRepoEStringParserRuleCall_4_1_0());
                     					
-                    pushFollow(FOLLOW_38);
+                    pushFollow(FOLLOW_37);
                     lv_fromGitRepo_5_0=ruleEString();
 
                     state._fsp--;
@@ -5683,7 +5683,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                         }
                     } while (true);
 
-                    otherlv_11=(Token)match(input,RightSquareBracket,FOLLOW_39); 
+                    otherlv_11=(Token)match(input,RightSquareBracket,FOLLOW_38); 
 
                     				newLeafNode(otherlv_11, grammarAccess.getPackage_ImplAccess().getRightSquareBracketKeyword_5_4());
                     			
@@ -5727,7 +5727,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             	    					newLeafNode(otherlv_12, grammarAccess.getPackage_ImplAccess().getMsgsKeyword_6_0_0());
             	    				
-            	    this_BEGIN_13=(Token)match(input,RULE_BEGIN,FOLLOW_40); 
+            	    this_BEGIN_13=(Token)match(input,RULE_BEGIN,FOLLOW_39); 
 
             	    					newLeafNode(this_BEGIN_13, grammarAccess.getPackage_ImplAccess().getBEGINTerminalRuleCall_6_0_1());
             	    				
@@ -5752,7 +5752,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             	    	    							newCompositeNode(grammarAccess.getPackage_ImplAccess().getSpecTopicSpecParserRuleCall_6_0_2_0());
             	    	    						
-            	    	    pushFollow(FOLLOW_40);
+            	    	    pushFollow(FOLLOW_39);
             	    	    lv_spec_14_0=ruleTopicSpec();
 
             	    	    state._fsp--;
@@ -5780,7 +5780,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
             	        }
             	    } while (true);
 
-            	    this_END_15=(Token)match(input,RULE_END,FOLLOW_39); 
+            	    this_END_15=(Token)match(input,RULE_END,FOLLOW_38); 
 
             	    					newLeafNode(this_END_15, grammarAccess.getPackage_ImplAccess().getENDTerminalRuleCall_6_0_3());
             	    				
@@ -5853,7 +5853,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
             	        }
             	    } while (true);
 
-            	    this_END_19=(Token)match(input,RULE_END,FOLLOW_39); 
+            	    this_END_19=(Token)match(input,RULE_END,FOLLOW_38); 
 
             	    					newLeafNode(this_END_19, grammarAccess.getPackage_ImplAccess().getENDTerminalRuleCall_6_1_3());
             	    				
@@ -5926,7 +5926,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
             	        }
             	    } while (true);
 
-            	    this_END_23=(Token)match(input,RULE_END,FOLLOW_39); 
+            	    this_END_23=(Token)match(input,RULE_END,FOLLOW_38); 
 
             	    					newLeafNode(this_END_23, grammarAccess.getPackage_ImplAccess().getENDTerminalRuleCall_6_2_3());
             	    				
@@ -6141,11 +6141,11 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            this_BEGIN_2=(Token)match(input,RULE_BEGIN,FOLLOW_41); 
+            this_BEGIN_2=(Token)match(input,RULE_BEGIN,FOLLOW_40); 
 
             			newLeafNode(this_BEGIN_2, grammarAccess.getTopicSpecAccess().getBEGINTerminalRuleCall_2());
             		
-            otherlv_3=(Token)match(input,Message,FOLLOW_42); 
+            otherlv_3=(Token)match(input,Message,FOLLOW_41); 
 
             			newLeafNode(otherlv_3, grammarAccess.getTopicSpecAccess().getMessageKeyword_3());
             		
@@ -6160,7 +6160,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                 case 1 :
                     // InternalRos2Parser.g:2600:4: this_BEGIN_4= RULE_BEGIN ( (lv_message_5_0= ruleMessageDefinition ) ) this_END_6= RULE_END
                     {
-                    this_BEGIN_4=(Token)match(input,RULE_BEGIN,FOLLOW_43); 
+                    this_BEGIN_4=(Token)match(input,RULE_BEGIN,FOLLOW_42); 
 
                     				newLeafNode(this_BEGIN_4, grammarAccess.getTopicSpecAccess().getBEGINTerminalRuleCall_4_0());
                     			
@@ -6339,11 +6339,11 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            this_BEGIN_2=(Token)match(input,RULE_BEGIN,FOLLOW_44); 
+            this_BEGIN_2=(Token)match(input,RULE_BEGIN,FOLLOW_43); 
 
             			newLeafNode(this_BEGIN_2, grammarAccess.getServiceSpecAccess().getBEGINTerminalRuleCall_2());
             		
-            otherlv_3=(Token)match(input,Request,FOLLOW_45); 
+            otherlv_3=(Token)match(input,Request,FOLLOW_44); 
 
             			newLeafNode(otherlv_3, grammarAccess.getServiceSpecAccess().getRequestKeyword_3());
             		
@@ -6358,7 +6358,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                 case 1 :
                     // InternalRos2Parser.g:2686:4: this_BEGIN_4= RULE_BEGIN ( (lv_request_5_0= ruleMessageDefinition ) ) this_END_6= RULE_END
                     {
-                    this_BEGIN_4=(Token)match(input,RULE_BEGIN,FOLLOW_43); 
+                    this_BEGIN_4=(Token)match(input,RULE_BEGIN,FOLLOW_42); 
 
                     				newLeafNode(this_BEGIN_4, grammarAccess.getServiceSpecAccess().getBEGINTerminalRuleCall_4_0());
                     			
@@ -6393,7 +6393,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     }
 
-                    this_END_6=(Token)match(input,RULE_END,FOLLOW_46); 
+                    this_END_6=(Token)match(input,RULE_END,FOLLOW_45); 
 
                     				newLeafNode(this_END_6, grammarAccess.getServiceSpecAccess().getENDTerminalRuleCall_4_2());
                     			
@@ -6403,7 +6403,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_7=(Token)match(input,Response,FOLLOW_42); 
+            otherlv_7=(Token)match(input,Response,FOLLOW_41); 
 
             			newLeafNode(otherlv_7, grammarAccess.getServiceSpecAccess().getResponseKeyword_5());
             		
@@ -6418,7 +6418,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                 case 1 :
                     // InternalRos2Parser.g:2719:4: this_BEGIN_8= RULE_BEGIN ( (lv_response_9_0= ruleMessageDefinition ) ) this_END_10= RULE_END
                     {
-                    this_BEGIN_8=(Token)match(input,RULE_BEGIN,FOLLOW_43); 
+                    this_BEGIN_8=(Token)match(input,RULE_BEGIN,FOLLOW_42); 
 
                     				newLeafNode(this_BEGIN_8, grammarAccess.getServiceSpecAccess().getBEGINTerminalRuleCall_6_0());
                     			
@@ -6602,11 +6602,11 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            this_BEGIN_2=(Token)match(input,RULE_BEGIN,FOLLOW_47); 
+            this_BEGIN_2=(Token)match(input,RULE_BEGIN,FOLLOW_46); 
 
             			newLeafNode(this_BEGIN_2, grammarAccess.getActionSpecAccess().getBEGINTerminalRuleCall_2());
             		
-            otherlv_3=(Token)match(input,Goal,FOLLOW_48); 
+            otherlv_3=(Token)match(input,Goal,FOLLOW_47); 
 
             			newLeafNode(otherlv_3, grammarAccess.getActionSpecAccess().getGoalKeyword_3());
             		
@@ -6621,7 +6621,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                 case 1 :
                     // InternalRos2Parser.g:2805:4: this_BEGIN_4= RULE_BEGIN ( (lv_goal_5_0= ruleMessageDefinition ) ) this_END_6= RULE_END
                     {
-                    this_BEGIN_4=(Token)match(input,RULE_BEGIN,FOLLOW_43); 
+                    this_BEGIN_4=(Token)match(input,RULE_BEGIN,FOLLOW_42); 
 
                     				newLeafNode(this_BEGIN_4, grammarAccess.getActionSpecAccess().getBEGINTerminalRuleCall_4_0());
                     			
@@ -6656,7 +6656,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     }
 
-                    this_END_6=(Token)match(input,RULE_END,FOLLOW_49); 
+                    this_END_6=(Token)match(input,RULE_END,FOLLOW_48); 
 
                     				newLeafNode(this_END_6, grammarAccess.getActionSpecAccess().getENDTerminalRuleCall_4_2());
                     			
@@ -6666,7 +6666,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_7=(Token)match(input,Result,FOLLOW_50); 
+            otherlv_7=(Token)match(input,Result,FOLLOW_49); 
 
             			newLeafNode(otherlv_7, grammarAccess.getActionSpecAccess().getResultKeyword_5());
             		
@@ -6681,7 +6681,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                 case 1 :
                     // InternalRos2Parser.g:2838:4: this_BEGIN_8= RULE_BEGIN ( (lv_result_9_0= ruleMessageDefinition ) ) this_END_10= RULE_END
                     {
-                    this_BEGIN_8=(Token)match(input,RULE_BEGIN,FOLLOW_43); 
+                    this_BEGIN_8=(Token)match(input,RULE_BEGIN,FOLLOW_42); 
 
                     				newLeafNode(this_BEGIN_8, grammarAccess.getActionSpecAccess().getBEGINTerminalRuleCall_6_0());
                     			
@@ -6716,7 +6716,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     }
 
-                    this_END_10=(Token)match(input,RULE_END,FOLLOW_51); 
+                    this_END_10=(Token)match(input,RULE_END,FOLLOW_50); 
 
                     				newLeafNode(this_END_10, grammarAccess.getActionSpecAccess().getENDTerminalRuleCall_6_2());
                     			
@@ -6726,7 +6726,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_11=(Token)match(input,Feedback,FOLLOW_42); 
+            otherlv_11=(Token)match(input,Feedback,FOLLOW_41); 
 
             			newLeafNode(otherlv_11, grammarAccess.getActionSpecAccess().getFeedbackKeyword_7());
             		
@@ -6741,7 +6741,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                 case 1 :
                     // InternalRos2Parser.g:2871:4: this_BEGIN_12= RULE_BEGIN ( (lv_feedback_13_0= ruleMessageDefinition ) ) this_END_14= RULE_END
                     {
-                    this_BEGIN_12=(Token)match(input,RULE_BEGIN,FOLLOW_43); 
+                    this_BEGIN_12=(Token)match(input,RULE_BEGIN,FOLLOW_42); 
 
                     				newLeafNode(this_BEGIN_12, grammarAccess.getActionSpecAccess().getBEGINTerminalRuleCall_8_0());
                     			
@@ -6898,7 +6898,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             	    					newCompositeNode(grammarAccess.getMessageDefinitionAccess().getMessagePartMessagePartParserRuleCall_1_0());
             	    				
-            	    pushFollow(FOLLOW_52);
+            	    pushFollow(FOLLOW_51);
             	    lv_MessagePart_1_0=ruleMessagePart();
 
             	    state._fsp--;
@@ -7053,7 +7053,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_2, grammarAccess.getArtifactAccess().getColonKeyword_2());
             		
-            this_BEGIN_3=(Token)match(input,RULE_BEGIN,FOLLOW_53); 
+            this_BEGIN_3=(Token)match(input,RULE_BEGIN,FOLLOW_52); 
 
             			newLeafNode(this_BEGIN_3, grammarAccess.getArtifactAccess().getBEGINTerminalRuleCall_3());
             		
@@ -7773,7 +7773,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,GlobalNamespace,FOLLOW_54); 
+            otherlv_1=(Token)match(input,GlobalNamespace,FOLLOW_53); 
 
             			newLeafNode(otherlv_1, grammarAccess.getGlobalNamespaceAccess().getGlobalNamespaceKeyword_1());
             		
@@ -7788,7 +7788,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                 case 1 :
                     // InternalRos2Parser.g:3240:4: otherlv_2= LeftSquareBracket ( (lv_parts_3_0= ruleGraphName ) ) (otherlv_4= Comma ( (lv_parts_5_0= ruleGraphName ) ) )* otherlv_6= RightSquareBracket
                     {
-                    otherlv_2=(Token)match(input,LeftSquareBracket,FOLLOW_55); 
+                    otherlv_2=(Token)match(input,LeftSquareBracket,FOLLOW_54); 
 
                     				newLeafNode(otherlv_2, grammarAccess.getGlobalNamespaceAccess().getLeftSquareBracketKeyword_2_0());
                     			
@@ -7838,7 +7838,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	case 1 :
                     	    // InternalRos2Parser.g:3264:5: otherlv_4= Comma ( (lv_parts_5_0= ruleGraphName ) )
                     	    {
-                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_55); 
+                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_54); 
 
                     	    					newLeafNode(otherlv_4, grammarAccess.getGlobalNamespaceAccess().getCommaKeyword_2_2_0());
                     	    				
@@ -7985,7 +7985,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,RelativeNamespace,FOLLOW_54); 
+            otherlv_1=(Token)match(input,RelativeNamespace,FOLLOW_53); 
 
             			newLeafNode(otherlv_1, grammarAccess.getRelativeNamespace_ImplAccess().getRelativeNamespaceKeyword_1());
             		
@@ -8000,7 +8000,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                 case 1 :
                     // InternalRos2Parser.g:3324:4: otherlv_2= LeftSquareBracket ( (lv_parts_3_0= ruleGraphName ) ) (otherlv_4= Comma ( (lv_parts_5_0= ruleGraphName ) ) )* otherlv_6= RightSquareBracket
                     {
-                    otherlv_2=(Token)match(input,LeftSquareBracket,FOLLOW_55); 
+                    otherlv_2=(Token)match(input,LeftSquareBracket,FOLLOW_54); 
 
                     				newLeafNode(otherlv_2, grammarAccess.getRelativeNamespace_ImplAccess().getLeftSquareBracketKeyword_2_0());
                     			
@@ -8050,7 +8050,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	case 1 :
                     	    // InternalRos2Parser.g:3348:5: otherlv_4= Comma ( (lv_parts_5_0= ruleGraphName ) )
                     	    {
-                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_55); 
+                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_54); 
 
                     	    					newLeafNode(otherlv_4, grammarAccess.getRelativeNamespace_ImplAccess().getCommaKeyword_2_2_0());
                     	    				
@@ -8197,7 +8197,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,PrivateNamespace,FOLLOW_54); 
+            otherlv_1=(Token)match(input,PrivateNamespace,FOLLOW_53); 
 
             			newLeafNode(otherlv_1, grammarAccess.getPrivateNamespaceAccess().getPrivateNamespaceKeyword_1());
             		
@@ -8212,7 +8212,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                 case 1 :
                     // InternalRos2Parser.g:3408:4: otherlv_2= LeftSquareBracket ( (lv_parts_3_0= ruleGraphName ) ) (otherlv_4= Comma ( (lv_parts_5_0= ruleGraphName ) ) )* otherlv_6= RightSquareBracket
                     {
-                    otherlv_2=(Token)match(input,LeftSquareBracket,FOLLOW_55); 
+                    otherlv_2=(Token)match(input,LeftSquareBracket,FOLLOW_54); 
 
                     				newLeafNode(otherlv_2, grammarAccess.getPrivateNamespaceAccess().getLeftSquareBracketKeyword_2_0());
                     			
@@ -8262,7 +8262,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	case 1 :
                     	    // InternalRos2Parser.g:3432:5: otherlv_4= Comma ( (lv_parts_5_0= ruleGraphName ) )
                     	    {
-                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_55); 
+                    	    otherlv_4=(Token)match(input,Comma,FOLLOW_54); 
 
                     	    					newLeafNode(otherlv_4, grammarAccess.getPrivateNamespaceAccess().getCommaKeyword_2_2_0());
                     	    				
@@ -9292,7 +9292,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Integer,FOLLOW_56); 
+            otherlv_1=(Token)match(input,Integer,FOLLOW_55); 
 
             			newLeafNode(otherlv_1, grammarAccess.getParameterIntegerTypeAccess().getIntegerKeyword_1());
             		
@@ -9437,7 +9437,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,String,FOLLOW_56); 
+            otherlv_1=(Token)match(input,String,FOLLOW_55); 
 
             			newLeafNode(otherlv_1, grammarAccess.getParameterStringTypeAccess().getStringKeyword_1());
             		
@@ -9582,7 +9582,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Double,FOLLOW_56); 
+            otherlv_1=(Token)match(input,Double,FOLLOW_55); 
 
             			newLeafNode(otherlv_1, grammarAccess.getParameterDoubleTypeAccess().getDoubleKeyword_1());
             		
@@ -9597,7 +9597,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                 case 1 :
                     // InternalRos2Parser.g:3937:4: otherlv_2= Default ( (lv_default_3_0= ruleParameterDouble ) )
                     {
-                    otherlv_2=(Token)match(input,Default,FOLLOW_57); 
+                    otherlv_2=(Token)match(input,Default,FOLLOW_56); 
 
                     				newLeafNode(otherlv_2, grammarAccess.getParameterDoubleTypeAccess().getDefaultKeyword_2_0());
                     			
@@ -9727,7 +9727,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Boolean,FOLLOW_56); 
+            otherlv_1=(Token)match(input,Boolean,FOLLOW_55); 
 
             			newLeafNode(otherlv_1, grammarAccess.getParameterBooleanTypeAccess().getBooleanKeyword_1());
             		
@@ -9872,7 +9872,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,Base64,FOLLOW_56); 
+            otherlv_1=(Token)match(input,Base64,FOLLOW_55); 
 
             			newLeafNode(otherlv_1, grammarAccess.getParameterBase64TypeAccess().getBase64Keyword_1());
             		
@@ -9887,7 +9887,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                 case 1 :
                     // InternalRos2Parser.g:4047:4: otherlv_2= Default ( (lv_default_3_0= ruleParameterBase64 ) )
                     {
-                    otherlv_2=(Token)match(input,Default,FOLLOW_58); 
+                    otherlv_2=(Token)match(input,Default,FOLLOW_57); 
 
                     				newLeafNode(otherlv_2, grammarAccess.getParameterBase64TypeAccess().getDefaultKeyword_2_0());
                     			
@@ -10027,7 +10027,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             					newCompositeNode(grammarAccess.getParameterArrayTypeAccess().getTypeParameterTypeParserRuleCall_2_0());
             				
-            pushFollow(FOLLOW_59);
+            pushFollow(FOLLOW_58);
             lv_type_2_0=ruleParameterType();
 
             state._fsp--;
@@ -10049,7 +10049,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_3=(Token)match(input,RightSquareBracket,FOLLOW_56); 
+            otherlv_3=(Token)match(input,RightSquareBracket,FOLLOW_55); 
 
             			newLeafNode(otherlv_3, grammarAccess.getParameterArrayTypeAccess().getRightSquareBracketKeyword_3());
             		
@@ -10384,7 +10384,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,ParameterAny,FOLLOW_60); 
+            otherlv_1=(Token)match(input,ParameterAny,FOLLOW_59); 
 
             			newLeafNode(otherlv_1, grammarAccess.getParameterAnyAccess().getParameterAnyKeyword_1());
             		
@@ -11051,7 +11051,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     				newLeafNode(otherlv_1, grammarAccess.getParameterStructAccess().getLeftSquareBracketKeyword_1_0());
                     			
-                    this_BEGIN_2=(Token)match(input,RULE_BEGIN,FOLLOW_61); 
+                    this_BEGIN_2=(Token)match(input,RULE_BEGIN,FOLLOW_60); 
 
                     				newLeafNode(this_BEGIN_2, grammarAccess.getParameterStructAccess().getBEGINTerminalRuleCall_1_1());
                     			
@@ -11076,7 +11076,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     	    						newCompositeNode(grammarAccess.getParameterStructAccess().getValueParameterStructMemberParserRuleCall_1_2_0());
                     	    					
-                    	    pushFollow(FOLLOW_61);
+                    	    pushFollow(FOLLOW_60);
                     	    lv_value_3_0=ruleParameterStructMember();
 
                     	    state._fsp--;
@@ -11974,7 +11974,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             					newCompositeNode(grammarAccess.getMessagePartAccess().getTypeAbstractTypeParserRuleCall_0_0());
             				
-            pushFollow(FOLLOW_62);
+            pushFollow(FOLLOW_61);
             lv_Type_0_0=ruleAbstractType();
 
             state._fsp--;
@@ -15827,7 +15827,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             					newCompositeNode(grammarAccess.getArraySpecRefAccess().getReferenceTopicSpecCrossReference_0_0());
             				
-            pushFollow(FOLLOW_63);
+            pushFollow(FOLLOW_62);
             ruleEString();
 
             state._fsp--;
@@ -16749,39 +16749,38 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x0000000010000000L,0x0000220000000000L,0x0000000000000008L});
     public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x00000000000000E0L});
     public static final BitSet FOLLOW_29 = new BitSet(new long[]{0x0000000010000000L,0x0000020000000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_30 = new BitSet(new long[]{0x0000000010000000L,0x0000000000000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_31 = new BitSet(new long[]{0x0000010100020000L,0x0000000000000008L});
+    public static final BitSet FOLLOW_30 = new BitSet(new long[]{0x0000010100020000L,0x0000000000000008L});
+    public static final BitSet FOLLOW_31 = new BitSet(new long[]{0x0000000000000000L,0x0000020000000000L,0x0000000000000008L});
     public static final BitSet FOLLOW_32 = new BitSet(new long[]{0x0300000000000000L,0x00000002004001B0L});
     public static final BitSet FOLLOW_33 = new BitSet(new long[]{0x0000000000000000L,0x0000220000200000L,0x0000000000000008L});
     public static final BitSet FOLLOW_34 = new BitSet(new long[]{0x0000000000000000L,0x0000020000200000L,0x0000000000000008L});
     public static final BitSet FOLLOW_35 = new BitSet(new long[]{0x0000000000000000L,0xC0F2000000000000L});
-    public static final BitSet FOLLOW_36 = new BitSet(new long[]{0x0000000000000000L,0x0000020000000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_37 = new BitSet(new long[]{0x0000020000044000L,0x0000000014000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_38 = new BitSet(new long[]{0x0000020000004000L,0x0000000014000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_39 = new BitSet(new long[]{0x0000020000000000L,0x0000000014000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_40 = new BitSet(new long[]{0x0000000000000000L,0xC0000000000000C0L,0x0000000000000008L});
-    public static final BitSet FOLLOW_41 = new BitSet(new long[]{0x8000000000000000L});
-    public static final BitSet FOLLOW_42 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x000000000000000CL});
-    public static final BitSet FOLLOW_43 = new BitSet(new long[]{0x7C78083000000000L,0xC000045C439E5C44L,0x0000000000000008L});
-    public static final BitSet FOLLOW_44 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000001L});
-    public static final BitSet FOLLOW_45 = new BitSet(new long[]{0x0004000000000000L,0x0000000000000000L,0x0000000000000004L});
-    public static final BitSet FOLLOW_46 = new BitSet(new long[]{0x0004000000000000L});
-    public static final BitSet FOLLOW_47 = new BitSet(new long[]{0x0000000000000000L,0x0000002000000000L});
-    public static final BitSet FOLLOW_48 = new BitSet(new long[]{0x0000000000000000L,0x0000000000010000L,0x0000000000000004L});
-    public static final BitSet FOLLOW_49 = new BitSet(new long[]{0x0000000000000000L,0x0000000000010000L});
-    public static final BitSet FOLLOW_50 = new BitSet(new long[]{0x0000100000000000L,0x0000000000000000L,0x0000000000000004L});
-    public static final BitSet FOLLOW_51 = new BitSet(new long[]{0x0000100000000000L});
-    public static final BitSet FOLLOW_52 = new BitSet(new long[]{0x7C78083000000002L,0xC000045C439E5C44L});
-    public static final BitSet FOLLOW_53 = new BitSet(new long[]{0x0000000000000000L,0x0000000008000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_54 = new BitSet(new long[]{0x0000000000000002L,0x0002000000000000L});
-    public static final BitSet FOLLOW_55 = new BitSet(new long[]{0x0000000200000000L});
-    public static final BitSet FOLLOW_56 = new BitSet(new long[]{0x0000040000000002L});
-    public static final BitSet FOLLOW_57 = new BitSet(new long[]{0x0000000000000000L,0x0080000000000000L});
-    public static final BitSet FOLLOW_58 = new BitSet(new long[]{0x0000000000000000L,0x0010000000000000L});
-    public static final BitSet FOLLOW_59 = new BitSet(new long[]{0x0000000000000000L,0x0004000000000000L});
-    public static final BitSet FOLLOW_60 = new BitSet(new long[]{0x0000000000000002L,0x0000000080000000L});
-    public static final BitSet FOLLOW_61 = new BitSet(new long[]{0x0000000000000000L,0xC004000000000000L});
-    public static final BitSet FOLLOW_62 = new BitSet(new long[]{0x8000180000000000L,0xC0000CA080010202L,0x0000000000000002L});
-    public static final BitSet FOLLOW_63 = new BitSet(new long[]{0x0000000000000000L,0x0000400000000000L});
+    public static final BitSet FOLLOW_36 = new BitSet(new long[]{0x0000020000044000L,0x0000000014000000L,0x0000000000000008L});
+    public static final BitSet FOLLOW_37 = new BitSet(new long[]{0x0000020000004000L,0x0000000014000000L,0x0000000000000008L});
+    public static final BitSet FOLLOW_38 = new BitSet(new long[]{0x0000020000000000L,0x0000000014000000L,0x0000000000000008L});
+    public static final BitSet FOLLOW_39 = new BitSet(new long[]{0x0000000000000000L,0xC0000000000000C0L,0x0000000000000008L});
+    public static final BitSet FOLLOW_40 = new BitSet(new long[]{0x8000000000000000L});
+    public static final BitSet FOLLOW_41 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x000000000000000CL});
+    public static final BitSet FOLLOW_42 = new BitSet(new long[]{0x7C78083000000000L,0xC000045C439E5C44L,0x0000000000000008L});
+    public static final BitSet FOLLOW_43 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000001L});
+    public static final BitSet FOLLOW_44 = new BitSet(new long[]{0x0004000000000000L,0x0000000000000000L,0x0000000000000004L});
+    public static final BitSet FOLLOW_45 = new BitSet(new long[]{0x0004000000000000L});
+    public static final BitSet FOLLOW_46 = new BitSet(new long[]{0x0000000000000000L,0x0000002000000000L});
+    public static final BitSet FOLLOW_47 = new BitSet(new long[]{0x0000000000000000L,0x0000000000010000L,0x0000000000000004L});
+    public static final BitSet FOLLOW_48 = new BitSet(new long[]{0x0000000000000000L,0x0000000000010000L});
+    public static final BitSet FOLLOW_49 = new BitSet(new long[]{0x0000100000000000L,0x0000000000000000L,0x0000000000000004L});
+    public static final BitSet FOLLOW_50 = new BitSet(new long[]{0x0000100000000000L});
+    public static final BitSet FOLLOW_51 = new BitSet(new long[]{0x7C78083000000002L,0xC000045C439E5C44L});
+    public static final BitSet FOLLOW_52 = new BitSet(new long[]{0x0000000000000000L,0x0000000008000000L,0x0000000000000008L});
+    public static final BitSet FOLLOW_53 = new BitSet(new long[]{0x0000000000000002L,0x0002000000000000L});
+    public static final BitSet FOLLOW_54 = new BitSet(new long[]{0x0000000200000000L});
+    public static final BitSet FOLLOW_55 = new BitSet(new long[]{0x0000040000000002L});
+    public static final BitSet FOLLOW_56 = new BitSet(new long[]{0x0000000000000000L,0x0080000000000000L});
+    public static final BitSet FOLLOW_57 = new BitSet(new long[]{0x0000000000000000L,0x0010000000000000L});
+    public static final BitSet FOLLOW_58 = new BitSet(new long[]{0x0000000000000000L,0x0004000000000000L});
+    public static final BitSet FOLLOW_59 = new BitSet(new long[]{0x0000000000000002L,0x0000000080000000L});
+    public static final BitSet FOLLOW_60 = new BitSet(new long[]{0x0000000000000000L,0xC004000000000000L});
+    public static final BitSet FOLLOW_61 = new BitSet(new long[]{0x8000180000000000L,0xC0000CA080010202L,0x0000000000000002L});
+    public static final BitSet FOLLOW_62 = new BitSet(new long[]{0x0000000000000000L,0x0000400000000000L});
 
 }

@@ -16881,7 +16881,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt36=2;
             int LA36_0 = input.LA(1);
 
-            if ( (LA36_0==Qos) ) {
+            if ( (LA36_0==Active_in) ) {
                 alt36=1;
             }
             switch (alt36) {
@@ -16977,7 +16977,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt37=2;
             int LA37_0 = input.LA(1);
 
-            if ( (LA37_0==Active_in) ) {
+            if ( (LA37_0==Qos) ) {
                 alt37=1;
             }
             switch (alt37) {
@@ -17252,7 +17252,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:5623:1: ( rule__Publisher__Group_7__0__Impl rule__Publisher__Group_7__1 )
             // InternalRos2Parser.g:5624:2: rule__Publisher__Group_7__0__Impl rule__Publisher__Group_7__1
             {
-            pushFollow(FOLLOW_5);
+            pushFollow(FOLLOW_10);
             rule__Publisher__Group_7__0__Impl();
 
             state._fsp--;
@@ -17281,21 +17281,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Publisher__Group_7__0__Impl"
-    // InternalRos2Parser.g:5631:1: rule__Publisher__Group_7__0__Impl : ( Qos ) ;
+    // InternalRos2Parser.g:5631:1: rule__Publisher__Group_7__0__Impl : ( Active_in ) ;
     public final void rule__Publisher__Group_7__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:5635:1: ( ( Qos ) )
-            // InternalRos2Parser.g:5636:1: ( Qos )
+            // InternalRos2Parser.g:5635:1: ( ( Active_in ) )
+            // InternalRos2Parser.g:5636:1: ( Active_in )
             {
-            // InternalRos2Parser.g:5636:1: ( Qos )
-            // InternalRos2Parser.g:5637:2: Qos
+            // InternalRos2Parser.g:5636:1: ( Active_in )
+            // InternalRos2Parser.g:5637:2: Active_in
             {
-             before(grammarAccess.getPublisherAccess().getQosKeyword_7_0()); 
-            match(input,Qos,FOLLOW_2); 
-             after(grammarAccess.getPublisherAccess().getQosKeyword_7_0()); 
+             before(grammarAccess.getPublisherAccess().getActive_inKeyword_7_0()); 
+            match(input,Active_in,FOLLOW_2); 
+             after(grammarAccess.getPublisherAccess().getActive_inKeyword_7_0()); 
 
             }
 
@@ -17318,17 +17318,22 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Publisher__Group_7__1"
-    // InternalRos2Parser.g:5646:1: rule__Publisher__Group_7__1 : rule__Publisher__Group_7__1__Impl ;
+    // InternalRos2Parser.g:5646:1: rule__Publisher__Group_7__1 : rule__Publisher__Group_7__1__Impl rule__Publisher__Group_7__2 ;
     public final void rule__Publisher__Group_7__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:5650:1: ( rule__Publisher__Group_7__1__Impl )
-            // InternalRos2Parser.g:5651:2: rule__Publisher__Group_7__1__Impl
+            // InternalRos2Parser.g:5650:1: ( rule__Publisher__Group_7__1__Impl rule__Publisher__Group_7__2 )
+            // InternalRos2Parser.g:5651:2: rule__Publisher__Group_7__1__Impl rule__Publisher__Group_7__2
             {
-            pushFollow(FOLLOW_2);
+            pushFollow(FOLLOW_31);
             rule__Publisher__Group_7__1__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__Publisher__Group_7__2();
 
             state._fsp--;
 
@@ -17351,31 +17356,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Publisher__Group_7__1__Impl"
-    // InternalRos2Parser.g:5657:1: rule__Publisher__Group_7__1__Impl : ( ( rule__Publisher__QosAssignment_7_1 ) ) ;
+    // InternalRos2Parser.g:5658:1: rule__Publisher__Group_7__1__Impl : ( LeftSquareBracket ) ;
     public final void rule__Publisher__Group_7__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:5661:1: ( ( ( rule__Publisher__QosAssignment_7_1 ) ) )
-            // InternalRos2Parser.g:5662:1: ( ( rule__Publisher__QosAssignment_7_1 ) )
+            // InternalRos2Parser.g:5662:1: ( ( LeftSquareBracket ) )
+            // InternalRos2Parser.g:5663:1: ( LeftSquareBracket )
             {
-            // InternalRos2Parser.g:5662:1: ( ( rule__Publisher__QosAssignment_7_1 ) )
-            // InternalRos2Parser.g:5663:2: ( rule__Publisher__QosAssignment_7_1 )
+            // InternalRos2Parser.g:5663:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:5664:2: LeftSquareBracket
             {
-             before(grammarAccess.getPublisherAccess().getQosAssignment_7_1()); 
-            // InternalRos2Parser.g:5664:2: ( rule__Publisher__QosAssignment_7_1 )
-            // InternalRos2Parser.g:5664:3: rule__Publisher__QosAssignment_7_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__Publisher__QosAssignment_7_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getPublisherAccess().getQosAssignment_7_1()); 
+             before(grammarAccess.getPublisherAccess().getLeftSquareBracketKeyword_7_1()); 
+            match(input,LeftSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getPublisherAccess().getLeftSquareBracketKeyword_7_1()); 
 
             }
 
@@ -17397,17 +17392,430 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__Publisher__Group_7__1__Impl"
 
 
+    // $ANTLR start "rule__Publisher__Group_7__2"
+    // InternalRos2Parser.g:5673:1: rule__Publisher__Group_7__2 : rule__Publisher__Group_7__2__Impl rule__Publisher__Group_7__3 ;
+    public final void rule__Publisher__Group_7__2() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:5677:1: ( rule__Publisher__Group_7__2__Impl rule__Publisher__Group_7__3 )
+            // InternalRos2Parser.g:5678:2: rule__Publisher__Group_7__2__Impl rule__Publisher__Group_7__3
+            {
+            pushFollow(FOLLOW_12);
+            rule__Publisher__Group_7__2__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__Publisher__Group_7__3();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Publisher__Group_7__2"
+
+
+    // $ANTLR start "rule__Publisher__Group_7__2__Impl"
+    // InternalRos2Parser.g:5685:1: rule__Publisher__Group_7__2__Impl : ( ( rule__Publisher__ActiveStatesAssignment_7_2 ) ) ;
+    public final void rule__Publisher__Group_7__2__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:5689:1: ( ( ( rule__Publisher__ActiveStatesAssignment_7_2 ) ) )
+            // InternalRos2Parser.g:5690:1: ( ( rule__Publisher__ActiveStatesAssignment_7_2 ) )
+            {
+            // InternalRos2Parser.g:5690:1: ( ( rule__Publisher__ActiveStatesAssignment_7_2 ) )
+            // InternalRos2Parser.g:5691:2: ( rule__Publisher__ActiveStatesAssignment_7_2 )
+            {
+             before(grammarAccess.getPublisherAccess().getActiveStatesAssignment_7_2()); 
+            // InternalRos2Parser.g:5692:2: ( rule__Publisher__ActiveStatesAssignment_7_2 )
+            // InternalRos2Parser.g:5692:3: rule__Publisher__ActiveStatesAssignment_7_2
+            {
+            pushFollow(FOLLOW_2);
+            rule__Publisher__ActiveStatesAssignment_7_2();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getPublisherAccess().getActiveStatesAssignment_7_2()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Publisher__Group_7__2__Impl"
+
+
+    // $ANTLR start "rule__Publisher__Group_7__3"
+    // InternalRos2Parser.g:5700:1: rule__Publisher__Group_7__3 : rule__Publisher__Group_7__3__Impl rule__Publisher__Group_7__4 ;
+    public final void rule__Publisher__Group_7__3() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:5704:1: ( rule__Publisher__Group_7__3__Impl rule__Publisher__Group_7__4 )
+            // InternalRos2Parser.g:5705:2: rule__Publisher__Group_7__3__Impl rule__Publisher__Group_7__4
+            {
+            pushFollow(FOLLOW_12);
+            rule__Publisher__Group_7__3__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__Publisher__Group_7__4();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Publisher__Group_7__3"
+
+
+    // $ANTLR start "rule__Publisher__Group_7__3__Impl"
+    // InternalRos2Parser.g:5712:1: rule__Publisher__Group_7__3__Impl : ( ( rule__Publisher__Group_7_3__0 )* ) ;
+    public final void rule__Publisher__Group_7__3__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:5716:1: ( ( ( rule__Publisher__Group_7_3__0 )* ) )
+            // InternalRos2Parser.g:5717:1: ( ( rule__Publisher__Group_7_3__0 )* )
+            {
+            // InternalRos2Parser.g:5717:1: ( ( rule__Publisher__Group_7_3__0 )* )
+            // InternalRos2Parser.g:5718:2: ( rule__Publisher__Group_7_3__0 )*
+            {
+             before(grammarAccess.getPublisherAccess().getGroup_7_3()); 
+            // InternalRos2Parser.g:5719:2: ( rule__Publisher__Group_7_3__0 )*
+            loop38:
+            do {
+                int alt38=2;
+                int LA38_0 = input.LA(1);
+
+                if ( (LA38_0==Comma) ) {
+                    alt38=1;
+                }
+
+
+                switch (alt38) {
+            	case 1 :
+            	    // InternalRos2Parser.g:5719:3: rule__Publisher__Group_7_3__0
+            	    {
+            	    pushFollow(FOLLOW_13);
+            	    rule__Publisher__Group_7_3__0();
+
+            	    state._fsp--;
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop38;
+                }
+            } while (true);
+
+             after(grammarAccess.getPublisherAccess().getGroup_7_3()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Publisher__Group_7__3__Impl"
+
+
+    // $ANTLR start "rule__Publisher__Group_7__4"
+    // InternalRos2Parser.g:5727:1: rule__Publisher__Group_7__4 : rule__Publisher__Group_7__4__Impl ;
+    public final void rule__Publisher__Group_7__4() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:5731:1: ( rule__Publisher__Group_7__4__Impl )
+            // InternalRos2Parser.g:5732:2: rule__Publisher__Group_7__4__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__Publisher__Group_7__4__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Publisher__Group_7__4"
+
+
+    // $ANTLR start "rule__Publisher__Group_7__4__Impl"
+    // InternalRos2Parser.g:5738:1: rule__Publisher__Group_7__4__Impl : ( RightSquareBracket ) ;
+    public final void rule__Publisher__Group_7__4__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:5742:1: ( ( RightSquareBracket ) )
+            // InternalRos2Parser.g:5743:1: ( RightSquareBracket )
+            {
+            // InternalRos2Parser.g:5743:1: ( RightSquareBracket )
+            // InternalRos2Parser.g:5744:2: RightSquareBracket
+            {
+             before(grammarAccess.getPublisherAccess().getRightSquareBracketKeyword_7_4()); 
+            match(input,RightSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getPublisherAccess().getRightSquareBracketKeyword_7_4()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Publisher__Group_7__4__Impl"
+
+
+    // $ANTLR start "rule__Publisher__Group_7_3__0"
+    // InternalRos2Parser.g:5754:1: rule__Publisher__Group_7_3__0 : rule__Publisher__Group_7_3__0__Impl rule__Publisher__Group_7_3__1 ;
+    public final void rule__Publisher__Group_7_3__0() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:5758:1: ( rule__Publisher__Group_7_3__0__Impl rule__Publisher__Group_7_3__1 )
+            // InternalRos2Parser.g:5759:2: rule__Publisher__Group_7_3__0__Impl rule__Publisher__Group_7_3__1
+            {
+            pushFollow(FOLLOW_31);
+            rule__Publisher__Group_7_3__0__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__Publisher__Group_7_3__1();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Publisher__Group_7_3__0"
+
+
+    // $ANTLR start "rule__Publisher__Group_7_3__0__Impl"
+    // InternalRos2Parser.g:5766:1: rule__Publisher__Group_7_3__0__Impl : ( Comma ) ;
+    public final void rule__Publisher__Group_7_3__0__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:5770:1: ( ( Comma ) )
+            // InternalRos2Parser.g:5771:1: ( Comma )
+            {
+            // InternalRos2Parser.g:5771:1: ( Comma )
+            // InternalRos2Parser.g:5772:2: Comma
+            {
+             before(grammarAccess.getPublisherAccess().getCommaKeyword_7_3_0()); 
+            match(input,Comma,FOLLOW_2); 
+             after(grammarAccess.getPublisherAccess().getCommaKeyword_7_3_0()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Publisher__Group_7_3__0__Impl"
+
+
+    // $ANTLR start "rule__Publisher__Group_7_3__1"
+    // InternalRos2Parser.g:5781:1: rule__Publisher__Group_7_3__1 : rule__Publisher__Group_7_3__1__Impl ;
+    public final void rule__Publisher__Group_7_3__1() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:5785:1: ( rule__Publisher__Group_7_3__1__Impl )
+            // InternalRos2Parser.g:5786:2: rule__Publisher__Group_7_3__1__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__Publisher__Group_7_3__1__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Publisher__Group_7_3__1"
+
+
+    // $ANTLR start "rule__Publisher__Group_7_3__1__Impl"
+    // InternalRos2Parser.g:5792:1: rule__Publisher__Group_7_3__1__Impl : ( ( rule__Publisher__ActiveStatesAssignment_7_3_1 ) ) ;
+    public final void rule__Publisher__Group_7_3__1__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:5796:1: ( ( ( rule__Publisher__ActiveStatesAssignment_7_3_1 ) ) )
+            // InternalRos2Parser.g:5797:1: ( ( rule__Publisher__ActiveStatesAssignment_7_3_1 ) )
+            {
+            // InternalRos2Parser.g:5797:1: ( ( rule__Publisher__ActiveStatesAssignment_7_3_1 ) )
+            // InternalRos2Parser.g:5798:2: ( rule__Publisher__ActiveStatesAssignment_7_3_1 )
+            {
+             before(grammarAccess.getPublisherAccess().getActiveStatesAssignment_7_3_1()); 
+            // InternalRos2Parser.g:5799:2: ( rule__Publisher__ActiveStatesAssignment_7_3_1 )
+            // InternalRos2Parser.g:5799:3: rule__Publisher__ActiveStatesAssignment_7_3_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__Publisher__ActiveStatesAssignment_7_3_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getPublisherAccess().getActiveStatesAssignment_7_3_1()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Publisher__Group_7_3__1__Impl"
+
+
     // $ANTLR start "rule__Publisher__Group_8__0"
-    // InternalRos2Parser.g:5673:1: rule__Publisher__Group_8__0 : rule__Publisher__Group_8__0__Impl rule__Publisher__Group_8__1 ;
+    // InternalRos2Parser.g:5808:1: rule__Publisher__Group_8__0 : rule__Publisher__Group_8__0__Impl rule__Publisher__Group_8__1 ;
     public final void rule__Publisher__Group_8__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:5677:1: ( rule__Publisher__Group_8__0__Impl rule__Publisher__Group_8__1 )
-            // InternalRos2Parser.g:5678:2: rule__Publisher__Group_8__0__Impl rule__Publisher__Group_8__1
+            // InternalRos2Parser.g:5812:1: ( rule__Publisher__Group_8__0__Impl rule__Publisher__Group_8__1 )
+            // InternalRos2Parser.g:5813:2: rule__Publisher__Group_8__0__Impl rule__Publisher__Group_8__1
             {
-            pushFollow(FOLLOW_10);
+            pushFollow(FOLLOW_5);
             rule__Publisher__Group_8__0__Impl();
 
             state._fsp--;
@@ -17436,21 +17844,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Publisher__Group_8__0__Impl"
-    // InternalRos2Parser.g:5685:1: rule__Publisher__Group_8__0__Impl : ( Active_in ) ;
+    // InternalRos2Parser.g:5820:1: rule__Publisher__Group_8__0__Impl : ( Qos ) ;
     public final void rule__Publisher__Group_8__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:5689:1: ( ( Active_in ) )
-            // InternalRos2Parser.g:5690:1: ( Active_in )
+            // InternalRos2Parser.g:5824:1: ( ( Qos ) )
+            // InternalRos2Parser.g:5825:1: ( Qos )
             {
-            // InternalRos2Parser.g:5690:1: ( Active_in )
-            // InternalRos2Parser.g:5691:2: Active_in
+            // InternalRos2Parser.g:5825:1: ( Qos )
+            // InternalRos2Parser.g:5826:2: Qos
             {
-             before(grammarAccess.getPublisherAccess().getActive_inKeyword_8_0()); 
-            match(input,Active_in,FOLLOW_2); 
-             after(grammarAccess.getPublisherAccess().getActive_inKeyword_8_0()); 
+             before(grammarAccess.getPublisherAccess().getQosKeyword_8_0()); 
+            match(input,Qos,FOLLOW_2); 
+             after(grammarAccess.getPublisherAccess().getQosKeyword_8_0()); 
 
             }
 
@@ -17473,22 +17881,17 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Publisher__Group_8__1"
-    // InternalRos2Parser.g:5700:1: rule__Publisher__Group_8__1 : rule__Publisher__Group_8__1__Impl rule__Publisher__Group_8__2 ;
+    // InternalRos2Parser.g:5835:1: rule__Publisher__Group_8__1 : rule__Publisher__Group_8__1__Impl ;
     public final void rule__Publisher__Group_8__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:5704:1: ( rule__Publisher__Group_8__1__Impl rule__Publisher__Group_8__2 )
-            // InternalRos2Parser.g:5705:2: rule__Publisher__Group_8__1__Impl rule__Publisher__Group_8__2
+            // InternalRos2Parser.g:5839:1: ( rule__Publisher__Group_8__1__Impl )
+            // InternalRos2Parser.g:5840:2: rule__Publisher__Group_8__1__Impl
             {
-            pushFollow(FOLLOW_31);
-            rule__Publisher__Group_8__1__Impl();
-
-            state._fsp--;
-
             pushFollow(FOLLOW_2);
-            rule__Publisher__Group_8__2();
+            rule__Publisher__Group_8__1__Impl();
 
             state._fsp--;
 
@@ -17511,21 +17914,31 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Publisher__Group_8__1__Impl"
-    // InternalRos2Parser.g:5712:1: rule__Publisher__Group_8__1__Impl : ( LeftSquareBracket ) ;
+    // InternalRos2Parser.g:5846:1: rule__Publisher__Group_8__1__Impl : ( ( rule__Publisher__QosAssignment_8_1 ) ) ;
     public final void rule__Publisher__Group_8__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:5716:1: ( ( LeftSquareBracket ) )
-            // InternalRos2Parser.g:5717:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:5850:1: ( ( ( rule__Publisher__QosAssignment_8_1 ) ) )
+            // InternalRos2Parser.g:5851:1: ( ( rule__Publisher__QosAssignment_8_1 ) )
             {
-            // InternalRos2Parser.g:5717:1: ( LeftSquareBracket )
-            // InternalRos2Parser.g:5718:2: LeftSquareBracket
+            // InternalRos2Parser.g:5851:1: ( ( rule__Publisher__QosAssignment_8_1 ) )
+            // InternalRos2Parser.g:5852:2: ( rule__Publisher__QosAssignment_8_1 )
             {
-             before(grammarAccess.getPublisherAccess().getLeftSquareBracketKeyword_8_1()); 
-            match(input,LeftSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getPublisherAccess().getLeftSquareBracketKeyword_8_1()); 
+             before(grammarAccess.getPublisherAccess().getQosAssignment_8_1()); 
+            // InternalRos2Parser.g:5853:2: ( rule__Publisher__QosAssignment_8_1 )
+            // InternalRos2Parser.g:5853:3: rule__Publisher__QosAssignment_8_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__Publisher__QosAssignment_8_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getPublisherAccess().getQosAssignment_8_1()); 
 
             }
 
@@ -17545,419 +17958,6 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         return ;
     }
     // $ANTLR end "rule__Publisher__Group_8__1__Impl"
-
-
-    // $ANTLR start "rule__Publisher__Group_8__2"
-    // InternalRos2Parser.g:5727:1: rule__Publisher__Group_8__2 : rule__Publisher__Group_8__2__Impl rule__Publisher__Group_8__3 ;
-    public final void rule__Publisher__Group_8__2() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:5731:1: ( rule__Publisher__Group_8__2__Impl rule__Publisher__Group_8__3 )
-            // InternalRos2Parser.g:5732:2: rule__Publisher__Group_8__2__Impl rule__Publisher__Group_8__3
-            {
-            pushFollow(FOLLOW_12);
-            rule__Publisher__Group_8__2__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__Publisher__Group_8__3();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Publisher__Group_8__2"
-
-
-    // $ANTLR start "rule__Publisher__Group_8__2__Impl"
-    // InternalRos2Parser.g:5739:1: rule__Publisher__Group_8__2__Impl : ( ( rule__Publisher__ActiveStatesAssignment_8_2 ) ) ;
-    public final void rule__Publisher__Group_8__2__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:5743:1: ( ( ( rule__Publisher__ActiveStatesAssignment_8_2 ) ) )
-            // InternalRos2Parser.g:5744:1: ( ( rule__Publisher__ActiveStatesAssignment_8_2 ) )
-            {
-            // InternalRos2Parser.g:5744:1: ( ( rule__Publisher__ActiveStatesAssignment_8_2 ) )
-            // InternalRos2Parser.g:5745:2: ( rule__Publisher__ActiveStatesAssignment_8_2 )
-            {
-             before(grammarAccess.getPublisherAccess().getActiveStatesAssignment_8_2()); 
-            // InternalRos2Parser.g:5746:2: ( rule__Publisher__ActiveStatesAssignment_8_2 )
-            // InternalRos2Parser.g:5746:3: rule__Publisher__ActiveStatesAssignment_8_2
-            {
-            pushFollow(FOLLOW_2);
-            rule__Publisher__ActiveStatesAssignment_8_2();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getPublisherAccess().getActiveStatesAssignment_8_2()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Publisher__Group_8__2__Impl"
-
-
-    // $ANTLR start "rule__Publisher__Group_8__3"
-    // InternalRos2Parser.g:5754:1: rule__Publisher__Group_8__3 : rule__Publisher__Group_8__3__Impl rule__Publisher__Group_8__4 ;
-    public final void rule__Publisher__Group_8__3() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:5758:1: ( rule__Publisher__Group_8__3__Impl rule__Publisher__Group_8__4 )
-            // InternalRos2Parser.g:5759:2: rule__Publisher__Group_8__3__Impl rule__Publisher__Group_8__4
-            {
-            pushFollow(FOLLOW_12);
-            rule__Publisher__Group_8__3__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__Publisher__Group_8__4();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Publisher__Group_8__3"
-
-
-    // $ANTLR start "rule__Publisher__Group_8__3__Impl"
-    // InternalRos2Parser.g:5766:1: rule__Publisher__Group_8__3__Impl : ( ( rule__Publisher__Group_8_3__0 )* ) ;
-    public final void rule__Publisher__Group_8__3__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:5770:1: ( ( ( rule__Publisher__Group_8_3__0 )* ) )
-            // InternalRos2Parser.g:5771:1: ( ( rule__Publisher__Group_8_3__0 )* )
-            {
-            // InternalRos2Parser.g:5771:1: ( ( rule__Publisher__Group_8_3__0 )* )
-            // InternalRos2Parser.g:5772:2: ( rule__Publisher__Group_8_3__0 )*
-            {
-             before(grammarAccess.getPublisherAccess().getGroup_8_3()); 
-            // InternalRos2Parser.g:5773:2: ( rule__Publisher__Group_8_3__0 )*
-            loop38:
-            do {
-                int alt38=2;
-                int LA38_0 = input.LA(1);
-
-                if ( (LA38_0==Comma) ) {
-                    alt38=1;
-                }
-
-
-                switch (alt38) {
-            	case 1 :
-            	    // InternalRos2Parser.g:5773:3: rule__Publisher__Group_8_3__0
-            	    {
-            	    pushFollow(FOLLOW_13);
-            	    rule__Publisher__Group_8_3__0();
-
-            	    state._fsp--;
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop38;
-                }
-            } while (true);
-
-             after(grammarAccess.getPublisherAccess().getGroup_8_3()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Publisher__Group_8__3__Impl"
-
-
-    // $ANTLR start "rule__Publisher__Group_8__4"
-    // InternalRos2Parser.g:5781:1: rule__Publisher__Group_8__4 : rule__Publisher__Group_8__4__Impl ;
-    public final void rule__Publisher__Group_8__4() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:5785:1: ( rule__Publisher__Group_8__4__Impl )
-            // InternalRos2Parser.g:5786:2: rule__Publisher__Group_8__4__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__Publisher__Group_8__4__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Publisher__Group_8__4"
-
-
-    // $ANTLR start "rule__Publisher__Group_8__4__Impl"
-    // InternalRos2Parser.g:5792:1: rule__Publisher__Group_8__4__Impl : ( RightSquareBracket ) ;
-    public final void rule__Publisher__Group_8__4__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:5796:1: ( ( RightSquareBracket ) )
-            // InternalRos2Parser.g:5797:1: ( RightSquareBracket )
-            {
-            // InternalRos2Parser.g:5797:1: ( RightSquareBracket )
-            // InternalRos2Parser.g:5798:2: RightSquareBracket
-            {
-             before(grammarAccess.getPublisherAccess().getRightSquareBracketKeyword_8_4()); 
-            match(input,RightSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getPublisherAccess().getRightSquareBracketKeyword_8_4()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Publisher__Group_8__4__Impl"
-
-
-    // $ANTLR start "rule__Publisher__Group_8_3__0"
-    // InternalRos2Parser.g:5808:1: rule__Publisher__Group_8_3__0 : rule__Publisher__Group_8_3__0__Impl rule__Publisher__Group_8_3__1 ;
-    public final void rule__Publisher__Group_8_3__0() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:5812:1: ( rule__Publisher__Group_8_3__0__Impl rule__Publisher__Group_8_3__1 )
-            // InternalRos2Parser.g:5813:2: rule__Publisher__Group_8_3__0__Impl rule__Publisher__Group_8_3__1
-            {
-            pushFollow(FOLLOW_31);
-            rule__Publisher__Group_8_3__0__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__Publisher__Group_8_3__1();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Publisher__Group_8_3__0"
-
-
-    // $ANTLR start "rule__Publisher__Group_8_3__0__Impl"
-    // InternalRos2Parser.g:5820:1: rule__Publisher__Group_8_3__0__Impl : ( Comma ) ;
-    public final void rule__Publisher__Group_8_3__0__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:5824:1: ( ( Comma ) )
-            // InternalRos2Parser.g:5825:1: ( Comma )
-            {
-            // InternalRos2Parser.g:5825:1: ( Comma )
-            // InternalRos2Parser.g:5826:2: Comma
-            {
-             before(grammarAccess.getPublisherAccess().getCommaKeyword_8_3_0()); 
-            match(input,Comma,FOLLOW_2); 
-             after(grammarAccess.getPublisherAccess().getCommaKeyword_8_3_0()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Publisher__Group_8_3__0__Impl"
-
-
-    // $ANTLR start "rule__Publisher__Group_8_3__1"
-    // InternalRos2Parser.g:5835:1: rule__Publisher__Group_8_3__1 : rule__Publisher__Group_8_3__1__Impl ;
-    public final void rule__Publisher__Group_8_3__1() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:5839:1: ( rule__Publisher__Group_8_3__1__Impl )
-            // InternalRos2Parser.g:5840:2: rule__Publisher__Group_8_3__1__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__Publisher__Group_8_3__1__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Publisher__Group_8_3__1"
-
-
-    // $ANTLR start "rule__Publisher__Group_8_3__1__Impl"
-    // InternalRos2Parser.g:5846:1: rule__Publisher__Group_8_3__1__Impl : ( ( rule__Publisher__ActiveStatesAssignment_8_3_1 ) ) ;
-    public final void rule__Publisher__Group_8_3__1__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:5850:1: ( ( ( rule__Publisher__ActiveStatesAssignment_8_3_1 ) ) )
-            // InternalRos2Parser.g:5851:1: ( ( rule__Publisher__ActiveStatesAssignment_8_3_1 ) )
-            {
-            // InternalRos2Parser.g:5851:1: ( ( rule__Publisher__ActiveStatesAssignment_8_3_1 ) )
-            // InternalRos2Parser.g:5852:2: ( rule__Publisher__ActiveStatesAssignment_8_3_1 )
-            {
-             before(grammarAccess.getPublisherAccess().getActiveStatesAssignment_8_3_1()); 
-            // InternalRos2Parser.g:5853:2: ( rule__Publisher__ActiveStatesAssignment_8_3_1 )
-            // InternalRos2Parser.g:5853:3: rule__Publisher__ActiveStatesAssignment_8_3_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__Publisher__ActiveStatesAssignment_8_3_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getPublisherAccess().getActiveStatesAssignment_8_3_1()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Publisher__Group_8_3__1__Impl"
 
 
     // $ANTLR start "rule__Subscriber__Group__0"
@@ -18582,7 +18582,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt40=2;
             int LA40_0 = input.LA(1);
 
-            if ( (LA40_0==Qos) ) {
+            if ( (LA40_0==Active_in) ) {
                 alt40=1;
             }
             switch (alt40) {
@@ -18678,7 +18678,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt41=2;
             int LA41_0 = input.LA(1);
 
-            if ( (LA41_0==Active_in) ) {
+            if ( (LA41_0==Qos) ) {
                 alt41=1;
             }
             switch (alt41) {
@@ -18953,7 +18953,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:6190:1: ( rule__Subscriber__Group_7__0__Impl rule__Subscriber__Group_7__1 )
             // InternalRos2Parser.g:6191:2: rule__Subscriber__Group_7__0__Impl rule__Subscriber__Group_7__1
             {
-            pushFollow(FOLLOW_5);
+            pushFollow(FOLLOW_10);
             rule__Subscriber__Group_7__0__Impl();
 
             state._fsp--;
@@ -18982,21 +18982,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Subscriber__Group_7__0__Impl"
-    // InternalRos2Parser.g:6198:1: rule__Subscriber__Group_7__0__Impl : ( Qos ) ;
+    // InternalRos2Parser.g:6198:1: rule__Subscriber__Group_7__0__Impl : ( Active_in ) ;
     public final void rule__Subscriber__Group_7__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6202:1: ( ( Qos ) )
-            // InternalRos2Parser.g:6203:1: ( Qos )
+            // InternalRos2Parser.g:6202:1: ( ( Active_in ) )
+            // InternalRos2Parser.g:6203:1: ( Active_in )
             {
-            // InternalRos2Parser.g:6203:1: ( Qos )
-            // InternalRos2Parser.g:6204:2: Qos
+            // InternalRos2Parser.g:6203:1: ( Active_in )
+            // InternalRos2Parser.g:6204:2: Active_in
             {
-             before(grammarAccess.getSubscriberAccess().getQosKeyword_7_0()); 
-            match(input,Qos,FOLLOW_2); 
-             after(grammarAccess.getSubscriberAccess().getQosKeyword_7_0()); 
+             before(grammarAccess.getSubscriberAccess().getActive_inKeyword_7_0()); 
+            match(input,Active_in,FOLLOW_2); 
+             after(grammarAccess.getSubscriberAccess().getActive_inKeyword_7_0()); 
 
             }
 
@@ -19019,17 +19019,22 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Subscriber__Group_7__1"
-    // InternalRos2Parser.g:6213:1: rule__Subscriber__Group_7__1 : rule__Subscriber__Group_7__1__Impl ;
+    // InternalRos2Parser.g:6213:1: rule__Subscriber__Group_7__1 : rule__Subscriber__Group_7__1__Impl rule__Subscriber__Group_7__2 ;
     public final void rule__Subscriber__Group_7__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6217:1: ( rule__Subscriber__Group_7__1__Impl )
-            // InternalRos2Parser.g:6218:2: rule__Subscriber__Group_7__1__Impl
+            // InternalRos2Parser.g:6217:1: ( rule__Subscriber__Group_7__1__Impl rule__Subscriber__Group_7__2 )
+            // InternalRos2Parser.g:6218:2: rule__Subscriber__Group_7__1__Impl rule__Subscriber__Group_7__2
             {
-            pushFollow(FOLLOW_2);
+            pushFollow(FOLLOW_31);
             rule__Subscriber__Group_7__1__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__Subscriber__Group_7__2();
 
             state._fsp--;
 
@@ -19052,31 +19057,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Subscriber__Group_7__1__Impl"
-    // InternalRos2Parser.g:6224:1: rule__Subscriber__Group_7__1__Impl : ( ( rule__Subscriber__QosAssignment_7_1 ) ) ;
+    // InternalRos2Parser.g:6225:1: rule__Subscriber__Group_7__1__Impl : ( LeftSquareBracket ) ;
     public final void rule__Subscriber__Group_7__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6228:1: ( ( ( rule__Subscriber__QosAssignment_7_1 ) ) )
-            // InternalRos2Parser.g:6229:1: ( ( rule__Subscriber__QosAssignment_7_1 ) )
+            // InternalRos2Parser.g:6229:1: ( ( LeftSquareBracket ) )
+            // InternalRos2Parser.g:6230:1: ( LeftSquareBracket )
             {
-            // InternalRos2Parser.g:6229:1: ( ( rule__Subscriber__QosAssignment_7_1 ) )
-            // InternalRos2Parser.g:6230:2: ( rule__Subscriber__QosAssignment_7_1 )
+            // InternalRos2Parser.g:6230:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:6231:2: LeftSquareBracket
             {
-             before(grammarAccess.getSubscriberAccess().getQosAssignment_7_1()); 
-            // InternalRos2Parser.g:6231:2: ( rule__Subscriber__QosAssignment_7_1 )
-            // InternalRos2Parser.g:6231:3: rule__Subscriber__QosAssignment_7_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__Subscriber__QosAssignment_7_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getSubscriberAccess().getQosAssignment_7_1()); 
+             before(grammarAccess.getSubscriberAccess().getLeftSquareBracketKeyword_7_1()); 
+            match(input,LeftSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getSubscriberAccess().getLeftSquareBracketKeyword_7_1()); 
 
             }
 
@@ -19098,17 +19093,430 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__Subscriber__Group_7__1__Impl"
 
 
+    // $ANTLR start "rule__Subscriber__Group_7__2"
+    // InternalRos2Parser.g:6240:1: rule__Subscriber__Group_7__2 : rule__Subscriber__Group_7__2__Impl rule__Subscriber__Group_7__3 ;
+    public final void rule__Subscriber__Group_7__2() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6244:1: ( rule__Subscriber__Group_7__2__Impl rule__Subscriber__Group_7__3 )
+            // InternalRos2Parser.g:6245:2: rule__Subscriber__Group_7__2__Impl rule__Subscriber__Group_7__3
+            {
+            pushFollow(FOLLOW_12);
+            rule__Subscriber__Group_7__2__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__Subscriber__Group_7__3();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Subscriber__Group_7__2"
+
+
+    // $ANTLR start "rule__Subscriber__Group_7__2__Impl"
+    // InternalRos2Parser.g:6252:1: rule__Subscriber__Group_7__2__Impl : ( ( rule__Subscriber__ActiveStatesAssignment_7_2 ) ) ;
+    public final void rule__Subscriber__Group_7__2__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6256:1: ( ( ( rule__Subscriber__ActiveStatesAssignment_7_2 ) ) )
+            // InternalRos2Parser.g:6257:1: ( ( rule__Subscriber__ActiveStatesAssignment_7_2 ) )
+            {
+            // InternalRos2Parser.g:6257:1: ( ( rule__Subscriber__ActiveStatesAssignment_7_2 ) )
+            // InternalRos2Parser.g:6258:2: ( rule__Subscriber__ActiveStatesAssignment_7_2 )
+            {
+             before(grammarAccess.getSubscriberAccess().getActiveStatesAssignment_7_2()); 
+            // InternalRos2Parser.g:6259:2: ( rule__Subscriber__ActiveStatesAssignment_7_2 )
+            // InternalRos2Parser.g:6259:3: rule__Subscriber__ActiveStatesAssignment_7_2
+            {
+            pushFollow(FOLLOW_2);
+            rule__Subscriber__ActiveStatesAssignment_7_2();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getSubscriberAccess().getActiveStatesAssignment_7_2()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Subscriber__Group_7__2__Impl"
+
+
+    // $ANTLR start "rule__Subscriber__Group_7__3"
+    // InternalRos2Parser.g:6267:1: rule__Subscriber__Group_7__3 : rule__Subscriber__Group_7__3__Impl rule__Subscriber__Group_7__4 ;
+    public final void rule__Subscriber__Group_7__3() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6271:1: ( rule__Subscriber__Group_7__3__Impl rule__Subscriber__Group_7__4 )
+            // InternalRos2Parser.g:6272:2: rule__Subscriber__Group_7__3__Impl rule__Subscriber__Group_7__4
+            {
+            pushFollow(FOLLOW_12);
+            rule__Subscriber__Group_7__3__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__Subscriber__Group_7__4();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Subscriber__Group_7__3"
+
+
+    // $ANTLR start "rule__Subscriber__Group_7__3__Impl"
+    // InternalRos2Parser.g:6279:1: rule__Subscriber__Group_7__3__Impl : ( ( rule__Subscriber__Group_7_3__0 )* ) ;
+    public final void rule__Subscriber__Group_7__3__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6283:1: ( ( ( rule__Subscriber__Group_7_3__0 )* ) )
+            // InternalRos2Parser.g:6284:1: ( ( rule__Subscriber__Group_7_3__0 )* )
+            {
+            // InternalRos2Parser.g:6284:1: ( ( rule__Subscriber__Group_7_3__0 )* )
+            // InternalRos2Parser.g:6285:2: ( rule__Subscriber__Group_7_3__0 )*
+            {
+             before(grammarAccess.getSubscriberAccess().getGroup_7_3()); 
+            // InternalRos2Parser.g:6286:2: ( rule__Subscriber__Group_7_3__0 )*
+            loop42:
+            do {
+                int alt42=2;
+                int LA42_0 = input.LA(1);
+
+                if ( (LA42_0==Comma) ) {
+                    alt42=1;
+                }
+
+
+                switch (alt42) {
+            	case 1 :
+            	    // InternalRos2Parser.g:6286:3: rule__Subscriber__Group_7_3__0
+            	    {
+            	    pushFollow(FOLLOW_13);
+            	    rule__Subscriber__Group_7_3__0();
+
+            	    state._fsp--;
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop42;
+                }
+            } while (true);
+
+             after(grammarAccess.getSubscriberAccess().getGroup_7_3()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Subscriber__Group_7__3__Impl"
+
+
+    // $ANTLR start "rule__Subscriber__Group_7__4"
+    // InternalRos2Parser.g:6294:1: rule__Subscriber__Group_7__4 : rule__Subscriber__Group_7__4__Impl ;
+    public final void rule__Subscriber__Group_7__4() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6298:1: ( rule__Subscriber__Group_7__4__Impl )
+            // InternalRos2Parser.g:6299:2: rule__Subscriber__Group_7__4__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__Subscriber__Group_7__4__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Subscriber__Group_7__4"
+
+
+    // $ANTLR start "rule__Subscriber__Group_7__4__Impl"
+    // InternalRos2Parser.g:6305:1: rule__Subscriber__Group_7__4__Impl : ( RightSquareBracket ) ;
+    public final void rule__Subscriber__Group_7__4__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6309:1: ( ( RightSquareBracket ) )
+            // InternalRos2Parser.g:6310:1: ( RightSquareBracket )
+            {
+            // InternalRos2Parser.g:6310:1: ( RightSquareBracket )
+            // InternalRos2Parser.g:6311:2: RightSquareBracket
+            {
+             before(grammarAccess.getSubscriberAccess().getRightSquareBracketKeyword_7_4()); 
+            match(input,RightSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getSubscriberAccess().getRightSquareBracketKeyword_7_4()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Subscriber__Group_7__4__Impl"
+
+
+    // $ANTLR start "rule__Subscriber__Group_7_3__0"
+    // InternalRos2Parser.g:6321:1: rule__Subscriber__Group_7_3__0 : rule__Subscriber__Group_7_3__0__Impl rule__Subscriber__Group_7_3__1 ;
+    public final void rule__Subscriber__Group_7_3__0() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6325:1: ( rule__Subscriber__Group_7_3__0__Impl rule__Subscriber__Group_7_3__1 )
+            // InternalRos2Parser.g:6326:2: rule__Subscriber__Group_7_3__0__Impl rule__Subscriber__Group_7_3__1
+            {
+            pushFollow(FOLLOW_31);
+            rule__Subscriber__Group_7_3__0__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__Subscriber__Group_7_3__1();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Subscriber__Group_7_3__0"
+
+
+    // $ANTLR start "rule__Subscriber__Group_7_3__0__Impl"
+    // InternalRos2Parser.g:6333:1: rule__Subscriber__Group_7_3__0__Impl : ( Comma ) ;
+    public final void rule__Subscriber__Group_7_3__0__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6337:1: ( ( Comma ) )
+            // InternalRos2Parser.g:6338:1: ( Comma )
+            {
+            // InternalRos2Parser.g:6338:1: ( Comma )
+            // InternalRos2Parser.g:6339:2: Comma
+            {
+             before(grammarAccess.getSubscriberAccess().getCommaKeyword_7_3_0()); 
+            match(input,Comma,FOLLOW_2); 
+             after(grammarAccess.getSubscriberAccess().getCommaKeyword_7_3_0()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Subscriber__Group_7_3__0__Impl"
+
+
+    // $ANTLR start "rule__Subscriber__Group_7_3__1"
+    // InternalRos2Parser.g:6348:1: rule__Subscriber__Group_7_3__1 : rule__Subscriber__Group_7_3__1__Impl ;
+    public final void rule__Subscriber__Group_7_3__1() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6352:1: ( rule__Subscriber__Group_7_3__1__Impl )
+            // InternalRos2Parser.g:6353:2: rule__Subscriber__Group_7_3__1__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__Subscriber__Group_7_3__1__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Subscriber__Group_7_3__1"
+
+
+    // $ANTLR start "rule__Subscriber__Group_7_3__1__Impl"
+    // InternalRos2Parser.g:6359:1: rule__Subscriber__Group_7_3__1__Impl : ( ( rule__Subscriber__ActiveStatesAssignment_7_3_1 ) ) ;
+    public final void rule__Subscriber__Group_7_3__1__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6363:1: ( ( ( rule__Subscriber__ActiveStatesAssignment_7_3_1 ) ) )
+            // InternalRos2Parser.g:6364:1: ( ( rule__Subscriber__ActiveStatesAssignment_7_3_1 ) )
+            {
+            // InternalRos2Parser.g:6364:1: ( ( rule__Subscriber__ActiveStatesAssignment_7_3_1 ) )
+            // InternalRos2Parser.g:6365:2: ( rule__Subscriber__ActiveStatesAssignment_7_3_1 )
+            {
+             before(grammarAccess.getSubscriberAccess().getActiveStatesAssignment_7_3_1()); 
+            // InternalRos2Parser.g:6366:2: ( rule__Subscriber__ActiveStatesAssignment_7_3_1 )
+            // InternalRos2Parser.g:6366:3: rule__Subscriber__ActiveStatesAssignment_7_3_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__Subscriber__ActiveStatesAssignment_7_3_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getSubscriberAccess().getActiveStatesAssignment_7_3_1()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__Subscriber__Group_7_3__1__Impl"
+
+
     // $ANTLR start "rule__Subscriber__Group_8__0"
-    // InternalRos2Parser.g:6240:1: rule__Subscriber__Group_8__0 : rule__Subscriber__Group_8__0__Impl rule__Subscriber__Group_8__1 ;
+    // InternalRos2Parser.g:6375:1: rule__Subscriber__Group_8__0 : rule__Subscriber__Group_8__0__Impl rule__Subscriber__Group_8__1 ;
     public final void rule__Subscriber__Group_8__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6244:1: ( rule__Subscriber__Group_8__0__Impl rule__Subscriber__Group_8__1 )
-            // InternalRos2Parser.g:6245:2: rule__Subscriber__Group_8__0__Impl rule__Subscriber__Group_8__1
+            // InternalRos2Parser.g:6379:1: ( rule__Subscriber__Group_8__0__Impl rule__Subscriber__Group_8__1 )
+            // InternalRos2Parser.g:6380:2: rule__Subscriber__Group_8__0__Impl rule__Subscriber__Group_8__1
             {
-            pushFollow(FOLLOW_10);
+            pushFollow(FOLLOW_5);
             rule__Subscriber__Group_8__0__Impl();
 
             state._fsp--;
@@ -19137,21 +19545,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Subscriber__Group_8__0__Impl"
-    // InternalRos2Parser.g:6252:1: rule__Subscriber__Group_8__0__Impl : ( Active_in ) ;
+    // InternalRos2Parser.g:6387:1: rule__Subscriber__Group_8__0__Impl : ( Qos ) ;
     public final void rule__Subscriber__Group_8__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6256:1: ( ( Active_in ) )
-            // InternalRos2Parser.g:6257:1: ( Active_in )
+            // InternalRos2Parser.g:6391:1: ( ( Qos ) )
+            // InternalRos2Parser.g:6392:1: ( Qos )
             {
-            // InternalRos2Parser.g:6257:1: ( Active_in )
-            // InternalRos2Parser.g:6258:2: Active_in
+            // InternalRos2Parser.g:6392:1: ( Qos )
+            // InternalRos2Parser.g:6393:2: Qos
             {
-             before(grammarAccess.getSubscriberAccess().getActive_inKeyword_8_0()); 
-            match(input,Active_in,FOLLOW_2); 
-             after(grammarAccess.getSubscriberAccess().getActive_inKeyword_8_0()); 
+             before(grammarAccess.getSubscriberAccess().getQosKeyword_8_0()); 
+            match(input,Qos,FOLLOW_2); 
+             after(grammarAccess.getSubscriberAccess().getQosKeyword_8_0()); 
 
             }
 
@@ -19174,22 +19582,17 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Subscriber__Group_8__1"
-    // InternalRos2Parser.g:6267:1: rule__Subscriber__Group_8__1 : rule__Subscriber__Group_8__1__Impl rule__Subscriber__Group_8__2 ;
+    // InternalRos2Parser.g:6402:1: rule__Subscriber__Group_8__1 : rule__Subscriber__Group_8__1__Impl ;
     public final void rule__Subscriber__Group_8__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6271:1: ( rule__Subscriber__Group_8__1__Impl rule__Subscriber__Group_8__2 )
-            // InternalRos2Parser.g:6272:2: rule__Subscriber__Group_8__1__Impl rule__Subscriber__Group_8__2
+            // InternalRos2Parser.g:6406:1: ( rule__Subscriber__Group_8__1__Impl )
+            // InternalRos2Parser.g:6407:2: rule__Subscriber__Group_8__1__Impl
             {
-            pushFollow(FOLLOW_31);
-            rule__Subscriber__Group_8__1__Impl();
-
-            state._fsp--;
-
             pushFollow(FOLLOW_2);
-            rule__Subscriber__Group_8__2();
+            rule__Subscriber__Group_8__1__Impl();
 
             state._fsp--;
 
@@ -19212,21 +19615,31 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Subscriber__Group_8__1__Impl"
-    // InternalRos2Parser.g:6279:1: rule__Subscriber__Group_8__1__Impl : ( LeftSquareBracket ) ;
+    // InternalRos2Parser.g:6413:1: rule__Subscriber__Group_8__1__Impl : ( ( rule__Subscriber__QosAssignment_8_1 ) ) ;
     public final void rule__Subscriber__Group_8__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6283:1: ( ( LeftSquareBracket ) )
-            // InternalRos2Parser.g:6284:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:6417:1: ( ( ( rule__Subscriber__QosAssignment_8_1 ) ) )
+            // InternalRos2Parser.g:6418:1: ( ( rule__Subscriber__QosAssignment_8_1 ) )
             {
-            // InternalRos2Parser.g:6284:1: ( LeftSquareBracket )
-            // InternalRos2Parser.g:6285:2: LeftSquareBracket
+            // InternalRos2Parser.g:6418:1: ( ( rule__Subscriber__QosAssignment_8_1 ) )
+            // InternalRos2Parser.g:6419:2: ( rule__Subscriber__QosAssignment_8_1 )
             {
-             before(grammarAccess.getSubscriberAccess().getLeftSquareBracketKeyword_8_1()); 
-            match(input,LeftSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getSubscriberAccess().getLeftSquareBracketKeyword_8_1()); 
+             before(grammarAccess.getSubscriberAccess().getQosAssignment_8_1()); 
+            // InternalRos2Parser.g:6420:2: ( rule__Subscriber__QosAssignment_8_1 )
+            // InternalRos2Parser.g:6420:3: rule__Subscriber__QosAssignment_8_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__Subscriber__QosAssignment_8_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getSubscriberAccess().getQosAssignment_8_1()); 
 
             }
 
@@ -19246,419 +19659,6 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         return ;
     }
     // $ANTLR end "rule__Subscriber__Group_8__1__Impl"
-
-
-    // $ANTLR start "rule__Subscriber__Group_8__2"
-    // InternalRos2Parser.g:6294:1: rule__Subscriber__Group_8__2 : rule__Subscriber__Group_8__2__Impl rule__Subscriber__Group_8__3 ;
-    public final void rule__Subscriber__Group_8__2() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6298:1: ( rule__Subscriber__Group_8__2__Impl rule__Subscriber__Group_8__3 )
-            // InternalRos2Parser.g:6299:2: rule__Subscriber__Group_8__2__Impl rule__Subscriber__Group_8__3
-            {
-            pushFollow(FOLLOW_12);
-            rule__Subscriber__Group_8__2__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__Subscriber__Group_8__3();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Subscriber__Group_8__2"
-
-
-    // $ANTLR start "rule__Subscriber__Group_8__2__Impl"
-    // InternalRos2Parser.g:6306:1: rule__Subscriber__Group_8__2__Impl : ( ( rule__Subscriber__ActiveStatesAssignment_8_2 ) ) ;
-    public final void rule__Subscriber__Group_8__2__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6310:1: ( ( ( rule__Subscriber__ActiveStatesAssignment_8_2 ) ) )
-            // InternalRos2Parser.g:6311:1: ( ( rule__Subscriber__ActiveStatesAssignment_8_2 ) )
-            {
-            // InternalRos2Parser.g:6311:1: ( ( rule__Subscriber__ActiveStatesAssignment_8_2 ) )
-            // InternalRos2Parser.g:6312:2: ( rule__Subscriber__ActiveStatesAssignment_8_2 )
-            {
-             before(grammarAccess.getSubscriberAccess().getActiveStatesAssignment_8_2()); 
-            // InternalRos2Parser.g:6313:2: ( rule__Subscriber__ActiveStatesAssignment_8_2 )
-            // InternalRos2Parser.g:6313:3: rule__Subscriber__ActiveStatesAssignment_8_2
-            {
-            pushFollow(FOLLOW_2);
-            rule__Subscriber__ActiveStatesAssignment_8_2();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getSubscriberAccess().getActiveStatesAssignment_8_2()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Subscriber__Group_8__2__Impl"
-
-
-    // $ANTLR start "rule__Subscriber__Group_8__3"
-    // InternalRos2Parser.g:6321:1: rule__Subscriber__Group_8__3 : rule__Subscriber__Group_8__3__Impl rule__Subscriber__Group_8__4 ;
-    public final void rule__Subscriber__Group_8__3() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6325:1: ( rule__Subscriber__Group_8__3__Impl rule__Subscriber__Group_8__4 )
-            // InternalRos2Parser.g:6326:2: rule__Subscriber__Group_8__3__Impl rule__Subscriber__Group_8__4
-            {
-            pushFollow(FOLLOW_12);
-            rule__Subscriber__Group_8__3__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__Subscriber__Group_8__4();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Subscriber__Group_8__3"
-
-
-    // $ANTLR start "rule__Subscriber__Group_8__3__Impl"
-    // InternalRos2Parser.g:6333:1: rule__Subscriber__Group_8__3__Impl : ( ( rule__Subscriber__Group_8_3__0 )* ) ;
-    public final void rule__Subscriber__Group_8__3__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6337:1: ( ( ( rule__Subscriber__Group_8_3__0 )* ) )
-            // InternalRos2Parser.g:6338:1: ( ( rule__Subscriber__Group_8_3__0 )* )
-            {
-            // InternalRos2Parser.g:6338:1: ( ( rule__Subscriber__Group_8_3__0 )* )
-            // InternalRos2Parser.g:6339:2: ( rule__Subscriber__Group_8_3__0 )*
-            {
-             before(grammarAccess.getSubscriberAccess().getGroup_8_3()); 
-            // InternalRos2Parser.g:6340:2: ( rule__Subscriber__Group_8_3__0 )*
-            loop42:
-            do {
-                int alt42=2;
-                int LA42_0 = input.LA(1);
-
-                if ( (LA42_0==Comma) ) {
-                    alt42=1;
-                }
-
-
-                switch (alt42) {
-            	case 1 :
-            	    // InternalRos2Parser.g:6340:3: rule__Subscriber__Group_8_3__0
-            	    {
-            	    pushFollow(FOLLOW_13);
-            	    rule__Subscriber__Group_8_3__0();
-
-            	    state._fsp--;
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop42;
-                }
-            } while (true);
-
-             after(grammarAccess.getSubscriberAccess().getGroup_8_3()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Subscriber__Group_8__3__Impl"
-
-
-    // $ANTLR start "rule__Subscriber__Group_8__4"
-    // InternalRos2Parser.g:6348:1: rule__Subscriber__Group_8__4 : rule__Subscriber__Group_8__4__Impl ;
-    public final void rule__Subscriber__Group_8__4() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6352:1: ( rule__Subscriber__Group_8__4__Impl )
-            // InternalRos2Parser.g:6353:2: rule__Subscriber__Group_8__4__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__Subscriber__Group_8__4__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Subscriber__Group_8__4"
-
-
-    // $ANTLR start "rule__Subscriber__Group_8__4__Impl"
-    // InternalRos2Parser.g:6359:1: rule__Subscriber__Group_8__4__Impl : ( RightSquareBracket ) ;
-    public final void rule__Subscriber__Group_8__4__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6363:1: ( ( RightSquareBracket ) )
-            // InternalRos2Parser.g:6364:1: ( RightSquareBracket )
-            {
-            // InternalRos2Parser.g:6364:1: ( RightSquareBracket )
-            // InternalRos2Parser.g:6365:2: RightSquareBracket
-            {
-             before(grammarAccess.getSubscriberAccess().getRightSquareBracketKeyword_8_4()); 
-            match(input,RightSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getSubscriberAccess().getRightSquareBracketKeyword_8_4()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Subscriber__Group_8__4__Impl"
-
-
-    // $ANTLR start "rule__Subscriber__Group_8_3__0"
-    // InternalRos2Parser.g:6375:1: rule__Subscriber__Group_8_3__0 : rule__Subscriber__Group_8_3__0__Impl rule__Subscriber__Group_8_3__1 ;
-    public final void rule__Subscriber__Group_8_3__0() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6379:1: ( rule__Subscriber__Group_8_3__0__Impl rule__Subscriber__Group_8_3__1 )
-            // InternalRos2Parser.g:6380:2: rule__Subscriber__Group_8_3__0__Impl rule__Subscriber__Group_8_3__1
-            {
-            pushFollow(FOLLOW_31);
-            rule__Subscriber__Group_8_3__0__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__Subscriber__Group_8_3__1();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Subscriber__Group_8_3__0"
-
-
-    // $ANTLR start "rule__Subscriber__Group_8_3__0__Impl"
-    // InternalRos2Parser.g:6387:1: rule__Subscriber__Group_8_3__0__Impl : ( Comma ) ;
-    public final void rule__Subscriber__Group_8_3__0__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6391:1: ( ( Comma ) )
-            // InternalRos2Parser.g:6392:1: ( Comma )
-            {
-            // InternalRos2Parser.g:6392:1: ( Comma )
-            // InternalRos2Parser.g:6393:2: Comma
-            {
-             before(grammarAccess.getSubscriberAccess().getCommaKeyword_8_3_0()); 
-            match(input,Comma,FOLLOW_2); 
-             after(grammarAccess.getSubscriberAccess().getCommaKeyword_8_3_0()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Subscriber__Group_8_3__0__Impl"
-
-
-    // $ANTLR start "rule__Subscriber__Group_8_3__1"
-    // InternalRos2Parser.g:6402:1: rule__Subscriber__Group_8_3__1 : rule__Subscriber__Group_8_3__1__Impl ;
-    public final void rule__Subscriber__Group_8_3__1() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6406:1: ( rule__Subscriber__Group_8_3__1__Impl )
-            // InternalRos2Parser.g:6407:2: rule__Subscriber__Group_8_3__1__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__Subscriber__Group_8_3__1__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Subscriber__Group_8_3__1"
-
-
-    // $ANTLR start "rule__Subscriber__Group_8_3__1__Impl"
-    // InternalRos2Parser.g:6413:1: rule__Subscriber__Group_8_3__1__Impl : ( ( rule__Subscriber__ActiveStatesAssignment_8_3_1 ) ) ;
-    public final void rule__Subscriber__Group_8_3__1__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6417:1: ( ( ( rule__Subscriber__ActiveStatesAssignment_8_3_1 ) ) )
-            // InternalRos2Parser.g:6418:1: ( ( rule__Subscriber__ActiveStatesAssignment_8_3_1 ) )
-            {
-            // InternalRos2Parser.g:6418:1: ( ( rule__Subscriber__ActiveStatesAssignment_8_3_1 ) )
-            // InternalRos2Parser.g:6419:2: ( rule__Subscriber__ActiveStatesAssignment_8_3_1 )
-            {
-             before(grammarAccess.getSubscriberAccess().getActiveStatesAssignment_8_3_1()); 
-            // InternalRos2Parser.g:6420:2: ( rule__Subscriber__ActiveStatesAssignment_8_3_1 )
-            // InternalRos2Parser.g:6420:3: rule__Subscriber__ActiveStatesAssignment_8_3_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__Subscriber__ActiveStatesAssignment_8_3_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getSubscriberAccess().getActiveStatesAssignment_8_3_1()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__Subscriber__Group_8_3__1__Impl"
 
 
     // $ANTLR start "rule__ServiceServer__Group__0"
@@ -20283,7 +20283,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt44=2;
             int LA44_0 = input.LA(1);
 
-            if ( (LA44_0==Qos) ) {
+            if ( (LA44_0==Active_in) ) {
                 alt44=1;
             }
             switch (alt44) {
@@ -20379,7 +20379,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt45=2;
             int LA45_0 = input.LA(1);
 
-            if ( (LA45_0==Active_in) ) {
+            if ( (LA45_0==Qos) ) {
                 alt45=1;
             }
             switch (alt45) {
@@ -20654,7 +20654,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:6757:1: ( rule__ServiceServer__Group_7__0__Impl rule__ServiceServer__Group_7__1 )
             // InternalRos2Parser.g:6758:2: rule__ServiceServer__Group_7__0__Impl rule__ServiceServer__Group_7__1
             {
-            pushFollow(FOLLOW_5);
+            pushFollow(FOLLOW_10);
             rule__ServiceServer__Group_7__0__Impl();
 
             state._fsp--;
@@ -20683,21 +20683,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceServer__Group_7__0__Impl"
-    // InternalRos2Parser.g:6765:1: rule__ServiceServer__Group_7__0__Impl : ( Qos ) ;
+    // InternalRos2Parser.g:6765:1: rule__ServiceServer__Group_7__0__Impl : ( Active_in ) ;
     public final void rule__ServiceServer__Group_7__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6769:1: ( ( Qos ) )
-            // InternalRos2Parser.g:6770:1: ( Qos )
+            // InternalRos2Parser.g:6769:1: ( ( Active_in ) )
+            // InternalRos2Parser.g:6770:1: ( Active_in )
             {
-            // InternalRos2Parser.g:6770:1: ( Qos )
-            // InternalRos2Parser.g:6771:2: Qos
+            // InternalRos2Parser.g:6770:1: ( Active_in )
+            // InternalRos2Parser.g:6771:2: Active_in
             {
-             before(grammarAccess.getServiceServerAccess().getQosKeyword_7_0()); 
-            match(input,Qos,FOLLOW_2); 
-             after(grammarAccess.getServiceServerAccess().getQosKeyword_7_0()); 
+             before(grammarAccess.getServiceServerAccess().getActive_inKeyword_7_0()); 
+            match(input,Active_in,FOLLOW_2); 
+             after(grammarAccess.getServiceServerAccess().getActive_inKeyword_7_0()); 
 
             }
 
@@ -20720,17 +20720,22 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceServer__Group_7__1"
-    // InternalRos2Parser.g:6780:1: rule__ServiceServer__Group_7__1 : rule__ServiceServer__Group_7__1__Impl ;
+    // InternalRos2Parser.g:6780:1: rule__ServiceServer__Group_7__1 : rule__ServiceServer__Group_7__1__Impl rule__ServiceServer__Group_7__2 ;
     public final void rule__ServiceServer__Group_7__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6784:1: ( rule__ServiceServer__Group_7__1__Impl )
-            // InternalRos2Parser.g:6785:2: rule__ServiceServer__Group_7__1__Impl
+            // InternalRos2Parser.g:6784:1: ( rule__ServiceServer__Group_7__1__Impl rule__ServiceServer__Group_7__2 )
+            // InternalRos2Parser.g:6785:2: rule__ServiceServer__Group_7__1__Impl rule__ServiceServer__Group_7__2
             {
-            pushFollow(FOLLOW_2);
+            pushFollow(FOLLOW_31);
             rule__ServiceServer__Group_7__1__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ServiceServer__Group_7__2();
 
             state._fsp--;
 
@@ -20753,31 +20758,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceServer__Group_7__1__Impl"
-    // InternalRos2Parser.g:6791:1: rule__ServiceServer__Group_7__1__Impl : ( ( rule__ServiceServer__QosAssignment_7_1 ) ) ;
+    // InternalRos2Parser.g:6792:1: rule__ServiceServer__Group_7__1__Impl : ( LeftSquareBracket ) ;
     public final void rule__ServiceServer__Group_7__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6795:1: ( ( ( rule__ServiceServer__QosAssignment_7_1 ) ) )
-            // InternalRos2Parser.g:6796:1: ( ( rule__ServiceServer__QosAssignment_7_1 ) )
+            // InternalRos2Parser.g:6796:1: ( ( LeftSquareBracket ) )
+            // InternalRos2Parser.g:6797:1: ( LeftSquareBracket )
             {
-            // InternalRos2Parser.g:6796:1: ( ( rule__ServiceServer__QosAssignment_7_1 ) )
-            // InternalRos2Parser.g:6797:2: ( rule__ServiceServer__QosAssignment_7_1 )
+            // InternalRos2Parser.g:6797:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:6798:2: LeftSquareBracket
             {
-             before(grammarAccess.getServiceServerAccess().getQosAssignment_7_1()); 
-            // InternalRos2Parser.g:6798:2: ( rule__ServiceServer__QosAssignment_7_1 )
-            // InternalRos2Parser.g:6798:3: rule__ServiceServer__QosAssignment_7_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__ServiceServer__QosAssignment_7_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getServiceServerAccess().getQosAssignment_7_1()); 
+             before(grammarAccess.getServiceServerAccess().getLeftSquareBracketKeyword_7_1()); 
+            match(input,LeftSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getServiceServerAccess().getLeftSquareBracketKeyword_7_1()); 
 
             }
 
@@ -20799,17 +20794,430 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ServiceServer__Group_7__1__Impl"
 
 
+    // $ANTLR start "rule__ServiceServer__Group_7__2"
+    // InternalRos2Parser.g:6807:1: rule__ServiceServer__Group_7__2 : rule__ServiceServer__Group_7__2__Impl rule__ServiceServer__Group_7__3 ;
+    public final void rule__ServiceServer__Group_7__2() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6811:1: ( rule__ServiceServer__Group_7__2__Impl rule__ServiceServer__Group_7__3 )
+            // InternalRos2Parser.g:6812:2: rule__ServiceServer__Group_7__2__Impl rule__ServiceServer__Group_7__3
+            {
+            pushFollow(FOLLOW_12);
+            rule__ServiceServer__Group_7__2__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ServiceServer__Group_7__3();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceServer__Group_7__2"
+
+
+    // $ANTLR start "rule__ServiceServer__Group_7__2__Impl"
+    // InternalRos2Parser.g:6819:1: rule__ServiceServer__Group_7__2__Impl : ( ( rule__ServiceServer__ActiveStatesAssignment_7_2 ) ) ;
+    public final void rule__ServiceServer__Group_7__2__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6823:1: ( ( ( rule__ServiceServer__ActiveStatesAssignment_7_2 ) ) )
+            // InternalRos2Parser.g:6824:1: ( ( rule__ServiceServer__ActiveStatesAssignment_7_2 ) )
+            {
+            // InternalRos2Parser.g:6824:1: ( ( rule__ServiceServer__ActiveStatesAssignment_7_2 ) )
+            // InternalRos2Parser.g:6825:2: ( rule__ServiceServer__ActiveStatesAssignment_7_2 )
+            {
+             before(grammarAccess.getServiceServerAccess().getActiveStatesAssignment_7_2()); 
+            // InternalRos2Parser.g:6826:2: ( rule__ServiceServer__ActiveStatesAssignment_7_2 )
+            // InternalRos2Parser.g:6826:3: rule__ServiceServer__ActiveStatesAssignment_7_2
+            {
+            pushFollow(FOLLOW_2);
+            rule__ServiceServer__ActiveStatesAssignment_7_2();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getServiceServerAccess().getActiveStatesAssignment_7_2()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceServer__Group_7__2__Impl"
+
+
+    // $ANTLR start "rule__ServiceServer__Group_7__3"
+    // InternalRos2Parser.g:6834:1: rule__ServiceServer__Group_7__3 : rule__ServiceServer__Group_7__3__Impl rule__ServiceServer__Group_7__4 ;
+    public final void rule__ServiceServer__Group_7__3() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6838:1: ( rule__ServiceServer__Group_7__3__Impl rule__ServiceServer__Group_7__4 )
+            // InternalRos2Parser.g:6839:2: rule__ServiceServer__Group_7__3__Impl rule__ServiceServer__Group_7__4
+            {
+            pushFollow(FOLLOW_12);
+            rule__ServiceServer__Group_7__3__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ServiceServer__Group_7__4();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceServer__Group_7__3"
+
+
+    // $ANTLR start "rule__ServiceServer__Group_7__3__Impl"
+    // InternalRos2Parser.g:6846:1: rule__ServiceServer__Group_7__3__Impl : ( ( rule__ServiceServer__Group_7_3__0 )* ) ;
+    public final void rule__ServiceServer__Group_7__3__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6850:1: ( ( ( rule__ServiceServer__Group_7_3__0 )* ) )
+            // InternalRos2Parser.g:6851:1: ( ( rule__ServiceServer__Group_7_3__0 )* )
+            {
+            // InternalRos2Parser.g:6851:1: ( ( rule__ServiceServer__Group_7_3__0 )* )
+            // InternalRos2Parser.g:6852:2: ( rule__ServiceServer__Group_7_3__0 )*
+            {
+             before(grammarAccess.getServiceServerAccess().getGroup_7_3()); 
+            // InternalRos2Parser.g:6853:2: ( rule__ServiceServer__Group_7_3__0 )*
+            loop46:
+            do {
+                int alt46=2;
+                int LA46_0 = input.LA(1);
+
+                if ( (LA46_0==Comma) ) {
+                    alt46=1;
+                }
+
+
+                switch (alt46) {
+            	case 1 :
+            	    // InternalRos2Parser.g:6853:3: rule__ServiceServer__Group_7_3__0
+            	    {
+            	    pushFollow(FOLLOW_13);
+            	    rule__ServiceServer__Group_7_3__0();
+
+            	    state._fsp--;
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop46;
+                }
+            } while (true);
+
+             after(grammarAccess.getServiceServerAccess().getGroup_7_3()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceServer__Group_7__3__Impl"
+
+
+    // $ANTLR start "rule__ServiceServer__Group_7__4"
+    // InternalRos2Parser.g:6861:1: rule__ServiceServer__Group_7__4 : rule__ServiceServer__Group_7__4__Impl ;
+    public final void rule__ServiceServer__Group_7__4() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6865:1: ( rule__ServiceServer__Group_7__4__Impl )
+            // InternalRos2Parser.g:6866:2: rule__ServiceServer__Group_7__4__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__ServiceServer__Group_7__4__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceServer__Group_7__4"
+
+
+    // $ANTLR start "rule__ServiceServer__Group_7__4__Impl"
+    // InternalRos2Parser.g:6872:1: rule__ServiceServer__Group_7__4__Impl : ( RightSquareBracket ) ;
+    public final void rule__ServiceServer__Group_7__4__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6876:1: ( ( RightSquareBracket ) )
+            // InternalRos2Parser.g:6877:1: ( RightSquareBracket )
+            {
+            // InternalRos2Parser.g:6877:1: ( RightSquareBracket )
+            // InternalRos2Parser.g:6878:2: RightSquareBracket
+            {
+             before(grammarAccess.getServiceServerAccess().getRightSquareBracketKeyword_7_4()); 
+            match(input,RightSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getServiceServerAccess().getRightSquareBracketKeyword_7_4()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceServer__Group_7__4__Impl"
+
+
+    // $ANTLR start "rule__ServiceServer__Group_7_3__0"
+    // InternalRos2Parser.g:6888:1: rule__ServiceServer__Group_7_3__0 : rule__ServiceServer__Group_7_3__0__Impl rule__ServiceServer__Group_7_3__1 ;
+    public final void rule__ServiceServer__Group_7_3__0() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6892:1: ( rule__ServiceServer__Group_7_3__0__Impl rule__ServiceServer__Group_7_3__1 )
+            // InternalRos2Parser.g:6893:2: rule__ServiceServer__Group_7_3__0__Impl rule__ServiceServer__Group_7_3__1
+            {
+            pushFollow(FOLLOW_31);
+            rule__ServiceServer__Group_7_3__0__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ServiceServer__Group_7_3__1();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceServer__Group_7_3__0"
+
+
+    // $ANTLR start "rule__ServiceServer__Group_7_3__0__Impl"
+    // InternalRos2Parser.g:6900:1: rule__ServiceServer__Group_7_3__0__Impl : ( Comma ) ;
+    public final void rule__ServiceServer__Group_7_3__0__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6904:1: ( ( Comma ) )
+            // InternalRos2Parser.g:6905:1: ( Comma )
+            {
+            // InternalRos2Parser.g:6905:1: ( Comma )
+            // InternalRos2Parser.g:6906:2: Comma
+            {
+             before(grammarAccess.getServiceServerAccess().getCommaKeyword_7_3_0()); 
+            match(input,Comma,FOLLOW_2); 
+             after(grammarAccess.getServiceServerAccess().getCommaKeyword_7_3_0()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceServer__Group_7_3__0__Impl"
+
+
+    // $ANTLR start "rule__ServiceServer__Group_7_3__1"
+    // InternalRos2Parser.g:6915:1: rule__ServiceServer__Group_7_3__1 : rule__ServiceServer__Group_7_3__1__Impl ;
+    public final void rule__ServiceServer__Group_7_3__1() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6919:1: ( rule__ServiceServer__Group_7_3__1__Impl )
+            // InternalRos2Parser.g:6920:2: rule__ServiceServer__Group_7_3__1__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__ServiceServer__Group_7_3__1__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceServer__Group_7_3__1"
+
+
+    // $ANTLR start "rule__ServiceServer__Group_7_3__1__Impl"
+    // InternalRos2Parser.g:6926:1: rule__ServiceServer__Group_7_3__1__Impl : ( ( rule__ServiceServer__ActiveStatesAssignment_7_3_1 ) ) ;
+    public final void rule__ServiceServer__Group_7_3__1__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:6930:1: ( ( ( rule__ServiceServer__ActiveStatesAssignment_7_3_1 ) ) )
+            // InternalRos2Parser.g:6931:1: ( ( rule__ServiceServer__ActiveStatesAssignment_7_3_1 ) )
+            {
+            // InternalRos2Parser.g:6931:1: ( ( rule__ServiceServer__ActiveStatesAssignment_7_3_1 ) )
+            // InternalRos2Parser.g:6932:2: ( rule__ServiceServer__ActiveStatesAssignment_7_3_1 )
+            {
+             before(grammarAccess.getServiceServerAccess().getActiveStatesAssignment_7_3_1()); 
+            // InternalRos2Parser.g:6933:2: ( rule__ServiceServer__ActiveStatesAssignment_7_3_1 )
+            // InternalRos2Parser.g:6933:3: rule__ServiceServer__ActiveStatesAssignment_7_3_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__ServiceServer__ActiveStatesAssignment_7_3_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getServiceServerAccess().getActiveStatesAssignment_7_3_1()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceServer__Group_7_3__1__Impl"
+
+
     // $ANTLR start "rule__ServiceServer__Group_8__0"
-    // InternalRos2Parser.g:6807:1: rule__ServiceServer__Group_8__0 : rule__ServiceServer__Group_8__0__Impl rule__ServiceServer__Group_8__1 ;
+    // InternalRos2Parser.g:6942:1: rule__ServiceServer__Group_8__0 : rule__ServiceServer__Group_8__0__Impl rule__ServiceServer__Group_8__1 ;
     public final void rule__ServiceServer__Group_8__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6811:1: ( rule__ServiceServer__Group_8__0__Impl rule__ServiceServer__Group_8__1 )
-            // InternalRos2Parser.g:6812:2: rule__ServiceServer__Group_8__0__Impl rule__ServiceServer__Group_8__1
+            // InternalRos2Parser.g:6946:1: ( rule__ServiceServer__Group_8__0__Impl rule__ServiceServer__Group_8__1 )
+            // InternalRos2Parser.g:6947:2: rule__ServiceServer__Group_8__0__Impl rule__ServiceServer__Group_8__1
             {
-            pushFollow(FOLLOW_10);
+            pushFollow(FOLLOW_5);
             rule__ServiceServer__Group_8__0__Impl();
 
             state._fsp--;
@@ -20838,21 +21246,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceServer__Group_8__0__Impl"
-    // InternalRos2Parser.g:6819:1: rule__ServiceServer__Group_8__0__Impl : ( Active_in ) ;
+    // InternalRos2Parser.g:6954:1: rule__ServiceServer__Group_8__0__Impl : ( Qos ) ;
     public final void rule__ServiceServer__Group_8__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6823:1: ( ( Active_in ) )
-            // InternalRos2Parser.g:6824:1: ( Active_in )
+            // InternalRos2Parser.g:6958:1: ( ( Qos ) )
+            // InternalRos2Parser.g:6959:1: ( Qos )
             {
-            // InternalRos2Parser.g:6824:1: ( Active_in )
-            // InternalRos2Parser.g:6825:2: Active_in
+            // InternalRos2Parser.g:6959:1: ( Qos )
+            // InternalRos2Parser.g:6960:2: Qos
             {
-             before(grammarAccess.getServiceServerAccess().getActive_inKeyword_8_0()); 
-            match(input,Active_in,FOLLOW_2); 
-             after(grammarAccess.getServiceServerAccess().getActive_inKeyword_8_0()); 
+             before(grammarAccess.getServiceServerAccess().getQosKeyword_8_0()); 
+            match(input,Qos,FOLLOW_2); 
+             after(grammarAccess.getServiceServerAccess().getQosKeyword_8_0()); 
 
             }
 
@@ -20875,22 +21283,17 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceServer__Group_8__1"
-    // InternalRos2Parser.g:6834:1: rule__ServiceServer__Group_8__1 : rule__ServiceServer__Group_8__1__Impl rule__ServiceServer__Group_8__2 ;
+    // InternalRos2Parser.g:6969:1: rule__ServiceServer__Group_8__1 : rule__ServiceServer__Group_8__1__Impl ;
     public final void rule__ServiceServer__Group_8__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6838:1: ( rule__ServiceServer__Group_8__1__Impl rule__ServiceServer__Group_8__2 )
-            // InternalRos2Parser.g:6839:2: rule__ServiceServer__Group_8__1__Impl rule__ServiceServer__Group_8__2
+            // InternalRos2Parser.g:6973:1: ( rule__ServiceServer__Group_8__1__Impl )
+            // InternalRos2Parser.g:6974:2: rule__ServiceServer__Group_8__1__Impl
             {
-            pushFollow(FOLLOW_31);
-            rule__ServiceServer__Group_8__1__Impl();
-
-            state._fsp--;
-
             pushFollow(FOLLOW_2);
-            rule__ServiceServer__Group_8__2();
+            rule__ServiceServer__Group_8__1__Impl();
 
             state._fsp--;
 
@@ -20913,21 +21316,31 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceServer__Group_8__1__Impl"
-    // InternalRos2Parser.g:6846:1: rule__ServiceServer__Group_8__1__Impl : ( LeftSquareBracket ) ;
+    // InternalRos2Parser.g:6980:1: rule__ServiceServer__Group_8__1__Impl : ( ( rule__ServiceServer__QosAssignment_8_1 ) ) ;
     public final void rule__ServiceServer__Group_8__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:6850:1: ( ( LeftSquareBracket ) )
-            // InternalRos2Parser.g:6851:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:6984:1: ( ( ( rule__ServiceServer__QosAssignment_8_1 ) ) )
+            // InternalRos2Parser.g:6985:1: ( ( rule__ServiceServer__QosAssignment_8_1 ) )
             {
-            // InternalRos2Parser.g:6851:1: ( LeftSquareBracket )
-            // InternalRos2Parser.g:6852:2: LeftSquareBracket
+            // InternalRos2Parser.g:6985:1: ( ( rule__ServiceServer__QosAssignment_8_1 ) )
+            // InternalRos2Parser.g:6986:2: ( rule__ServiceServer__QosAssignment_8_1 )
             {
-             before(grammarAccess.getServiceServerAccess().getLeftSquareBracketKeyword_8_1()); 
-            match(input,LeftSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getServiceServerAccess().getLeftSquareBracketKeyword_8_1()); 
+             before(grammarAccess.getServiceServerAccess().getQosAssignment_8_1()); 
+            // InternalRos2Parser.g:6987:2: ( rule__ServiceServer__QosAssignment_8_1 )
+            // InternalRos2Parser.g:6987:3: rule__ServiceServer__QosAssignment_8_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__ServiceServer__QosAssignment_8_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getServiceServerAccess().getQosAssignment_8_1()); 
 
             }
 
@@ -20947,419 +21360,6 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         return ;
     }
     // $ANTLR end "rule__ServiceServer__Group_8__1__Impl"
-
-
-    // $ANTLR start "rule__ServiceServer__Group_8__2"
-    // InternalRos2Parser.g:6861:1: rule__ServiceServer__Group_8__2 : rule__ServiceServer__Group_8__2__Impl rule__ServiceServer__Group_8__3 ;
-    public final void rule__ServiceServer__Group_8__2() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6865:1: ( rule__ServiceServer__Group_8__2__Impl rule__ServiceServer__Group_8__3 )
-            // InternalRos2Parser.g:6866:2: rule__ServiceServer__Group_8__2__Impl rule__ServiceServer__Group_8__3
-            {
-            pushFollow(FOLLOW_12);
-            rule__ServiceServer__Group_8__2__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ServiceServer__Group_8__3();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceServer__Group_8__2"
-
-
-    // $ANTLR start "rule__ServiceServer__Group_8__2__Impl"
-    // InternalRos2Parser.g:6873:1: rule__ServiceServer__Group_8__2__Impl : ( ( rule__ServiceServer__ActiveStatesAssignment_8_2 ) ) ;
-    public final void rule__ServiceServer__Group_8__2__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6877:1: ( ( ( rule__ServiceServer__ActiveStatesAssignment_8_2 ) ) )
-            // InternalRos2Parser.g:6878:1: ( ( rule__ServiceServer__ActiveStatesAssignment_8_2 ) )
-            {
-            // InternalRos2Parser.g:6878:1: ( ( rule__ServiceServer__ActiveStatesAssignment_8_2 ) )
-            // InternalRos2Parser.g:6879:2: ( rule__ServiceServer__ActiveStatesAssignment_8_2 )
-            {
-             before(grammarAccess.getServiceServerAccess().getActiveStatesAssignment_8_2()); 
-            // InternalRos2Parser.g:6880:2: ( rule__ServiceServer__ActiveStatesAssignment_8_2 )
-            // InternalRos2Parser.g:6880:3: rule__ServiceServer__ActiveStatesAssignment_8_2
-            {
-            pushFollow(FOLLOW_2);
-            rule__ServiceServer__ActiveStatesAssignment_8_2();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getServiceServerAccess().getActiveStatesAssignment_8_2()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceServer__Group_8__2__Impl"
-
-
-    // $ANTLR start "rule__ServiceServer__Group_8__3"
-    // InternalRos2Parser.g:6888:1: rule__ServiceServer__Group_8__3 : rule__ServiceServer__Group_8__3__Impl rule__ServiceServer__Group_8__4 ;
-    public final void rule__ServiceServer__Group_8__3() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6892:1: ( rule__ServiceServer__Group_8__3__Impl rule__ServiceServer__Group_8__4 )
-            // InternalRos2Parser.g:6893:2: rule__ServiceServer__Group_8__3__Impl rule__ServiceServer__Group_8__4
-            {
-            pushFollow(FOLLOW_12);
-            rule__ServiceServer__Group_8__3__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ServiceServer__Group_8__4();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceServer__Group_8__3"
-
-
-    // $ANTLR start "rule__ServiceServer__Group_8__3__Impl"
-    // InternalRos2Parser.g:6900:1: rule__ServiceServer__Group_8__3__Impl : ( ( rule__ServiceServer__Group_8_3__0 )* ) ;
-    public final void rule__ServiceServer__Group_8__3__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6904:1: ( ( ( rule__ServiceServer__Group_8_3__0 )* ) )
-            // InternalRos2Parser.g:6905:1: ( ( rule__ServiceServer__Group_8_3__0 )* )
-            {
-            // InternalRos2Parser.g:6905:1: ( ( rule__ServiceServer__Group_8_3__0 )* )
-            // InternalRos2Parser.g:6906:2: ( rule__ServiceServer__Group_8_3__0 )*
-            {
-             before(grammarAccess.getServiceServerAccess().getGroup_8_3()); 
-            // InternalRos2Parser.g:6907:2: ( rule__ServiceServer__Group_8_3__0 )*
-            loop46:
-            do {
-                int alt46=2;
-                int LA46_0 = input.LA(1);
-
-                if ( (LA46_0==Comma) ) {
-                    alt46=1;
-                }
-
-
-                switch (alt46) {
-            	case 1 :
-            	    // InternalRos2Parser.g:6907:3: rule__ServiceServer__Group_8_3__0
-            	    {
-            	    pushFollow(FOLLOW_13);
-            	    rule__ServiceServer__Group_8_3__0();
-
-            	    state._fsp--;
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop46;
-                }
-            } while (true);
-
-             after(grammarAccess.getServiceServerAccess().getGroup_8_3()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceServer__Group_8__3__Impl"
-
-
-    // $ANTLR start "rule__ServiceServer__Group_8__4"
-    // InternalRos2Parser.g:6915:1: rule__ServiceServer__Group_8__4 : rule__ServiceServer__Group_8__4__Impl ;
-    public final void rule__ServiceServer__Group_8__4() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6919:1: ( rule__ServiceServer__Group_8__4__Impl )
-            // InternalRos2Parser.g:6920:2: rule__ServiceServer__Group_8__4__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__ServiceServer__Group_8__4__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceServer__Group_8__4"
-
-
-    // $ANTLR start "rule__ServiceServer__Group_8__4__Impl"
-    // InternalRos2Parser.g:6926:1: rule__ServiceServer__Group_8__4__Impl : ( RightSquareBracket ) ;
-    public final void rule__ServiceServer__Group_8__4__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6930:1: ( ( RightSquareBracket ) )
-            // InternalRos2Parser.g:6931:1: ( RightSquareBracket )
-            {
-            // InternalRos2Parser.g:6931:1: ( RightSquareBracket )
-            // InternalRos2Parser.g:6932:2: RightSquareBracket
-            {
-             before(grammarAccess.getServiceServerAccess().getRightSquareBracketKeyword_8_4()); 
-            match(input,RightSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getServiceServerAccess().getRightSquareBracketKeyword_8_4()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceServer__Group_8__4__Impl"
-
-
-    // $ANTLR start "rule__ServiceServer__Group_8_3__0"
-    // InternalRos2Parser.g:6942:1: rule__ServiceServer__Group_8_3__0 : rule__ServiceServer__Group_8_3__0__Impl rule__ServiceServer__Group_8_3__1 ;
-    public final void rule__ServiceServer__Group_8_3__0() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6946:1: ( rule__ServiceServer__Group_8_3__0__Impl rule__ServiceServer__Group_8_3__1 )
-            // InternalRos2Parser.g:6947:2: rule__ServiceServer__Group_8_3__0__Impl rule__ServiceServer__Group_8_3__1
-            {
-            pushFollow(FOLLOW_31);
-            rule__ServiceServer__Group_8_3__0__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ServiceServer__Group_8_3__1();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceServer__Group_8_3__0"
-
-
-    // $ANTLR start "rule__ServiceServer__Group_8_3__0__Impl"
-    // InternalRos2Parser.g:6954:1: rule__ServiceServer__Group_8_3__0__Impl : ( Comma ) ;
-    public final void rule__ServiceServer__Group_8_3__0__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6958:1: ( ( Comma ) )
-            // InternalRos2Parser.g:6959:1: ( Comma )
-            {
-            // InternalRos2Parser.g:6959:1: ( Comma )
-            // InternalRos2Parser.g:6960:2: Comma
-            {
-             before(grammarAccess.getServiceServerAccess().getCommaKeyword_8_3_0()); 
-            match(input,Comma,FOLLOW_2); 
-             after(grammarAccess.getServiceServerAccess().getCommaKeyword_8_3_0()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceServer__Group_8_3__0__Impl"
-
-
-    // $ANTLR start "rule__ServiceServer__Group_8_3__1"
-    // InternalRos2Parser.g:6969:1: rule__ServiceServer__Group_8_3__1 : rule__ServiceServer__Group_8_3__1__Impl ;
-    public final void rule__ServiceServer__Group_8_3__1() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6973:1: ( rule__ServiceServer__Group_8_3__1__Impl )
-            // InternalRos2Parser.g:6974:2: rule__ServiceServer__Group_8_3__1__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__ServiceServer__Group_8_3__1__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceServer__Group_8_3__1"
-
-
-    // $ANTLR start "rule__ServiceServer__Group_8_3__1__Impl"
-    // InternalRos2Parser.g:6980:1: rule__ServiceServer__Group_8_3__1__Impl : ( ( rule__ServiceServer__ActiveStatesAssignment_8_3_1 ) ) ;
-    public final void rule__ServiceServer__Group_8_3__1__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:6984:1: ( ( ( rule__ServiceServer__ActiveStatesAssignment_8_3_1 ) ) )
-            // InternalRos2Parser.g:6985:1: ( ( rule__ServiceServer__ActiveStatesAssignment_8_3_1 ) )
-            {
-            // InternalRos2Parser.g:6985:1: ( ( rule__ServiceServer__ActiveStatesAssignment_8_3_1 ) )
-            // InternalRos2Parser.g:6986:2: ( rule__ServiceServer__ActiveStatesAssignment_8_3_1 )
-            {
-             before(grammarAccess.getServiceServerAccess().getActiveStatesAssignment_8_3_1()); 
-            // InternalRos2Parser.g:6987:2: ( rule__ServiceServer__ActiveStatesAssignment_8_3_1 )
-            // InternalRos2Parser.g:6987:3: rule__ServiceServer__ActiveStatesAssignment_8_3_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__ServiceServer__ActiveStatesAssignment_8_3_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getServiceServerAccess().getActiveStatesAssignment_8_3_1()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceServer__Group_8_3__1__Impl"
 
 
     // $ANTLR start "rule__ServiceClient__Group__0"
@@ -21984,7 +21984,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt48=2;
             int LA48_0 = input.LA(1);
 
-            if ( (LA48_0==Qos) ) {
+            if ( (LA48_0==Active_in) ) {
                 alt48=1;
             }
             switch (alt48) {
@@ -22080,7 +22080,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt49=2;
             int LA49_0 = input.LA(1);
 
-            if ( (LA49_0==Active_in) ) {
+            if ( (LA49_0==Qos) ) {
                 alt49=1;
             }
             switch (alt49) {
@@ -22355,7 +22355,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:7324:1: ( rule__ServiceClient__Group_7__0__Impl rule__ServiceClient__Group_7__1 )
             // InternalRos2Parser.g:7325:2: rule__ServiceClient__Group_7__0__Impl rule__ServiceClient__Group_7__1
             {
-            pushFollow(FOLLOW_5);
+            pushFollow(FOLLOW_10);
             rule__ServiceClient__Group_7__0__Impl();
 
             state._fsp--;
@@ -22384,21 +22384,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceClient__Group_7__0__Impl"
-    // InternalRos2Parser.g:7332:1: rule__ServiceClient__Group_7__0__Impl : ( Qos ) ;
+    // InternalRos2Parser.g:7332:1: rule__ServiceClient__Group_7__0__Impl : ( Active_in ) ;
     public final void rule__ServiceClient__Group_7__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7336:1: ( ( Qos ) )
-            // InternalRos2Parser.g:7337:1: ( Qos )
+            // InternalRos2Parser.g:7336:1: ( ( Active_in ) )
+            // InternalRos2Parser.g:7337:1: ( Active_in )
             {
-            // InternalRos2Parser.g:7337:1: ( Qos )
-            // InternalRos2Parser.g:7338:2: Qos
+            // InternalRos2Parser.g:7337:1: ( Active_in )
+            // InternalRos2Parser.g:7338:2: Active_in
             {
-             before(grammarAccess.getServiceClientAccess().getQosKeyword_7_0()); 
-            match(input,Qos,FOLLOW_2); 
-             after(grammarAccess.getServiceClientAccess().getQosKeyword_7_0()); 
+             before(grammarAccess.getServiceClientAccess().getActive_inKeyword_7_0()); 
+            match(input,Active_in,FOLLOW_2); 
+             after(grammarAccess.getServiceClientAccess().getActive_inKeyword_7_0()); 
 
             }
 
@@ -22421,17 +22421,22 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceClient__Group_7__1"
-    // InternalRos2Parser.g:7347:1: rule__ServiceClient__Group_7__1 : rule__ServiceClient__Group_7__1__Impl ;
+    // InternalRos2Parser.g:7347:1: rule__ServiceClient__Group_7__1 : rule__ServiceClient__Group_7__1__Impl rule__ServiceClient__Group_7__2 ;
     public final void rule__ServiceClient__Group_7__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7351:1: ( rule__ServiceClient__Group_7__1__Impl )
-            // InternalRos2Parser.g:7352:2: rule__ServiceClient__Group_7__1__Impl
+            // InternalRos2Parser.g:7351:1: ( rule__ServiceClient__Group_7__1__Impl rule__ServiceClient__Group_7__2 )
+            // InternalRos2Parser.g:7352:2: rule__ServiceClient__Group_7__1__Impl rule__ServiceClient__Group_7__2
             {
-            pushFollow(FOLLOW_2);
+            pushFollow(FOLLOW_31);
             rule__ServiceClient__Group_7__1__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ServiceClient__Group_7__2();
 
             state._fsp--;
 
@@ -22454,31 +22459,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceClient__Group_7__1__Impl"
-    // InternalRos2Parser.g:7358:1: rule__ServiceClient__Group_7__1__Impl : ( ( rule__ServiceClient__QosAssignment_7_1 ) ) ;
+    // InternalRos2Parser.g:7359:1: rule__ServiceClient__Group_7__1__Impl : ( LeftSquareBracket ) ;
     public final void rule__ServiceClient__Group_7__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7362:1: ( ( ( rule__ServiceClient__QosAssignment_7_1 ) ) )
-            // InternalRos2Parser.g:7363:1: ( ( rule__ServiceClient__QosAssignment_7_1 ) )
+            // InternalRos2Parser.g:7363:1: ( ( LeftSquareBracket ) )
+            // InternalRos2Parser.g:7364:1: ( LeftSquareBracket )
             {
-            // InternalRos2Parser.g:7363:1: ( ( rule__ServiceClient__QosAssignment_7_1 ) )
-            // InternalRos2Parser.g:7364:2: ( rule__ServiceClient__QosAssignment_7_1 )
+            // InternalRos2Parser.g:7364:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:7365:2: LeftSquareBracket
             {
-             before(grammarAccess.getServiceClientAccess().getQosAssignment_7_1()); 
-            // InternalRos2Parser.g:7365:2: ( rule__ServiceClient__QosAssignment_7_1 )
-            // InternalRos2Parser.g:7365:3: rule__ServiceClient__QosAssignment_7_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__ServiceClient__QosAssignment_7_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getServiceClientAccess().getQosAssignment_7_1()); 
+             before(grammarAccess.getServiceClientAccess().getLeftSquareBracketKeyword_7_1()); 
+            match(input,LeftSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getServiceClientAccess().getLeftSquareBracketKeyword_7_1()); 
 
             }
 
@@ -22500,17 +22495,430 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ServiceClient__Group_7__1__Impl"
 
 
+    // $ANTLR start "rule__ServiceClient__Group_7__2"
+    // InternalRos2Parser.g:7374:1: rule__ServiceClient__Group_7__2 : rule__ServiceClient__Group_7__2__Impl rule__ServiceClient__Group_7__3 ;
+    public final void rule__ServiceClient__Group_7__2() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7378:1: ( rule__ServiceClient__Group_7__2__Impl rule__ServiceClient__Group_7__3 )
+            // InternalRos2Parser.g:7379:2: rule__ServiceClient__Group_7__2__Impl rule__ServiceClient__Group_7__3
+            {
+            pushFollow(FOLLOW_12);
+            rule__ServiceClient__Group_7__2__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ServiceClient__Group_7__3();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceClient__Group_7__2"
+
+
+    // $ANTLR start "rule__ServiceClient__Group_7__2__Impl"
+    // InternalRos2Parser.g:7386:1: rule__ServiceClient__Group_7__2__Impl : ( ( rule__ServiceClient__ActiveStatesAssignment_7_2 ) ) ;
+    public final void rule__ServiceClient__Group_7__2__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7390:1: ( ( ( rule__ServiceClient__ActiveStatesAssignment_7_2 ) ) )
+            // InternalRos2Parser.g:7391:1: ( ( rule__ServiceClient__ActiveStatesAssignment_7_2 ) )
+            {
+            // InternalRos2Parser.g:7391:1: ( ( rule__ServiceClient__ActiveStatesAssignment_7_2 ) )
+            // InternalRos2Parser.g:7392:2: ( rule__ServiceClient__ActiveStatesAssignment_7_2 )
+            {
+             before(grammarAccess.getServiceClientAccess().getActiveStatesAssignment_7_2()); 
+            // InternalRos2Parser.g:7393:2: ( rule__ServiceClient__ActiveStatesAssignment_7_2 )
+            // InternalRos2Parser.g:7393:3: rule__ServiceClient__ActiveStatesAssignment_7_2
+            {
+            pushFollow(FOLLOW_2);
+            rule__ServiceClient__ActiveStatesAssignment_7_2();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getServiceClientAccess().getActiveStatesAssignment_7_2()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceClient__Group_7__2__Impl"
+
+
+    // $ANTLR start "rule__ServiceClient__Group_7__3"
+    // InternalRos2Parser.g:7401:1: rule__ServiceClient__Group_7__3 : rule__ServiceClient__Group_7__3__Impl rule__ServiceClient__Group_7__4 ;
+    public final void rule__ServiceClient__Group_7__3() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7405:1: ( rule__ServiceClient__Group_7__3__Impl rule__ServiceClient__Group_7__4 )
+            // InternalRos2Parser.g:7406:2: rule__ServiceClient__Group_7__3__Impl rule__ServiceClient__Group_7__4
+            {
+            pushFollow(FOLLOW_12);
+            rule__ServiceClient__Group_7__3__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ServiceClient__Group_7__4();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceClient__Group_7__3"
+
+
+    // $ANTLR start "rule__ServiceClient__Group_7__3__Impl"
+    // InternalRos2Parser.g:7413:1: rule__ServiceClient__Group_7__3__Impl : ( ( rule__ServiceClient__Group_7_3__0 )* ) ;
+    public final void rule__ServiceClient__Group_7__3__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7417:1: ( ( ( rule__ServiceClient__Group_7_3__0 )* ) )
+            // InternalRos2Parser.g:7418:1: ( ( rule__ServiceClient__Group_7_3__0 )* )
+            {
+            // InternalRos2Parser.g:7418:1: ( ( rule__ServiceClient__Group_7_3__0 )* )
+            // InternalRos2Parser.g:7419:2: ( rule__ServiceClient__Group_7_3__0 )*
+            {
+             before(grammarAccess.getServiceClientAccess().getGroup_7_3()); 
+            // InternalRos2Parser.g:7420:2: ( rule__ServiceClient__Group_7_3__0 )*
+            loop50:
+            do {
+                int alt50=2;
+                int LA50_0 = input.LA(1);
+
+                if ( (LA50_0==Comma) ) {
+                    alt50=1;
+                }
+
+
+                switch (alt50) {
+            	case 1 :
+            	    // InternalRos2Parser.g:7420:3: rule__ServiceClient__Group_7_3__0
+            	    {
+            	    pushFollow(FOLLOW_13);
+            	    rule__ServiceClient__Group_7_3__0();
+
+            	    state._fsp--;
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop50;
+                }
+            } while (true);
+
+             after(grammarAccess.getServiceClientAccess().getGroup_7_3()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceClient__Group_7__3__Impl"
+
+
+    // $ANTLR start "rule__ServiceClient__Group_7__4"
+    // InternalRos2Parser.g:7428:1: rule__ServiceClient__Group_7__4 : rule__ServiceClient__Group_7__4__Impl ;
+    public final void rule__ServiceClient__Group_7__4() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7432:1: ( rule__ServiceClient__Group_7__4__Impl )
+            // InternalRos2Parser.g:7433:2: rule__ServiceClient__Group_7__4__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__ServiceClient__Group_7__4__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceClient__Group_7__4"
+
+
+    // $ANTLR start "rule__ServiceClient__Group_7__4__Impl"
+    // InternalRos2Parser.g:7439:1: rule__ServiceClient__Group_7__4__Impl : ( RightSquareBracket ) ;
+    public final void rule__ServiceClient__Group_7__4__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7443:1: ( ( RightSquareBracket ) )
+            // InternalRos2Parser.g:7444:1: ( RightSquareBracket )
+            {
+            // InternalRos2Parser.g:7444:1: ( RightSquareBracket )
+            // InternalRos2Parser.g:7445:2: RightSquareBracket
+            {
+             before(grammarAccess.getServiceClientAccess().getRightSquareBracketKeyword_7_4()); 
+            match(input,RightSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getServiceClientAccess().getRightSquareBracketKeyword_7_4()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceClient__Group_7__4__Impl"
+
+
+    // $ANTLR start "rule__ServiceClient__Group_7_3__0"
+    // InternalRos2Parser.g:7455:1: rule__ServiceClient__Group_7_3__0 : rule__ServiceClient__Group_7_3__0__Impl rule__ServiceClient__Group_7_3__1 ;
+    public final void rule__ServiceClient__Group_7_3__0() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7459:1: ( rule__ServiceClient__Group_7_3__0__Impl rule__ServiceClient__Group_7_3__1 )
+            // InternalRos2Parser.g:7460:2: rule__ServiceClient__Group_7_3__0__Impl rule__ServiceClient__Group_7_3__1
+            {
+            pushFollow(FOLLOW_31);
+            rule__ServiceClient__Group_7_3__0__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ServiceClient__Group_7_3__1();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceClient__Group_7_3__0"
+
+
+    // $ANTLR start "rule__ServiceClient__Group_7_3__0__Impl"
+    // InternalRos2Parser.g:7467:1: rule__ServiceClient__Group_7_3__0__Impl : ( Comma ) ;
+    public final void rule__ServiceClient__Group_7_3__0__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7471:1: ( ( Comma ) )
+            // InternalRos2Parser.g:7472:1: ( Comma )
+            {
+            // InternalRos2Parser.g:7472:1: ( Comma )
+            // InternalRos2Parser.g:7473:2: Comma
+            {
+             before(grammarAccess.getServiceClientAccess().getCommaKeyword_7_3_0()); 
+            match(input,Comma,FOLLOW_2); 
+             after(grammarAccess.getServiceClientAccess().getCommaKeyword_7_3_0()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceClient__Group_7_3__0__Impl"
+
+
+    // $ANTLR start "rule__ServiceClient__Group_7_3__1"
+    // InternalRos2Parser.g:7482:1: rule__ServiceClient__Group_7_3__1 : rule__ServiceClient__Group_7_3__1__Impl ;
+    public final void rule__ServiceClient__Group_7_3__1() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7486:1: ( rule__ServiceClient__Group_7_3__1__Impl )
+            // InternalRos2Parser.g:7487:2: rule__ServiceClient__Group_7_3__1__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__ServiceClient__Group_7_3__1__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceClient__Group_7_3__1"
+
+
+    // $ANTLR start "rule__ServiceClient__Group_7_3__1__Impl"
+    // InternalRos2Parser.g:7493:1: rule__ServiceClient__Group_7_3__1__Impl : ( ( rule__ServiceClient__ActiveStatesAssignment_7_3_1 ) ) ;
+    public final void rule__ServiceClient__Group_7_3__1__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7497:1: ( ( ( rule__ServiceClient__ActiveStatesAssignment_7_3_1 ) ) )
+            // InternalRos2Parser.g:7498:1: ( ( rule__ServiceClient__ActiveStatesAssignment_7_3_1 ) )
+            {
+            // InternalRos2Parser.g:7498:1: ( ( rule__ServiceClient__ActiveStatesAssignment_7_3_1 ) )
+            // InternalRos2Parser.g:7499:2: ( rule__ServiceClient__ActiveStatesAssignment_7_3_1 )
+            {
+             before(grammarAccess.getServiceClientAccess().getActiveStatesAssignment_7_3_1()); 
+            // InternalRos2Parser.g:7500:2: ( rule__ServiceClient__ActiveStatesAssignment_7_3_1 )
+            // InternalRos2Parser.g:7500:3: rule__ServiceClient__ActiveStatesAssignment_7_3_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__ServiceClient__ActiveStatesAssignment_7_3_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getServiceClientAccess().getActiveStatesAssignment_7_3_1()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ServiceClient__Group_7_3__1__Impl"
+
+
     // $ANTLR start "rule__ServiceClient__Group_8__0"
-    // InternalRos2Parser.g:7374:1: rule__ServiceClient__Group_8__0 : rule__ServiceClient__Group_8__0__Impl rule__ServiceClient__Group_8__1 ;
+    // InternalRos2Parser.g:7509:1: rule__ServiceClient__Group_8__0 : rule__ServiceClient__Group_8__0__Impl rule__ServiceClient__Group_8__1 ;
     public final void rule__ServiceClient__Group_8__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7378:1: ( rule__ServiceClient__Group_8__0__Impl rule__ServiceClient__Group_8__1 )
-            // InternalRos2Parser.g:7379:2: rule__ServiceClient__Group_8__0__Impl rule__ServiceClient__Group_8__1
+            // InternalRos2Parser.g:7513:1: ( rule__ServiceClient__Group_8__0__Impl rule__ServiceClient__Group_8__1 )
+            // InternalRos2Parser.g:7514:2: rule__ServiceClient__Group_8__0__Impl rule__ServiceClient__Group_8__1
             {
-            pushFollow(FOLLOW_10);
+            pushFollow(FOLLOW_5);
             rule__ServiceClient__Group_8__0__Impl();
 
             state._fsp--;
@@ -22539,21 +22947,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceClient__Group_8__0__Impl"
-    // InternalRos2Parser.g:7386:1: rule__ServiceClient__Group_8__0__Impl : ( Active_in ) ;
+    // InternalRos2Parser.g:7521:1: rule__ServiceClient__Group_8__0__Impl : ( Qos ) ;
     public final void rule__ServiceClient__Group_8__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7390:1: ( ( Active_in ) )
-            // InternalRos2Parser.g:7391:1: ( Active_in )
+            // InternalRos2Parser.g:7525:1: ( ( Qos ) )
+            // InternalRos2Parser.g:7526:1: ( Qos )
             {
-            // InternalRos2Parser.g:7391:1: ( Active_in )
-            // InternalRos2Parser.g:7392:2: Active_in
+            // InternalRos2Parser.g:7526:1: ( Qos )
+            // InternalRos2Parser.g:7527:2: Qos
             {
-             before(grammarAccess.getServiceClientAccess().getActive_inKeyword_8_0()); 
-            match(input,Active_in,FOLLOW_2); 
-             after(grammarAccess.getServiceClientAccess().getActive_inKeyword_8_0()); 
+             before(grammarAccess.getServiceClientAccess().getQosKeyword_8_0()); 
+            match(input,Qos,FOLLOW_2); 
+             after(grammarAccess.getServiceClientAccess().getQosKeyword_8_0()); 
 
             }
 
@@ -22576,22 +22984,17 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceClient__Group_8__1"
-    // InternalRos2Parser.g:7401:1: rule__ServiceClient__Group_8__1 : rule__ServiceClient__Group_8__1__Impl rule__ServiceClient__Group_8__2 ;
+    // InternalRos2Parser.g:7536:1: rule__ServiceClient__Group_8__1 : rule__ServiceClient__Group_8__1__Impl ;
     public final void rule__ServiceClient__Group_8__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7405:1: ( rule__ServiceClient__Group_8__1__Impl rule__ServiceClient__Group_8__2 )
-            // InternalRos2Parser.g:7406:2: rule__ServiceClient__Group_8__1__Impl rule__ServiceClient__Group_8__2
+            // InternalRos2Parser.g:7540:1: ( rule__ServiceClient__Group_8__1__Impl )
+            // InternalRos2Parser.g:7541:2: rule__ServiceClient__Group_8__1__Impl
             {
-            pushFollow(FOLLOW_31);
-            rule__ServiceClient__Group_8__1__Impl();
-
-            state._fsp--;
-
             pushFollow(FOLLOW_2);
-            rule__ServiceClient__Group_8__2();
+            rule__ServiceClient__Group_8__1__Impl();
 
             state._fsp--;
 
@@ -22614,21 +23017,31 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ServiceClient__Group_8__1__Impl"
-    // InternalRos2Parser.g:7413:1: rule__ServiceClient__Group_8__1__Impl : ( LeftSquareBracket ) ;
+    // InternalRos2Parser.g:7547:1: rule__ServiceClient__Group_8__1__Impl : ( ( rule__ServiceClient__QosAssignment_8_1 ) ) ;
     public final void rule__ServiceClient__Group_8__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7417:1: ( ( LeftSquareBracket ) )
-            // InternalRos2Parser.g:7418:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:7551:1: ( ( ( rule__ServiceClient__QosAssignment_8_1 ) ) )
+            // InternalRos2Parser.g:7552:1: ( ( rule__ServiceClient__QosAssignment_8_1 ) )
             {
-            // InternalRos2Parser.g:7418:1: ( LeftSquareBracket )
-            // InternalRos2Parser.g:7419:2: LeftSquareBracket
+            // InternalRos2Parser.g:7552:1: ( ( rule__ServiceClient__QosAssignment_8_1 ) )
+            // InternalRos2Parser.g:7553:2: ( rule__ServiceClient__QosAssignment_8_1 )
             {
-             before(grammarAccess.getServiceClientAccess().getLeftSquareBracketKeyword_8_1()); 
-            match(input,LeftSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getServiceClientAccess().getLeftSquareBracketKeyword_8_1()); 
+             before(grammarAccess.getServiceClientAccess().getQosAssignment_8_1()); 
+            // InternalRos2Parser.g:7554:2: ( rule__ServiceClient__QosAssignment_8_1 )
+            // InternalRos2Parser.g:7554:3: rule__ServiceClient__QosAssignment_8_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__ServiceClient__QosAssignment_8_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getServiceClientAccess().getQosAssignment_8_1()); 
 
             }
 
@@ -22648,419 +23061,6 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         return ;
     }
     // $ANTLR end "rule__ServiceClient__Group_8__1__Impl"
-
-
-    // $ANTLR start "rule__ServiceClient__Group_8__2"
-    // InternalRos2Parser.g:7428:1: rule__ServiceClient__Group_8__2 : rule__ServiceClient__Group_8__2__Impl rule__ServiceClient__Group_8__3 ;
-    public final void rule__ServiceClient__Group_8__2() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:7432:1: ( rule__ServiceClient__Group_8__2__Impl rule__ServiceClient__Group_8__3 )
-            // InternalRos2Parser.g:7433:2: rule__ServiceClient__Group_8__2__Impl rule__ServiceClient__Group_8__3
-            {
-            pushFollow(FOLLOW_12);
-            rule__ServiceClient__Group_8__2__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ServiceClient__Group_8__3();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceClient__Group_8__2"
-
-
-    // $ANTLR start "rule__ServiceClient__Group_8__2__Impl"
-    // InternalRos2Parser.g:7440:1: rule__ServiceClient__Group_8__2__Impl : ( ( rule__ServiceClient__ActiveStatesAssignment_8_2 ) ) ;
-    public final void rule__ServiceClient__Group_8__2__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:7444:1: ( ( ( rule__ServiceClient__ActiveStatesAssignment_8_2 ) ) )
-            // InternalRos2Parser.g:7445:1: ( ( rule__ServiceClient__ActiveStatesAssignment_8_2 ) )
-            {
-            // InternalRos2Parser.g:7445:1: ( ( rule__ServiceClient__ActiveStatesAssignment_8_2 ) )
-            // InternalRos2Parser.g:7446:2: ( rule__ServiceClient__ActiveStatesAssignment_8_2 )
-            {
-             before(grammarAccess.getServiceClientAccess().getActiveStatesAssignment_8_2()); 
-            // InternalRos2Parser.g:7447:2: ( rule__ServiceClient__ActiveStatesAssignment_8_2 )
-            // InternalRos2Parser.g:7447:3: rule__ServiceClient__ActiveStatesAssignment_8_2
-            {
-            pushFollow(FOLLOW_2);
-            rule__ServiceClient__ActiveStatesAssignment_8_2();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getServiceClientAccess().getActiveStatesAssignment_8_2()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceClient__Group_8__2__Impl"
-
-
-    // $ANTLR start "rule__ServiceClient__Group_8__3"
-    // InternalRos2Parser.g:7455:1: rule__ServiceClient__Group_8__3 : rule__ServiceClient__Group_8__3__Impl rule__ServiceClient__Group_8__4 ;
-    public final void rule__ServiceClient__Group_8__3() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:7459:1: ( rule__ServiceClient__Group_8__3__Impl rule__ServiceClient__Group_8__4 )
-            // InternalRos2Parser.g:7460:2: rule__ServiceClient__Group_8__3__Impl rule__ServiceClient__Group_8__4
-            {
-            pushFollow(FOLLOW_12);
-            rule__ServiceClient__Group_8__3__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ServiceClient__Group_8__4();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceClient__Group_8__3"
-
-
-    // $ANTLR start "rule__ServiceClient__Group_8__3__Impl"
-    // InternalRos2Parser.g:7467:1: rule__ServiceClient__Group_8__3__Impl : ( ( rule__ServiceClient__Group_8_3__0 )* ) ;
-    public final void rule__ServiceClient__Group_8__3__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:7471:1: ( ( ( rule__ServiceClient__Group_8_3__0 )* ) )
-            // InternalRos2Parser.g:7472:1: ( ( rule__ServiceClient__Group_8_3__0 )* )
-            {
-            // InternalRos2Parser.g:7472:1: ( ( rule__ServiceClient__Group_8_3__0 )* )
-            // InternalRos2Parser.g:7473:2: ( rule__ServiceClient__Group_8_3__0 )*
-            {
-             before(grammarAccess.getServiceClientAccess().getGroup_8_3()); 
-            // InternalRos2Parser.g:7474:2: ( rule__ServiceClient__Group_8_3__0 )*
-            loop50:
-            do {
-                int alt50=2;
-                int LA50_0 = input.LA(1);
-
-                if ( (LA50_0==Comma) ) {
-                    alt50=1;
-                }
-
-
-                switch (alt50) {
-            	case 1 :
-            	    // InternalRos2Parser.g:7474:3: rule__ServiceClient__Group_8_3__0
-            	    {
-            	    pushFollow(FOLLOW_13);
-            	    rule__ServiceClient__Group_8_3__0();
-
-            	    state._fsp--;
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop50;
-                }
-            } while (true);
-
-             after(grammarAccess.getServiceClientAccess().getGroup_8_3()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceClient__Group_8__3__Impl"
-
-
-    // $ANTLR start "rule__ServiceClient__Group_8__4"
-    // InternalRos2Parser.g:7482:1: rule__ServiceClient__Group_8__4 : rule__ServiceClient__Group_8__4__Impl ;
-    public final void rule__ServiceClient__Group_8__4() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:7486:1: ( rule__ServiceClient__Group_8__4__Impl )
-            // InternalRos2Parser.g:7487:2: rule__ServiceClient__Group_8__4__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__ServiceClient__Group_8__4__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceClient__Group_8__4"
-
-
-    // $ANTLR start "rule__ServiceClient__Group_8__4__Impl"
-    // InternalRos2Parser.g:7493:1: rule__ServiceClient__Group_8__4__Impl : ( RightSquareBracket ) ;
-    public final void rule__ServiceClient__Group_8__4__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:7497:1: ( ( RightSquareBracket ) )
-            // InternalRos2Parser.g:7498:1: ( RightSquareBracket )
-            {
-            // InternalRos2Parser.g:7498:1: ( RightSquareBracket )
-            // InternalRos2Parser.g:7499:2: RightSquareBracket
-            {
-             before(grammarAccess.getServiceClientAccess().getRightSquareBracketKeyword_8_4()); 
-            match(input,RightSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getServiceClientAccess().getRightSquareBracketKeyword_8_4()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceClient__Group_8__4__Impl"
-
-
-    // $ANTLR start "rule__ServiceClient__Group_8_3__0"
-    // InternalRos2Parser.g:7509:1: rule__ServiceClient__Group_8_3__0 : rule__ServiceClient__Group_8_3__0__Impl rule__ServiceClient__Group_8_3__1 ;
-    public final void rule__ServiceClient__Group_8_3__0() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:7513:1: ( rule__ServiceClient__Group_8_3__0__Impl rule__ServiceClient__Group_8_3__1 )
-            // InternalRos2Parser.g:7514:2: rule__ServiceClient__Group_8_3__0__Impl rule__ServiceClient__Group_8_3__1
-            {
-            pushFollow(FOLLOW_31);
-            rule__ServiceClient__Group_8_3__0__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ServiceClient__Group_8_3__1();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceClient__Group_8_3__0"
-
-
-    // $ANTLR start "rule__ServiceClient__Group_8_3__0__Impl"
-    // InternalRos2Parser.g:7521:1: rule__ServiceClient__Group_8_3__0__Impl : ( Comma ) ;
-    public final void rule__ServiceClient__Group_8_3__0__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:7525:1: ( ( Comma ) )
-            // InternalRos2Parser.g:7526:1: ( Comma )
-            {
-            // InternalRos2Parser.g:7526:1: ( Comma )
-            // InternalRos2Parser.g:7527:2: Comma
-            {
-             before(grammarAccess.getServiceClientAccess().getCommaKeyword_8_3_0()); 
-            match(input,Comma,FOLLOW_2); 
-             after(grammarAccess.getServiceClientAccess().getCommaKeyword_8_3_0()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceClient__Group_8_3__0__Impl"
-
-
-    // $ANTLR start "rule__ServiceClient__Group_8_3__1"
-    // InternalRos2Parser.g:7536:1: rule__ServiceClient__Group_8_3__1 : rule__ServiceClient__Group_8_3__1__Impl ;
-    public final void rule__ServiceClient__Group_8_3__1() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:7540:1: ( rule__ServiceClient__Group_8_3__1__Impl )
-            // InternalRos2Parser.g:7541:2: rule__ServiceClient__Group_8_3__1__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__ServiceClient__Group_8_3__1__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceClient__Group_8_3__1"
-
-
-    // $ANTLR start "rule__ServiceClient__Group_8_3__1__Impl"
-    // InternalRos2Parser.g:7547:1: rule__ServiceClient__Group_8_3__1__Impl : ( ( rule__ServiceClient__ActiveStatesAssignment_8_3_1 ) ) ;
-    public final void rule__ServiceClient__Group_8_3__1__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:7551:1: ( ( ( rule__ServiceClient__ActiveStatesAssignment_8_3_1 ) ) )
-            // InternalRos2Parser.g:7552:1: ( ( rule__ServiceClient__ActiveStatesAssignment_8_3_1 ) )
-            {
-            // InternalRos2Parser.g:7552:1: ( ( rule__ServiceClient__ActiveStatesAssignment_8_3_1 ) )
-            // InternalRos2Parser.g:7553:2: ( rule__ServiceClient__ActiveStatesAssignment_8_3_1 )
-            {
-             before(grammarAccess.getServiceClientAccess().getActiveStatesAssignment_8_3_1()); 
-            // InternalRos2Parser.g:7554:2: ( rule__ServiceClient__ActiveStatesAssignment_8_3_1 )
-            // InternalRos2Parser.g:7554:3: rule__ServiceClient__ActiveStatesAssignment_8_3_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__ServiceClient__ActiveStatesAssignment_8_3_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getServiceClientAccess().getActiveStatesAssignment_8_3_1()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ServiceClient__Group_8_3__1__Impl"
 
 
     // $ANTLR start "rule__ActionServer__Group__0"
@@ -23685,7 +23685,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt52=2;
             int LA52_0 = input.LA(1);
 
-            if ( (LA52_0==Qos) ) {
+            if ( (LA52_0==Active_in) ) {
                 alt52=1;
             }
             switch (alt52) {
@@ -23781,7 +23781,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt53=2;
             int LA53_0 = input.LA(1);
 
-            if ( (LA53_0==Active_in) ) {
+            if ( (LA53_0==Qos) ) {
                 alt53=1;
             }
             switch (alt53) {
@@ -24056,7 +24056,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:7891:1: ( rule__ActionServer__Group_7__0__Impl rule__ActionServer__Group_7__1 )
             // InternalRos2Parser.g:7892:2: rule__ActionServer__Group_7__0__Impl rule__ActionServer__Group_7__1
             {
-            pushFollow(FOLLOW_5);
+            pushFollow(FOLLOW_10);
             rule__ActionServer__Group_7__0__Impl();
 
             state._fsp--;
@@ -24085,21 +24085,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionServer__Group_7__0__Impl"
-    // InternalRos2Parser.g:7899:1: rule__ActionServer__Group_7__0__Impl : ( Qos ) ;
+    // InternalRos2Parser.g:7899:1: rule__ActionServer__Group_7__0__Impl : ( Active_in ) ;
     public final void rule__ActionServer__Group_7__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7903:1: ( ( Qos ) )
-            // InternalRos2Parser.g:7904:1: ( Qos )
+            // InternalRos2Parser.g:7903:1: ( ( Active_in ) )
+            // InternalRos2Parser.g:7904:1: ( Active_in )
             {
-            // InternalRos2Parser.g:7904:1: ( Qos )
-            // InternalRos2Parser.g:7905:2: Qos
+            // InternalRos2Parser.g:7904:1: ( Active_in )
+            // InternalRos2Parser.g:7905:2: Active_in
             {
-             before(grammarAccess.getActionServerAccess().getQosKeyword_7_0()); 
-            match(input,Qos,FOLLOW_2); 
-             after(grammarAccess.getActionServerAccess().getQosKeyword_7_0()); 
+             before(grammarAccess.getActionServerAccess().getActive_inKeyword_7_0()); 
+            match(input,Active_in,FOLLOW_2); 
+             after(grammarAccess.getActionServerAccess().getActive_inKeyword_7_0()); 
 
             }
 
@@ -24122,17 +24122,22 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionServer__Group_7__1"
-    // InternalRos2Parser.g:7914:1: rule__ActionServer__Group_7__1 : rule__ActionServer__Group_7__1__Impl ;
+    // InternalRos2Parser.g:7914:1: rule__ActionServer__Group_7__1 : rule__ActionServer__Group_7__1__Impl rule__ActionServer__Group_7__2 ;
     public final void rule__ActionServer__Group_7__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7918:1: ( rule__ActionServer__Group_7__1__Impl )
-            // InternalRos2Parser.g:7919:2: rule__ActionServer__Group_7__1__Impl
+            // InternalRos2Parser.g:7918:1: ( rule__ActionServer__Group_7__1__Impl rule__ActionServer__Group_7__2 )
+            // InternalRos2Parser.g:7919:2: rule__ActionServer__Group_7__1__Impl rule__ActionServer__Group_7__2
             {
-            pushFollow(FOLLOW_2);
+            pushFollow(FOLLOW_31);
             rule__ActionServer__Group_7__1__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ActionServer__Group_7__2();
 
             state._fsp--;
 
@@ -24155,31 +24160,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionServer__Group_7__1__Impl"
-    // InternalRos2Parser.g:7925:1: rule__ActionServer__Group_7__1__Impl : ( ( rule__ActionServer__QosAssignment_7_1 ) ) ;
+    // InternalRos2Parser.g:7926:1: rule__ActionServer__Group_7__1__Impl : ( LeftSquareBracket ) ;
     public final void rule__ActionServer__Group_7__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7929:1: ( ( ( rule__ActionServer__QosAssignment_7_1 ) ) )
-            // InternalRos2Parser.g:7930:1: ( ( rule__ActionServer__QosAssignment_7_1 ) )
+            // InternalRos2Parser.g:7930:1: ( ( LeftSquareBracket ) )
+            // InternalRos2Parser.g:7931:1: ( LeftSquareBracket )
             {
-            // InternalRos2Parser.g:7930:1: ( ( rule__ActionServer__QosAssignment_7_1 ) )
-            // InternalRos2Parser.g:7931:2: ( rule__ActionServer__QosAssignment_7_1 )
+            // InternalRos2Parser.g:7931:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:7932:2: LeftSquareBracket
             {
-             before(grammarAccess.getActionServerAccess().getQosAssignment_7_1()); 
-            // InternalRos2Parser.g:7932:2: ( rule__ActionServer__QosAssignment_7_1 )
-            // InternalRos2Parser.g:7932:3: rule__ActionServer__QosAssignment_7_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__ActionServer__QosAssignment_7_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getActionServerAccess().getQosAssignment_7_1()); 
+             before(grammarAccess.getActionServerAccess().getLeftSquareBracketKeyword_7_1()); 
+            match(input,LeftSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getActionServerAccess().getLeftSquareBracketKeyword_7_1()); 
 
             }
 
@@ -24201,17 +24196,430 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ActionServer__Group_7__1__Impl"
 
 
+    // $ANTLR start "rule__ActionServer__Group_7__2"
+    // InternalRos2Parser.g:7941:1: rule__ActionServer__Group_7__2 : rule__ActionServer__Group_7__2__Impl rule__ActionServer__Group_7__3 ;
+    public final void rule__ActionServer__Group_7__2() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7945:1: ( rule__ActionServer__Group_7__2__Impl rule__ActionServer__Group_7__3 )
+            // InternalRos2Parser.g:7946:2: rule__ActionServer__Group_7__2__Impl rule__ActionServer__Group_7__3
+            {
+            pushFollow(FOLLOW_12);
+            rule__ActionServer__Group_7__2__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ActionServer__Group_7__3();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionServer__Group_7__2"
+
+
+    // $ANTLR start "rule__ActionServer__Group_7__2__Impl"
+    // InternalRos2Parser.g:7953:1: rule__ActionServer__Group_7__2__Impl : ( ( rule__ActionServer__ActiveStatesAssignment_7_2 ) ) ;
+    public final void rule__ActionServer__Group_7__2__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7957:1: ( ( ( rule__ActionServer__ActiveStatesAssignment_7_2 ) ) )
+            // InternalRos2Parser.g:7958:1: ( ( rule__ActionServer__ActiveStatesAssignment_7_2 ) )
+            {
+            // InternalRos2Parser.g:7958:1: ( ( rule__ActionServer__ActiveStatesAssignment_7_2 ) )
+            // InternalRos2Parser.g:7959:2: ( rule__ActionServer__ActiveStatesAssignment_7_2 )
+            {
+             before(grammarAccess.getActionServerAccess().getActiveStatesAssignment_7_2()); 
+            // InternalRos2Parser.g:7960:2: ( rule__ActionServer__ActiveStatesAssignment_7_2 )
+            // InternalRos2Parser.g:7960:3: rule__ActionServer__ActiveStatesAssignment_7_2
+            {
+            pushFollow(FOLLOW_2);
+            rule__ActionServer__ActiveStatesAssignment_7_2();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getActionServerAccess().getActiveStatesAssignment_7_2()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionServer__Group_7__2__Impl"
+
+
+    // $ANTLR start "rule__ActionServer__Group_7__3"
+    // InternalRos2Parser.g:7968:1: rule__ActionServer__Group_7__3 : rule__ActionServer__Group_7__3__Impl rule__ActionServer__Group_7__4 ;
+    public final void rule__ActionServer__Group_7__3() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7972:1: ( rule__ActionServer__Group_7__3__Impl rule__ActionServer__Group_7__4 )
+            // InternalRos2Parser.g:7973:2: rule__ActionServer__Group_7__3__Impl rule__ActionServer__Group_7__4
+            {
+            pushFollow(FOLLOW_12);
+            rule__ActionServer__Group_7__3__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ActionServer__Group_7__4();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionServer__Group_7__3"
+
+
+    // $ANTLR start "rule__ActionServer__Group_7__3__Impl"
+    // InternalRos2Parser.g:7980:1: rule__ActionServer__Group_7__3__Impl : ( ( rule__ActionServer__Group_7_3__0 )* ) ;
+    public final void rule__ActionServer__Group_7__3__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7984:1: ( ( ( rule__ActionServer__Group_7_3__0 )* ) )
+            // InternalRos2Parser.g:7985:1: ( ( rule__ActionServer__Group_7_3__0 )* )
+            {
+            // InternalRos2Parser.g:7985:1: ( ( rule__ActionServer__Group_7_3__0 )* )
+            // InternalRos2Parser.g:7986:2: ( rule__ActionServer__Group_7_3__0 )*
+            {
+             before(grammarAccess.getActionServerAccess().getGroup_7_3()); 
+            // InternalRos2Parser.g:7987:2: ( rule__ActionServer__Group_7_3__0 )*
+            loop54:
+            do {
+                int alt54=2;
+                int LA54_0 = input.LA(1);
+
+                if ( (LA54_0==Comma) ) {
+                    alt54=1;
+                }
+
+
+                switch (alt54) {
+            	case 1 :
+            	    // InternalRos2Parser.g:7987:3: rule__ActionServer__Group_7_3__0
+            	    {
+            	    pushFollow(FOLLOW_13);
+            	    rule__ActionServer__Group_7_3__0();
+
+            	    state._fsp--;
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop54;
+                }
+            } while (true);
+
+             after(grammarAccess.getActionServerAccess().getGroup_7_3()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionServer__Group_7__3__Impl"
+
+
+    // $ANTLR start "rule__ActionServer__Group_7__4"
+    // InternalRos2Parser.g:7995:1: rule__ActionServer__Group_7__4 : rule__ActionServer__Group_7__4__Impl ;
+    public final void rule__ActionServer__Group_7__4() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:7999:1: ( rule__ActionServer__Group_7__4__Impl )
+            // InternalRos2Parser.g:8000:2: rule__ActionServer__Group_7__4__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__ActionServer__Group_7__4__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionServer__Group_7__4"
+
+
+    // $ANTLR start "rule__ActionServer__Group_7__4__Impl"
+    // InternalRos2Parser.g:8006:1: rule__ActionServer__Group_7__4__Impl : ( RightSquareBracket ) ;
+    public final void rule__ActionServer__Group_7__4__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8010:1: ( ( RightSquareBracket ) )
+            // InternalRos2Parser.g:8011:1: ( RightSquareBracket )
+            {
+            // InternalRos2Parser.g:8011:1: ( RightSquareBracket )
+            // InternalRos2Parser.g:8012:2: RightSquareBracket
+            {
+             before(grammarAccess.getActionServerAccess().getRightSquareBracketKeyword_7_4()); 
+            match(input,RightSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getActionServerAccess().getRightSquareBracketKeyword_7_4()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionServer__Group_7__4__Impl"
+
+
+    // $ANTLR start "rule__ActionServer__Group_7_3__0"
+    // InternalRos2Parser.g:8022:1: rule__ActionServer__Group_7_3__0 : rule__ActionServer__Group_7_3__0__Impl rule__ActionServer__Group_7_3__1 ;
+    public final void rule__ActionServer__Group_7_3__0() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8026:1: ( rule__ActionServer__Group_7_3__0__Impl rule__ActionServer__Group_7_3__1 )
+            // InternalRos2Parser.g:8027:2: rule__ActionServer__Group_7_3__0__Impl rule__ActionServer__Group_7_3__1
+            {
+            pushFollow(FOLLOW_31);
+            rule__ActionServer__Group_7_3__0__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ActionServer__Group_7_3__1();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionServer__Group_7_3__0"
+
+
+    // $ANTLR start "rule__ActionServer__Group_7_3__0__Impl"
+    // InternalRos2Parser.g:8034:1: rule__ActionServer__Group_7_3__0__Impl : ( Comma ) ;
+    public final void rule__ActionServer__Group_7_3__0__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8038:1: ( ( Comma ) )
+            // InternalRos2Parser.g:8039:1: ( Comma )
+            {
+            // InternalRos2Parser.g:8039:1: ( Comma )
+            // InternalRos2Parser.g:8040:2: Comma
+            {
+             before(grammarAccess.getActionServerAccess().getCommaKeyword_7_3_0()); 
+            match(input,Comma,FOLLOW_2); 
+             after(grammarAccess.getActionServerAccess().getCommaKeyword_7_3_0()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionServer__Group_7_3__0__Impl"
+
+
+    // $ANTLR start "rule__ActionServer__Group_7_3__1"
+    // InternalRos2Parser.g:8049:1: rule__ActionServer__Group_7_3__1 : rule__ActionServer__Group_7_3__1__Impl ;
+    public final void rule__ActionServer__Group_7_3__1() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8053:1: ( rule__ActionServer__Group_7_3__1__Impl )
+            // InternalRos2Parser.g:8054:2: rule__ActionServer__Group_7_3__1__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__ActionServer__Group_7_3__1__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionServer__Group_7_3__1"
+
+
+    // $ANTLR start "rule__ActionServer__Group_7_3__1__Impl"
+    // InternalRos2Parser.g:8060:1: rule__ActionServer__Group_7_3__1__Impl : ( ( rule__ActionServer__ActiveStatesAssignment_7_3_1 ) ) ;
+    public final void rule__ActionServer__Group_7_3__1__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8064:1: ( ( ( rule__ActionServer__ActiveStatesAssignment_7_3_1 ) ) )
+            // InternalRos2Parser.g:8065:1: ( ( rule__ActionServer__ActiveStatesAssignment_7_3_1 ) )
+            {
+            // InternalRos2Parser.g:8065:1: ( ( rule__ActionServer__ActiveStatesAssignment_7_3_1 ) )
+            // InternalRos2Parser.g:8066:2: ( rule__ActionServer__ActiveStatesAssignment_7_3_1 )
+            {
+             before(grammarAccess.getActionServerAccess().getActiveStatesAssignment_7_3_1()); 
+            // InternalRos2Parser.g:8067:2: ( rule__ActionServer__ActiveStatesAssignment_7_3_1 )
+            // InternalRos2Parser.g:8067:3: rule__ActionServer__ActiveStatesAssignment_7_3_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__ActionServer__ActiveStatesAssignment_7_3_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getActionServerAccess().getActiveStatesAssignment_7_3_1()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionServer__Group_7_3__1__Impl"
+
+
     // $ANTLR start "rule__ActionServer__Group_8__0"
-    // InternalRos2Parser.g:7941:1: rule__ActionServer__Group_8__0 : rule__ActionServer__Group_8__0__Impl rule__ActionServer__Group_8__1 ;
+    // InternalRos2Parser.g:8076:1: rule__ActionServer__Group_8__0 : rule__ActionServer__Group_8__0__Impl rule__ActionServer__Group_8__1 ;
     public final void rule__ActionServer__Group_8__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7945:1: ( rule__ActionServer__Group_8__0__Impl rule__ActionServer__Group_8__1 )
-            // InternalRos2Parser.g:7946:2: rule__ActionServer__Group_8__0__Impl rule__ActionServer__Group_8__1
+            // InternalRos2Parser.g:8080:1: ( rule__ActionServer__Group_8__0__Impl rule__ActionServer__Group_8__1 )
+            // InternalRos2Parser.g:8081:2: rule__ActionServer__Group_8__0__Impl rule__ActionServer__Group_8__1
             {
-            pushFollow(FOLLOW_10);
+            pushFollow(FOLLOW_5);
             rule__ActionServer__Group_8__0__Impl();
 
             state._fsp--;
@@ -24240,21 +24648,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionServer__Group_8__0__Impl"
-    // InternalRos2Parser.g:7953:1: rule__ActionServer__Group_8__0__Impl : ( Active_in ) ;
+    // InternalRos2Parser.g:8088:1: rule__ActionServer__Group_8__0__Impl : ( Qos ) ;
     public final void rule__ActionServer__Group_8__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7957:1: ( ( Active_in ) )
-            // InternalRos2Parser.g:7958:1: ( Active_in )
+            // InternalRos2Parser.g:8092:1: ( ( Qos ) )
+            // InternalRos2Parser.g:8093:1: ( Qos )
             {
-            // InternalRos2Parser.g:7958:1: ( Active_in )
-            // InternalRos2Parser.g:7959:2: Active_in
+            // InternalRos2Parser.g:8093:1: ( Qos )
+            // InternalRos2Parser.g:8094:2: Qos
             {
-             before(grammarAccess.getActionServerAccess().getActive_inKeyword_8_0()); 
-            match(input,Active_in,FOLLOW_2); 
-             after(grammarAccess.getActionServerAccess().getActive_inKeyword_8_0()); 
+             before(grammarAccess.getActionServerAccess().getQosKeyword_8_0()); 
+            match(input,Qos,FOLLOW_2); 
+             after(grammarAccess.getActionServerAccess().getQosKeyword_8_0()); 
 
             }
 
@@ -24277,22 +24685,17 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionServer__Group_8__1"
-    // InternalRos2Parser.g:7968:1: rule__ActionServer__Group_8__1 : rule__ActionServer__Group_8__1__Impl rule__ActionServer__Group_8__2 ;
+    // InternalRos2Parser.g:8103:1: rule__ActionServer__Group_8__1 : rule__ActionServer__Group_8__1__Impl ;
     public final void rule__ActionServer__Group_8__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7972:1: ( rule__ActionServer__Group_8__1__Impl rule__ActionServer__Group_8__2 )
-            // InternalRos2Parser.g:7973:2: rule__ActionServer__Group_8__1__Impl rule__ActionServer__Group_8__2
+            // InternalRos2Parser.g:8107:1: ( rule__ActionServer__Group_8__1__Impl )
+            // InternalRos2Parser.g:8108:2: rule__ActionServer__Group_8__1__Impl
             {
-            pushFollow(FOLLOW_31);
-            rule__ActionServer__Group_8__1__Impl();
-
-            state._fsp--;
-
             pushFollow(FOLLOW_2);
-            rule__ActionServer__Group_8__2();
+            rule__ActionServer__Group_8__1__Impl();
 
             state._fsp--;
 
@@ -24315,21 +24718,31 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionServer__Group_8__1__Impl"
-    // InternalRos2Parser.g:7980:1: rule__ActionServer__Group_8__1__Impl : ( LeftSquareBracket ) ;
+    // InternalRos2Parser.g:8114:1: rule__ActionServer__Group_8__1__Impl : ( ( rule__ActionServer__QosAssignment_8_1 ) ) ;
     public final void rule__ActionServer__Group_8__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:7984:1: ( ( LeftSquareBracket ) )
-            // InternalRos2Parser.g:7985:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:8118:1: ( ( ( rule__ActionServer__QosAssignment_8_1 ) ) )
+            // InternalRos2Parser.g:8119:1: ( ( rule__ActionServer__QosAssignment_8_1 ) )
             {
-            // InternalRos2Parser.g:7985:1: ( LeftSquareBracket )
-            // InternalRos2Parser.g:7986:2: LeftSquareBracket
+            // InternalRos2Parser.g:8119:1: ( ( rule__ActionServer__QosAssignment_8_1 ) )
+            // InternalRos2Parser.g:8120:2: ( rule__ActionServer__QosAssignment_8_1 )
             {
-             before(grammarAccess.getActionServerAccess().getLeftSquareBracketKeyword_8_1()); 
-            match(input,LeftSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getActionServerAccess().getLeftSquareBracketKeyword_8_1()); 
+             before(grammarAccess.getActionServerAccess().getQosAssignment_8_1()); 
+            // InternalRos2Parser.g:8121:2: ( rule__ActionServer__QosAssignment_8_1 )
+            // InternalRos2Parser.g:8121:3: rule__ActionServer__QosAssignment_8_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__ActionServer__QosAssignment_8_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getActionServerAccess().getQosAssignment_8_1()); 
 
             }
 
@@ -24349,419 +24762,6 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         return ;
     }
     // $ANTLR end "rule__ActionServer__Group_8__1__Impl"
-
-
-    // $ANTLR start "rule__ActionServer__Group_8__2"
-    // InternalRos2Parser.g:7995:1: rule__ActionServer__Group_8__2 : rule__ActionServer__Group_8__2__Impl rule__ActionServer__Group_8__3 ;
-    public final void rule__ActionServer__Group_8__2() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:7999:1: ( rule__ActionServer__Group_8__2__Impl rule__ActionServer__Group_8__3 )
-            // InternalRos2Parser.g:8000:2: rule__ActionServer__Group_8__2__Impl rule__ActionServer__Group_8__3
-            {
-            pushFollow(FOLLOW_12);
-            rule__ActionServer__Group_8__2__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ActionServer__Group_8__3();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionServer__Group_8__2"
-
-
-    // $ANTLR start "rule__ActionServer__Group_8__2__Impl"
-    // InternalRos2Parser.g:8007:1: rule__ActionServer__Group_8__2__Impl : ( ( rule__ActionServer__ActiveStatesAssignment_8_2 ) ) ;
-    public final void rule__ActionServer__Group_8__2__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8011:1: ( ( ( rule__ActionServer__ActiveStatesAssignment_8_2 ) ) )
-            // InternalRos2Parser.g:8012:1: ( ( rule__ActionServer__ActiveStatesAssignment_8_2 ) )
-            {
-            // InternalRos2Parser.g:8012:1: ( ( rule__ActionServer__ActiveStatesAssignment_8_2 ) )
-            // InternalRos2Parser.g:8013:2: ( rule__ActionServer__ActiveStatesAssignment_8_2 )
-            {
-             before(grammarAccess.getActionServerAccess().getActiveStatesAssignment_8_2()); 
-            // InternalRos2Parser.g:8014:2: ( rule__ActionServer__ActiveStatesAssignment_8_2 )
-            // InternalRos2Parser.g:8014:3: rule__ActionServer__ActiveStatesAssignment_8_2
-            {
-            pushFollow(FOLLOW_2);
-            rule__ActionServer__ActiveStatesAssignment_8_2();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getActionServerAccess().getActiveStatesAssignment_8_2()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionServer__Group_8__2__Impl"
-
-
-    // $ANTLR start "rule__ActionServer__Group_8__3"
-    // InternalRos2Parser.g:8022:1: rule__ActionServer__Group_8__3 : rule__ActionServer__Group_8__3__Impl rule__ActionServer__Group_8__4 ;
-    public final void rule__ActionServer__Group_8__3() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8026:1: ( rule__ActionServer__Group_8__3__Impl rule__ActionServer__Group_8__4 )
-            // InternalRos2Parser.g:8027:2: rule__ActionServer__Group_8__3__Impl rule__ActionServer__Group_8__4
-            {
-            pushFollow(FOLLOW_12);
-            rule__ActionServer__Group_8__3__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ActionServer__Group_8__4();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionServer__Group_8__3"
-
-
-    // $ANTLR start "rule__ActionServer__Group_8__3__Impl"
-    // InternalRos2Parser.g:8034:1: rule__ActionServer__Group_8__3__Impl : ( ( rule__ActionServer__Group_8_3__0 )* ) ;
-    public final void rule__ActionServer__Group_8__3__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8038:1: ( ( ( rule__ActionServer__Group_8_3__0 )* ) )
-            // InternalRos2Parser.g:8039:1: ( ( rule__ActionServer__Group_8_3__0 )* )
-            {
-            // InternalRos2Parser.g:8039:1: ( ( rule__ActionServer__Group_8_3__0 )* )
-            // InternalRos2Parser.g:8040:2: ( rule__ActionServer__Group_8_3__0 )*
-            {
-             before(grammarAccess.getActionServerAccess().getGroup_8_3()); 
-            // InternalRos2Parser.g:8041:2: ( rule__ActionServer__Group_8_3__0 )*
-            loop54:
-            do {
-                int alt54=2;
-                int LA54_0 = input.LA(1);
-
-                if ( (LA54_0==Comma) ) {
-                    alt54=1;
-                }
-
-
-                switch (alt54) {
-            	case 1 :
-            	    // InternalRos2Parser.g:8041:3: rule__ActionServer__Group_8_3__0
-            	    {
-            	    pushFollow(FOLLOW_13);
-            	    rule__ActionServer__Group_8_3__0();
-
-            	    state._fsp--;
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop54;
-                }
-            } while (true);
-
-             after(grammarAccess.getActionServerAccess().getGroup_8_3()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionServer__Group_8__3__Impl"
-
-
-    // $ANTLR start "rule__ActionServer__Group_8__4"
-    // InternalRos2Parser.g:8049:1: rule__ActionServer__Group_8__4 : rule__ActionServer__Group_8__4__Impl ;
-    public final void rule__ActionServer__Group_8__4() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8053:1: ( rule__ActionServer__Group_8__4__Impl )
-            // InternalRos2Parser.g:8054:2: rule__ActionServer__Group_8__4__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__ActionServer__Group_8__4__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionServer__Group_8__4"
-
-
-    // $ANTLR start "rule__ActionServer__Group_8__4__Impl"
-    // InternalRos2Parser.g:8060:1: rule__ActionServer__Group_8__4__Impl : ( RightSquareBracket ) ;
-    public final void rule__ActionServer__Group_8__4__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8064:1: ( ( RightSquareBracket ) )
-            // InternalRos2Parser.g:8065:1: ( RightSquareBracket )
-            {
-            // InternalRos2Parser.g:8065:1: ( RightSquareBracket )
-            // InternalRos2Parser.g:8066:2: RightSquareBracket
-            {
-             before(grammarAccess.getActionServerAccess().getRightSquareBracketKeyword_8_4()); 
-            match(input,RightSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getActionServerAccess().getRightSquareBracketKeyword_8_4()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionServer__Group_8__4__Impl"
-
-
-    // $ANTLR start "rule__ActionServer__Group_8_3__0"
-    // InternalRos2Parser.g:8076:1: rule__ActionServer__Group_8_3__0 : rule__ActionServer__Group_8_3__0__Impl rule__ActionServer__Group_8_3__1 ;
-    public final void rule__ActionServer__Group_8_3__0() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8080:1: ( rule__ActionServer__Group_8_3__0__Impl rule__ActionServer__Group_8_3__1 )
-            // InternalRos2Parser.g:8081:2: rule__ActionServer__Group_8_3__0__Impl rule__ActionServer__Group_8_3__1
-            {
-            pushFollow(FOLLOW_31);
-            rule__ActionServer__Group_8_3__0__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ActionServer__Group_8_3__1();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionServer__Group_8_3__0"
-
-
-    // $ANTLR start "rule__ActionServer__Group_8_3__0__Impl"
-    // InternalRos2Parser.g:8088:1: rule__ActionServer__Group_8_3__0__Impl : ( Comma ) ;
-    public final void rule__ActionServer__Group_8_3__0__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8092:1: ( ( Comma ) )
-            // InternalRos2Parser.g:8093:1: ( Comma )
-            {
-            // InternalRos2Parser.g:8093:1: ( Comma )
-            // InternalRos2Parser.g:8094:2: Comma
-            {
-             before(grammarAccess.getActionServerAccess().getCommaKeyword_8_3_0()); 
-            match(input,Comma,FOLLOW_2); 
-             after(grammarAccess.getActionServerAccess().getCommaKeyword_8_3_0()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionServer__Group_8_3__0__Impl"
-
-
-    // $ANTLR start "rule__ActionServer__Group_8_3__1"
-    // InternalRos2Parser.g:8103:1: rule__ActionServer__Group_8_3__1 : rule__ActionServer__Group_8_3__1__Impl ;
-    public final void rule__ActionServer__Group_8_3__1() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8107:1: ( rule__ActionServer__Group_8_3__1__Impl )
-            // InternalRos2Parser.g:8108:2: rule__ActionServer__Group_8_3__1__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__ActionServer__Group_8_3__1__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionServer__Group_8_3__1"
-
-
-    // $ANTLR start "rule__ActionServer__Group_8_3__1__Impl"
-    // InternalRos2Parser.g:8114:1: rule__ActionServer__Group_8_3__1__Impl : ( ( rule__ActionServer__ActiveStatesAssignment_8_3_1 ) ) ;
-    public final void rule__ActionServer__Group_8_3__1__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8118:1: ( ( ( rule__ActionServer__ActiveStatesAssignment_8_3_1 ) ) )
-            // InternalRos2Parser.g:8119:1: ( ( rule__ActionServer__ActiveStatesAssignment_8_3_1 ) )
-            {
-            // InternalRos2Parser.g:8119:1: ( ( rule__ActionServer__ActiveStatesAssignment_8_3_1 ) )
-            // InternalRos2Parser.g:8120:2: ( rule__ActionServer__ActiveStatesAssignment_8_3_1 )
-            {
-             before(grammarAccess.getActionServerAccess().getActiveStatesAssignment_8_3_1()); 
-            // InternalRos2Parser.g:8121:2: ( rule__ActionServer__ActiveStatesAssignment_8_3_1 )
-            // InternalRos2Parser.g:8121:3: rule__ActionServer__ActiveStatesAssignment_8_3_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__ActionServer__ActiveStatesAssignment_8_3_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getActionServerAccess().getActiveStatesAssignment_8_3_1()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionServer__Group_8_3__1__Impl"
 
 
     // $ANTLR start "rule__ActionClient__Group__0"
@@ -25386,7 +25386,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt56=2;
             int LA56_0 = input.LA(1);
 
-            if ( (LA56_0==Qos) ) {
+            if ( (LA56_0==Active_in) ) {
                 alt56=1;
             }
             switch (alt56) {
@@ -25482,7 +25482,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             int alt57=2;
             int LA57_0 = input.LA(1);
 
-            if ( (LA57_0==Active_in) ) {
+            if ( (LA57_0==Qos) ) {
                 alt57=1;
             }
             switch (alt57) {
@@ -25757,7 +25757,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:8458:1: ( rule__ActionClient__Group_7__0__Impl rule__ActionClient__Group_7__1 )
             // InternalRos2Parser.g:8459:2: rule__ActionClient__Group_7__0__Impl rule__ActionClient__Group_7__1
             {
-            pushFollow(FOLLOW_5);
+            pushFollow(FOLLOW_10);
             rule__ActionClient__Group_7__0__Impl();
 
             state._fsp--;
@@ -25786,21 +25786,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionClient__Group_7__0__Impl"
-    // InternalRos2Parser.g:8466:1: rule__ActionClient__Group_7__0__Impl : ( Qos ) ;
+    // InternalRos2Parser.g:8466:1: rule__ActionClient__Group_7__0__Impl : ( Active_in ) ;
     public final void rule__ActionClient__Group_7__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:8470:1: ( ( Qos ) )
-            // InternalRos2Parser.g:8471:1: ( Qos )
+            // InternalRos2Parser.g:8470:1: ( ( Active_in ) )
+            // InternalRos2Parser.g:8471:1: ( Active_in )
             {
-            // InternalRos2Parser.g:8471:1: ( Qos )
-            // InternalRos2Parser.g:8472:2: Qos
+            // InternalRos2Parser.g:8471:1: ( Active_in )
+            // InternalRos2Parser.g:8472:2: Active_in
             {
-             before(grammarAccess.getActionClientAccess().getQosKeyword_7_0()); 
-            match(input,Qos,FOLLOW_2); 
-             after(grammarAccess.getActionClientAccess().getQosKeyword_7_0()); 
+             before(grammarAccess.getActionClientAccess().getActive_inKeyword_7_0()); 
+            match(input,Active_in,FOLLOW_2); 
+             after(grammarAccess.getActionClientAccess().getActive_inKeyword_7_0()); 
 
             }
 
@@ -25823,17 +25823,22 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionClient__Group_7__1"
-    // InternalRos2Parser.g:8481:1: rule__ActionClient__Group_7__1 : rule__ActionClient__Group_7__1__Impl ;
+    // InternalRos2Parser.g:8481:1: rule__ActionClient__Group_7__1 : rule__ActionClient__Group_7__1__Impl rule__ActionClient__Group_7__2 ;
     public final void rule__ActionClient__Group_7__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:8485:1: ( rule__ActionClient__Group_7__1__Impl )
-            // InternalRos2Parser.g:8486:2: rule__ActionClient__Group_7__1__Impl
+            // InternalRos2Parser.g:8485:1: ( rule__ActionClient__Group_7__1__Impl rule__ActionClient__Group_7__2 )
+            // InternalRos2Parser.g:8486:2: rule__ActionClient__Group_7__1__Impl rule__ActionClient__Group_7__2
             {
-            pushFollow(FOLLOW_2);
+            pushFollow(FOLLOW_31);
             rule__ActionClient__Group_7__1__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ActionClient__Group_7__2();
 
             state._fsp--;
 
@@ -25856,31 +25861,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionClient__Group_7__1__Impl"
-    // InternalRos2Parser.g:8492:1: rule__ActionClient__Group_7__1__Impl : ( ( rule__ActionClient__QosAssignment_7_1 ) ) ;
+    // InternalRos2Parser.g:8493:1: rule__ActionClient__Group_7__1__Impl : ( LeftSquareBracket ) ;
     public final void rule__ActionClient__Group_7__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:8496:1: ( ( ( rule__ActionClient__QosAssignment_7_1 ) ) )
-            // InternalRos2Parser.g:8497:1: ( ( rule__ActionClient__QosAssignment_7_1 ) )
+            // InternalRos2Parser.g:8497:1: ( ( LeftSquareBracket ) )
+            // InternalRos2Parser.g:8498:1: ( LeftSquareBracket )
             {
-            // InternalRos2Parser.g:8497:1: ( ( rule__ActionClient__QosAssignment_7_1 ) )
-            // InternalRos2Parser.g:8498:2: ( rule__ActionClient__QosAssignment_7_1 )
+            // InternalRos2Parser.g:8498:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:8499:2: LeftSquareBracket
             {
-             before(grammarAccess.getActionClientAccess().getQosAssignment_7_1()); 
-            // InternalRos2Parser.g:8499:2: ( rule__ActionClient__QosAssignment_7_1 )
-            // InternalRos2Parser.g:8499:3: rule__ActionClient__QosAssignment_7_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__ActionClient__QosAssignment_7_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getActionClientAccess().getQosAssignment_7_1()); 
+             before(grammarAccess.getActionClientAccess().getLeftSquareBracketKeyword_7_1()); 
+            match(input,LeftSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getActionClientAccess().getLeftSquareBracketKeyword_7_1()); 
 
             }
 
@@ -25902,17 +25897,430 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ActionClient__Group_7__1__Impl"
 
 
+    // $ANTLR start "rule__ActionClient__Group_7__2"
+    // InternalRos2Parser.g:8508:1: rule__ActionClient__Group_7__2 : rule__ActionClient__Group_7__2__Impl rule__ActionClient__Group_7__3 ;
+    public final void rule__ActionClient__Group_7__2() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8512:1: ( rule__ActionClient__Group_7__2__Impl rule__ActionClient__Group_7__3 )
+            // InternalRos2Parser.g:8513:2: rule__ActionClient__Group_7__2__Impl rule__ActionClient__Group_7__3
+            {
+            pushFollow(FOLLOW_12);
+            rule__ActionClient__Group_7__2__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ActionClient__Group_7__3();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionClient__Group_7__2"
+
+
+    // $ANTLR start "rule__ActionClient__Group_7__2__Impl"
+    // InternalRos2Parser.g:8520:1: rule__ActionClient__Group_7__2__Impl : ( ( rule__ActionClient__ActiveStatesAssignment_7_2 ) ) ;
+    public final void rule__ActionClient__Group_7__2__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8524:1: ( ( ( rule__ActionClient__ActiveStatesAssignment_7_2 ) ) )
+            // InternalRos2Parser.g:8525:1: ( ( rule__ActionClient__ActiveStatesAssignment_7_2 ) )
+            {
+            // InternalRos2Parser.g:8525:1: ( ( rule__ActionClient__ActiveStatesAssignment_7_2 ) )
+            // InternalRos2Parser.g:8526:2: ( rule__ActionClient__ActiveStatesAssignment_7_2 )
+            {
+             before(grammarAccess.getActionClientAccess().getActiveStatesAssignment_7_2()); 
+            // InternalRos2Parser.g:8527:2: ( rule__ActionClient__ActiveStatesAssignment_7_2 )
+            // InternalRos2Parser.g:8527:3: rule__ActionClient__ActiveStatesAssignment_7_2
+            {
+            pushFollow(FOLLOW_2);
+            rule__ActionClient__ActiveStatesAssignment_7_2();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getActionClientAccess().getActiveStatesAssignment_7_2()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionClient__Group_7__2__Impl"
+
+
+    // $ANTLR start "rule__ActionClient__Group_7__3"
+    // InternalRos2Parser.g:8535:1: rule__ActionClient__Group_7__3 : rule__ActionClient__Group_7__3__Impl rule__ActionClient__Group_7__4 ;
+    public final void rule__ActionClient__Group_7__3() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8539:1: ( rule__ActionClient__Group_7__3__Impl rule__ActionClient__Group_7__4 )
+            // InternalRos2Parser.g:8540:2: rule__ActionClient__Group_7__3__Impl rule__ActionClient__Group_7__4
+            {
+            pushFollow(FOLLOW_12);
+            rule__ActionClient__Group_7__3__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ActionClient__Group_7__4();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionClient__Group_7__3"
+
+
+    // $ANTLR start "rule__ActionClient__Group_7__3__Impl"
+    // InternalRos2Parser.g:8547:1: rule__ActionClient__Group_7__3__Impl : ( ( rule__ActionClient__Group_7_3__0 )* ) ;
+    public final void rule__ActionClient__Group_7__3__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8551:1: ( ( ( rule__ActionClient__Group_7_3__0 )* ) )
+            // InternalRos2Parser.g:8552:1: ( ( rule__ActionClient__Group_7_3__0 )* )
+            {
+            // InternalRos2Parser.g:8552:1: ( ( rule__ActionClient__Group_7_3__0 )* )
+            // InternalRos2Parser.g:8553:2: ( rule__ActionClient__Group_7_3__0 )*
+            {
+             before(grammarAccess.getActionClientAccess().getGroup_7_3()); 
+            // InternalRos2Parser.g:8554:2: ( rule__ActionClient__Group_7_3__0 )*
+            loop58:
+            do {
+                int alt58=2;
+                int LA58_0 = input.LA(1);
+
+                if ( (LA58_0==Comma) ) {
+                    alt58=1;
+                }
+
+
+                switch (alt58) {
+            	case 1 :
+            	    // InternalRos2Parser.g:8554:3: rule__ActionClient__Group_7_3__0
+            	    {
+            	    pushFollow(FOLLOW_13);
+            	    rule__ActionClient__Group_7_3__0();
+
+            	    state._fsp--;
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop58;
+                }
+            } while (true);
+
+             after(grammarAccess.getActionClientAccess().getGroup_7_3()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionClient__Group_7__3__Impl"
+
+
+    // $ANTLR start "rule__ActionClient__Group_7__4"
+    // InternalRos2Parser.g:8562:1: rule__ActionClient__Group_7__4 : rule__ActionClient__Group_7__4__Impl ;
+    public final void rule__ActionClient__Group_7__4() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8566:1: ( rule__ActionClient__Group_7__4__Impl )
+            // InternalRos2Parser.g:8567:2: rule__ActionClient__Group_7__4__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__ActionClient__Group_7__4__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionClient__Group_7__4"
+
+
+    // $ANTLR start "rule__ActionClient__Group_7__4__Impl"
+    // InternalRos2Parser.g:8573:1: rule__ActionClient__Group_7__4__Impl : ( RightSquareBracket ) ;
+    public final void rule__ActionClient__Group_7__4__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8577:1: ( ( RightSquareBracket ) )
+            // InternalRos2Parser.g:8578:1: ( RightSquareBracket )
+            {
+            // InternalRos2Parser.g:8578:1: ( RightSquareBracket )
+            // InternalRos2Parser.g:8579:2: RightSquareBracket
+            {
+             before(grammarAccess.getActionClientAccess().getRightSquareBracketKeyword_7_4()); 
+            match(input,RightSquareBracket,FOLLOW_2); 
+             after(grammarAccess.getActionClientAccess().getRightSquareBracketKeyword_7_4()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionClient__Group_7__4__Impl"
+
+
+    // $ANTLR start "rule__ActionClient__Group_7_3__0"
+    // InternalRos2Parser.g:8589:1: rule__ActionClient__Group_7_3__0 : rule__ActionClient__Group_7_3__0__Impl rule__ActionClient__Group_7_3__1 ;
+    public final void rule__ActionClient__Group_7_3__0() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8593:1: ( rule__ActionClient__Group_7_3__0__Impl rule__ActionClient__Group_7_3__1 )
+            // InternalRos2Parser.g:8594:2: rule__ActionClient__Group_7_3__0__Impl rule__ActionClient__Group_7_3__1
+            {
+            pushFollow(FOLLOW_31);
+            rule__ActionClient__Group_7_3__0__Impl();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_2);
+            rule__ActionClient__Group_7_3__1();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionClient__Group_7_3__0"
+
+
+    // $ANTLR start "rule__ActionClient__Group_7_3__0__Impl"
+    // InternalRos2Parser.g:8601:1: rule__ActionClient__Group_7_3__0__Impl : ( Comma ) ;
+    public final void rule__ActionClient__Group_7_3__0__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8605:1: ( ( Comma ) )
+            // InternalRos2Parser.g:8606:1: ( Comma )
+            {
+            // InternalRos2Parser.g:8606:1: ( Comma )
+            // InternalRos2Parser.g:8607:2: Comma
+            {
+             before(grammarAccess.getActionClientAccess().getCommaKeyword_7_3_0()); 
+            match(input,Comma,FOLLOW_2); 
+             after(grammarAccess.getActionClientAccess().getCommaKeyword_7_3_0()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionClient__Group_7_3__0__Impl"
+
+
+    // $ANTLR start "rule__ActionClient__Group_7_3__1"
+    // InternalRos2Parser.g:8616:1: rule__ActionClient__Group_7_3__1 : rule__ActionClient__Group_7_3__1__Impl ;
+    public final void rule__ActionClient__Group_7_3__1() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8620:1: ( rule__ActionClient__Group_7_3__1__Impl )
+            // InternalRos2Parser.g:8621:2: rule__ActionClient__Group_7_3__1__Impl
+            {
+            pushFollow(FOLLOW_2);
+            rule__ActionClient__Group_7_3__1__Impl();
+
+            state._fsp--;
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionClient__Group_7_3__1"
+
+
+    // $ANTLR start "rule__ActionClient__Group_7_3__1__Impl"
+    // InternalRos2Parser.g:8627:1: rule__ActionClient__Group_7_3__1__Impl : ( ( rule__ActionClient__ActiveStatesAssignment_7_3_1 ) ) ;
+    public final void rule__ActionClient__Group_7_3__1__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+        	
+        try {
+            // InternalRos2Parser.g:8631:1: ( ( ( rule__ActionClient__ActiveStatesAssignment_7_3_1 ) ) )
+            // InternalRos2Parser.g:8632:1: ( ( rule__ActionClient__ActiveStatesAssignment_7_3_1 ) )
+            {
+            // InternalRos2Parser.g:8632:1: ( ( rule__ActionClient__ActiveStatesAssignment_7_3_1 ) )
+            // InternalRos2Parser.g:8633:2: ( rule__ActionClient__ActiveStatesAssignment_7_3_1 )
+            {
+             before(grammarAccess.getActionClientAccess().getActiveStatesAssignment_7_3_1()); 
+            // InternalRos2Parser.g:8634:2: ( rule__ActionClient__ActiveStatesAssignment_7_3_1 )
+            // InternalRos2Parser.g:8634:3: rule__ActionClient__ActiveStatesAssignment_7_3_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__ActionClient__ActiveStatesAssignment_7_3_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getActionClientAccess().getActiveStatesAssignment_7_3_1()); 
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ActionClient__Group_7_3__1__Impl"
+
+
     // $ANTLR start "rule__ActionClient__Group_8__0"
-    // InternalRos2Parser.g:8508:1: rule__ActionClient__Group_8__0 : rule__ActionClient__Group_8__0__Impl rule__ActionClient__Group_8__1 ;
+    // InternalRos2Parser.g:8643:1: rule__ActionClient__Group_8__0 : rule__ActionClient__Group_8__0__Impl rule__ActionClient__Group_8__1 ;
     public final void rule__ActionClient__Group_8__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:8512:1: ( rule__ActionClient__Group_8__0__Impl rule__ActionClient__Group_8__1 )
-            // InternalRos2Parser.g:8513:2: rule__ActionClient__Group_8__0__Impl rule__ActionClient__Group_8__1
+            // InternalRos2Parser.g:8647:1: ( rule__ActionClient__Group_8__0__Impl rule__ActionClient__Group_8__1 )
+            // InternalRos2Parser.g:8648:2: rule__ActionClient__Group_8__0__Impl rule__ActionClient__Group_8__1
             {
-            pushFollow(FOLLOW_10);
+            pushFollow(FOLLOW_5);
             rule__ActionClient__Group_8__0__Impl();
 
             state._fsp--;
@@ -25941,21 +26349,21 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionClient__Group_8__0__Impl"
-    // InternalRos2Parser.g:8520:1: rule__ActionClient__Group_8__0__Impl : ( Active_in ) ;
+    // InternalRos2Parser.g:8655:1: rule__ActionClient__Group_8__0__Impl : ( Qos ) ;
     public final void rule__ActionClient__Group_8__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:8524:1: ( ( Active_in ) )
-            // InternalRos2Parser.g:8525:1: ( Active_in )
+            // InternalRos2Parser.g:8659:1: ( ( Qos ) )
+            // InternalRos2Parser.g:8660:1: ( Qos )
             {
-            // InternalRos2Parser.g:8525:1: ( Active_in )
-            // InternalRos2Parser.g:8526:2: Active_in
+            // InternalRos2Parser.g:8660:1: ( Qos )
+            // InternalRos2Parser.g:8661:2: Qos
             {
-             before(grammarAccess.getActionClientAccess().getActive_inKeyword_8_0()); 
-            match(input,Active_in,FOLLOW_2); 
-             after(grammarAccess.getActionClientAccess().getActive_inKeyword_8_0()); 
+             before(grammarAccess.getActionClientAccess().getQosKeyword_8_0()); 
+            match(input,Qos,FOLLOW_2); 
+             after(grammarAccess.getActionClientAccess().getQosKeyword_8_0()); 
 
             }
 
@@ -25978,22 +26386,17 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionClient__Group_8__1"
-    // InternalRos2Parser.g:8535:1: rule__ActionClient__Group_8__1 : rule__ActionClient__Group_8__1__Impl rule__ActionClient__Group_8__2 ;
+    // InternalRos2Parser.g:8670:1: rule__ActionClient__Group_8__1 : rule__ActionClient__Group_8__1__Impl ;
     public final void rule__ActionClient__Group_8__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:8539:1: ( rule__ActionClient__Group_8__1__Impl rule__ActionClient__Group_8__2 )
-            // InternalRos2Parser.g:8540:2: rule__ActionClient__Group_8__1__Impl rule__ActionClient__Group_8__2
+            // InternalRos2Parser.g:8674:1: ( rule__ActionClient__Group_8__1__Impl )
+            // InternalRos2Parser.g:8675:2: rule__ActionClient__Group_8__1__Impl
             {
-            pushFollow(FOLLOW_31);
-            rule__ActionClient__Group_8__1__Impl();
-
-            state._fsp--;
-
             pushFollow(FOLLOW_2);
-            rule__ActionClient__Group_8__2();
+            rule__ActionClient__Group_8__1__Impl();
 
             state._fsp--;
 
@@ -26016,21 +26419,31 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ActionClient__Group_8__1__Impl"
-    // InternalRos2Parser.g:8547:1: rule__ActionClient__Group_8__1__Impl : ( LeftSquareBracket ) ;
+    // InternalRos2Parser.g:8681:1: rule__ActionClient__Group_8__1__Impl : ( ( rule__ActionClient__QosAssignment_8_1 ) ) ;
     public final void rule__ActionClient__Group_8__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:8551:1: ( ( LeftSquareBracket ) )
-            // InternalRos2Parser.g:8552:1: ( LeftSquareBracket )
+            // InternalRos2Parser.g:8685:1: ( ( ( rule__ActionClient__QosAssignment_8_1 ) ) )
+            // InternalRos2Parser.g:8686:1: ( ( rule__ActionClient__QosAssignment_8_1 ) )
             {
-            // InternalRos2Parser.g:8552:1: ( LeftSquareBracket )
-            // InternalRos2Parser.g:8553:2: LeftSquareBracket
+            // InternalRos2Parser.g:8686:1: ( ( rule__ActionClient__QosAssignment_8_1 ) )
+            // InternalRos2Parser.g:8687:2: ( rule__ActionClient__QosAssignment_8_1 )
             {
-             before(grammarAccess.getActionClientAccess().getLeftSquareBracketKeyword_8_1()); 
-            match(input,LeftSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getActionClientAccess().getLeftSquareBracketKeyword_8_1()); 
+             before(grammarAccess.getActionClientAccess().getQosAssignment_8_1()); 
+            // InternalRos2Parser.g:8688:2: ( rule__ActionClient__QosAssignment_8_1 )
+            // InternalRos2Parser.g:8688:3: rule__ActionClient__QosAssignment_8_1
+            {
+            pushFollow(FOLLOW_2);
+            rule__ActionClient__QosAssignment_8_1();
+
+            state._fsp--;
+
+
+            }
+
+             after(grammarAccess.getActionClientAccess().getQosAssignment_8_1()); 
 
             }
 
@@ -26050,419 +26463,6 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         return ;
     }
     // $ANTLR end "rule__ActionClient__Group_8__1__Impl"
-
-
-    // $ANTLR start "rule__ActionClient__Group_8__2"
-    // InternalRos2Parser.g:8562:1: rule__ActionClient__Group_8__2 : rule__ActionClient__Group_8__2__Impl rule__ActionClient__Group_8__3 ;
-    public final void rule__ActionClient__Group_8__2() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8566:1: ( rule__ActionClient__Group_8__2__Impl rule__ActionClient__Group_8__3 )
-            // InternalRos2Parser.g:8567:2: rule__ActionClient__Group_8__2__Impl rule__ActionClient__Group_8__3
-            {
-            pushFollow(FOLLOW_12);
-            rule__ActionClient__Group_8__2__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ActionClient__Group_8__3();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionClient__Group_8__2"
-
-
-    // $ANTLR start "rule__ActionClient__Group_8__2__Impl"
-    // InternalRos2Parser.g:8574:1: rule__ActionClient__Group_8__2__Impl : ( ( rule__ActionClient__ActiveStatesAssignment_8_2 ) ) ;
-    public final void rule__ActionClient__Group_8__2__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8578:1: ( ( ( rule__ActionClient__ActiveStatesAssignment_8_2 ) ) )
-            // InternalRos2Parser.g:8579:1: ( ( rule__ActionClient__ActiveStatesAssignment_8_2 ) )
-            {
-            // InternalRos2Parser.g:8579:1: ( ( rule__ActionClient__ActiveStatesAssignment_8_2 ) )
-            // InternalRos2Parser.g:8580:2: ( rule__ActionClient__ActiveStatesAssignment_8_2 )
-            {
-             before(grammarAccess.getActionClientAccess().getActiveStatesAssignment_8_2()); 
-            // InternalRos2Parser.g:8581:2: ( rule__ActionClient__ActiveStatesAssignment_8_2 )
-            // InternalRos2Parser.g:8581:3: rule__ActionClient__ActiveStatesAssignment_8_2
-            {
-            pushFollow(FOLLOW_2);
-            rule__ActionClient__ActiveStatesAssignment_8_2();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getActionClientAccess().getActiveStatesAssignment_8_2()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionClient__Group_8__2__Impl"
-
-
-    // $ANTLR start "rule__ActionClient__Group_8__3"
-    // InternalRos2Parser.g:8589:1: rule__ActionClient__Group_8__3 : rule__ActionClient__Group_8__3__Impl rule__ActionClient__Group_8__4 ;
-    public final void rule__ActionClient__Group_8__3() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8593:1: ( rule__ActionClient__Group_8__3__Impl rule__ActionClient__Group_8__4 )
-            // InternalRos2Parser.g:8594:2: rule__ActionClient__Group_8__3__Impl rule__ActionClient__Group_8__4
-            {
-            pushFollow(FOLLOW_12);
-            rule__ActionClient__Group_8__3__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ActionClient__Group_8__4();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionClient__Group_8__3"
-
-
-    // $ANTLR start "rule__ActionClient__Group_8__3__Impl"
-    // InternalRos2Parser.g:8601:1: rule__ActionClient__Group_8__3__Impl : ( ( rule__ActionClient__Group_8_3__0 )* ) ;
-    public final void rule__ActionClient__Group_8__3__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8605:1: ( ( ( rule__ActionClient__Group_8_3__0 )* ) )
-            // InternalRos2Parser.g:8606:1: ( ( rule__ActionClient__Group_8_3__0 )* )
-            {
-            // InternalRos2Parser.g:8606:1: ( ( rule__ActionClient__Group_8_3__0 )* )
-            // InternalRos2Parser.g:8607:2: ( rule__ActionClient__Group_8_3__0 )*
-            {
-             before(grammarAccess.getActionClientAccess().getGroup_8_3()); 
-            // InternalRos2Parser.g:8608:2: ( rule__ActionClient__Group_8_3__0 )*
-            loop58:
-            do {
-                int alt58=2;
-                int LA58_0 = input.LA(1);
-
-                if ( (LA58_0==Comma) ) {
-                    alt58=1;
-                }
-
-
-                switch (alt58) {
-            	case 1 :
-            	    // InternalRos2Parser.g:8608:3: rule__ActionClient__Group_8_3__0
-            	    {
-            	    pushFollow(FOLLOW_13);
-            	    rule__ActionClient__Group_8_3__0();
-
-            	    state._fsp--;
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop58;
-                }
-            } while (true);
-
-             after(grammarAccess.getActionClientAccess().getGroup_8_3()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionClient__Group_8__3__Impl"
-
-
-    // $ANTLR start "rule__ActionClient__Group_8__4"
-    // InternalRos2Parser.g:8616:1: rule__ActionClient__Group_8__4 : rule__ActionClient__Group_8__4__Impl ;
-    public final void rule__ActionClient__Group_8__4() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8620:1: ( rule__ActionClient__Group_8__4__Impl )
-            // InternalRos2Parser.g:8621:2: rule__ActionClient__Group_8__4__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__ActionClient__Group_8__4__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionClient__Group_8__4"
-
-
-    // $ANTLR start "rule__ActionClient__Group_8__4__Impl"
-    // InternalRos2Parser.g:8627:1: rule__ActionClient__Group_8__4__Impl : ( RightSquareBracket ) ;
-    public final void rule__ActionClient__Group_8__4__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8631:1: ( ( RightSquareBracket ) )
-            // InternalRos2Parser.g:8632:1: ( RightSquareBracket )
-            {
-            // InternalRos2Parser.g:8632:1: ( RightSquareBracket )
-            // InternalRos2Parser.g:8633:2: RightSquareBracket
-            {
-             before(grammarAccess.getActionClientAccess().getRightSquareBracketKeyword_8_4()); 
-            match(input,RightSquareBracket,FOLLOW_2); 
-             after(grammarAccess.getActionClientAccess().getRightSquareBracketKeyword_8_4()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionClient__Group_8__4__Impl"
-
-
-    // $ANTLR start "rule__ActionClient__Group_8_3__0"
-    // InternalRos2Parser.g:8643:1: rule__ActionClient__Group_8_3__0 : rule__ActionClient__Group_8_3__0__Impl rule__ActionClient__Group_8_3__1 ;
-    public final void rule__ActionClient__Group_8_3__0() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8647:1: ( rule__ActionClient__Group_8_3__0__Impl rule__ActionClient__Group_8_3__1 )
-            // InternalRos2Parser.g:8648:2: rule__ActionClient__Group_8_3__0__Impl rule__ActionClient__Group_8_3__1
-            {
-            pushFollow(FOLLOW_31);
-            rule__ActionClient__Group_8_3__0__Impl();
-
-            state._fsp--;
-
-            pushFollow(FOLLOW_2);
-            rule__ActionClient__Group_8_3__1();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionClient__Group_8_3__0"
-
-
-    // $ANTLR start "rule__ActionClient__Group_8_3__0__Impl"
-    // InternalRos2Parser.g:8655:1: rule__ActionClient__Group_8_3__0__Impl : ( Comma ) ;
-    public final void rule__ActionClient__Group_8_3__0__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8659:1: ( ( Comma ) )
-            // InternalRos2Parser.g:8660:1: ( Comma )
-            {
-            // InternalRos2Parser.g:8660:1: ( Comma )
-            // InternalRos2Parser.g:8661:2: Comma
-            {
-             before(grammarAccess.getActionClientAccess().getCommaKeyword_8_3_0()); 
-            match(input,Comma,FOLLOW_2); 
-             after(grammarAccess.getActionClientAccess().getCommaKeyword_8_3_0()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionClient__Group_8_3__0__Impl"
-
-
-    // $ANTLR start "rule__ActionClient__Group_8_3__1"
-    // InternalRos2Parser.g:8670:1: rule__ActionClient__Group_8_3__1 : rule__ActionClient__Group_8_3__1__Impl ;
-    public final void rule__ActionClient__Group_8_3__1() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8674:1: ( rule__ActionClient__Group_8_3__1__Impl )
-            // InternalRos2Parser.g:8675:2: rule__ActionClient__Group_8_3__1__Impl
-            {
-            pushFollow(FOLLOW_2);
-            rule__ActionClient__Group_8_3__1__Impl();
-
-            state._fsp--;
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionClient__Group_8_3__1"
-
-
-    // $ANTLR start "rule__ActionClient__Group_8_3__1__Impl"
-    // InternalRos2Parser.g:8681:1: rule__ActionClient__Group_8_3__1__Impl : ( ( rule__ActionClient__ActiveStatesAssignment_8_3_1 ) ) ;
-    public final void rule__ActionClient__Group_8_3__1__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-        	
-        try {
-            // InternalRos2Parser.g:8685:1: ( ( ( rule__ActionClient__ActiveStatesAssignment_8_3_1 ) ) )
-            // InternalRos2Parser.g:8686:1: ( ( rule__ActionClient__ActiveStatesAssignment_8_3_1 ) )
-            {
-            // InternalRos2Parser.g:8686:1: ( ( rule__ActionClient__ActiveStatesAssignment_8_3_1 ) )
-            // InternalRos2Parser.g:8687:2: ( rule__ActionClient__ActiveStatesAssignment_8_3_1 )
-            {
-             before(grammarAccess.getActionClientAccess().getActiveStatesAssignment_8_3_1()); 
-            // InternalRos2Parser.g:8688:2: ( rule__ActionClient__ActiveStatesAssignment_8_3_1 )
-            // InternalRos2Parser.g:8688:3: rule__ActionClient__ActiveStatesAssignment_8_3_1
-            {
-            pushFollow(FOLLOW_2);
-            rule__ActionClient__ActiveStatesAssignment_8_3_1();
-
-            state._fsp--;
-
-
-            }
-
-             after(grammarAccess.getActionClientAccess().getActiveStatesAssignment_8_3_1()); 
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ActionClient__Group_8_3__1__Impl"
 
 
     // $ANTLR start "rule__Parameter__Group__0"
@@ -49125,26 +49125,26 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__Publisher__NamespaceAssignment_6_1"
 
 
-    // $ANTLR start "rule__Publisher__QosAssignment_7_1"
-    // InternalRos2Parser.g:16464:1: rule__Publisher__QosAssignment_7_1 : ( ruleQualityOfService ) ;
-    public final void rule__Publisher__QosAssignment_7_1() throws RecognitionException {
+    // $ANTLR start "rule__Publisher__ActiveStatesAssignment_7_2"
+    // InternalRos2Parser.g:16464:1: rule__Publisher__ActiveStatesAssignment_7_2 : ( ruleLifecycleState ) ;
+    public final void rule__Publisher__ActiveStatesAssignment_7_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16468:1: ( ( ruleQualityOfService ) )
-            // InternalRos2Parser.g:16469:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16468:1: ( ( ruleLifecycleState ) )
+            // InternalRos2Parser.g:16469:2: ( ruleLifecycleState )
             {
-            // InternalRos2Parser.g:16469:2: ( ruleQualityOfService )
-            // InternalRos2Parser.g:16470:3: ruleQualityOfService
+            // InternalRos2Parser.g:16469:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16470:3: ruleLifecycleState
             {
-             before(grammarAccess.getPublisherAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             before(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
             pushFollow(FOLLOW_2);
-            ruleQualityOfService();
+            ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getPublisherAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             after(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
 
             }
 
@@ -49163,12 +49163,12 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__Publisher__QosAssignment_7_1"
+    // $ANTLR end "rule__Publisher__ActiveStatesAssignment_7_2"
 
 
-    // $ANTLR start "rule__Publisher__ActiveStatesAssignment_8_2"
-    // InternalRos2Parser.g:16479:1: rule__Publisher__ActiveStatesAssignment_8_2 : ( ruleLifecycleState ) ;
-    public final void rule__Publisher__ActiveStatesAssignment_8_2() throws RecognitionException {
+    // $ANTLR start "rule__Publisher__ActiveStatesAssignment_7_3_1"
+    // InternalRos2Parser.g:16479:1: rule__Publisher__ActiveStatesAssignment_7_3_1 : ( ruleLifecycleState ) ;
+    public final void rule__Publisher__ActiveStatesAssignment_7_3_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -49179,13 +49179,13 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:16484:2: ( ruleLifecycleState )
             // InternalRos2Parser.g:16485:3: ruleLifecycleState
             {
-             before(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             before(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
             pushFollow(FOLLOW_2);
             ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             after(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
 
             }
 
@@ -49204,29 +49204,29 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__Publisher__ActiveStatesAssignment_8_2"
+    // $ANTLR end "rule__Publisher__ActiveStatesAssignment_7_3_1"
 
 
-    // $ANTLR start "rule__Publisher__ActiveStatesAssignment_8_3_1"
-    // InternalRos2Parser.g:16494:1: rule__Publisher__ActiveStatesAssignment_8_3_1 : ( ruleLifecycleState ) ;
-    public final void rule__Publisher__ActiveStatesAssignment_8_3_1() throws RecognitionException {
+    // $ANTLR start "rule__Publisher__QosAssignment_8_1"
+    // InternalRos2Parser.g:16494:1: rule__Publisher__QosAssignment_8_1 : ( ruleQualityOfService ) ;
+    public final void rule__Publisher__QosAssignment_8_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16498:1: ( ( ruleLifecycleState ) )
-            // InternalRos2Parser.g:16499:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16498:1: ( ( ruleQualityOfService ) )
+            // InternalRos2Parser.g:16499:2: ( ruleQualityOfService )
             {
-            // InternalRos2Parser.g:16499:2: ( ruleLifecycleState )
-            // InternalRos2Parser.g:16500:3: ruleLifecycleState
+            // InternalRos2Parser.g:16499:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16500:3: ruleQualityOfService
             {
-             before(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             before(grammarAccess.getPublisherAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
             pushFollow(FOLLOW_2);
-            ruleLifecycleState();
+            ruleQualityOfService();
 
             state._fsp--;
 
-             after(grammarAccess.getPublisherAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             after(grammarAccess.getPublisherAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
 
             }
 
@@ -49245,7 +49245,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__Publisher__ActiveStatesAssignment_8_3_1"
+    // $ANTLR end "rule__Publisher__QosAssignment_8_1"
 
 
     // $ANTLR start "rule__Subscriber__NameAssignment_1"
@@ -49379,26 +49379,26 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__Subscriber__NamespaceAssignment_6_1"
 
 
-    // $ANTLR start "rule__Subscriber__QosAssignment_7_1"
-    // InternalRos2Parser.g:16558:1: rule__Subscriber__QosAssignment_7_1 : ( ruleQualityOfService ) ;
-    public final void rule__Subscriber__QosAssignment_7_1() throws RecognitionException {
+    // $ANTLR start "rule__Subscriber__ActiveStatesAssignment_7_2"
+    // InternalRos2Parser.g:16558:1: rule__Subscriber__ActiveStatesAssignment_7_2 : ( ruleLifecycleState ) ;
+    public final void rule__Subscriber__ActiveStatesAssignment_7_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16562:1: ( ( ruleQualityOfService ) )
-            // InternalRos2Parser.g:16563:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16562:1: ( ( ruleLifecycleState ) )
+            // InternalRos2Parser.g:16563:2: ( ruleLifecycleState )
             {
-            // InternalRos2Parser.g:16563:2: ( ruleQualityOfService )
-            // InternalRos2Parser.g:16564:3: ruleQualityOfService
+            // InternalRos2Parser.g:16563:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16564:3: ruleLifecycleState
             {
-             before(grammarAccess.getSubscriberAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             before(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
             pushFollow(FOLLOW_2);
-            ruleQualityOfService();
+            ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getSubscriberAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             after(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
 
             }
 
@@ -49417,12 +49417,12 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__Subscriber__QosAssignment_7_1"
+    // $ANTLR end "rule__Subscriber__ActiveStatesAssignment_7_2"
 
 
-    // $ANTLR start "rule__Subscriber__ActiveStatesAssignment_8_2"
-    // InternalRos2Parser.g:16573:1: rule__Subscriber__ActiveStatesAssignment_8_2 : ( ruleLifecycleState ) ;
-    public final void rule__Subscriber__ActiveStatesAssignment_8_2() throws RecognitionException {
+    // $ANTLR start "rule__Subscriber__ActiveStatesAssignment_7_3_1"
+    // InternalRos2Parser.g:16573:1: rule__Subscriber__ActiveStatesAssignment_7_3_1 : ( ruleLifecycleState ) ;
+    public final void rule__Subscriber__ActiveStatesAssignment_7_3_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -49433,13 +49433,13 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:16578:2: ( ruleLifecycleState )
             // InternalRos2Parser.g:16579:3: ruleLifecycleState
             {
-             before(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             before(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
             pushFollow(FOLLOW_2);
             ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             after(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
 
             }
 
@@ -49458,29 +49458,29 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__Subscriber__ActiveStatesAssignment_8_2"
+    // $ANTLR end "rule__Subscriber__ActiveStatesAssignment_7_3_1"
 
 
-    // $ANTLR start "rule__Subscriber__ActiveStatesAssignment_8_3_1"
-    // InternalRos2Parser.g:16588:1: rule__Subscriber__ActiveStatesAssignment_8_3_1 : ( ruleLifecycleState ) ;
-    public final void rule__Subscriber__ActiveStatesAssignment_8_3_1() throws RecognitionException {
+    // $ANTLR start "rule__Subscriber__QosAssignment_8_1"
+    // InternalRos2Parser.g:16588:1: rule__Subscriber__QosAssignment_8_1 : ( ruleQualityOfService ) ;
+    public final void rule__Subscriber__QosAssignment_8_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16592:1: ( ( ruleLifecycleState ) )
-            // InternalRos2Parser.g:16593:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16592:1: ( ( ruleQualityOfService ) )
+            // InternalRos2Parser.g:16593:2: ( ruleQualityOfService )
             {
-            // InternalRos2Parser.g:16593:2: ( ruleLifecycleState )
-            // InternalRos2Parser.g:16594:3: ruleLifecycleState
+            // InternalRos2Parser.g:16593:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16594:3: ruleQualityOfService
             {
-             before(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             before(grammarAccess.getSubscriberAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
             pushFollow(FOLLOW_2);
-            ruleLifecycleState();
+            ruleQualityOfService();
 
             state._fsp--;
 
-             after(grammarAccess.getSubscriberAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             after(grammarAccess.getSubscriberAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
 
             }
 
@@ -49499,7 +49499,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__Subscriber__ActiveStatesAssignment_8_3_1"
+    // $ANTLR end "rule__Subscriber__QosAssignment_8_1"
 
 
     // $ANTLR start "rule__ServiceServer__NameAssignment_1"
@@ -49633,26 +49633,26 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ServiceServer__NamespaceAssignment_6_1"
 
 
-    // $ANTLR start "rule__ServiceServer__QosAssignment_7_1"
-    // InternalRos2Parser.g:16652:1: rule__ServiceServer__QosAssignment_7_1 : ( ruleQualityOfService ) ;
-    public final void rule__ServiceServer__QosAssignment_7_1() throws RecognitionException {
+    // $ANTLR start "rule__ServiceServer__ActiveStatesAssignment_7_2"
+    // InternalRos2Parser.g:16652:1: rule__ServiceServer__ActiveStatesAssignment_7_2 : ( ruleLifecycleState ) ;
+    public final void rule__ServiceServer__ActiveStatesAssignment_7_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16656:1: ( ( ruleQualityOfService ) )
-            // InternalRos2Parser.g:16657:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16656:1: ( ( ruleLifecycleState ) )
+            // InternalRos2Parser.g:16657:2: ( ruleLifecycleState )
             {
-            // InternalRos2Parser.g:16657:2: ( ruleQualityOfService )
-            // InternalRos2Parser.g:16658:3: ruleQualityOfService
+            // InternalRos2Parser.g:16657:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16658:3: ruleLifecycleState
             {
-             before(grammarAccess.getServiceServerAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             before(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
             pushFollow(FOLLOW_2);
-            ruleQualityOfService();
+            ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getServiceServerAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             after(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
 
             }
 
@@ -49671,12 +49671,12 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ServiceServer__QosAssignment_7_1"
+    // $ANTLR end "rule__ServiceServer__ActiveStatesAssignment_7_2"
 
 
-    // $ANTLR start "rule__ServiceServer__ActiveStatesAssignment_8_2"
-    // InternalRos2Parser.g:16667:1: rule__ServiceServer__ActiveStatesAssignment_8_2 : ( ruleLifecycleState ) ;
-    public final void rule__ServiceServer__ActiveStatesAssignment_8_2() throws RecognitionException {
+    // $ANTLR start "rule__ServiceServer__ActiveStatesAssignment_7_3_1"
+    // InternalRos2Parser.g:16667:1: rule__ServiceServer__ActiveStatesAssignment_7_3_1 : ( ruleLifecycleState ) ;
+    public final void rule__ServiceServer__ActiveStatesAssignment_7_3_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -49687,13 +49687,13 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:16672:2: ( ruleLifecycleState )
             // InternalRos2Parser.g:16673:3: ruleLifecycleState
             {
-             before(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             before(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
             pushFollow(FOLLOW_2);
             ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             after(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
 
             }
 
@@ -49712,29 +49712,29 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ServiceServer__ActiveStatesAssignment_8_2"
+    // $ANTLR end "rule__ServiceServer__ActiveStatesAssignment_7_3_1"
 
 
-    // $ANTLR start "rule__ServiceServer__ActiveStatesAssignment_8_3_1"
-    // InternalRos2Parser.g:16682:1: rule__ServiceServer__ActiveStatesAssignment_8_3_1 : ( ruleLifecycleState ) ;
-    public final void rule__ServiceServer__ActiveStatesAssignment_8_3_1() throws RecognitionException {
+    // $ANTLR start "rule__ServiceServer__QosAssignment_8_1"
+    // InternalRos2Parser.g:16682:1: rule__ServiceServer__QosAssignment_8_1 : ( ruleQualityOfService ) ;
+    public final void rule__ServiceServer__QosAssignment_8_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16686:1: ( ( ruleLifecycleState ) )
-            // InternalRos2Parser.g:16687:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16686:1: ( ( ruleQualityOfService ) )
+            // InternalRos2Parser.g:16687:2: ( ruleQualityOfService )
             {
-            // InternalRos2Parser.g:16687:2: ( ruleLifecycleState )
-            // InternalRos2Parser.g:16688:3: ruleLifecycleState
+            // InternalRos2Parser.g:16687:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16688:3: ruleQualityOfService
             {
-             before(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             before(grammarAccess.getServiceServerAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
             pushFollow(FOLLOW_2);
-            ruleLifecycleState();
+            ruleQualityOfService();
 
             state._fsp--;
 
-             after(grammarAccess.getServiceServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             after(grammarAccess.getServiceServerAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
 
             }
 
@@ -49753,7 +49753,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ServiceServer__ActiveStatesAssignment_8_3_1"
+    // $ANTLR end "rule__ServiceServer__QosAssignment_8_1"
 
 
     // $ANTLR start "rule__ServiceClient__NameAssignment_1"
@@ -49887,26 +49887,26 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ServiceClient__NamespaceAssignment_6_1"
 
 
-    // $ANTLR start "rule__ServiceClient__QosAssignment_7_1"
-    // InternalRos2Parser.g:16746:1: rule__ServiceClient__QosAssignment_7_1 : ( ruleQualityOfService ) ;
-    public final void rule__ServiceClient__QosAssignment_7_1() throws RecognitionException {
+    // $ANTLR start "rule__ServiceClient__ActiveStatesAssignment_7_2"
+    // InternalRos2Parser.g:16746:1: rule__ServiceClient__ActiveStatesAssignment_7_2 : ( ruleLifecycleState ) ;
+    public final void rule__ServiceClient__ActiveStatesAssignment_7_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16750:1: ( ( ruleQualityOfService ) )
-            // InternalRos2Parser.g:16751:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16750:1: ( ( ruleLifecycleState ) )
+            // InternalRos2Parser.g:16751:2: ( ruleLifecycleState )
             {
-            // InternalRos2Parser.g:16751:2: ( ruleQualityOfService )
-            // InternalRos2Parser.g:16752:3: ruleQualityOfService
+            // InternalRos2Parser.g:16751:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16752:3: ruleLifecycleState
             {
-             before(grammarAccess.getServiceClientAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             before(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
             pushFollow(FOLLOW_2);
-            ruleQualityOfService();
+            ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getServiceClientAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             after(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
 
             }
 
@@ -49925,12 +49925,12 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ServiceClient__QosAssignment_7_1"
+    // $ANTLR end "rule__ServiceClient__ActiveStatesAssignment_7_2"
 
 
-    // $ANTLR start "rule__ServiceClient__ActiveStatesAssignment_8_2"
-    // InternalRos2Parser.g:16761:1: rule__ServiceClient__ActiveStatesAssignment_8_2 : ( ruleLifecycleState ) ;
-    public final void rule__ServiceClient__ActiveStatesAssignment_8_2() throws RecognitionException {
+    // $ANTLR start "rule__ServiceClient__ActiveStatesAssignment_7_3_1"
+    // InternalRos2Parser.g:16761:1: rule__ServiceClient__ActiveStatesAssignment_7_3_1 : ( ruleLifecycleState ) ;
+    public final void rule__ServiceClient__ActiveStatesAssignment_7_3_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -49941,13 +49941,13 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:16766:2: ( ruleLifecycleState )
             // InternalRos2Parser.g:16767:3: ruleLifecycleState
             {
-             before(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             before(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
             pushFollow(FOLLOW_2);
             ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             after(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
 
             }
 
@@ -49966,29 +49966,29 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ServiceClient__ActiveStatesAssignment_8_2"
+    // $ANTLR end "rule__ServiceClient__ActiveStatesAssignment_7_3_1"
 
 
-    // $ANTLR start "rule__ServiceClient__ActiveStatesAssignment_8_3_1"
-    // InternalRos2Parser.g:16776:1: rule__ServiceClient__ActiveStatesAssignment_8_3_1 : ( ruleLifecycleState ) ;
-    public final void rule__ServiceClient__ActiveStatesAssignment_8_3_1() throws RecognitionException {
+    // $ANTLR start "rule__ServiceClient__QosAssignment_8_1"
+    // InternalRos2Parser.g:16776:1: rule__ServiceClient__QosAssignment_8_1 : ( ruleQualityOfService ) ;
+    public final void rule__ServiceClient__QosAssignment_8_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16780:1: ( ( ruleLifecycleState ) )
-            // InternalRos2Parser.g:16781:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16780:1: ( ( ruleQualityOfService ) )
+            // InternalRos2Parser.g:16781:2: ( ruleQualityOfService )
             {
-            // InternalRos2Parser.g:16781:2: ( ruleLifecycleState )
-            // InternalRos2Parser.g:16782:3: ruleLifecycleState
+            // InternalRos2Parser.g:16781:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16782:3: ruleQualityOfService
             {
-             before(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             before(grammarAccess.getServiceClientAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
             pushFollow(FOLLOW_2);
-            ruleLifecycleState();
+            ruleQualityOfService();
 
             state._fsp--;
 
-             after(grammarAccess.getServiceClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             after(grammarAccess.getServiceClientAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
 
             }
 
@@ -50007,7 +50007,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ServiceClient__ActiveStatesAssignment_8_3_1"
+    // $ANTLR end "rule__ServiceClient__QosAssignment_8_1"
 
 
     // $ANTLR start "rule__ActionServer__NameAssignment_1"
@@ -50141,26 +50141,26 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ActionServer__NamespaceAssignment_6_1"
 
 
-    // $ANTLR start "rule__ActionServer__QosAssignment_7_1"
-    // InternalRos2Parser.g:16840:1: rule__ActionServer__QosAssignment_7_1 : ( ruleQualityOfService ) ;
-    public final void rule__ActionServer__QosAssignment_7_1() throws RecognitionException {
+    // $ANTLR start "rule__ActionServer__ActiveStatesAssignment_7_2"
+    // InternalRos2Parser.g:16840:1: rule__ActionServer__ActiveStatesAssignment_7_2 : ( ruleLifecycleState ) ;
+    public final void rule__ActionServer__ActiveStatesAssignment_7_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16844:1: ( ( ruleQualityOfService ) )
-            // InternalRos2Parser.g:16845:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16844:1: ( ( ruleLifecycleState ) )
+            // InternalRos2Parser.g:16845:2: ( ruleLifecycleState )
             {
-            // InternalRos2Parser.g:16845:2: ( ruleQualityOfService )
-            // InternalRos2Parser.g:16846:3: ruleQualityOfService
+            // InternalRos2Parser.g:16845:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16846:3: ruleLifecycleState
             {
-             before(grammarAccess.getActionServerAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             before(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
             pushFollow(FOLLOW_2);
-            ruleQualityOfService();
+            ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getActionServerAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             after(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
 
             }
 
@@ -50179,12 +50179,12 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ActionServer__QosAssignment_7_1"
+    // $ANTLR end "rule__ActionServer__ActiveStatesAssignment_7_2"
 
 
-    // $ANTLR start "rule__ActionServer__ActiveStatesAssignment_8_2"
-    // InternalRos2Parser.g:16855:1: rule__ActionServer__ActiveStatesAssignment_8_2 : ( ruleLifecycleState ) ;
-    public final void rule__ActionServer__ActiveStatesAssignment_8_2() throws RecognitionException {
+    // $ANTLR start "rule__ActionServer__ActiveStatesAssignment_7_3_1"
+    // InternalRos2Parser.g:16855:1: rule__ActionServer__ActiveStatesAssignment_7_3_1 : ( ruleLifecycleState ) ;
+    public final void rule__ActionServer__ActiveStatesAssignment_7_3_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -50195,13 +50195,13 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:16860:2: ( ruleLifecycleState )
             // InternalRos2Parser.g:16861:3: ruleLifecycleState
             {
-             before(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             before(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
             pushFollow(FOLLOW_2);
             ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             after(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
 
             }
 
@@ -50220,29 +50220,29 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ActionServer__ActiveStatesAssignment_8_2"
+    // $ANTLR end "rule__ActionServer__ActiveStatesAssignment_7_3_1"
 
 
-    // $ANTLR start "rule__ActionServer__ActiveStatesAssignment_8_3_1"
-    // InternalRos2Parser.g:16870:1: rule__ActionServer__ActiveStatesAssignment_8_3_1 : ( ruleLifecycleState ) ;
-    public final void rule__ActionServer__ActiveStatesAssignment_8_3_1() throws RecognitionException {
+    // $ANTLR start "rule__ActionServer__QosAssignment_8_1"
+    // InternalRos2Parser.g:16870:1: rule__ActionServer__QosAssignment_8_1 : ( ruleQualityOfService ) ;
+    public final void rule__ActionServer__QosAssignment_8_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16874:1: ( ( ruleLifecycleState ) )
-            // InternalRos2Parser.g:16875:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16874:1: ( ( ruleQualityOfService ) )
+            // InternalRos2Parser.g:16875:2: ( ruleQualityOfService )
             {
-            // InternalRos2Parser.g:16875:2: ( ruleLifecycleState )
-            // InternalRos2Parser.g:16876:3: ruleLifecycleState
+            // InternalRos2Parser.g:16875:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16876:3: ruleQualityOfService
             {
-             before(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             before(grammarAccess.getActionServerAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
             pushFollow(FOLLOW_2);
-            ruleLifecycleState();
+            ruleQualityOfService();
 
             state._fsp--;
 
-             after(grammarAccess.getActionServerAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             after(grammarAccess.getActionServerAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
 
             }
 
@@ -50261,7 +50261,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ActionServer__ActiveStatesAssignment_8_3_1"
+    // $ANTLR end "rule__ActionServer__QosAssignment_8_1"
 
 
     // $ANTLR start "rule__ActionClient__NameAssignment_1"
@@ -50395,26 +50395,26 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ActionClient__NamespaceAssignment_6_1"
 
 
-    // $ANTLR start "rule__ActionClient__QosAssignment_7_1"
-    // InternalRos2Parser.g:16934:1: rule__ActionClient__QosAssignment_7_1 : ( ruleQualityOfService ) ;
-    public final void rule__ActionClient__QosAssignment_7_1() throws RecognitionException {
+    // $ANTLR start "rule__ActionClient__ActiveStatesAssignment_7_2"
+    // InternalRos2Parser.g:16934:1: rule__ActionClient__ActiveStatesAssignment_7_2 : ( ruleLifecycleState ) ;
+    public final void rule__ActionClient__ActiveStatesAssignment_7_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16938:1: ( ( ruleQualityOfService ) )
-            // InternalRos2Parser.g:16939:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16938:1: ( ( ruleLifecycleState ) )
+            // InternalRos2Parser.g:16939:2: ( ruleLifecycleState )
             {
-            // InternalRos2Parser.g:16939:2: ( ruleQualityOfService )
-            // InternalRos2Parser.g:16940:3: ruleQualityOfService
+            // InternalRos2Parser.g:16939:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16940:3: ruleLifecycleState
             {
-             before(grammarAccess.getActionClientAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             before(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
             pushFollow(FOLLOW_2);
-            ruleQualityOfService();
+            ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getActionClientAccess().getQosQualityOfServiceParserRuleCall_7_1_0()); 
+             after(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_2_0()); 
 
             }
 
@@ -50433,12 +50433,12 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ActionClient__QosAssignment_7_1"
+    // $ANTLR end "rule__ActionClient__ActiveStatesAssignment_7_2"
 
 
-    // $ANTLR start "rule__ActionClient__ActiveStatesAssignment_8_2"
-    // InternalRos2Parser.g:16949:1: rule__ActionClient__ActiveStatesAssignment_8_2 : ( ruleLifecycleState ) ;
-    public final void rule__ActionClient__ActiveStatesAssignment_8_2() throws RecognitionException {
+    // $ANTLR start "rule__ActionClient__ActiveStatesAssignment_7_3_1"
+    // InternalRos2Parser.g:16949:1: rule__ActionClient__ActiveStatesAssignment_7_3_1 : ( ruleLifecycleState ) ;
+    public final void rule__ActionClient__ActiveStatesAssignment_7_3_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -50449,13 +50449,13 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
             // InternalRos2Parser.g:16954:2: ( ruleLifecycleState )
             // InternalRos2Parser.g:16955:3: ruleLifecycleState
             {
-             before(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             before(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
             pushFollow(FOLLOW_2);
             ruleLifecycleState();
 
             state._fsp--;
 
-             after(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_2_0()); 
+             after(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_7_3_1_0()); 
 
             }
 
@@ -50474,29 +50474,29 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ActionClient__ActiveStatesAssignment_8_2"
+    // $ANTLR end "rule__ActionClient__ActiveStatesAssignment_7_3_1"
 
 
-    // $ANTLR start "rule__ActionClient__ActiveStatesAssignment_8_3_1"
-    // InternalRos2Parser.g:16964:1: rule__ActionClient__ActiveStatesAssignment_8_3_1 : ( ruleLifecycleState ) ;
-    public final void rule__ActionClient__ActiveStatesAssignment_8_3_1() throws RecognitionException {
+    // $ANTLR start "rule__ActionClient__QosAssignment_8_1"
+    // InternalRos2Parser.g:16964:1: rule__ActionClient__QosAssignment_8_1 : ( ruleQualityOfService ) ;
+    public final void rule__ActionClient__QosAssignment_8_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalRos2Parser.g:16968:1: ( ( ruleLifecycleState ) )
-            // InternalRos2Parser.g:16969:2: ( ruleLifecycleState )
+            // InternalRos2Parser.g:16968:1: ( ( ruleQualityOfService ) )
+            // InternalRos2Parser.g:16969:2: ( ruleQualityOfService )
             {
-            // InternalRos2Parser.g:16969:2: ( ruleLifecycleState )
-            // InternalRos2Parser.g:16970:3: ruleLifecycleState
+            // InternalRos2Parser.g:16969:2: ( ruleQualityOfService )
+            // InternalRos2Parser.g:16970:3: ruleQualityOfService
             {
-             before(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             before(grammarAccess.getActionClientAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
             pushFollow(FOLLOW_2);
-            ruleLifecycleState();
+            ruleQualityOfService();
 
             state._fsp--;
 
-             after(grammarAccess.getActionClientAccess().getActiveStatesLifecycleStateEnumRuleCall_8_3_1_0()); 
+             after(grammarAccess.getActionClientAccess().getQosQualityOfServiceParserRuleCall_8_1_0()); 
 
             }
 
@@ -50515,7 +50515,7 @@ public class InternalRos2Parser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ActionClient__ActiveStatesAssignment_8_3_1"
+    // $ANTLR end "rule__ActionClient__QosAssignment_8_1"
 
 
     // $ANTLR start "rule__Parameter__NameAssignment_1"
