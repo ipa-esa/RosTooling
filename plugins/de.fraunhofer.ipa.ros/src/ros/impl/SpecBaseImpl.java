@@ -150,25 +150,21 @@ public abstract class SpecBaseImpl extends MinimalEObjectImpl.Container implemen
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getFullname() {
-		// TODO: implement this method to return the 'Fullname' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		return getPackage() != null ? String.format("%s/%s", getPackage().getName(), getName()) : getName();
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public boolean isSetFullname() {
-		// TODO: implement this method to return whether the 'Fullname' attribute is set
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		return getPackage() != null;
 	}
 
 	/**
