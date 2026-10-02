@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,7 +29,11 @@ import org.eclipse.xtext.generator.GeneratorContext;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+
+import de.fraunhofer.ipa.rossystem.generator.RosSystemGenerator;
 
 public class RosSystemGeneratorCommandService implements IExecutableCommandService {
     
@@ -76,6 +81,12 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
                 }
                 forceLog("Cleaned URI received: " + fileUriStr);
                 URI uri = URI.createURI(fileUriStr);
+
+                List<String> existingFiles = new ArrayList<>();
+                if (params.getArguments().size() > 1 && params.getArguments().get(1) != null) {
+                    existingFiles = parseStringList(params.getArguments().get(1));
+                }
+                final List<String> finalExistingFiles = existingFiles;
                 
                 forceLog("Requesting workspace-aware document from LSP ...");
                 
@@ -92,7 +103,11 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
 						var fsa = new InMemoryFileSystemAccess();
 						var context1 = new GeneratorContext();
 						context1.setCancelIndicator(CancelIndicator.NullImpl);
-						generator.doGenerate(resource, fsa, context1);
+						if (generator instanceof RosSystemGenerator) {
+							((RosSystemGenerator) generator).generateSystemTargeted(resource, fsa, finalExistingFiles);
+						} else {
+							generator.doGenerate(resource, fsa, context1);
+						}
 						
 						Map<String, String> files = fsa.getAllFiles().entrySet().stream()
 		                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
@@ -114,5 +129,37 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
             }
         }
         return Map.of("error", "Unknown command");
+    }
+
+    private String parseStringArg(Object arg) {
+        if (arg == null) return "";
+        if (arg instanceof JsonPrimitive) {
+            return ((JsonPrimitive) arg).getAsString();
+        }
+        String s = arg.toString();
+        if (s.startsWith("\"") && s.endsWith("\"") && s.length() >= 2) {
+            s = s.substring(1, s.length() - 1);
+        }
+        return s;
+    }
+
+    private List<String> parseStringList(Object arg) {
+        List<String> list = new ArrayList<>();
+        if (arg == null) return list;
+        if (arg instanceof JsonArray) {
+            for (JsonElement el : (JsonArray) arg) {
+                list.add(el.getAsString());
+            }
+        } else if (arg instanceof List) {
+            for (Object obj : (List<?>) arg) {
+                list.add(parseStringArg(obj));
+            }
+        } else {
+            String s = parseStringArg(arg);
+            if (!s.isEmpty()) {
+                list.add(s);
+            }
+        }
+        return list;
     }
 }
