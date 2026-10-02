@@ -5,6 +5,45 @@ All notable changes to the **RosTooling** model and generator plugins will be do
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.1-SNAPSHOT] - 2026-10-02
+
+### Added
+- **Targeted System Generation with Workspace Awareness**:
+  - `RosSystemGeneratorCommandService.java` now accepts an `existingFiles` argument and forwards it to `RosSystemGenerator.generateSystemTargeted`.
+  - Enables `.rossystem` code generation to inspect existing package structures in `src-gen/<pkg>` before generating or updating build files.
+- **Dedicated Pure Python System Generation (`compile_package_xml_python`)**:
+  - Added `compile_package_xml_python` in `PackageXmlCompiler.xtend` to emit a clean `<build_type>ament_python</build_type>` without CMake build tool dependencies.
+- **Launch & Config Installation Injections**:
+  - Injected `install(DIRECTORY launch ...)` and `config/` installation directives into existing `CMakeLists.txt` for monolithic packages lacking them.
+  - Injected `<exec_depend>launch</exec_depend>`, `<exec_depend>launch_ros</exec_depend>`, and `<exec_depend>ament_index_python</exec_depend>` into existing `package.xml` files when system launch files are added.
+
+### Changed
+- **Executable Naming Alignment Across Build Systems (Approach A)**:
+  - Standardized C++ generated filenames to CamelCase matching artifact names (`«artCamel»Wrapper.hpp`, `«artCamel»Algorithm.hpp`, `«artCamel»Runner.cpp`).
+  - Aligned C++ executable targets to match the exact modeled artifact name `«node.artifactName»` in `add_executable`, `target_link_libraries`, `ament_target_dependencies`, and `install(TARGETS ...)` (replacing `«CamelCase»_node`).
+  - In hybrid CMake packages (`ament_cmake_python`), installed Python runners into `lib/${PROJECT_NAME}` using CMake `RENAME «node.artifactName»` so that executable binaries match the modeled artifact name without a `.py` extension.
+  - Aligned Python `setup.py` `console_scripts` entry points to `«node.artifactName» = «pkg».«node.name»_runner:main`.
+  - Unified `.rossystem` launch file generation: Launch files reference canonical `executable="«artifact.name»"`, which resolves identically across pure C++, pure Python, and hybrid packages without naming mismatches.
+- **Removal of `pyproject.toml` Generation**:
+  - Completely removed `pyproject.toml` generation from `Ros2BuildArtifactsCompiler.xtend` and `Ros2Generator.xtend`. Pure Python packages strictly adhere to standard ROS 2 `setup.py` and `setup.cfg`.
+- **CMake Baseline**:
+  - Updated `CMakeListsCompiler.xtend` minimum version requirement from `3.5` to `3.8`.
+
+### Fixed
+- **Monolithic Package Support & Build Collision Prevention**:
+  - Resolved build system conflicts in monolithic packages where multiple nodes and bringup launch files share a single package directory.
+  - Prevented generation of rogue `CMakeLists.txt` or CMake build configurations in pure Python packages.
+  - Prevented generation of rogue `setup.py`, `setup.cfg`, or `__init__.py` in pure C++ bringup packages.
+  - Filtered self-referential execution dependencies in `PackageXmlCompiler.xtend` (packages no longer declare dependencies on themselves).
+- **Deterministic File Pruning for Clean Build Transitions**:
+  - Added deterministic file pruning (`fsa.deleteFile`) for obsolete Python setuptools files (`setup.py`, `setup.cfg`, `pyproject.toml`, and setuptools resource package marker `resource/<pkg>`) in CMake and hybrid packages.
+  - Added deterministic file pruning (`fsa.deleteFile`) for obsolete `CMakeLists.txt` and `pyproject.toml` in pure Python packages.
+  - Strictly preserved PlantUML architecture diagrams (`resource/<pkg>.puml`) from deletion across all build file cleanup routines.
+- **Single-Language Node Enforcement & Duplicate Node Prevention**:
+  - Enforced single-language implementation per node in `Ros2Generator.xtend`: regenerating a node in C++ automatically prunes it from `pythonNodes` and deletes opposite-language files (`_wrapper.py`, `_runner.py`, `_logic.py`); regenerating a node in Python prunes it from `cppNodes` and deletes opposite-language files (`Wrapper.hpp`, `Algorithm.hpp`, `Wrapper.cpp`, `Runner.cpp`).
+- **Antlr Token Source Resilience**:
+  - Updated `Ros2TokenSource.java` in both `ros2.xtext` and `ros2.xtext.ide` to use reflection-based fallback for resolving token rule constants (`RULE_WS`, `RULE_BEGIN`, `RULE_END`), preventing binary incompatibility crashes upon Antlr re-generation.
+
 ## [3.2.0] - 2026-09-30
 
 ### Added
@@ -37,3 +76,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed parameter default value extraction in `Ros2GeneratorHelpers.xtend`.
 - Fixed loop generation syntax error when generating parameter handlers for nodes with zero parameters.
 - Fixed lambda parameter syntax and missing semicolons in C++ runner generation.
+
+
