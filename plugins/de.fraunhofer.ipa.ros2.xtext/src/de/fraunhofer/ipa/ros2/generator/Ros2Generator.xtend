@@ -121,6 +121,13 @@ class Ros2Generator extends AbstractGenerator {
                             cppNodes.add(node)
                         }
 
+                        // When generating C++, ensure node is not duplicated in pythonNodes and prune opposite-language files
+                        pythonNodes.removeIf[it == node || it.name == node.name || it.artifactName == node.artifactName]
+                        val snakeNode = toSnakeCase(node.name)
+                        fsa.deleteFile(pkgName + "/" + pkgName + "/" + snakeNode + "_wrapper.py")
+                        fsa.deleteFile(pkgName + "/" + pkgName + "/" + snakeNode + "_runner.py")
+                        fsa.deleteFile(pkgName + "/" + pkgName + "/" + snakeNode + "_logic.py")
+
                         val artCamel = toCamelCase(node.artifactName)
 
                         // Wrapper Header (Overwritten on generation)
@@ -152,18 +159,23 @@ class Ros2Generator extends AbstractGenerator {
 
                 // 3. Generate Python Artifacts
                 if (genPy) {
+                    // __init__.py
+                    fsa.generateFile(pkgName + "/" + pkgName + "/__init__.py", "")
+
                     for (node : nodesToGenerate) {
                         if (!pythonNodes.contains(node)) {
                             pythonNodes.add(node)
                         }
 
+                        // When generating Python, ensure node is not duplicated in cppNodes and prune opposite-language files
+                        cppNodes.removeIf[it == node || it.name == node.name || it.artifactName == node.artifactName]
+                        val artCamel = toCamelCase(node.artifactName)
+                        fsa.deleteFile(pkgName + "/include/" + pkgName + "/" + artCamel + "Wrapper.hpp")
+                        fsa.deleteFile(pkgName + "/include/" + pkgName + "/" + artCamel + "Algorithm.hpp")
+                        fsa.deleteFile(pkgName + "/src/" + artCamel + "Wrapper.cpp")
+                        fsa.deleteFile(pkgName + "/src/" + artCamel + "Runner.cpp")
+
                         val snakeNode = toSnakeCase(node.name)
-
-                        // __init__.py
-                        fsa.generateFile(pkgName + "/" + pkgName + "/__init__.py", "")
-
-                        // Resource marker
-                        fsa.generateFile(pkgName + "/resource/" + pkgName, "")
 
                         // Python Wrapper (Overwritten on generation)
                         fsa.generateFile(
@@ -186,7 +198,7 @@ class Ros2Generator extends AbstractGenerator {
                     }
                 }
 
-                // 4. Generate Build Files (Package.xml, CMakeLists.txt, setup.py / pyproject.toml)
+                // 4. Generate Build Files (Package.xml, CMakeLists.txt, setup.py)
                 fsa.generateFile(
                     pkgName + "/package.xml",
                     compilePackageXml(pkg, cppNodes, pythonNodes, distro)
@@ -198,15 +210,17 @@ class Ros2Generator extends AbstractGenerator {
                         pkgName + "/CMakeLists.txt",
                         compileCMakeLists(pkg, cppNodes, pythonNodes, distro)
                     )
+                    // Prune redundant Python setuptools files in CMake packages
+                    fsa.deleteFile(pkgName + "/setup.py")
+                    fsa.deleteFile(pkgName + "/setup.cfg")
+                    fsa.deleteFile(pkgName + "/pyproject.toml")
+                    fsa.deleteFile(pkgName + "/resource/" + pkgName)
                 } else if (!pythonNodes.empty) {
                     // Pure Python package
-                    val isJazzyOrRolling = "jazzy".equalsIgnoreCase(distro) || "rolling".equalsIgnoreCase(distro)
-                    if (isJazzyOrRolling) {
-                        fsa.generateFile(
-                            pkgName + "/pyproject.toml",
-                            compilePyprojectToml(pkg, pythonNodes)
-                        )
-                    }
+                    fsa.generateFile(
+                        pkgName + "/resource/" + pkgName,
+                        ""
+                    )
                     fsa.generateFile(
                         pkgName + "/setup.py",
                         compileSetupPy(pkg, pythonNodes)
@@ -215,6 +229,9 @@ class Ros2Generator extends AbstractGenerator {
                         pkgName + "/setup.cfg",
                         compileSetupCfg(pkg)
                     )
+                    // Prune redundant CMake and TOML files in pure Python packages
+                    fsa.deleteFile(pkgName + "/CMakeLists.txt")
+                    fsa.deleteFile(pkgName + "/pyproject.toml")
                 }
             }
         }

@@ -67,6 +67,9 @@ class Ros2BuildArtifactsCompiler {
   <depend>«dep»</depend>
   «ENDFOR»
 
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
@@ -141,15 +144,15 @@ ament_target_dependencies(«artCamel»_component
 rclcpp_components_register_nodes(«artCamel»_component "«pkg.name.toLowerCase»::«artCamel»Wrapper")
 
 # -----------------------------------------------------------------------------
-# Standalone Executable: «artCamel»_node
+# Standalone Executable: «node.artifactName»
 # -----------------------------------------------------------------------------
-add_executable(«artCamel»_node
+add_executable(«node.artifactName»
   src/«artCamel»Runner.cpp
 )
-target_link_libraries(«artCamel»_node
+target_link_libraries(«node.artifactName»
   «artCamel»_component
 )
-ament_target_dependencies(«artCamel»_node
+ament_target_dependencies(«node.artifactName»
   rclcpp
 )
 «ENDFOR»
@@ -160,12 +163,13 @@ ament_target_dependencies(«artCamel»_node
 # -----------------------------------------------------------------------------
 ament_python_install_package(${PROJECT_NAME})
 
+«FOR node : pythonNodes»
 install(PROGRAMS
-  «FOR node : pythonNodes»
   «pkg.name.toLowerCase»/«node.name»_runner.py
-  «ENDFOR»
   DESTINATION lib/${PROJECT_NAME}
+  RENAME «node.artifactName»
 )
+«ENDFOR»
 «ENDIF»
 
 # -----------------------------------------------------------------------------
@@ -176,7 +180,7 @@ install(TARGETS
   «FOR node : cppNodes»
   «val artCamel = toCamelCase(node.artifactName)»
   «artCamel»_component
-  «artCamel»_node
+  «node.artifactName»
   «ENDFOR»
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -188,11 +192,25 @@ install(DIRECTORY include/
 )
 «ENDIF»
 
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/launch")
+  install(DIRECTORY launch
+    DESTINATION share/${PROJECT_NAME}
+  )
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/config")
+  install(DIRECTORY config
+    DESTINATION share/${PROJECT_NAME}
+  )
+endif()
+
 ament_package()
 '''
     }
 
     def String compileSetupPy(Package pkg, List<Node> pythonNodes) '''
+import os
+from glob import glob
 from setuptools import find_packages, setup
 
 package_name = '«pkg.name.toLowerCase»'
@@ -204,6 +222,8 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*.[pxy][yma]*'))),
+        (os.path.join('share', package_name, 'config'), glob(os.path.join('config', '*.*'))),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -215,7 +235,7 @@ setup(
     entry_points={
         'console_scripts': [
             «FOR node : pythonNodes»
-            '«node.name»_node = «pkg.name.toLowerCase».«node.name»_runner:main',
+            '«node.artifactName» = «pkg.name.toLowerCase».«node.name»_runner:main',
             «ENDFOR»
         ],
     },
@@ -229,26 +249,5 @@ script_dir=$base/lib/«pkg.name.toLowerCase»
 install_scripts=$base/lib/«pkg.name.toLowerCase»
 '''
 
-    def String compilePyprojectToml(Package pkg, List<Node> pythonNodes) '''
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "«pkg.name.toLowerCase»"
-version = "0.0.1"
-description = "ROS 2 package «pkg.name» with generated Python node wrappers"
-readme = "README.md"
-license = {text = "Apache-2.0"}
-authors = [{name = "ROS Developer", email = "user@todo.todo"}]
-dependencies = [
-    "setuptools",
-]
-
-[project.scripts]
-«FOR node : pythonNodes»
-«node.name»_node = "«pkg.name.toLowerCase».«node.name»_runner:main"
-«ENDFOR»
-'''
-
 }
+

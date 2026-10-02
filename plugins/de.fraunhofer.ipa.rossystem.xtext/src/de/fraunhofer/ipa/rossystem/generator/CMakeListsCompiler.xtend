@@ -23,13 +23,8 @@ class CMakeListsCompiler {
 //)'''
 
     def compile_CMakeLists_ROS2(System system, boolean gen_yaml) '''«init_pkg()»
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.8)
 project(«system.name.toLowerCase»)
-
-# Default to C++14
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
-endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -37,13 +32,21 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-### INSTALL ###
-install(DIRECTORY launch «IF gen_yaml»config«ENDIF»
-  DESTINATION share/${PROJECT_NAME}
-)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/launch")
+  install(DIRECTORY launch
+    DESTINATION share/${PROJECT_NAME}
+  )
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/config")
+  install(DIRECTORY config
+    DESTINATION share/${PROJECT_NAME}
+  )
+endif()
 
 ament_package()
 '''
+
 
 
 }
