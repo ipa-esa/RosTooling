@@ -22,7 +22,11 @@ import threading
 from typing import Optional, Callable, Any, List
 
 import rclpy
+«IF node.isLifecycle»
+from rclpy.lifecycle import Node, State, TransitionCallbackReturn
+«ELSE»
 from rclpy.node import Node
+«ENDIF»
 from rclpy.callback_groups import ReentrantCallbackGroup
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 from rcl_interfaces.msg import ParameterDescriptor, SetParametersResult
@@ -95,11 +99,19 @@ class «node.name»Wrapper(Node):
         # 2. Publishers Initialization
         # ----------------------------------------------------
         «FOR pub : node.publisher»
+        «IF node.isLifecycle»
+        self._pub_«sanitizeName(pub.name)» = self.create_lifecycle_publisher(
+            «pub.message.specName»,
+            "«pub.name»",
+            «getQosPython(pub.qos)»
+        )
+        «ELSE»
         self._pub_«sanitizeName(pub.name)» = self.create_publisher(
             «pub.message.specName»,
             "«pub.name»",
             «getQosPython(pub.qos)»
         )
+        «ENDIF»
         «ENDFOR»
 
         # ----------------------------------------------------
@@ -327,6 +339,47 @@ class «node.name»Wrapper(Node):
         success_res = SetParametersResult()
         success_res.successful = True
         return success_res
+
+    «IF node.isLifecycle»
+    # ==========================================
+    # LIFECYCLE TRANSITION CALLBACKS
+    # ==========================================
+    def on_configure(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info(f"Configuring {self.get_name()} from state {state.label}")
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_activate(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info(f"Activating {self.get_name()} from state {state.label}")
+        «FOR pub : node.publisher»
+        «IF isPubActiveIn(pub, "ACTIVE")»
+        if self._pub_«sanitizeName(pub.name)» is not None:
+            self._pub_«sanitizeName(pub.name)».on_activate(state)
+        «ENDIF»
+        «ENDFOR»
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_deactivate(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info(f"Deactivating {self.get_name()} from state {state.label}")
+        «FOR pub : node.publisher»
+        «IF isPubActiveIn(pub, "ACTIVE")»
+        if self._pub_«sanitizeName(pub.name)» is not None:
+            self._pub_«sanitizeName(pub.name)».on_deactivate(state)
+        «ENDIF»
+        «ENDFOR»
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_cleanup(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info(f"Cleaning up {self.get_name()} from state {state.label}")
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_shutdown(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info(f"Shutting down {self.get_name()} from state {state.label}")
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_error(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().error(f"Error in lifecycle node {self.get_name()} from state {state.label}")
+        return TransitionCallbackReturn.SUCCESS
+    «ENDIF»
 '''
 
     def String compileLogicStub(Package pkg, Node node) '''
@@ -428,6 +481,35 @@ class «node.name»Logic:
         self._send_«sanitizeName(actClient.name)»_goal_fn: Optional[Callable] = None
         self._cancel_«sanitizeName(actClient.name)»_goal_fn: Optional[Callable] = None
         «ENDFOR»
+
+    «IF node.isLifecycle»
+    # ==========================================
+    # LIFECYCLE TRANSITION HOOKS (Pure Python / Zero ROS 2 dependencies)
+    # ==========================================
+    def on_configure(self) -> bool:
+        """Called when configuring node. Return True on success."""
+        return True
+
+    def on_activate(self) -> bool:
+        """Called when activating node. Return True on success."""
+        return True
+
+    def on_deactivate(self) -> bool:
+        """Called when deactivating node. Return True on success."""
+        return True
+
+    def on_cleanup(self) -> bool:
+        """Called when cleaning up node. Return True on success."""
+        return True
+
+    def on_shutdown(self) -> bool:
+        """Called when shutting down node. Return True on success."""
+        return True
+
+    def on_error(self) -> bool:
+        """Called when an error occurs. Return True on success."""
+        return True
+    «ENDIF»
 
     # ==========================================
     # 1. INBOUND SUBSCRIBER MESSAGE HANDLERS
@@ -731,6 +813,9 @@ class «node.name»Logic:
 
 import sys
 import rclpy
+«IF node.isLifecycle»
+from rclpy.lifecycle import State, TransitionCallbackReturn
+«ENDIF»
 from rclpy.duration import Duration
 from rclpy.executors import MultiThreadedExecutor, SingleThreadedExecutor
 «IF !node.parameter.empty»
@@ -832,6 +917,47 @@ class «node.name»Node(«node.name»Wrapper):
         return future
 
     «ENDFOR»
+    «IF node.isLifecycle»
+    # ==========================================
+    # LIFECYCLE TRANSITION CALLBACK OVERRIDES
+    # ==========================================
+    def on_configure(self, state: State) -> TransitionCallbackReturn:
+        super_ret = super().on_configure(state)
+        if super_ret != TransitionCallbackReturn.SUCCESS:
+            return super_ret
+        return TransitionCallbackReturn.SUCCESS if self.logic.on_configure() else TransitionCallbackReturn.FAILURE
+
+    def on_activate(self, state: State) -> TransitionCallbackReturn:
+        super_ret = super().on_activate(state)
+        if super_ret != TransitionCallbackReturn.SUCCESS:
+            return super_ret
+        return TransitionCallbackReturn.SUCCESS if self.logic.on_activate() else TransitionCallbackReturn.FAILURE
+
+    def on_deactivate(self, state: State) -> TransitionCallbackReturn:
+        super_ret = super().on_deactivate(state)
+        if super_ret != TransitionCallbackReturn.SUCCESS:
+            return super_ret
+        return TransitionCallbackReturn.SUCCESS if self.logic.on_deactivate() else TransitionCallbackReturn.FAILURE
+
+    def on_cleanup(self, state: State) -> TransitionCallbackReturn:
+        super_ret = super().on_cleanup(state)
+        if super_ret != TransitionCallbackReturn.SUCCESS:
+            return super_ret
+        return TransitionCallbackReturn.SUCCESS if self.logic.on_cleanup() else TransitionCallbackReturn.FAILURE
+
+    def on_shutdown(self, state: State) -> TransitionCallbackReturn:
+        super_ret = super().on_shutdown(state)
+        if super_ret != TransitionCallbackReturn.SUCCESS:
+            return super_ret
+        return TransitionCallbackReturn.SUCCESS if self.logic.on_shutdown() else TransitionCallbackReturn.FAILURE
+
+    def on_error(self, state: State) -> TransitionCallbackReturn:
+        super_ret = super().on_error(state)
+        if super_ret != TransitionCallbackReturn.SUCCESS:
+            return super_ret
+        return TransitionCallbackReturn.SUCCESS if self.logic.on_error() else TransitionCallbackReturn.FAILURE
+    «ENDIF»
+
     «FOR sub : node.subscriber»
     def on_«sanitizeName(sub.name)»_msg(self, msg) -> None:
         self.logic.on_«sanitizeName(sub.name)»_received(msg)
