@@ -135,6 +135,7 @@ find_package(«dep» REQUIRED)
 # -----------------------------------------------------------------------------
 add_library(«artCamel»_component SHARED
   src/«artCamel»Wrapper.cpp
+  src/«artCamel»Node.cpp
 )
 target_include_directories(«artCamel»_component PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -149,7 +150,7 @@ ament_target_dependencies(«artCamel»_component
   «dep»
   «ENDFOR»
 )
-rclcpp_components_register_nodes(«artCamel»_component "«pkg.name.toLowerCase»::«artCamel»Wrapper")
+rclcpp_components_register_nodes(«artCamel»_component "«pkg.name.toLowerCase»::«artCamel»Node")
 
 # -----------------------------------------------------------------------------
 # Standalone Executable: «node.artifactName»
@@ -201,17 +202,15 @@ install(DIRECTORY include/
 )
 «ENDIF»
 
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/launch")
-  install(DIRECTORY launch
-    DESTINATION share/${PROJECT_NAME}
-  )
-endif()
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+  OPTIONAL
+)
 
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/config")
-  install(DIRECTORY config
-    DESTINATION share/${PROJECT_NAME}
-  )
-endif()
+install(DIRECTORY config
+  DESTINATION share/${PROJECT_NAME}
+  OPTIONAL
+)
 
 ament_package()
 '''

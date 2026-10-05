@@ -83,33 +83,40 @@ class Ros2Generator extends AbstractGenerator {
                 val pythonNodes = new ArrayList<Node>()
 
                 // 1. Check existing files to preserve previously generated nodes of other languages (Hybrid support)
+                //    Only consider files that belong to this package (pkgName/ or src-gen/pkgName/)
                 val cppPattern = Pattern.compile(".*src/([A-Za-z0-9_]+)Wrapper\\.cpp")
                 val pyPattern = Pattern.compile(".*([A-Za-z0-9_]+)/([A-Za-z0-9_]+)_wrapper\\.py")
 
                 for (f : existingList) {
-                    val mCpp = cppPattern.matcher(f)
-                    if (mCpp.matches()) {
-                        val matchedName = mCpp.group(1)
-                        val existingNode = allPkgNodes.findFirst[
-                            toCamelCase(artifactName) == matchedName ||
-                            artifactName == matchedName ||
-                            toCamelCase(name) == matchedName ||
-                            name == matchedName
-                        ]
-                        if (existingNode !== null && !cppNodes.contains(existingNode)) {
-                            cppNodes.add(existingNode)
+                    // Only consider files that belong to this package (pkgName/ or src-gen/pkgName/ or bare filenames)
+                    val belongsToPackage = f.startsWith(pkgName + "/") || f.startsWith("src-gen/" + pkgName + "/") || !f.contains("/")
+                    if (!belongsToPackage) {
+                        // Skip files from other packages
+                    } else {
+                        val mCpp = cppPattern.matcher(f)
+                        if (mCpp.matches()) {
+                            val matchedName = mCpp.group(1)
+                            val existingNode = allPkgNodes.findFirst[
+                                toCamelCase(artifactName) == matchedName ||
+                                artifactName == matchedName ||
+                                toCamelCase(name) == matchedName ||
+                                name == matchedName
+                            ]
+                            if (existingNode !== null && !cppNodes.contains(existingNode)) {
+                                cppNodes.add(existingNode)
+                            }
                         }
-                    }
-                    val mPy = pyPattern.matcher(f)
-                    if (mPy.matches()) {
-                        val matchedName = mPy.group(2)
-                        val existingNode = allPkgNodes.findFirst[
-                            toSnakeCase(artifactName) == matchedName ||
-                            toSnakeCase(name) == matchedName ||
-                            name == matchedName
-                        ]
-                        if (existingNode !== null && !pythonNodes.contains(existingNode)) {
-                            pythonNodes.add(existingNode)
+                        val mPy = pyPattern.matcher(f)
+                        if (mPy.matches()) {
+                            val matchedName = mPy.group(2)
+                            val existingNode = allPkgNodes.findFirst[
+                                toSnakeCase(artifactName) == matchedName ||
+                                toSnakeCase(name) == matchedName ||
+                                name == matchedName
+                            ]
+                            if (existingNode !== null && !pythonNodes.contains(existingNode)) {
+                                pythonNodes.add(existingNode)
+                            }
                         }
                     }
                 }
@@ -144,13 +151,25 @@ class Ros2Generator extends AbstractGenerator {
 
                         // Standalone Runner & Component Export (Overwritten on generation)
                         fsa.generateFile(
+                            pkgName + "/include/" + pkgName + "/" + artCamel + "Node.hpp",
+                            compileCppNodeHeader(pkg, node, artCamel)
+                        )
+                        fsa.generateFile(
+                            pkgName + "/src/" + artCamel + "Node.cpp",
+                            compileCppNodeSource(pkg, node, artCamel)
+                        )
+                        fsa.generateFile(
                             pkgName + "/src/" + artCamel + "Runner.cpp",
                             compileCppRunner(pkg, node, artCamel)
                         )
 
-                        // Pure Algorithm Template (Protected: only if not already existing)
+                        // Pure Algorithm Template (Protected: only if not already existing within this package)
                         val algoHeaderPath = pkgName + "/include/" + pkgName + "/" + artCamel + "Algorithm.hpp"
-                        val alreadyExists = existingList.exists[contains(artCamel + "Algorithm.hpp")]
+                        val alreadyExists = existingList.exists[
+                            it == algoHeaderPath ||
+                            (it.startsWith(pkgName + "/") && it.endsWith("/" + artCamel + "Algorithm.hpp")) ||
+                            (it.startsWith("src-gen/" + pkgName + "/") && it.endsWith("/" + artCamel + "Algorithm.hpp"))
+                        ]
                         if (!alreadyExists) {
                             fsa.generateFile(algoHeaderPath, compileCoreLogicStub(pkg, node, artCamel))
                         }
@@ -171,8 +190,10 @@ class Ros2Generator extends AbstractGenerator {
                         cppNodes.removeIf[it == node || it.name == node.name || it.artifactName == node.artifactName]
                         val artCamel = toCamelCase(node.artifactName)
                         fsa.deleteFile(pkgName + "/include/" + pkgName + "/" + artCamel + "Wrapper.hpp")
+                        fsa.deleteFile(pkgName + "/include/" + pkgName + "/" + artCamel + "Node.hpp")
                         fsa.deleteFile(pkgName + "/include/" + pkgName + "/" + artCamel + "Algorithm.hpp")
                         fsa.deleteFile(pkgName + "/src/" + artCamel + "Wrapper.cpp")
+                        fsa.deleteFile(pkgName + "/src/" + artCamel + "Node.cpp")
                         fsa.deleteFile(pkgName + "/src/" + artCamel + "Runner.cpp")
 
                         val snakeNode = toSnakeCase(node.name)
@@ -189,9 +210,13 @@ class Ros2Generator extends AbstractGenerator {
                             compilePythonRunner(pkg, node)
                         )
 
-                        // Pure Logic Template (Protected: only if not already existing)
+                        // Pure Logic Template (Protected: only if not already existing within this package)
                         val logicPath = pkgName + "/" + pkgName + "/" + snakeNode + "_logic.py"
-                        val alreadyExists = existingList.exists[contains(snakeNode + "_logic.py")]
+                        val alreadyExists = existingList.exists[
+                            it == logicPath ||
+                            (it.startsWith(pkgName + "/") && it.endsWith("/" + snakeNode + "_logic.py")) ||
+                            (it.startsWith("src-gen/" + pkgName + "/") && it.endsWith("/" + snakeNode + "_logic.py"))
+                        ]
                         if (!alreadyExists) {
                             fsa.generateFile(logicPath, compileLogicStub(pkg, node))
                         }

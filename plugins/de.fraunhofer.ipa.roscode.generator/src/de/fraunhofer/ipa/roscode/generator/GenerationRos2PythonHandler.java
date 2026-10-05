@@ -16,9 +16,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import ros.Package;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -78,7 +81,22 @@ public class GenerationRos2PythonHandler extends AbstractHandler implements IHan
             List<String> existingFiles = new ArrayList<String>();
             IFolder srcGenFolder = project.getFolder("src-gen");
             if (srcGenFolder.exists()) {
-                collectFiles(srcGenFolder, existingFiles);
+                TreeIterator<EObject> it = r.getAllContents();
+                boolean foundPkg = false;
+                while (it.hasNext()) {
+                    EObject obj = it.next();
+                    if (obj instanceof ros.Package) {
+                        String pkgName = ((ros.Package) obj).getName().toLowerCase();
+                        IFolder pkgFolder = srcGenFolder.getFolder(pkgName);
+                        if (pkgFolder.exists()) {
+                            collectFiles(pkgFolder, existingFiles);
+                        }
+                        foundPkg = true;
+                    }
+                }
+                if (!foundPkg) {
+                    collectFiles(srcGenFolder, existingFiles);
+                }
             }
 
             if (ros2Generator == null) {

@@ -119,22 +119,23 @@ class RosSystemGenerator extends AbstractGenerator {
                             if (existingChars !== null) {
                                 val cmakeContent = existingChars.toString
                                 val hasLaunchInstall = cmakeContent.contains("install(DIRECTORY launch") || cmakeContent.contains("DIRECTORY launch")
-                                if (!hasLaunchInstall && cmakeContent.contains("ament_package()")) {
-                                    val launchInstallSnippet = '''
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/launch")
-  install(DIRECTORY launch
-    DESTINATION share/${PROJECT_NAME}
-  )
-endif()
+                                val hasIfExistsLaunch = cmakeContent.contains("if(EXISTS \"${CMAKE_CURRENT_SOURCE_DIR}/launch\")")
+                                val launchInstallSnippet = '''
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+  OPTIONAL
+)
 
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/config")
-  install(DIRECTORY config
-    DESTINATION share/${PROJECT_NAME}
-  )
-endif()
-
-ament_package()'''
-                                    val updatedCmake = cmakeContent.replace("ament_package()", launchInstallSnippet)
+install(DIRECTORY config
+  DESTINATION share/${PROJECT_NAME}
+  OPTIONAL
+)'''
+                                if (hasIfExistsLaunch) {
+                                    val updatedCmake = cmakeContent.replaceAll("(?s)if\\(EXISTS\\s+\"\\$\\{CMAKE_CURRENT_SOURCE_DIR\\}/launch\"\\).*?endif\\(\\)(\\s*if\\(EXISTS\\s+\"\\$\\{CMAKE_CURRENT_SOURCE_DIR\\}/config\"\\).*?endif\\(\\))?", launchInstallSnippet)
+                                    fsa.generateFile(pkgName + "/CMakeLists.txt", updatedCmake)
+                                    cmakeWritten = true
+                                } else if (!hasLaunchInstall && cmakeContent.contains("ament_package()")) {
+                                    val updatedCmake = cmakeContent.replace("ament_package()", launchInstallSnippet + "\n\nament_package()")
                                     fsa.generateFile(pkgName + "/CMakeLists.txt", updatedCmake)
                                     cmakeWritten = true
                                 } else {
