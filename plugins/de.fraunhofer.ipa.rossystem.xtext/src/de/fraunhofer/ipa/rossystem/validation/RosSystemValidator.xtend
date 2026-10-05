@@ -26,6 +26,7 @@ import system.InterfaceReference
 import system.SubSystem
 import org.eclipse.emf.ecore.EObject
 import java.util.ArrayList
+import java.util.HashSet
 import system.RosParameter
 import ros.Parameter
 
@@ -68,6 +69,51 @@ class RosSystemValidator extends AbstractRosSystemValidator {
               info('Valid components for this process are '+system.components
                   ,null,NOT_IN_THE_SYSTEM)
           }
+      }
+  }
+
+  @Check
+  def checkUniqueProcessAssignment(System system) {
+      if (system.processes !== null) {
+          val seenNodes = new HashSet<Component>()
+          for (process : system.processes) {
+              if (process.components !== null) {
+                  for (comp : process.components) {
+                      if (seenNodes.contains(comp)) {
+                          val nodeName = if (comp instanceof RosNode) (comp as RosNode).name else comp.toString
+                          error("Node '" + nodeName + "' is assigned to multiple processes. A node can only be loaded into one component container.",
+                              process, null)
+                      } else {
+                          seenNodes.add(comp)
+                      }
+                  }
+              }
+          }
+      }
+  }
+
+  @Check
+  def checkProcessNodesRos2(Process process) {
+      if (process.components !== null) {
+          for (comp : process.components) {
+              if (comp instanceof RosNode) {
+                  val rosNode = comp as RosNode
+                  if (rosNode.from !== null && rosNode.from.eContainer !== null && rosNode.from.eContainer.eContainer !== null) {
+                      val pkgClass = rosNode.from.eContainer.eContainer.class.toString
+                      if (pkgClass.contains("Catkin")) {
+                          error("Node '" + rosNode.name + "' is a ROS 1 Catkin node and cannot be loaded into a ROS 2 component container.",
+                              process, null)
+                      }
+                  }
+              }
+          }
+      }
+  }
+
+  @Check
+  def checkProcessThreads(Process process) {
+      if (process.threads < 0) {
+          error("Process thread count cannot be negative.", process, null)
       }
   }
 

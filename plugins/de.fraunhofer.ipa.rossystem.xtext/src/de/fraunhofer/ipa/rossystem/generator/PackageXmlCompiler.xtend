@@ -48,6 +48,7 @@ class PackageXmlCompiler{
   <exec_depend>ament_index_python</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
+  «IF hasComponentContainers(system)»<exec_depend>rclcpp_components</exec_depend>«ENDIF»
   «FOR pkg:system.getPkgsDependencies»
   «IF !pkg.toString.equalsIgnoreCase(system.name)»
   <exec_depend>«pkg»</exec_depend>

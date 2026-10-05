@@ -8,22 +8,22 @@ class Ros2CppRunnerCompiler {
 
     @Inject extension Ros2GeneratorHelpers
 
-    def String compileCppRunner(Package pkg, Node node) {
-        compileCppRunner(pkg, node, toCamelCase(node.artifactName))
+    def String compileCppNodeHeader(Package pkg, Node node) {
+        compileCppNodeHeader(pkg, node, toCamelCase(node.artifactName))
     }
 
-    def String compileCppRunner(Package pkg, Node node, String artCamel) '''
+    def String compileCppNodeHeader(Package pkg, Node node, String artCamel) '''
+#pragma once
+
 #include <chrono>
 #include <memory>
 #include <thread>
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/rate.hpp"
-#include "rclcpp_components/register_node_macro.hpp"
 #include "«pkg.name.toLowerCase»/«artCamel»Wrapper.hpp"
 #include "«pkg.name.toLowerCase»/«artCamel»Algorithm.hpp"
 
-// Composable Component Registration for zero-copy ROS 2 container loading
-RCLCPP_COMPONENTS_REGISTER_NODE(«pkg.name.toLowerCase»::«artCamel»Wrapper)
+namespace «pkg.name.toLowerCase» {
 
 /**
  * @brief Adapter wrapping rclcpp::Rate with the node's ROS clock
@@ -143,7 +143,12 @@ public:
         // Inject action client callers
         «FOR actClient : node.actionclient»
         algorithm_->set_«sanitizeName(actClient.name)»_client(
-            [this](const auto & goal, auto resp_cb, auto fb_cb, auto res_cb) {
+            [this](const auto & goal, auto resp_cb, auto fb_cb, auto res_cb, auto ... timeout_opt) {
+                std::chrono::nanoseconds timeout = std::chrono::seconds(10);
+                if constexpr (sizeof...(timeout_opt) > 0) {
+                    timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                        std::get<0>(std::forward_as_tuple(timeout_opt...)));
+                }
                 auto resp_adapter = [resp_cb](auto goal_handle) {
                     if (resp_cb) resp_cb(goal_handle != nullptr);
                 };
@@ -175,10 +180,10 @@ public:
                         res_cb(status, empty_result);
                     }
                 };
-                this->send_«sanitizeName(actClient.name)»_goal_async(goal, resp_adapter, fb_adapter, res_adapter);
+                this->send_«sanitizeName(actClient.name)»_goal_async(goal, resp_adapter, fb_adapter, res_adapter, timeout);
             },
             [this]() {
-                // Cancel active action client goals
+                this->cancel_all_«sanitizeName(actClient.name)»_goals_async();
             }
         );
         «ENDFOR»
@@ -348,10 +353,35 @@ private:
     }
 };
 
+} // namespace «pkg.name.toLowerCase»
+'''
+
+    def String compileCppNodeSource(Package pkg, Node node) {
+        compileCppNodeSource(pkg, node, toCamelCase(node.artifactName))
+    }
+
+    def String compileCppNodeSource(Package pkg, Node node, String artCamel) '''
+#include "«pkg.name.toLowerCase»/«artCamel»Node.hpp"
+#include "rclcpp_components/register_node_macro.hpp"
+
+// Composable Component Registration for zero-copy ROS 2 container loading
+RCLCPP_COMPONENTS_REGISTER_NODE(«pkg.name.toLowerCase»::«artCamel»Node)
+'''
+
+    def String compileCppRunner(Package pkg, Node node) {
+        compileCppRunner(pkg, node, toCamelCase(node.artifactName))
+    }
+
+    def String compileCppRunner(Package pkg, Node node, String artCamel) '''
+#include <memory>
+#include <thread>
+#include "rclcpp/rclcpp.hpp"
+#include "«pkg.name.toLowerCase»/«artCamel»Node.hpp"
+
 int main(int argc, char * argv[])
 {
     rclcpp::init(argc, argv);
-    auto node = std::make_shared<«artCamel»Node>();
+    auto node = std::make_shared<«pkg.name.toLowerCase»::«artCamel»Node>();
 
     «IF node.hasActionServer || node.hasServiceClients»
     // Automated Executor Selection: MultiThreadedExecutor selected for concurrency
@@ -379,3 +409,4 @@ int main(int argc, char * argv[])
 '''
 
 }
+

@@ -223,7 +223,7 @@ protected:
      */
     std::optional<«client.service.specName»::Response> call_«sanitizeName(client.name)»_sync(
         const «client.service.specName»::Request & request,
-        std::chrono::nanoseconds timeout = std::chrono::nanoseconds(5000));
+        std::chrono::nanoseconds timeout = std::chrono::seconds(5));
 
     «ENDFOR»
     «FOR actClient : node.actionclient»
@@ -237,13 +237,30 @@ protected:
         const «actClient.action.specName»Client::Goal & goal,
         std::function<void(ClientGoalHandle«actClient.action.specName»::SharedPtr)> goal_response_cb = nullptr,
         std::function<void(ClientGoalHandle«actClient.action.specName»::SharedPtr, const std::shared_ptr<const «actClient.action.specName»Client::Feedback>)> feedback_cb = nullptr,
-        std::function<void(const ClientGoalHandle«actClient.action.specName»::WrappedResult &)> result_cb = nullptr);
+        std::function<void(const ClientGoalHandle«actClient.action.specName»::WrappedResult &)> result_cb = nullptr,
+        std::chrono::nanoseconds timeout = std::chrono::seconds(10));
 
     /**
      * @brief Cancel active goal for Action '«actClient.name»'
      */
     void cancel_«sanitizeName(actClient.name)»_goal_async(
         std::shared_ptr<ClientGoalHandle«actClient.action.specName»> goal_handle);
+
+    /**
+     * @brief Cancel all active goals for Action '«actClient.name»'
+     */
+    void cancel_all_«sanitizeName(actClient.name)»_goals_async();
+
+    /**
+     * @brief Wait for action server '«actClient.name»' to be available
+     */
+    bool wait_for_«sanitizeName(actClient.name)»_server(
+        std::chrono::nanoseconds timeout = std::chrono::nanoseconds(-1));
+
+    /**
+     * @brief Check if action server '«actClient.name»' is ready
+     */
+    bool is_«sanitizeName(actClient.name)»_server_ready() const;
 
     «ENDFOR»
     «FOR act : node.actionserver»
@@ -458,6 +475,10 @@ void «artCamel»Wrapper::call_«sanitizeName(client.name)»_async(
     std::shared_ptr<«client.service.specName»::Request> request,
     std::function<void(rclcpp::Client<«client.service.specName»>::SharedFuture)> callback)
 {
+    if (!is_«sanitizeName(client.name)»_ready(std::chrono::seconds(10))) {
+        RCLCPP_ERROR(this->get_logger(), "Service '«client.name»' not available after waiting");
+        return;
+    }
     client_«sanitizeName(client.name)»_->async_send_request(request, std::move(callback));
 }
 
@@ -466,7 +487,7 @@ std::optional<«artCamel»Wrapper::«client.service.specName»::Response>
     const «client.service.specName»::Request & request,
     std::chrono::nanoseconds timeout)
 {
-    if (!is_«sanitizeName(client.name)»_ready(std::chrono::microseconds(500))) {
+    if (!is_«sanitizeName(client.name)»_ready(timeout)) {
         RCLCPP_ERROR(this->get_logger(), "Service '«client.name»' is not available for sync call.");
         return std::nullopt;
     }
@@ -487,8 +508,16 @@ std::shared_future<«artCamel»Wrapper::ClientGoalHandle«actClient.action.specN
     const «actClient.action.specName»Client::Goal & goal,
     std::function<void(ClientGoalHandle«actClient.action.specName»::SharedPtr)> goal_response_cb,
     std::function<void(ClientGoalHandle«actClient.action.specName»::SharedPtr, const std::shared_ptr<const «actClient.action.specName»Client::Feedback>)> feedback_cb,
-    std::function<void(const ClientGoalHandle«actClient.action.specName»::WrappedResult &)> result_cb)
+    std::function<void(const ClientGoalHandle«actClient.action.specName»::WrappedResult &)> result_cb,
+    std::chrono::nanoseconds timeout)
 {
+    if (!action_client_«sanitizeName(actClient.name)»_->wait_for_action_server(timeout)) {
+        RCLCPP_ERROR(this->get_logger(), "Action server '«actClient.name»' not available after waiting");
+        if (goal_response_cb) {
+            goal_response_cb(nullptr);
+        }
+        return {};
+    }
     auto send_goal_options = rclcpp_action::Client<«actClient.action.specName»Client>::SendGoalOptions();
     if (goal_response_cb) send_goal_options.goal_response_callback = goal_response_cb;
     if (feedback_cb) send_goal_options.feedback_callback = feedback_cb;
@@ -502,6 +531,26 @@ void «artCamel»Wrapper::cancel_«sanitizeName(actClient.name)»_goal_async(
     if (action_client_«sanitizeName(actClient.name)»_ && goal_handle) {
         action_client_«sanitizeName(actClient.name)»_->async_cancel_goal(goal_handle);
     }
+}
+
+void «artCamel»Wrapper::cancel_all_«sanitizeName(actClient.name)»_goals_async()
+{
+    if (action_client_«sanitizeName(actClient.name)»_) {
+        action_client_«sanitizeName(actClient.name)»_->async_cancel_all_goals();
+    }
+}
+
+bool «artCamel»Wrapper::wait_for_«sanitizeName(actClient.name)»_server(
+    std::chrono::nanoseconds timeout)
+{
+    if (!action_client_«sanitizeName(actClient.name)»_) return false;
+    return action_client_«sanitizeName(actClient.name)»_->wait_for_action_server(timeout);
+}
+
+bool «artCamel»Wrapper::is_«sanitizeName(actClient.name)»_server_ready() const
+{
+    if (!action_client_«sanitizeName(actClient.name)»_) return false;
+    return action_client_«sanitizeName(actClient.name)»_->action_server_is_ready();
 }
 «ENDFOR»
 
@@ -875,25 +924,62 @@ public:
         const «actClient.action.specPackage»::action::«actClient.action.specName»::Goal &,
         std::function<void(bool)>,
         std::function<void(const «actClient.action.specPackage»::action::«actClient.action.specName»::Feedback &)>,
-        std::function<void(GoalStatus, const «actClient.action.specPackage»::action::«actClient.action.specName»::Result &)>)>;
+        std::function<void(GoalStatus, const «actClient.action.specPackage»::action::«actClient.action.specName»::Result &)>,
+        std::chrono::nanoseconds)>;
     using «actClient.name»CancelCaller = std::function<void()>;
+    using «actClient.name»WaitServerCaller = std::function<bool(std::chrono::nanoseconds)>;
+    using «actClient.name»IsServerReadyCaller = std::function<bool()>;
 
-    void set_«sanitizeName(actClient.name)»_client(«actClient.name»GoalCaller goal_fn, «actClient.name»CancelCaller cancel_fn) {
+    void set_«sanitizeName(actClient.name)»_client(
+        «actClient.name»GoalCaller goal_fn,
+        «actClient.name»CancelCaller cancel_fn,
+        «actClient.name»WaitServerCaller wait_server_fn = nullptr,
+        «actClient.name»IsServerReadyCaller is_ready_fn = nullptr)
+    {
         send_«sanitizeName(actClient.name)»_goal_fn_ = goal_fn;
         cancel_«sanitizeName(actClient.name)»_goal_fn_ = cancel_fn;
+        wait_«sanitizeName(actClient.name)»_server_fn_ = wait_server_fn;
+        is_«sanitizeName(actClient.name)»_server_ready_fn_ = is_ready_fn;
+    }
+
+    void set_«sanitizeName(actClient.name)»_server_timeout(std::chrono::nanoseconds timeout) {
+        «sanitizeName(actClient.name)»_server_timeout_ = timeout;
+    }
+
+    template <typename Rep, typename Period>
+    void set_«sanitizeName(actClient.name)»_server_timeout(std::chrono::duration<Rep, Period> timeout) {
+        «sanitizeName(actClient.name)»_server_timeout_ = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout);
+    }
+
+    std::chrono::nanoseconds get_«sanitizeName(actClient.name)»_server_timeout() const {
+        return «sanitizeName(actClient.name)»_server_timeout_;
     }
 
     void send_«sanitizeName(actClient.name)»_goal_async(
         const «actClient.action.specPackage»::action::«actClient.action.specName»::Goal & goal,
         std::function<void(bool)> response_cb = nullptr,
         std::function<void(const «actClient.action.specPackage»::action::«actClient.action.specName»::Feedback &)> feedback_cb = nullptr,
-        std::function<void(GoalStatus, const «actClient.action.specPackage»::action::«actClient.action.specName»::Result &)> result_cb = nullptr)
+        std::function<void(GoalStatus, const «actClient.action.specPackage»::action::«actClient.action.specName»::Result &)> result_cb = nullptr,
+        std::optional<std::chrono::nanoseconds> timeout = std::nullopt)
     {
-        if (send_«sanitizeName(actClient.name)»_goal_fn_) send_«sanitizeName(actClient.name)»_goal_fn_(goal, response_cb, feedback_cb, result_cb);
+        auto effective_timeout = timeout.value_or(«sanitizeName(actClient.name)»_server_timeout_);
+        if (send_«sanitizeName(actClient.name)»_goal_fn_) {
+            send_«sanitizeName(actClient.name)»_goal_fn_(goal, response_cb, feedback_cb, result_cb, effective_timeout);
+        }
     }
 
     void cancel_«sanitizeName(actClient.name)»_goal_async() {
         if (cancel_«sanitizeName(actClient.name)»_goal_fn_) cancel_«sanitizeName(actClient.name)»_goal_fn_();
+    }
+
+    bool wait_for_«sanitizeName(actClient.name)»_server(std::chrono::nanoseconds timeout = std::chrono::seconds(5)) {
+        if (wait_«sanitizeName(actClient.name)»_server_fn_) return wait_«sanitizeName(actClient.name)»_server_fn_(timeout);
+        return false;
+    }
+
+    bool is_«sanitizeName(actClient.name)»_server_ready() const {
+        if (is_«sanitizeName(actClient.name)»_server_ready_fn_) return is_«sanitizeName(actClient.name)»_server_ready_fn_();
+        return false;
     }
 
     «ENDFOR»
@@ -1205,6 +1291,9 @@ private:
     «FOR actClient : node.actionclient»
     «actClient.name»GoalCaller send_«sanitizeName(actClient.name)»_goal_fn_;
     «actClient.name»CancelCaller cancel_«sanitizeName(actClient.name)»_goal_fn_;
+    «actClient.name»WaitServerCaller wait_«sanitizeName(actClient.name)»_server_fn_;
+    «actClient.name»IsServerReadyCaller is_«sanitizeName(actClient.name)»_server_ready_fn_;
+    std::chrono::nanoseconds «sanitizeName(actClient.name)»_server_timeout_{std::chrono::seconds(10)};
     «ENDFOR»
 };
 
