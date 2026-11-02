@@ -132,11 +132,105 @@ class RosSystemValidator extends AbstractRosSystemValidator {
     if (system === null) {
         return interfaces
     }
+    if (system.components === null) return interfaces
     for (Component component : system.components) {
         if (component instanceof RosNode) {
-            interfaces.addAll(component.rosinterfaces)
+            val rosNode = component as RosNode
+            if (rosNode.rosinterfaces !== null && !rosNode.rosinterfaces.empty) {
+                interfaces.addAll(rosNode.rosinterfaces)
+            } else {
+                var fromNode = rosNode.from
+                if (fromNode !== null && fromNode.eIsProxy) {
+                    fromNode = EcoreUtil.resolve(fromNode, system) as ros.Node
+                }
+                if (fromNode !== null && !fromNode.eIsProxy) {
+                    val existing = newHashSet
+                    for (ex : rosNode.rosinterfaces) {
+                        if (ex.name !== null) existing.add(ex.name)
+                    }
+                    if (fromNode.publisher !== null) {
+                        for (pub : fromNode.publisher) {
+                            if (pub.name !== null && existing.add(pub.name)) {
+                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
+                                iface.name = pub.name
+                                val ref = system.RossystemFactory.eINSTANCE.createRosPublisherReference
+                                ref.from = pub
+                                iface.reference = ref
+                                rosNode.rosinterfaces.add(iface)
+                            }
+                        }
+                    }
+                    if (fromNode.subscriber !== null) {
+                        for (sub : fromNode.subscriber) {
+                            if (sub.name !== null && existing.add(sub.name)) {
+                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
+                                iface.name = sub.name
+                                val ref = system.RossystemFactory.eINSTANCE.createRosSubscriberReference
+                                ref.from = sub
+                                iface.reference = ref
+                                rosNode.rosinterfaces.add(iface)
+                            }
+                        }
+                    }
+                    if (fromNode.serviceserver !== null) {
+                        for (ss : fromNode.serviceserver) {
+                            if (ss.name !== null && existing.add(ss.name)) {
+                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
+                                iface.name = ss.name
+                                val ref = system.RossystemFactory.eINSTANCE.createRosServiceServerReference
+                                ref.from = ss
+                                iface.reference = ref
+                                rosNode.rosinterfaces.add(iface)
+                            }
+                        }
+                    }
+                    if (fromNode.serviceclient !== null) {
+                        for (sc : fromNode.serviceclient) {
+                            if (sc.name !== null && existing.add(sc.name)) {
+                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
+                                iface.name = sc.name
+                                val ref = system.RossystemFactory.eINSTANCE.createRosServiceClientReference
+                                ref.from = sc
+                                iface.reference = ref
+                                rosNode.rosinterfaces.add(iface)
+                            }
+                        }
+                    }
+                    if (fromNode.actionserver !== null) {
+                        for (as : fromNode.actionserver) {
+                            if (as.name !== null && existing.add(as.name)) {
+                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
+                                iface.name = as.name
+                                val ref = system.RossystemFactory.eINSTANCE.createRosActionServerReference
+                                ref.from = as
+                                iface.reference = ref
+                                rosNode.rosinterfaces.add(iface)
+                            }
+                        }
+                    }
+                    if (fromNode.actionclient !== null) {
+                        for (ac : fromNode.actionclient) {
+                            if (ac.name !== null && existing.add(ac.name)) {
+                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
+                                iface.name = ac.name
+                                val ref = system.RossystemFactory.eINSTANCE.createRosActionClientReference
+                                ref.from = ac
+                                iface.reference = ref
+                                rosNode.rosinterfaces.add(iface)
+                            }
+                        }
+                    }
+                }
+                interfaces.addAll(rosNode.rosinterfaces)
+            }
         } else if (component instanceof SubSystem) {
-            interfaces.addAll(getAllInterfaces(component.system))
+            var subSystem = component.system
+            if (subSystem !== null && subSystem.eIsProxy) {
+                subSystem = EcoreUtil.resolve(subSystem, system) as System
+            }
+            if (subSystem !== null && !subSystem.eIsProxy) {
+                interfaces.addAll(getAllInterfaces(subSystem))
+            }
         }
     }
     return interfaces
@@ -145,9 +239,15 @@ class RosSystemValidator extends AbstractRosSystemValidator {
 
   @Check
   def checkIfInterfaceInSystem(Connection connection) {
+      if (!(connection instanceof RosSystemConnectionImpl)) {
+          return
+      }
       var connection_def = connection as RosSystemConnectionImpl
       var from_connection = connection_def.from
       var to_connection = connection_def.to
+      if (from_connection === null || from_connection.eIsProxy || to_connection === null || to_connection.eIsProxy) {
+          return
+      }
       var system = connection.eContainer as System
       var List<RosInterface> AllInterfaces = getAllInterfaces(system)
 
@@ -168,11 +268,20 @@ class RosSystemValidator extends AbstractRosSystemValidator {
 
   @Check
   def checkPortPatterns(Connection connection) {
+      if (!(connection instanceof RosSystemConnectionImpl)) {
+          return
+      }
       var List<String> validFromType = newArrayList('RosPublisherReference','RosServiceServerReference','RosActionServerReference')
       var List<String> validToType = newArrayList('RosSubscriberReference','RosServiceClientReference','RosActionClientReference')
       var connection_def = connection as RosSystemConnectionImpl
       var from_connection = connection_def.from
       var to_connection = connection_def.to
+      if (from_connection === null || from_connection.eIsProxy || to_connection === null || to_connection.eIsProxy) {
+          return
+      }
+      if (from_connection.reference === null || to_connection.reference === null) {
+          return
+      }
       if(!validFromType.contains(from_connection.reference.eClass.name)){
               error('The type of the interface '+from_connection+' is not valid, the output port can have only one of the following types '+validFromType
                   ,null,NOT_VALID_PATTERN)
@@ -197,9 +306,18 @@ class RosSystemValidator extends AbstractRosSystemValidator {
 
   @Check
   def MatchPortMsgs(Connection connection){
+      if (!(connection instanceof RosSystemConnectionImpl)) {
+          return
+      }
       var connection_def = connection as RosSystemConnectionImpl
       var from_connection = connection_def.from
       var to_connection = connection_def.to
+      if (from_connection === null || from_connection.eIsProxy || to_connection === null || to_connection.eIsProxy) {
+          return
+      }
+      if (from_connection.reference === null || to_connection.reference === null) {
+          return
+      }
       if (from_connection.reference.eClass.name=='RosPublisherReference'){
           var from_top = from_connection.reference as RosPublisherReference
           from_type = from_top.from.message
