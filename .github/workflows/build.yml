@@ -29,4 +29,4 @@ jobs:
       - name: Build and test with Maven
         run: |
           pushd RosTooling
-          mvn clean verify -f plugins/de.fraunhofer.ipa.ros.parent/pom.xml
+          ./mvnw clean verify -f plugins/de.fraunhofer.ipa.ros.parent/pom.xml
