@@ -24,7 +24,9 @@ import system.RosSubscriberReference
 import system.RosActionClientReference
 import system.InterfaceReference
 import system.SubSystem
+import system.RossystemFactory
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.util.EcoreUtil
 import java.util.ArrayList
 import java.util.HashSet
 import system.RosParameter
@@ -151,9 +153,9 @@ class RosSystemValidator extends AbstractRosSystemValidator {
                     if (fromNode.publisher !== null) {
                         for (pub : fromNode.publisher) {
                             if (pub.name !== null && existing.add(pub.name)) {
-                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
+                                val iface = RossystemFactory.eINSTANCE.createRosInterface
                                 iface.name = pub.name
-                                val ref = system.RossystemFactory.eINSTANCE.createRosPublisherReference
+                                val ref = RossystemFactory.eINSTANCE.createRosPublisherReference
                                 ref.from = pub
                                 iface.reference = ref
                                 rosNode.rosinterfaces.add(iface)
@@ -163,9 +165,9 @@ class RosSystemValidator extends AbstractRosSystemValidator {
                     if (fromNode.subscriber !== null) {
                         for (sub : fromNode.subscriber) {
                             if (sub.name !== null && existing.add(sub.name)) {
-                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
+                                val iface = RossystemFactory.eINSTANCE.createRosInterface
                                 iface.name = sub.name
-                                val ref = system.RossystemFactory.eINSTANCE.createRosSubscriberReference
+                                val ref = RossystemFactory.eINSTANCE.createRosSubscriberReference
                                 ref.from = sub
                                 iface.reference = ref
                                 rosNode.rosinterfaces.add(iface)
@@ -175,9 +177,9 @@ class RosSystemValidator extends AbstractRosSystemValidator {
                     if (fromNode.serviceserver !== null) {
                         for (ss : fromNode.serviceserver) {
                             if (ss.name !== null && existing.add(ss.name)) {
-                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
+                                val iface = RossystemFactory.eINSTANCE.createRosInterface
                                 iface.name = ss.name
-                                val ref = system.RossystemFactory.eINSTANCE.createRosServiceServerReference
+                                val ref = RossystemFactory.eINSTANCE.createRosServiceServerReference
                                 ref.from = ss
                                 iface.reference = ref
                                 rosNode.rosinterfaces.add(iface)
@@ -187,9 +189,9 @@ class RosSystemValidator extends AbstractRosSystemValidator {
                     if (fromNode.serviceclient !== null) {
                         for (sc : fromNode.serviceclient) {
                             if (sc.name !== null && existing.add(sc.name)) {
-                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
+                                val iface = RossystemFactory.eINSTANCE.createRosInterface
                                 iface.name = sc.name
-                                val ref = system.RossystemFactory.eINSTANCE.createRosServiceClientReference
+                                val ref = RossystemFactory.eINSTANCE.createRosServiceClientReference
                                 ref.from = sc
                                 iface.reference = ref
                                 rosNode.rosinterfaces.add(iface)
@@ -197,12 +199,12 @@ class RosSystemValidator extends AbstractRosSystemValidator {
                         }
                     }
                     if (fromNode.actionserver !== null) {
-                        for (as : fromNode.actionserver) {
-                            if (as.name !== null && existing.add(as.name)) {
-                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
-                                iface.name = as.name
-                                val ref = system.RossystemFactory.eINSTANCE.createRosActionServerReference
-                                ref.from = as
+                        for (actServer : fromNode.actionserver) {
+                            if (actServer.name !== null && existing.add(actServer.name)) {
+                                val iface = RossystemFactory.eINSTANCE.createRosInterface
+                                iface.name = actServer.name
+                                val ref = RossystemFactory.eINSTANCE.createRosActionServerReference
+                                ref.from = actServer
                                 iface.reference = ref
                                 rosNode.rosinterfaces.add(iface)
                             }
@@ -211,9 +213,9 @@ class RosSystemValidator extends AbstractRosSystemValidator {
                     if (fromNode.actionclient !== null) {
                         for (ac : fromNode.actionclient) {
                             if (ac.name !== null && existing.add(ac.name)) {
-                                val iface = system.RossystemFactory.eINSTANCE.createRosInterface
+                                val iface = RossystemFactory.eINSTANCE.createRosInterface
                                 iface.name = ac.name
-                                val ref = system.RossystemFactory.eINSTANCE.createRosActionClientReference
+                                val ref = RossystemFactory.eINSTANCE.createRosActionClientReference
                                 ref.from = ac
                                 iface.reference = ref
                                 rosNode.rosinterfaces.add(iface)

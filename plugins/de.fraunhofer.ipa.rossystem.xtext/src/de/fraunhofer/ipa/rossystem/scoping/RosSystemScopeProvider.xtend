@@ -113,7 +113,9 @@ class RosSystemScopeProvider extends AbstractRosSystemScopeProvider {
     }
 
     val components = currentSystem.components
-    if (components === null) return
+    if (components === null) {
+      return
+    }
 
     for (component : components) {
       if (component instanceof RosNode) {
@@ -207,16 +209,16 @@ class RosSystemScopeProvider extends AbstractRosSystemScopeProvider {
             }
 
             if (fromNode.actionserver !== null) {
-              for (as : fromNode.actionserver) {
-                if (as.name !== null && !as.name.empty && existingNames.add(as.name)) {
+              for (actServer : fromNode.actionserver) {
+                if (actServer.name !== null && !actServer.name.empty && existingNames.add(actServer.name)) {
                   val iface = RossystemFactory.eINSTANCE.createRosInterface
-                  iface.name = as.name
+                  iface.name = actServer.name
                   val ref = RossystemFactory.eINSTANCE.createRosActionServerReference
-                  ref.from = as
+                  ref.from = actServer
                   iface.reference = ref
                   rosNode.rosinterfaces.add(iface)
                   allInterfaces.add(Pair.of(nodePrefix, iface))
-                  nodeExposedNames.add(as.name)
+                  nodeExposedNames.add(actServer.name)
                 }
               }
             }
