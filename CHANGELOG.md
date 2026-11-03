@@ -5,6 +5,25 @@ All notable changes to the **RosTooling** model and generator plugins will be do
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.1] - 2026-11-03
+
+### Added
+- **Scoped Remapped Interface Resolution in `.rossystem`**:
+  - Implemented custom scoping in `RosSystemScopeProvider` supporting double-colon qualified names (`<node>::<interface>` and `<subsystem>::<node>::<interface>`) to deterministically resolve connection endpoints when multiple nodes or subsystems declare identically named interfaces.
+  - Added recursive subsystem scope resolution: traverses nested subsystem components and resolves EMF proxies (`EcoreUtil.resolve`) to accurately calculate global interface name collisions across root systems and subsystems.
+  - Implemented automatic synthetic interface derivation in `RosSystemScopeProvider` and `RosSystemValidator`: automatically exposes synthetic `RosInterface` instances for publishers, subscribers, service servers, service clients, action servers, and action clients when a node references an underlying ROS component without an explicit `interfaces:` block.
+  - Enhanced `RosSystemQNP` to provide fully qualified names for `RosInterface` elements (`<container>::<interface>`), enabling hyperlinking and Go-to-Definition (Ctrl + Click) navigation directly to remapped interface definitions across nodes and subsystems.
+
+### Changed
+- **Backwards-Compatible Interface Scoping**:
+  - Maintained 100% backward compatibility for `.rossystem` models: short unqualified interface names (e.g. `- [filtered_image_pub, filtered_image_sub]`) remain fully valid and resolvable whenever the interface name is unique across the system hierarchy.
+  - Standardized connection scoping syntax strictly on the double-colon format (`::`) to eliminate ambiguity and prevent parsing conflicts with dot notation.
+
+### Fixed
+- **Subsystem Connection Validation & Null Safety**:
+  - Resolved subsystem proxy references in `RosSystemValidator.xtend` (`checkIfInterfaceInSystem`, `checkPortPatterns`, `MatchPortMsgs`) when validating connections traversing subsystem boundaries.
+  - Added null, proxy, and reference checks across connection validation rules, preventing unhandled `NullPointerException`s during real-time validation of partially defined or proxy connections.
+
 ## [3.3.0] - 2026-10-05
 
 ### Added
