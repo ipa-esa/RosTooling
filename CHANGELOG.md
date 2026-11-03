@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Subsystem Connection Validation & Null Safety**:
   - Resolved subsystem proxy references in `RosSystemValidator.xtend` (`checkIfInterfaceInSystem`, `checkPortPatterns`, `MatchPortMsgs`) when validating connections traversing subsystem boundaries.
   - Added null, proxy, and reference checks across connection validation rules, preventing unhandled `NullPointerException`s during real-time validation of partially defined or proxy connections.
+- **Maven Wrapper & Tycho Build Resolution**:
+  - Added Maven Wrapper (`mvnw`) pinned to Maven 3.9.9, resolving Tycho 4.0.12 prerequisite errors (`requires Maven version 3.9.0`) on environments with older system Maven packages and ensuring deterministic builds locally and across CI.
+  - Aligned GitHub Actions workflows (`build.yml` and `maven-publish.yml`) to invoke `./mvnw`.
+  - Removed stale `xtextVersion` override in `de.fraunhofer.ipa.ros.feature/pom.xml` to correctly inherit 2.42.0 and eliminate p2 repository resolution failures.
+  - Fixed Xtend source compilation errors in `RosSystemValidator.xtend`, `RosSystemScopeProvider.xtend`, and `RosSystemQNP.xtend` (reserved keyword conflicts in loops and missing imports).
 
 ## [3.3.0] - 2026-10-05
 
