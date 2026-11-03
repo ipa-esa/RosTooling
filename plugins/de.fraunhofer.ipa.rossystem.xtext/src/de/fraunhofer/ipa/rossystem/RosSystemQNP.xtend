@@ -13,10 +13,19 @@ class RosSystemQNP extends DefaultDeclarativeQualifiedNameProvider{
 
 
   override getFullyQualifiedName(EObject obj) {
-  	
+    if (obj instanceof RosInterface) {
+      val container = obj.eContainer
+      if (container instanceof RosNode) {
+        val nodeName = (container as RosNode).name
+        if (nodeName !== null && !nodeName.empty) {
+          return getConverter().toQualifiedName(nodeName + "::" + obj.name)
+        }
+      }
+      return if (obj.name !== null && !obj.name.empty) getConverter().toQualifiedName(obj.name) else null
+    }
+
   	val String extractedName = switch obj {
   		RosNode: obj.name
-  		RosInterface: obj.name
   		Rossystem: obj.name
   		System: obj.name
   		Parameter: obj.name
