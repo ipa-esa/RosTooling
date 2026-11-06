@@ -11,9 +11,9 @@ class YamlFileCompiler_ROS2 {
     def compile_toROS2yaml(RosNode component)'''
     «component.name»:
       ros__parameters:
-        «FOR param:component.rosparameters»
+        «FOR param:component.rosparameters»«IF !isSubstitutionValue(param)»
         «param.from.name»: «get_param_value(param.value,param.name)»
-        «ENDFOR»
+        «ENDIF»«ENDFOR»
 
     '''
 

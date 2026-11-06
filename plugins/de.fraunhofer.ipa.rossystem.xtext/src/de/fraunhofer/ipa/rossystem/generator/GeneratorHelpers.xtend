@@ -2,13 +2,18 @@ package de.fraunhofer.ipa.rossystem.generator
 
 import java.util.ArrayList
 import java.util.List
+import java.util.HashSet
+import java.util.Set
 import ros.Artifact
 import ros.Node
 import ros.Package
 import ros.Parameter
 import ros.ParameterValue
+import ros.ParameterStringType
+import ros.ParameterString
 import ros.impl.AmentPackageImpl
 import system.Process
+import system.RosParameter
 import ros.impl.ParameterBooleanImpl
 import ros.impl.ParameterDoubleImpl
 import ros.impl.ParameterIntegerImpl
@@ -63,6 +68,112 @@ class GeneratorHelpers {
             yaml_gen=true
         }
         return  yaml_gen
+    }
+
+    def boolean isStringParameter(RosParameter param) {
+        if (param === null) {
+            return false
+        }
+        if (param.from !== null && param.from.type !== null) {
+            if (param.from.type instanceof ParameterStringType || param.from.type.eClass.name.contains("ParameterStringType")) {
+                return true
+            }
+        }
+        if (param.from !== null && param.from.value !== null) {
+            if (param.from.value instanceof ParameterString || param.from.value instanceof ParameterStringImpl || param.from.value.eClass.name.contains("ParameterString")) {
+                return true
+            }
+        }
+        if (param.value !== null) {
+            if (param.value instanceof ParameterString || param.value instanceof ParameterStringImpl || param.value.eClass.name.contains("ParameterString")) {
+                return true
+            }
+        }
+        return false
+    }
+
+    def boolean isSubstitutionValue(RosParameter param) {
+        if (param === null || param.value === null) {
+            return false
+        }
+        if (param.value instanceof ParameterString || param.value instanceof ParameterStringImpl || param.value.eClass.name.contains("ParameterString")) {
+            val strVal = get_param_value(param.value, param.name)
+            if (strVal !== null && strVal.contains("$(")) {
+                return true
+            }
+        }
+        return false
+    }
+
+    def boolean isSubstitutionParameter(Parameter param) {
+        if (param === null || param.value === null) {
+            return false
+        }
+        if (param.value instanceof ParameterString || param.value instanceof ParameterStringImpl || param.value.eClass.name.contains("ParameterString")) {
+            val strVal = get_param_value(param.value, param.name)
+            if (strVal !== null && strVal.contains("$(")) {
+                return true
+            }
+        }
+        return false
+    }
+
+    def boolean hasSubstitutionValues(System system) {
+        for (component : getRos2Nodes(system)) {
+            for (param : component.rosparameters) {
+                if (isSubstitutionValue(param)) {
+                    return true
+                }
+            }
+        }
+        if (system.parameter !== null) {
+            for (param : system.parameter) {
+                if (isSubstitutionParameter(param as Parameter)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    def boolean hasSubstitutionParameters(RosNode node) {
+        if (node === null || node.rosparameters === null) {
+            return false
+        }
+        for (param : node.rosparameters) {
+            if (isSubstitutionValue(param)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    def String escapePythonString(String text) {
+        if (text === null) {
+            return ""
+        }
+        return text.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")
+    }
+
+    def List<RosParameter> getUniqueLaunchParameters(System system) {
+        val declaredNames = new HashSet<String>()
+        if (system.parameter !== null) {
+            for (p : system.parameter) {
+                declaredNames.add((p as Parameter).name)
+            }
+        }
+        val result = new ArrayList<RosParameter>()
+        for (component : getRos2Nodes(system)) {
+            if (!generate_yaml(component)) {
+                for (param : component.rosparameters) {
+                    if (!isSubstitutionValue(param) && !declaredNames.contains(param.name)) {
+                        declaredNames.add(param.name)
+                        result.add(param)
+                    }
+                }
+            }
+        }
+        return result
     }
 
     def boolean YamlFileGenerated(System rossystem) {
