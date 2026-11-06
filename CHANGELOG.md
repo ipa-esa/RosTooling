@@ -5,6 +5,19 @@ All notable changes to the **RosTooling** model and generator plugins will be do
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.2] - 2026-11-06
+
+### Added
+- **ROS 2 Launch Substitution Parameters in .rossystem**:
+  - Implemented launch substitution AST compilation in `LaunchFileCompiler_ROS2.xtend` and `GeneratorHelpers.xtend` for parameter expressions (e.g. `$(find-pkg-share ...)`, `$(var ...)`, `$(command ...)`).
+  - Added Xtext validator checks in `RosSystemValidator.xtend` for launch substitution expressions verifying balanced parentheses and registered ROS 2 Jazzy substitution names.
+
+### Fixed
+- **Launch Generator String Parameter Wrapping**:
+  - Wrapped string parameters with `ParameterValue(..., value_type=str)` in launch templates to prevent numbers, booleans, or YAML colons from being coerced into unexpected types.
+- **Python Runner Parameter Forwarding**:
+  - Forwarded parameters in `on_parameters_changed` callback to `super().on_parameters_changed(parameters)` in generated Python wrappers.
+
 ## [3.3.1] - 2026-11-03
 
 ### Added
