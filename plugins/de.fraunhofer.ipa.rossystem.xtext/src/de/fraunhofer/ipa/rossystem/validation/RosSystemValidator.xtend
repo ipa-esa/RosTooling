@@ -29,8 +29,11 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
 import java.util.ArrayList
 import java.util.HashSet
+import java.util.Set
 import system.RosParameter
 import ros.Parameter
+import ros.ParameterString
+import ros.ParameterStringType
 
 /**
  * This class contains custom validation rules.
@@ -367,9 +370,75 @@ class RosSystemValidator extends AbstractRosSystemValidator {
     boolean sub_element;
     EObject expected_sub_type = null;
 
+    public static val Set<String> KNOWN_SUBSTITUTIONS = newHashSet(
+        "all", "and", "anon", "any", "command", "dirname", "env", "optenv",
+        "equals", "eval", "exec-in-pkg", "file-content", "filename", "find-exec",
+        "find-pkg-prefix", "find-pkg-share", "if", "launch_log_dir", "log_dir",
+        "not", "not-equals", "or", "param", "var"
+    )
+
     @Check
     def void CheckParameter (RosParameter rosparam){
-        CheckParameterValue(rosparam.from, rosparam.value);
+        if (rosparam === null || rosparam.value === null) {
+            return;
+        }
+        if (rosparam.value instanceof ParameterString || rosparam.value.eClass.name.contains("ParameterString")) {
+            val strVal = (rosparam.value as ParameterString).value
+            if (strVal !== null && strVal.contains("$(")) {
+                // Check balanced parentheses
+                var depth = 0
+                var boolean unbalanced = false
+                for (var k = 0; k < strVal.length(); k++) {
+                    val c = strVal.substring(k, k + 1)
+                    if (c == "(") {
+                        depth++
+                    } else if (c == ")") {
+                        depth--
+                        if (depth < 0) {
+                            unbalanced = true
+                        }
+                    }
+                }
+                if (depth != 0) {
+                    unbalanced = true
+                }
+                if (unbalanced) {
+                    error("Launch substitution expression in parameter '" + rosparam.name + "' has unbalanced parentheses.", rosparam, null)
+                    return
+                }
+
+                // Check substitution names
+                var idx = strVal.indexOf("$(")
+                while (idx != -1) {
+                    val startName = idx + 2
+                    var endName = startName
+                    while (endName < strVal.length() && 
+                           (Character.isLetterOrDigit(strVal.charAt(endName)) || strVal.substring(endName, endName + 1) == "_" || strVal.substring(endName, endName + 1) == "-")) {
+                        endName++
+                    }
+                    val subName = strVal.substring(startName, endName)
+                    if (subName.length == 0 || !KNOWN_SUBSTITUTIONS.contains(subName)) {
+                        error("Unknown launch substitution '" + subName + "' in parameter '" + rosparam.name + "'.", rosparam, null)
+                        return
+                    }
+                    idx = strVal.indexOf("$(", startName)
+                }
+
+                if (rosparam.from !== null) {
+                    val expectedType = rosparam.from.type
+                    if (expectedType instanceof ParameterStringType || (expectedType !== null && expectedType.eClass.name.contains("ParameterStringType"))) {
+                        info("Parameter '" + rosparam.name + "' uses launch-time substitution; computed at launch time, not checked statically.", rosparam, null)
+                    } else {
+                        val typeName = if (expectedType !== null) expectedType.eClass.name.replace("Impl", "").replace("Parameter", "").replace("Type", "") else "unknown"
+                        warning("Parameter '" + rosparam.name + "' is of type " + typeName + " but assigned a launch substitution expression; the generator will force value_type=str.", rosparam, null)
+                    }
+                }
+                return
+            }
+        }
+        if (rosparam.from !== null) {
+            CheckParameterValue(rosparam.from, rosparam.value)
+        }
     }
 
     def void CheckParameterValue (EObject expected_parameter, EObject given_parameter){

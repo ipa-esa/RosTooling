@@ -34,6 +34,7 @@ from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 «ENDIF»
 from launch_ros.parameter_descriptions import ParameterValue
+«IF hasSubstitutionValues(system)»from launch.frontend.parse_substitution import parse_substitution«ENDIF»
 «IF !getSubsystems(system).empty»from ament_index_python.packages import get_package_share_directory«ENDIF»
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -43,26 +44,24 @@ def generate_launch_description():
   ld = LaunchDescription()
 
   # *** PARAMETERS ***
-  «FOR parameter:system.parameter»
+  «FOR parameter:system.parameter»«IF !isSubstitutionParameter(parameter as ros.Parameter)»
   «(parameter as ros.Parameter).name»_arg = DeclareLaunchArgument(
     "«(parameter as ros.Parameter).name»", default_value=TextSubstitution(text="«get_param_value((parameter as ros.Parameter).value,(parameter as ros.Parameter).name)»")
   )
   ld.add_action(«(parameter as ros.Parameter).name»_arg)
-  «ENDFOR»
+  «ENDIF»«ENDFOR»
   «FOR component:getRos2Nodes(system)»«IF generate_yaml(component)»
   «component.name»_config = os.path.join(
     get_package_share_directory('«system.getName().toLowerCase»'),
     'config',
     '«component.name».yaml'
   )
-  «ELSE»
-  «FOR parameter:component.rosparameters»
+  «ENDIF»«ENDFOR»
+  «FOR parameter:getUniqueLaunchParameters(system)»
   «parameter.name»_arg = DeclareLaunchArgument(
     "«parameter.name»", default_value=TextSubstitution(text="«get_param_value(parameter.value,parameter.name)»")
   )
   ld.add_action(«parameter.name»_arg)
-  «ENDFOR»
-  «ENDIF»
   «ENDFOR»
 
   «IF hasComponentContainers(system)»
@@ -80,9 +79,9 @@ def generate_launch_description():
         plugin="«getPluginName(component as RosNode)»",
         name="«(component as RosNode).name»"«IF !(component as RosNode).namespace.nullOrEmpty»,
         namespace="«(component as RosNode).namespace»"«ENDIF»«compile_remappings_str(component as RosNode, system.connections)»«IF !(component as RosNode).rosparameters.nullOrEmpty»«IF generate_yaml(component as RosNode)»,
-        parameters=[«(component as RosNode).name»_config]«ELSE»,
+        parameters=[«(component as RosNode).name»_config«IF hasSubstitutionParameters(component as RosNode)», {«FOR param:(component as RosNode).rosparameters»«IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ENDIF»«ENDFOR»}«ENDIF»]«ELSE»,
         parameters=[{«FOR param:(component as RosNode).rosparameters»
-          «IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDFOR»}]«ENDIF»«ENDIF»
+          «IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ELSE»«IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDIF»«ENDFOR»}]«ENDIF»«ENDIF»
       )«ENDFOR»
     ],
     output='screen'
@@ -101,9 +100,9 @@ def generate_launch_description():
     executable="«((component as RosNode).from.eContainer as Artifact).name»",
     output='screen',
     name="«(component as RosNode).name»"«compile_remappings_str(component as RosNode, system.connections)»«IF !component.rosparameters.nullOrEmpty»«IF generate_yaml(component)»,
-    parameters = [«component.name»_config]«ELSE»,
+    parameters = [«component.name»_config«IF hasSubstitutionParameters(component)», {«FOR param:component.rosparameters»«IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ENDIF»«ENDFOR»}«ENDIF»]«ELSE»,
     parameters=[{«FOR param:component.rosparameters»
-      «IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDFOR»}]«ENDIF»«ENDIF»
+      «IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ELSE»«IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDIF»«ENDFOR»}]«ENDIF»«ENDIF»
   )
   «ENDFOR»
 
