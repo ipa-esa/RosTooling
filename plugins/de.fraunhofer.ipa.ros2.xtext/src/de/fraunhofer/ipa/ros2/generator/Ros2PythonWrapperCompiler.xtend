@@ -1020,7 +1020,7 @@ class «node.name»Node(«node.name»Wrapper):
     #Helper function to request parameter validation from logic
     «IF !node.parameter.empty»
     def on_parameters_changed(self, parameters: List[rclpy.Parameter]) -> SetParametersResult:
-        result = super().on_parameters_changed()
+        result = super().on_parameters_changed(parameters)
         for param in parameters:
             val = param.get_parameter_value()
             validation = self.logic.validate_parameter(param.name, val)

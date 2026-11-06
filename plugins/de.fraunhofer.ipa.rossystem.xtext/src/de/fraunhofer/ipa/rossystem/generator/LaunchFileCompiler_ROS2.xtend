@@ -33,6 +33,7 @@ from launch import LaunchDescription
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 «ENDIF»
+from launch_ros.parameter_descriptions import ParameterValue
 «IF !getSubsystems(system).empty»from ament_index_python.packages import get_package_share_directory«ENDIF»
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -81,7 +82,7 @@ def generate_launch_description():
         namespace="«(component as RosNode).namespace»"«ENDIF»«compile_remappings_str(component as RosNode, system.connections)»«IF !(component as RosNode).rosparameters.nullOrEmpty»«IF generate_yaml(component as RosNode)»,
         parameters=[«(component as RosNode).name»_config]«ELSE»,
         parameters=[{«FOR param:(component as RosNode).rosparameters»
-          "«param.from.name»": LaunchConfiguration("«param.name»"),«ENDFOR»}]«ENDIF»«ENDIF»
+          «IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDFOR»}]«ENDIF»«ENDIF»
       )«ENDFOR»
     ],
     output='screen'
@@ -102,7 +103,7 @@ def generate_launch_description():
     name="«(component as RosNode).name»"«compile_remappings_str(component as RosNode, system.connections)»«IF !component.rosparameters.nullOrEmpty»«IF generate_yaml(component)»,
     parameters = [«component.name»_config]«ELSE»,
     parameters=[{«FOR param:component.rosparameters»
-      "«param.from.name»": LaunchConfiguration("«param.name»"),«ENDFOR»}]«ENDIF»«ENDIF»
+      «IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDFOR»}]«ENDIF»«ENDIF»
   )
   «ENDFOR»
 

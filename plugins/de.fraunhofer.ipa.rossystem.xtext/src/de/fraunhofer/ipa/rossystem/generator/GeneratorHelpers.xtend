@@ -7,8 +7,11 @@ import ros.Node
 import ros.Package
 import ros.Parameter
 import ros.ParameterValue
+import ros.ParameterStringType
+import ros.ParameterString
 import ros.impl.AmentPackageImpl
 import system.Process
+import system.RosParameter
 import ros.impl.ParameterBooleanImpl
 import ros.impl.ParameterDoubleImpl
 import ros.impl.ParameterIntegerImpl
@@ -63,6 +66,28 @@ class GeneratorHelpers {
             yaml_gen=true
         }
         return  yaml_gen
+    }
+
+    def boolean isStringParameter(RosParameter param) {
+        if (param === null) {
+            return false
+        }
+        if (param.from !== null && param.from.type !== null) {
+            if (param.from.type instanceof ParameterStringType || param.from.type.eClass.name.contains("ParameterStringType")) {
+                return true
+            }
+        }
+        if (param.from !== null && param.from.value !== null) {
+            if (param.from.value instanceof ParameterString || param.from.value instanceof ParameterStringImpl || param.from.value.eClass.name.contains("ParameterString")) {
+                return true
+            }
+        }
+        if (param.value !== null) {
+            if (param.value instanceof ParameterString || param.value instanceof ParameterStringImpl || param.value.eClass.name.contains("ParameterString")) {
+                return true
+            }
+        }
+        return false
     }
 
     def boolean YamlFileGenerated(System rossystem) {
