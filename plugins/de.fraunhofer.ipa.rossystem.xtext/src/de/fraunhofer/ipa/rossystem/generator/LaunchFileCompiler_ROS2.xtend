@@ -21,6 +21,12 @@ import system.impl.RosSystemConnectionImpl
 
 class LaunchFileCompiler_ROS2 {
 
+    /** Python variable name for a parameter: ROS names may contain '.' (nested parameters) or '/'. */
+    def String pyIdentifier(String name) {
+        val id = name.replaceAll("[^A-Za-z0-9_]", "_")
+        return if (id.matches("^[0-9].*")) "_" + id else id
+    }
+
     @Inject extension GeneratorHelpers
 
 
@@ -45,10 +51,10 @@ def generate_launch_description():
 
   # *** PARAMETERS ***
   «FOR parameter:system.parameter»«IF !isSubstitutionParameter(parameter as ros.Parameter)»
-  «(parameter as ros.Parameter).name»_arg = DeclareLaunchArgument(
+  «pyIdentifier((parameter as ros.Parameter).name)»_arg = DeclareLaunchArgument(
     "«(parameter as ros.Parameter).name»", default_value=TextSubstitution(text="«get_param_value((parameter as ros.Parameter).value,(parameter as ros.Parameter).name)»")
   )
-  ld.add_action(«(parameter as ros.Parameter).name»_arg)
+  ld.add_action(«pyIdentifier((parameter as ros.Parameter).name)»_arg)
   «ENDIF»«ENDFOR»
   «FOR component:getRos2Nodes(system)»«IF generate_yaml(component)»
   «component.name»_config = os.path.join(
@@ -58,10 +64,10 @@ def generate_launch_description():
   )
   «ENDIF»«ENDFOR»
   «FOR parameter:getUniqueLaunchParameters(system)»
-  «parameter.name»_arg = DeclareLaunchArgument(
+  «pyIdentifier(parameter.name)»_arg = DeclareLaunchArgument(
     "«parameter.name»", default_value=TextSubstitution(text="«get_param_value(parameter.value,parameter.name)»")
   )
-  ld.add_action(«parameter.name»_arg)
+  ld.add_action(«pyIdentifier(parameter.name)»_arg)
   «ENDFOR»
 
   «IF hasComponentContainers(system)»

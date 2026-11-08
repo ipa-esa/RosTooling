@@ -3,6 +3,8 @@ package de.fraunhofer.ipa.ros2.generator
 import com.google.inject.Inject
 import ros.Node
 import ros.Package
+import ros.PackageDependency
+import ros.ExternalDependency
 import java.util.List
 import java.util.Set
 import java.util.HashSet
@@ -15,6 +17,19 @@ class Ros2BuildArtifactsCompiler {
         val set = new HashSet<String>()
         for (node : nodes) {
             set.addAll(node.dependencies)
+        }
+        return set
+    }
+
+    /** Names listed under the package's `dependencies:` (package references or ExternalDependency "name"). */
+    def Set<String> getPackageDependencies(Package pkg) {
+        val set = new HashSet<String>()
+        for (dep : pkg.dependency) {
+            if (dep instanceof PackageDependency) {
+                if (dep.package !== null && dep.package.name !== null) set.add(dep.package.name)
+            } else if (dep instanceof ExternalDependency) {
+                if (dep.name !== null && !dep.name.empty) set.add(dep.name)
+            }
         }
         return set
     }
@@ -33,6 +48,7 @@ class Ros2BuildArtifactsCompiler {
         allNodes.addAll(cppNodes)
         allNodes.addAll(pythonNodes)
         val deps = getAllDependencies(allNodes)
+        deps.addAll(getPackageDependencies(pkg))
         val hasActions = hasAnyActions(allNodes)
         val hasLifecycle = hasLifecycle(cppNodes)
 
