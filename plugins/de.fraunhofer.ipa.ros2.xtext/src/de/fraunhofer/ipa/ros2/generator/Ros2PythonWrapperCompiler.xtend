@@ -817,7 +817,7 @@ import rclpy
 from rclpy.lifecycle import State, TransitionCallbackReturn
 «ENDIF»
 from rclpy.duration import Duration
-from rclpy.executors import MultiThreadedExecutor, SingleThreadedExecutor
+from rclpy.executors import ExternalShutdownException, MultiThreadedExecutor, SingleThreadedExecutor
 «IF !node.parameter.empty»
 from rcl_interfaces.msg import SetParametersResult
 from typing import List
@@ -1042,20 +1042,24 @@ def main(args=None):
     executor.add_node(node)
     try:
         executor.spin()
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, ExternalShutdownException):
         pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        # Ctrl+C or the logic's shutdown handler may already have shut the context down.
+        if rclpy.ok():
+            rclpy.shutdown()
     «ELSE»
     # Automated Executor Selection: SingleThreadedExecutor selected
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, ExternalShutdownException):
         pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        # Ctrl+C or the logic's shutdown handler may already have shut the context down.
+        if rclpy.ok():
+            rclpy.shutdown()
     «ENDIF»
 
 
