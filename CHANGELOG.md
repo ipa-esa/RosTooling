@@ -5,6 +5,25 @@ All notable changes to the **RosTooling** model and generator plugins will be do
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.3] - 2026-11-09
+
+### Added
+- **Validation Before Code Generation**:
+  - Implemented automatic Xtext validation checks in `Ros2GeneratorCommandService` and `RosSystemGeneratorCommandService` prior to code generation.
+  - Returns detailed validation error messages and prevents emitting invalid launch or component files when model errors exist.
+- **Package-Level Dependencies in Package.xml Generation**:
+  - Emitted `<depend>` declarations for all names listed under a package's `dependencies:` block in `Ros2BuildArtifactsCompiler.xtend`.
+
+### Fixed
+- **Launch Generator Python Identifier Sanitization**:
+  - Sanitized launch argument Python variable names (`pyIdentifier`) in `LaunchFileCompiler_ROS2.xtend` to replace non-identifier characters (such as `.` or `/` in nested parameters) with underscores, preventing `NameError` at launch time.
+- **Python Component Process Graceful Shutdown**:
+  - Ensured Python node runners exit cleanly upon receiving `SIGINT` / `KeyboardInterrupt` (`Ctrl+C`) without hanging executors.
+- **RosSystem List Format Error Diagnostic Message**:
+  - Clarified list format error message in `RosSystemValidator.xtend` to display `[ , , ]` format instead of `{ , , }`.
+- **Undeclared Launch Substitution Variable Check**:
+  - Added warning diagnostic when a parameter expression references `$(var X)` but `X` is not declared as a system-level parameter.
+
 ## [3.3.2] - 2026-11-06
 
 ### Added
