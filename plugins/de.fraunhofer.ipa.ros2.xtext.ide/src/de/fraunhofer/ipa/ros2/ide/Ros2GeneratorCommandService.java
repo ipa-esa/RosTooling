@@ -22,6 +22,10 @@ import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.commands.IExecutableCommandService;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.validation.CheckMode;
+import org.eclipse.xtext.validation.IResourceValidator;
+import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.diagnostics.Severity;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
@@ -115,6 +119,22 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                     Resource resource = context.getResource();
                     EcoreUtil.resolveAll(resource);
                     IResourceServiceProvider rsp = resourceServiceRegistry.getResourceServiceProvider(uri);
+
+                    IResourceValidator validator = rsp.getResourceValidator();
+                    if (validator != null) {
+                        List<Issue> issues = validator.validate(resource, CheckMode.ALL, cancelIndicator != null ? cancelIndicator : CancelIndicator.NullImpl);
+                        List<Issue> errors = issues.stream()
+                                .filter(i -> i.getSeverity() == Severity.ERROR)
+                                .collect(Collectors.toList());
+                        if (!errors.isEmpty()) {
+                            String errMsg = errors.stream()
+                                    .map(i -> "Line " + i.getLineNumber() + ": " + i.getMessage())
+                                    .collect(Collectors.joining("; "));
+                            log("VALIDATION ERROR: " + errMsg);
+                            return Map.of("error", "Cannot generate code: model has validation errors: " + errMsg);
+                        }
+                    }
+
                     IGenerator2 generator = rsp.get(IGenerator2.class);
                     if (generator == null) {
                         return Map.of("error", "IGenerator2 not bound in Ros2 language module");

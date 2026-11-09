@@ -25,6 +25,10 @@ import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.GeneratorContext;
+import org.eclipse.xtext.validation.IResourceValidator;
+import org.eclipse.xtext.validation.CheckMode;
+import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.diagnostics.Severity;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -95,6 +99,22 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
 						Resource resource = context.getResource();
 						EcoreUtil.resolveAll(resource);
 						IResourceServiceProvider rsp = resourceServiceRegistry.getResourceServiceProvider(uri);
+
+						IResourceValidator validator = rsp.getResourceValidator();
+						if (validator != null) {
+							List<Issue> issues = validator.validate(resource, CheckMode.ALL, cancelIndicator);
+							List<Issue> errors = issues.stream()
+								.filter(i -> i.getSeverity() == Severity.ERROR)
+								.collect(Collectors.toList());
+							if (!errors.isEmpty()) {
+								String errMsg = errors.stream()
+									.map(i -> "Line " + i.getLineNumber() + ": " + i.getMessage())
+									.collect(Collectors.joining("; "));
+								forceLog("VALIDATION ERROR: " + errMsg);
+								return Map.of("error", "Cannot generate code: model has validation errors: " + errMsg);
+							}
+						}
+
 						IGenerator2 generator = rsp.get(IGenerator2.class);
 						if (generator == null) {
 							forceLog("ERROR: IGenerator2 not bound in language module!");

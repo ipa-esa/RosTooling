@@ -34,6 +34,7 @@ import system.RosParameter
 import ros.Parameter
 import ros.ParameterString
 import ros.ParameterStringType
+import java.util.regex.Pattern
 
 /**
  * This class contains custom validation rules.
@@ -424,6 +425,21 @@ class RosSystemValidator extends AbstractRosSystemValidator {
                     idx = strVal.indexOf("$(", startName)
                 }
 
+                // Check $(var X) variables are declared as system-level parameters or by an included subsystem
+                val varPattern = Pattern.compile("\\$\\(\\s*var\\s+([a-zA-Z0-9_.-]+)")
+                val varMatcher = varPattern.matcher(strVal)
+                while (varMatcher.find()) {
+                    val varName = varMatcher.group(1)
+                    var EObject container = rosparam.eContainer
+                    while (container !== null && !(container instanceof System)) {
+                        container = container.eContainer
+                    }
+                    val sys = container as System
+                    if (sys !== null && !isSystemVariableDeclared(sys, varName)) {
+                        warning("Launch substitution '$(var " + varName + ")' in parameter '" + rosparam.name + "' references variable '" + varName + "' which is not declared as a system-level parameter or by an included subsystem.", rosparam, null)
+                    }
+                }
+
                 if (rosparam.from !== null) {
                     val expectedType = rosparam.from.type
                     if (expectedType instanceof ParameterStringType || (expectedType !== null && expectedType.eClass.name.contains("ParameterStringType"))) {
@@ -480,7 +496,7 @@ class RosSystemValidator extends AbstractRosSystemValidator {
                     error( "Expect a list of "+expected_sub_types.length+" elements", null, INVALID_LENGHT)
                 }
             } else {
-                error( "Expect a list of elements; format { , ,...}", null, INVALID_LENGHT)
+                error( "Expect a list of elements; format [ , ,...]", null, INVALID_LENGHT)
                 }
 
         }
@@ -503,7 +519,7 @@ class RosSystemValidator extends AbstractRosSystemValidator {
                     }
                 }
             else {
-                error( "Expect a list of elements; format { , , }", null, INVALID_LENGHT)
+                error( "Expect a list of elements; format [ , , ]", null, INVALID_LENGHT)
                 }
         }
         // STRUCT
@@ -575,6 +591,69 @@ class RosSystemValidator extends AbstractRosSystemValidator {
 
     def String getValue(String Element){
         return Element.substring(Element.indexOf("value:")+6,Element.indexOf(")"))
+    }
+
+    def boolean isSystemVariableDeclared(System system, String varName) {
+        if (system === null) return false
+        if (system.parameter !== null) {
+            for (p : system.parameter) {
+                if (p instanceof Parameter && (p as Parameter).name == varName) {
+                    return true
+                }
+            }
+        }
+        if (system.components !== null) {
+            for (comp : system.components) {
+                if (comp instanceof SubSystem) {
+                    var sub = (comp as SubSystem).system
+                    if (sub !== null && sub.eIsProxy) {
+                        sub = EcoreUtil.resolve(sub, system) as System
+                    }
+                    if (sub !== null && !sub.eIsProxy) {
+                        if (isSubsystemDeclaringOrUsingVariable(sub, varName)) {
+                            return true
+                        }
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    def boolean isSubsystemDeclaringOrUsingVariable(System sub, String varName) {
+        if (sub === null) return false
+        if (sub.parameter !== null) {
+            for (p : sub.parameter) {
+                if (p instanceof Parameter && (p as Parameter).name == varName) {
+                    return true
+                }
+            }
+        }
+        if (sub.components !== null) {
+            for (comp : sub.components) {
+                if (comp instanceof RosNode) {
+                    val rnode = comp as RosNode
+                    if (rnode.from !== null && rnode.from.parameter !== null) {
+                        for (p : rnode.from.parameter) {
+                            if (p.name == varName) {
+                                return true
+                            }
+                        }
+                    }
+                } else if (comp instanceof SubSystem) {
+                    var nestedSub = (comp as SubSystem).system
+                    if (nestedSub !== null && nestedSub.eIsProxy) {
+                        nestedSub = EcoreUtil.resolve(nestedSub, sub) as System
+                    }
+                    if (nestedSub !== null && !nestedSub.eIsProxy) {
+                        if (isSubsystemDeclaringOrUsingVariable(nestedSub, varName)) {
+                            return true
+                        }
+                    }
+                }
+            }
+        }
+        return false
     }
 
     /*Parameters Helper*/
