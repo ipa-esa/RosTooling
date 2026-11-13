@@ -78,6 +78,14 @@ public class RosGlspModule extends EMFDiagramModule {
     }
 
     @Override
+    protected void configureAdditionals() {
+        super.configureAdditionals();
+        // Live validation on the dispatcher thread (see RosModelSubmissionHandler).
+        bind(org.eclipse.glsp.server.features.core.model.ModelSubmissionHandler.class)
+                .to(de.fraunhofer.ipa.ros.glsp.model.RosModelSubmissionHandler.class);
+    }
+
+    @Override
     protected void configureActionHandlers(final MultiBinding<ActionHandler> binding) {
         super.configureActionHandlers(binding);
         binding.add(RequestRosIndexActionHandler.class);

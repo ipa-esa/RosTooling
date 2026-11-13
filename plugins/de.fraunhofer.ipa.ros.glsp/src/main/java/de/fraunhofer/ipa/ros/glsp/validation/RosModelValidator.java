@@ -2,7 +2,6 @@ package de.fraunhofer.ipa.ros.glsp.validation;
 
 import com.google.inject.Inject;
 import de.fraunhofer.ipa.ros.glsp.handlers.RosElementResolver;
-import de.fraunhofer.ipa.ros.glsp.model.RosAstNodeModelSerializer;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +43,9 @@ public class RosModelValidator implements ModelValidator {
     public List<Marker> validate(final List<GModelElement> elements, final String reason) {
         List<Marker> markers = new ArrayList<>();
 
-        // Synchronize in-memory AST mutations into XtextResource before running Xtext validator
-        try {
-            RosAstNodeModelSerializer.synchronizeAndFormat(rosModelState);
-        } catch (Exception ignored) {
-            // Continue validation even if partial syntax cannot synchronize
-        }
+        // Validation is read-only: it checks the in-memory Ecore model as it is. Committing pending
+        // AST mutations here would consume them before the client's requestRosTextEdits, so their
+        // span edits would never reach the editor (or the MCP tools).
 
         Optional<XtextResource> xtextResOpt = rosModelState.getXtextResource();
         if (xtextResOpt.isPresent()) {

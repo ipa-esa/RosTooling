@@ -183,6 +183,11 @@ public class EditRosPropertyOperationHandler extends EMFOperationHandler<EditRos
                 }
             }
             Optional<Parameter> originParamOpt = RosElementResolver.findOriginParameter(rn, key);
+            if (targetParam == null && originParamOpt.isEmpty()) {
+                // Ecore: a RosParameter refines a ros.Parameter declared by the node type; an
+                // undeclared name would only produce a dangling cross-reference.
+                return;
+            }
             if (targetParam == null) {
                 targetParam = RossystemFactory.eINSTANCE.createRosParameter();
                 targetParam.setName(key);

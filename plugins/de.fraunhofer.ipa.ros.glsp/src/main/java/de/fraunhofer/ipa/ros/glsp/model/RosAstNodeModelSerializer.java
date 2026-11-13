@@ -112,6 +112,21 @@ public final class RosAstNodeModelSerializer {
         EObject rootModel = modelState.getSemanticModel();
         OptionalXtextContext ctx = rootModel == null ? null : extractContext(modelState);
         if (ctx == null) {
+            // A brand-new .rossystem (no text yet): its first text is written by the serializer.
+            if (rootModel instanceof system.System sys && hasContent(sys)
+                    && modelState.getXtextResource().isPresent()) {
+                XtextResource res = modelState.getXtextResource().get();
+                String created = serializeFullSystem(sys);
+                res.reparse(created);
+                if (!res.getContents().isEmpty()) {
+                    modelState.setSemanticModel(res.getContents().get(0));
+                }
+                if (res.getResourceSet() != null) {
+                    org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(res.getResourceSet());
+                }
+                modelState.clearTextEditState();
+                return new TextChange("", created, List.of(new SpanEdit(0, 0, created)));
+            }
             modelState.clearTextEditState();
             return new TextChange("", "", List.of());
         }
@@ -325,24 +340,10 @@ public final class RosAstNodeModelSerializer {
                     newConns.add(sysConn);
                 } else {
                     lastExistingConnComp = connComp;
-                    if (sysConn.getFrom() != null) {
-                        checkFeatureTokenEdit(
-                                sysConn,
-                                RossystemPackage.Literals.ROS_SYSTEM_CONNECTION__FROM,
-                                sysConn.getFrom().getName(),
-                                false,
-                                text,
-                                edits);
-                    }
-                    if (sysConn.getTo() != null) {
-                        checkFeatureTokenEdit(
-                                sysConn,
-                                RossystemPackage.Literals.ROS_SYSTEM_CONNECTION__TO,
-                                sysConn.getTo().getName(),
-                                false,
-                                text,
-                                edits);
-                    }
+                    checkConnectionEndpointEdit(sysConn, RossystemPackage.Literals.ROS_SYSTEM_CONNECTION__FROM,
+                            sysConn.getFrom(), text, edits);
+                    checkConnectionEndpointEdit(sysConn, RossystemPackage.Literals.ROS_SYSTEM_CONNECTION__TO,
+                            sysConn.getTo(), text, edits);
                 }
             }
         }
@@ -350,9 +351,7 @@ public final class RosAstNodeModelSerializer {
         if (!newConns.isEmpty()) {
             StringBuilder connLines = new StringBuilder();
             for (RosSystemConnection sc : newConns) {
-                String fromName = sc.getFrom() != null ? sc.getFrom().getName() : "";
-                String toName = sc.getTo() != null ? sc.getTo().getName() : "";
-                connLines.append("    - [ ").append(fromName).append(" , ").append(toName).append(" ]\n");
+                connLines.append(connectionLine(sc));
             }
             if (lastExistingConnComp != null) {
                 int insertPos = findElementBlockEndOffset(text, lastExistingConnComp);
@@ -675,6 +674,70 @@ public final class RosAstNodeModelSerializer {
         edits.add(new SpanEdit(start, end - start, replacement));
     }
 
+    /**
+     * Text of a new connection. Endpoints are written node-qualified ({@code "node::interface"},
+     * resolved by RosSystemScopeProvider) so that a later node instance of the same type - with
+     * the same interface names - cannot make the reference ambiguous.
+     */
+    static String connectionLine(final RosSystemConnection sc) {
+        return "    - [ " + quote(connectionRef(sc.getFrom())) + " , " + quote(connectionRef(sc.getTo())) + " ]\n";
+    }
+
+    static String connectionRef(final RosInterface ri) {
+        if (ri == null) {
+            return "";
+        }
+        return ri.eContainer() instanceof RosNode rn && rn.getName() != null
+                ? rn.getName() + "::" + ri.getName()
+                : ri.getName();
+    }
+
+    private static String quote(final String s) {
+        return "\"" + s + "\"";
+    }
+
+    /**
+     * Keeps an existing connection endpoint in its written style: a bare name stays bare, a
+     * qualified {@code "[prefix::]node::interface"} stays qualified (prefix kept). Only a rename of
+     * the referenced node or interface changes the token.
+     */
+    static void checkConnectionEndpointEdit(final RosSystemConnection holder, final EStructuralFeature feature,
+            final RosInterface target, final String text, final List<SpanEdit> edits) {
+        if (target == null || target.eIsProxy() || target.getName() == null) {
+            return;
+        }
+        List<INode> nodes = NodeModelUtils.findNodesForFeature(holder, feature);
+        if (nodes.isEmpty()) {
+            return;
+        }
+        int start = firstNonHiddenOffset(nodes.get(0));
+        int end = lastNonHiddenOffset(nodes.get(0));
+        if (start < 0 || end < start || end > text.length()) {
+            return;
+        }
+        String raw = text.substring(start, end);
+        boolean quoted = raw.length() >= 2 && (raw.charAt(0) == '"' || raw.charAt(0) == '\'');
+        String current = quoted ? raw.substring(1, raw.length() - 1) : raw;
+        String expected;
+        int sep = current.lastIndexOf("::");
+        if (sep >= 0) {
+            String head = current.substring(0, sep);
+            int nodeSep = head.lastIndexOf("::");
+            String prefix = nodeSep >= 0 ? head.substring(0, nodeSep + 2) : "";
+            String node = target.eContainer() instanceof RosNode rn && rn.getName() != null
+                    ? rn.getName() : head.substring(nodeSep >= 0 ? nodeSep + 2 : 0);
+            expected = prefix + node + "::" + target.getName();
+        } else {
+            expected = target.getName();
+        }
+        if (current.equals(expected)) {
+            return;
+        }
+        char q = quoted ? raw.charAt(0) : '"';
+        boolean needsQuotes = quoted || expected.contains("::");
+        edits.add(new SpanEdit(start, end - start, needsQuotes ? q + expected + q : expected));
+    }
+
     static void checkFeatureRawSpanEdit(
             final EObject holder,
             final EStructuralFeature feature,
@@ -700,11 +763,39 @@ public final class RosAstNodeModelSerializer {
         }
     }
 
+    private static boolean hasContent(final system.System sys) {
+        return !sys.getComponents().isEmpty() || !sys.getProcesses().isEmpty() || !sys.getConnections().isEmpty();
+    }
+
+    /** Text of a system that has no source yet (new file). Section order follows RosSystem.xtext. */
     public static String serializeFullSystem(final system.System sys) {
         StringBuilder sb = new StringBuilder();
         sb.append(sys.getName()).append(":\n");
         if (sys.getFromFile() != null && !sys.getFromFile().isEmpty()) {
             sb.append("  fromFile: \"").append(sys.getFromFile()).append("\"\n");
+        }
+        List<String> subs = new ArrayList<>();
+        for (Component c : sys.getComponents()) {
+            if (c instanceof system.SubSystem sub && sub.getSystem() != null && sub.getSystem().getName() != null) {
+                subs.add(sub.getSystem().getName());
+            }
+        }
+        if (!subs.isEmpty()) {
+            sb.append("  subSystems:\n");
+            for (String s : subs) {
+                sb.append("    ").append(s).append("\n");
+            }
+        }
+        if (!sys.getProcesses().isEmpty()) {
+            sb.append("  processes:\n");
+            for (system.Process proc : sys.getProcesses()) {
+                sb.append("    ").append(proc.getName()).append(":\n");
+                String members = processMemberList(proc);
+                if (!members.isEmpty()) {
+                    sb.append("      nodes: [ ").append(members).append(" ]\n");
+                }
+                sb.append("      threads: ").append(Math.max(1, proc.getThreads())).append("\n");
+            }
         }
         List<RosNode> rosNodes = new ArrayList<>();
         for (Component c : sys.getComponents()) {
@@ -722,9 +813,7 @@ public final class RosAstNodeModelSerializer {
             sb.append("  connections:\n");
             for (Connection conn : sys.getConnections()) {
                 if (conn instanceof RosSystemConnection sc) {
-                    String fromName = sc.getFrom() != null ? sc.getFrom().getName() : "";
-                    String toName = sc.getTo() != null ? sc.getTo().getName() : "";
-                    sb.append("    - [ ").append(fromName).append(" , ").append(toName).append(" ]\n");
+                    sb.append(connectionLine(sc));
                 }
             }
         }

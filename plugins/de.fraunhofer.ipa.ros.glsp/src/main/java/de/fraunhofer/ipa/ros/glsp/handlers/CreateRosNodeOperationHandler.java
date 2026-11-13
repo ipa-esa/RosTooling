@@ -62,7 +62,12 @@ public class CreateRosNodeOperationHandler extends EMFCreateOperationHandler<Cre
                         Optional<Node> originOpt = RosElementResolver.resolveOriginNode(
                                 rosModelState.getSemanticResource().getResourceSet(),
                                 fromSpec);
-                        originOpt.ifPresent(newNode::setFrom);
+                        if (originOpt.isEmpty()) {
+                            // Ecore: RosNode.from is the node type; an unresolvable type would only
+                            // be written as a dangling reference.
+                            return;
+                        }
+                        newNode.setFrom(originOpt.get());
                     }
                     sys.getComponents().add(newNode);
 

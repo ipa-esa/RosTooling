@@ -216,7 +216,7 @@ class RosGlspBlock2Test {
                 savedText.contains("value: 0.75"),
                 "Newly added Double parameter override must be serialized");
         assertTrue(
-                savedText.contains("- [ scan , scan_emergency ]"),
+                savedText.contains("- [ \"lidar::scan\" , \"safety_monitor::scan_emergency\" ]"),
                 "Newly added connection must be serialized");
 
         // 11. Test DeleteOperation removing safety_monitor and cleaning up its connection
@@ -227,7 +227,7 @@ class RosGlspBlock2Test {
         String textAfterDelete = Files.readString(rossystemFile);
         assertFalse(textAfterDelete.contains("safety_monitor:"), "Deleted node should be removed from file");
         assertFalse(
-                textAfterDelete.contains("- [ scan , scan_emergency ]"),
+                textAfterDelete.contains("- [ \"lidar::scan\" , \"safety_monitor::scan_emergency\" ]"),
                 "Dangling connection to deleted node should be removed from file");
         assertTrue(
                 textAfterDelete.contains("value: \"front_lidar_link\" # keep this inline calibration comment!"),

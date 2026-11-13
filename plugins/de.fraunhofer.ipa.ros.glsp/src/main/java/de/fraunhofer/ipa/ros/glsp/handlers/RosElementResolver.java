@@ -94,6 +94,17 @@ public final class RosElementResolver {
                     }
                 }
             }
+            for (system.Process proc : sys.getProcesses()) {
+                if (idOrName.equals(proc.getName())) {
+                    return Optional.of(proc);
+                }
+            }
+            for (Component comp : sys.getComponents()) {
+                if (comp instanceof system.SubSystem sub && sub.getSystem() != null
+                        && idOrName.equals(sub.getSystem().getName())) {
+                    return Optional.of(sub);
+                }
+            }
             for (Connection conn : sys.getConnections()) {
                 if (conn instanceof RosSystemConnection sc) {
                     String fromName = sc.getFrom() != null ? sc.getFrom().getName() : "";

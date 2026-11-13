@@ -110,10 +110,13 @@ public class RosXtextModelStorage extends EMFSourceModelStorage {
 
         loadCompanionModels(resourceSet, sourceUri, action.getOptions());
 
-        Resource mainResource = resourceSet.getResource(sourceUri, true);
         // The editor may hold unsaved text; parse that instead of the on-disk content.
         String sourceText = action.getOptions() != null ? action.getOptions().get("sourceText") : null;
-        if (sourceText != null && mainResource instanceof org.eclipse.xtext.resource.XtextResource xtextRes) {
+        Resource mainResource = isNewSystemFile(sourceUri, sourceText)
+                ? createEmptySystemResource(resourceSet, sourceUri)
+                : resourceSet.getResource(sourceUri, true);
+        if (sourceText != null && !sourceText.isBlank()
+                && mainResource instanceof org.eclipse.xtext.resource.XtextResource xtextRes) {
             try {
                 xtextRes.reparse(sourceText);
                 EcoreUtil.resolveAll(resourceSet);
@@ -133,6 +136,35 @@ public class RosXtextModelStorage extends EMFSourceModelStorage {
         rosModelState.setSemanticModel(rootObject);
 
         loadOptionalLayoutSidecar(sourceUri);
+    }
+
+    /** A .rossystem that does not exist yet (or is empty) is created from an empty Ecore System. */
+    protected boolean isNewSystemFile(final URI sourceUri, final String sourceText) {
+        if (!"rossystem".equals(sourceUri.fileExtension())) {
+            return false;
+        }
+        if (sourceText != null) {
+            return sourceText.isBlank();
+        }
+        File file = new File(sourceUri.toFileString());
+        try {
+            return !file.exists() || Files.readString(file.toPath(), StandardCharsets.UTF_8).isBlank();
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * New system: an Xtext resource holding an empty {@code system.System} named after the file.
+     * Its text is produced by the serializer on the first save (RosAstNodeModelSerializer).
+     */
+    protected Resource createEmptySystemResource(final ResourceSet resourceSet, final URI sourceUri) {
+        Resource res = resourceSet.createResource(sourceUri);
+        system.System sys = system.RossystemFactory.eINSTANCE.createSystem();
+        String base = sourceUri.lastSegment() == null ? "system" : sourceUri.trimFileExtension().lastSegment();
+        sys.setName(base.replaceAll("[^A-Za-z0-9_]", "_"));
+        res.getContents().add(sys);
+        return res;
     }
 
     protected void loadCompanionModels(
