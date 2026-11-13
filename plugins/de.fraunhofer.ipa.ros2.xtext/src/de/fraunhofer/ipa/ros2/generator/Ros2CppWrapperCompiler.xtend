@@ -3,6 +3,7 @@ package de.fraunhofer.ipa.ros2.generator
 import com.google.inject.Inject
 import ros.Node
 import ros.Package
+import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target
 
 class Ros2CppWrapperCompiler {
 
@@ -337,11 +338,11 @@ private:
 } // namespace «pkg.name.toLowerCase»
 '''
 
-    def String compileSource(Package pkg, Node node) {
-        compileSource(pkg, node, toCamelCase(node.artifactName))
+    def String compileSource(Package pkg, Node node, Ros2Target target) {
+        compileSource(pkg, node, toCamelCase(node.artifactName), target)
     }
 
-    def String compileSource(Package pkg, Node node, String artCamel) '''
+    def String compileSource(Package pkg, Node node, String artCamel, Ros2Target target) '''
 #include "«pkg.name.toLowerCase»/«artCamel»Wrapper.hpp"
 
 namespace «pkg.name.toLowerCase» {
@@ -414,7 +415,7 @@ namespace «pkg.name.toLowerCase» {
                std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Response> res) {
             this->handle_«sanitizeName(srv.name)»(req, res);
         },
-        rclcpp::ServicesQoS(),
+        «target.cpp.serviceQos»,
         client_cb_group_);
     «ENDFOR»
 
@@ -423,7 +424,7 @@ namespace «pkg.name.toLowerCase» {
     // ----------------------------------------------------
     «FOR client : node.serviceclient»
     client_«sanitizeName(client.name)»_ = this->create_client<«client.service.specPackage»::srv::«client.service.specName»>(
-        "«client.name»", rclcpp::ServicesQoS(), client_cb_group_);
+        "«client.name»", «target.cpp.serviceQos», client_cb_group_);
     «ENDFOR»
 
     // ----------------------------------------------------

@@ -8,6 +8,8 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
+import de.fraunhofer.ipa.ros2.distro.Ros2Distros
+import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target
 import ros.Node
 import ros.Package
 
@@ -31,10 +33,15 @@ class Ros2Generator extends AbstractGenerator {
             return
         }
 
-        // Default invocation: generate both C++ and Python for all nodes targeting host distro
-        generateTargeted(resource, fsa, null, "both", "auto", null)
+        // Default invocation: generate both C++ and Python for all nodes targeting the host distro
+        generateTargeted(resource, fsa, null, "both", Ros2Distros.AUTO, null)
     }
 
+    /**
+     * @param targetDistro a name from {@link Ros2Distros}, or {@code "auto"}/{@code null} for
+     *        {@code $ROS_DISTRO} falling back to the newest LTS
+     * @throws de.fraunhofer.ipa.ros2.distro.UnknownDistroException for unsupported distributions
+     */
     def void generateTargeted(
         Resource resource,
         IFileSystemAccess2 fsa,
@@ -43,12 +50,7 @@ class Ros2Generator extends AbstractGenerator {
         String targetDistro,
         List<String> existingFiles)
     {
-        val distro = if (targetDistro === null || targetDistro.empty || "auto".equalsIgnoreCase(targetDistro)) {
-            val envDistro = System.getenv("ROS_DISTRO")
-            if (envDistro !== null && !envDistro.empty) envDistro else "humble"
-        } else {
-            targetDistro.toLowerCase()
-        }
+        val target = Ros2Target.resolve(targetDistro)
 
         val existingList = if (existingFiles !== null) existingFiles else new ArrayList<String>()
 
@@ -146,13 +148,13 @@ class Ros2Generator extends AbstractGenerator {
                         // Wrapper Source (Overwritten on generation)
                         fsa.generateFile(
                             pkgName + "/src/" + artCamel + "Wrapper.cpp",
-                            compileSource(pkg, node, artCamel)
+                            compileSource(pkg, node, artCamel, target)
                         )
 
                         // Standalone Runner & Component Export (Overwritten on generation)
                         fsa.generateFile(
                             pkgName + "/include/" + pkgName + "/" + artCamel + "Node.hpp",
-                            compileCppNodeHeader(pkg, node, artCamel)
+                            compileCppNodeHeader(pkg, node, artCamel, target)
                         )
                         fsa.generateFile(
                             pkgName + "/src/" + artCamel + "Node.cpp",
@@ -226,14 +228,14 @@ class Ros2Generator extends AbstractGenerator {
                 // 4. Generate Build Files (Package.xml, CMakeLists.txt, setup.py)
                 fsa.generateFile(
                     pkgName + "/package.xml",
-                    compilePackageXml(pkg, cppNodes, pythonNodes, distro)
+                    compilePackageXml(pkg, cppNodes, pythonNodes)
                 )
 
                 // If C++ is involved (pure C++ or hybrid), generate CMakeLists.txt
                 if (!cppNodes.empty) {
                     fsa.generateFile(
                         pkgName + "/CMakeLists.txt",
-                        compileCMakeLists(pkg, cppNodes, pythonNodes, distro)
+                        compileCMakeLists(pkg, cppNodes, pythonNodes, target)
                     )
                     // Prune redundant Python setuptools files in CMake packages
                     fsa.deleteFile(pkgName + "/setup.py")

@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -34,9 +35,15 @@ import com.google.gson.JsonPrimitive;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
+import de.fraunhofer.ipa.ros2.distro.Ros2Distros;
+import de.fraunhofer.ipa.ros2.distro.UnknownDistroException;
 import de.fraunhofer.ipa.ros2.generator.Ros2Generator;
 
 public class Ros2GeneratorCommandService implements IExecutableCommandService {
+
+    /** Lists the supported ROS 2 distributions; the single source for MCP tools and the extension. */
+    public static final String LIST_DISTROS = "ros2.listDistros";
 
     @Inject Provider<GeneratorDelegate> generatorProvider;
     @Inject IResourceServiceProvider.Registry resourceServiceRegistry;
@@ -52,11 +59,12 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
 
     @Override
     public List<String> initialize() {
-        log("Advertising commands: ros2.generateWrappersServer, ros2.generateCppWrapper, ros2.generatePythonWrapper");
+        log("Advertising commands: ros2.generateWrappersServer, ros2.generateCppWrapper, ros2.generatePythonWrapper, " + LIST_DISTROS);
         return Lists.newArrayList(
             "ros2.generateWrappersServer",
             "ros2.generateCppWrapper",
-            "ros2.generatePythonWrapper"
+            "ros2.generatePythonWrapper",
+            LIST_DISTROS
         );
     }
 
@@ -64,6 +72,9 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
     public Object execute(ExecuteCommandParams params, ILanguageServerAccess access, CancelIndicator cancelIndicator) {
         String command = params.getCommand();
         log("Executing command: " + command);
+        if (LIST_DISTROS.equals(command)) {
+            return listDistros();
+        }
         if (!"ros2.generateWrappersServer".equals(command) &&
             !"ros2.generateWrappers".equals(command) &&
             !"ros2.generateCppWrapper".equals(command) &&
@@ -97,10 +108,16 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                 language = parseStringArg(args.get(2));
             }
 
-            // Optional 4th arg: Target distro ("humble", "jazzy", "auto")
-            String targetDistro = "auto";
+            // Optional 4th arg: target distribution, a name from ros2.listDistros or "auto"
+            String targetDistro = Ros2Distros.AUTO;
             if (args.size() > 3 && args.get(3) != null) {
                 targetDistro = parseStringArg(args.get(3));
+            }
+            final Ros2Distro resolvedDistro;
+            try {
+                resolvedDistro = Ros2Distros.resolve(targetDistro);
+            } catch (UnknownDistroException e) {
+                return Map.of("error", e.getMessage());
             }
 
             // Optional 5th arg: Existing files in src-gen/<pkg> (to support hybrid preservation)
@@ -111,7 +128,7 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
 
             final List<String> finalTargetNodes = targetNodes;
             final String finalLanguage = language;
-            final String finalDistro = targetDistro;
+            final String finalDistro = resolvedDistro.name();
             final List<String> finalExistingFiles = existingFiles;
 
             CompletableFuture<Map<String, Object>> futureResult = access.doRead(fileUriStr, (context) -> {
@@ -161,7 +178,7 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                         .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
 
                     log("Successfully generated " + files.size() + " files for " + fileUriStr);
-                    return Map.of("success", true, "files", files, "count", files.size());
+                    return Map.of("success", true, "files", files, "count", files.size(), "distro", finalDistro);
                 } catch (Exception e) {
                     log("Generation failed: " + e.getMessage());
                     e.printStackTrace();
@@ -175,6 +192,32 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
             log("Execution error: " + e.getMessage());
             return Map.of("error", e.getMessage());
         }
+    }
+
+    /**
+     * {@code {distros: [{name, status}], default, environment, auto}}: supported distributions oldest
+     * first, the fallback default, {@code $ROS_DISTRO} of the language server, and what {@code "auto"}
+     * resolves to (or {@code autoError}).
+     */
+    private Map<String, Object> listDistros() {
+        List<Map<String, Object>> distros = new ArrayList<>();
+        for (Ros2Distro distro : Ros2Distros.all()) {
+            Map<String, Object> entry = new LinkedHashMap<>();
+            entry.put("name", distro.name());
+            entry.put("status", distro.status().name().toLowerCase());
+            distros.add(entry);
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("distros", distros);
+        result.put("default", Ros2Distros.defaultDistro().name());
+        String env = System.getenv("ROS_DISTRO");
+        result.put("environment", env == null ? "" : env);
+        try {
+            result.put("auto", Ros2Distros.resolve(Ros2Distros.AUTO).name());
+        } catch (UnknownDistroException e) {
+            result.put("autoError", e.getMessage());
+        }
+        return result;
     }
 
     private String parseStringArg(Object arg) {

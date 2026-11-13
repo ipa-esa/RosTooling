@@ -3,16 +3,17 @@ package de.fraunhofer.ipa.ros2.generator
 import com.google.inject.Inject
 import ros.Node
 import ros.Package
+import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target
 
 class Ros2CppRunnerCompiler {
 
     @Inject extension Ros2GeneratorHelpers
 
-    def String compileCppNodeHeader(Package pkg, Node node) {
-        compileCppNodeHeader(pkg, node, toCamelCase(node.artifactName))
+    def String compileCppNodeHeader(Package pkg, Node node, Ros2Target target) {
+        compileCppNodeHeader(pkg, node, toCamelCase(node.artifactName), target)
     }
 
-    def String compileCppNodeHeader(Package pkg, Node node, String artCamel) '''
+    def String compileCppNodeHeader(Package pkg, Node node, String artCamel, Ros2Target target) '''
 #pragma once
 
 #include <chrono>
@@ -25,26 +26,7 @@ class Ros2CppRunnerCompiler {
 
 namespace «pkg.name.toLowerCase» {
 
-/**
- * @brief Adapter wrapping rclcpp::Rate with the node's ROS clock
- */
-class Ros2RateAdapter : public «pkg.name.toLowerCase»::Rate {
-public:
-    Ros2RateAdapter(double hz, rclcpp::Clock::SharedPtr clock)
-    : rate_(hz, clock)
-    {}
-
-    bool sleep() override {
-        return rate_.sleep();
-    }
-
-    void reset() override {
-        rate_.reset();
-    }
-
-private:
-    rclcpp::Rate rate_;
-};
+«target.cpp.rateAdapter(pkg.name.toLowerCase + "::Rate")»
 
 /**
  * @brief Default Derived Implementation coupling the pure algorithm with the ROS 2 wrapper
