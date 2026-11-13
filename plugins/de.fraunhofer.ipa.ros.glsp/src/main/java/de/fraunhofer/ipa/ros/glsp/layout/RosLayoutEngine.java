@@ -112,7 +112,7 @@ public class RosLayoutEngine extends ElkLayoutEngine {
                 .setProperty(CoreOptions.ALGORITHM, LayeredOptions.ALGORITHM_ID)
                 .setProperty(CoreOptions.DIRECTION, Direction.RIGHT)
                 .setProperty(CoreOptions.EDGE_ROUTING, EdgeRouting.ORTHOGONAL)
-                .setProperty(CoreOptions.PORT_CONSTRAINTS, PortConstraints.FIXED_SIDE)
+                .setProperty(CoreOptions.PORT_CONSTRAINTS, PortConstraints.FIXED_POS)
                 .setProperty(CoreOptions.PADDING, new ElkPadding(48.0, 24.0, 24.0, 24.0))
                 .setProperty(CoreOptions.SPACING_NODE_NODE, 45.0)
                 .setProperty(LayeredOptions.SPACING_NODE_NODE_BETWEEN_LAYERS, 120.0);

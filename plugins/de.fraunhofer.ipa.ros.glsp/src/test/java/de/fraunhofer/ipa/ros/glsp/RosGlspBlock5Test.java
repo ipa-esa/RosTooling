@@ -9,6 +9,7 @@ import com.google.inject.Injector;
 import de.fraunhofer.ipa.ros.glsp.model.RosAstNodeModelSerializer;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
 import de.fraunhofer.ipa.ros.glsp.operations.EditRosPropertyOperation;
+import de.fraunhofer.ipa.ros.glsp.operations.ToggleSubSystemOperation;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -326,6 +327,52 @@ class RosGlspBlock5Test {
     }
 
     @Test
+    void nodeCardsFitTheirLabelsAndWrapLongOnes() throws Exception {
+        Files.writeString(tempDir.resolve("nav_msgs.ros"), String.join("\n",
+                "nav_msgs:", "  msgs:", "    LaserScan", "      message", "        float32[] ranges", ""));
+        Files.writeString(tempDir.resolve("wide_pkg.ros2"), String.join("\n",
+                "wide_pkg:",
+                "  artifacts:",
+                "    wide:",
+                "      node: wide_node",
+                "      publishers:",
+                "        '/scaled_joint_trajectory_controller/follow_joint_trajectory_feedback_and_status':",
+                "          type: \"nav_msgs/msg/LaserScan\"",
+                "        scan:",
+                "          type: \"nav_msgs/msg/LaserScan\"",
+                "      subscribers:",
+                "        '/camera/camera_3/aligned_depth_to_color/image_raw':",
+                "          type: \"nav_msgs/msg/LaserScan\"",
+                ""));
+        Path sysFile = tempDir.resolve("wide_system.rossystem");
+        Files.writeString(sysFile, String.join("\n",
+                "wide_system:", "  nodes:", "    wide:", "      from: \"wide_pkg.wide_node\"", ""));
+        open(sysFile, null);
+        org.eclipse.glsp.graph.GGraph graph = (org.eclipse.glsp.graph.GGraph) state.getRoot();
+        org.eclipse.glsp.graph.GNode node = (org.eclipse.glsp.graph.GNode) graph.getChildren().stream()
+                .filter(c -> RosModelTypes.ROS_NODE.equals(c.getType())).findFirst().orElseThrow();
+        double width = node.getSize().getWidth();
+        assertTrue(width > de.fraunhofer.ipa.ros.glsp.model.RosGModelFactory.NODE_WIDTH
+                && width <= de.fraunhofer.ipa.ros.glsp.model.RosGModelFactory.MAX_NODE_WIDTH, "width " + width);
+        java.util.List<org.eclipse.glsp.graph.GPort> east = node.getChildren().stream()
+                .filter(c -> c instanceof org.eclipse.glsp.graph.GPort p && p.getPosition().getX() > 0)
+                .map(c -> (org.eclipse.glsp.graph.GPort) c).toList();
+        assertEquals(2, east.size());
+        String longLines = (String) east.get(0).getArgs().get("labelLines");
+        assertTrue(longLines.contains("\n"), "long label wraps: " + longLines);
+        assertEquals("/scaled_joint_trajectory_controller/follow_joint_trajectory_feedback_and_status : LaserScan",
+                longLines.replace("\n", " ").replace("/ ", "/").replace("_ ", "_").replace(": ", ": "),
+                "wrapping keeps the whole label");
+        assertEquals(width, east.get(0).getPosition().getX(), 0.01, "east ports sit on the card edge");
+        int lineCount = longLines.split("\n").length;
+        double gap = east.get(1).getPosition().getY() - east.get(0).getPosition().getY();
+        assertEquals(de.fraunhofer.ipa.ros.glsp.model.RosGModelFactory.PORT_ROW_HEIGHT
+                + (lineCount - 1) * de.fraunhofer.ipa.ros.glsp.model.RosGModelFactory.PORT_LABEL_LINE_HEIGHT, gap, 0.01,
+                "the wrapped row is as tall as its lines");
+        assertTrue(node.getSize().getHeight() >= east.get(1).getPosition().getY() + 12, "card holds all rows");
+    }
+
+    @Test
     void blankSourceTextIsTreatedAsANewSystem() throws Exception {
         writeCompanions();
         Path sysFile = tempDir.resolve("fresh-sys.rossystem");
@@ -334,5 +381,136 @@ class RosGlspBlock5Test {
         assertEquals("fresh_sys", state.getRosSystem().orElseThrow().getName());
         addNode("planner", "nav_pkg.planner_node");
         assertTrue(commit().newText.startsWith("fresh_sys:\n  nodes:\n    planner:"));
+    }
+
+    @Test
+    void collapsedSubSystemShiftsExternalConnectionsToBoundaryPorts() throws Exception {
+        writeCompanions();
+        Path subFile = tempDir.resolve("sensor_sub.rossystem");
+        Files.writeString(subFile, String.join("\n",
+                "sensor_sub:",
+                "  nodes:",
+                "    lidar:",
+                "      from: \"nav_pkg.lidar_node\"",
+                "      interfaces:",
+                "        - \"scan_out\": pub-> \"lidar_node::scan\"",
+                "        - \"scan_loop\": pub-> \"lidar_node::scan\"",
+                "    internal_checker:",
+                "      from: \"nav_pkg.planner_node\"",
+                "      interfaces:",
+                "        - \"internal_scan\": sub-> \"planner_node::scan_in\"",
+                ""));
+
+        Path outerFile = tempDir.resolve("robot_app.rossystem");
+        String outerText = String.join("\n",
+                "robot_app:",
+                "  subSystems:",
+                "    sensor_sub",
+                "  nodes:",
+                "    planner:",
+                "      from: \"nav_pkg.planner_node\"",
+                "      interfaces:",
+                "        - \"planner_scan\": sub-> \"planner_node::scan_in\"",
+                "  connections:",
+                "    - [\"scan_out\", \"planner_scan\"]",
+                "    - [\"scan_loop\", \"internal_scan\"]",
+                "");
+        Files.writeString(outerFile, outerText);
+        open(outerFile, outerText);
+
+        GModelFactory factory = injector.getInstance(GModelFactory.class);
+        org.eclipse.glsp.graph.GGraph expanded = (org.eclipse.glsp.graph.GGraph) state.getRoot();
+        long expandedEdges = expanded.getChildren().stream()
+                .filter(c -> c instanceof org.eclipse.glsp.graph.GEdge).count();
+        assertEquals(2, expandedEdges, "expanded graph renders both external and internal connections");
+
+        org.eclipse.glsp.graph.GNode subNode = (org.eclipse.glsp.graph.GNode) expanded.getChildren().stream()
+                .filter(c -> RosModelTypes.SUBSYSTEM_NODE.equals(c.getType()))
+                .findFirst().orElseThrow();
+        assertEquals(2, subNode.getChildren().stream()
+                .filter(c -> RosModelTypes.ROS_NODE.equals(c.getType())).count());
+
+        exec(new ToggleSubSystemOperation(subNode.getId(), true));
+        factory.createGModel();
+        org.eclipse.glsp.graph.GGraph collapsed = (org.eclipse.glsp.graph.GGraph) state.getRoot();
+        org.eclipse.glsp.graph.GNode collapsedSub = (org.eclipse.glsp.graph.GNode) collapsed.getChildren().stream()
+                .filter(c -> subNode.getId().equals(c.getId())).findFirst().orElseThrow();
+        assertEquals(Boolean.TRUE, collapsedSub.getArgs().get("collapsed"));
+        assertEquals(0, collapsedSub.getChildren().stream()
+                .filter(c -> RosModelTypes.ROS_NODE.equals(c.getType())).count(),
+                "child nodes are hidden while collapsed");
+
+        java.util.List<org.eclipse.glsp.graph.GPort> boundaryPorts = collapsedSub.getChildren().stream()
+                .filter(c -> c instanceof org.eclipse.glsp.graph.GPort)
+                .map(c -> (org.eclipse.glsp.graph.GPort) c)
+                .toList();
+        assertEquals(1, boundaryPorts.size(), "only external crossing interface becomes a boundary port");
+        org.eclipse.glsp.graph.GPort boundary = boundaryPorts.get(0);
+        assertEquals("scan_out", boundary.getArgs().get("interfaceName"));
+        assertEquals(collapsedSub.getSize().getWidth(), boundary.getPosition().getX(), 0.01,
+                "east boundary port sits on collapsed subsystem edge");
+        assertTrue(boundary.getPosition().getY() >= de.fraunhofer.ipa.ros.glsp.model.RosGModelFactory.SUBSYSTEM_COLLAPSED_HEADER_HEIGHT,
+                "boundary port starts below subsystem header");
+
+        java.util.List<org.eclipse.glsp.graph.GEdge> edges = collapsed.getChildren().stream()
+                .filter(c -> c instanceof org.eclipse.glsp.graph.GEdge)
+                .map(c -> (org.eclipse.glsp.graph.GEdge) c)
+                .toList();
+        assertEquals(1, edges.size(), "internal edge is hidden; external edge remains wired");
+        org.eclipse.glsp.graph.GEdge extEdge = edges.get(0);
+        assertEquals(boundary.getId(), extEdge.getSourceId(), "edge source shifts to collapsed boundary port");
+        assertFalse(extEdge.getRoutingPoints().isEmpty(), "ELK computes orthogonal routing points for collapsed edge");
+
+        exec(new ToggleSubSystemOperation(subNode.getId(), false));
+        factory.createGModel();
+        org.eclipse.glsp.graph.GGraph reopened = (org.eclipse.glsp.graph.GGraph) state.getRoot();
+        assertEquals(2, reopened.getChildren().stream()
+                .filter(c -> c instanceof org.eclipse.glsp.graph.GEdge).count(),
+                "expanding restores both connections");
+    }
+
+    @Test
+    void unchangedChangeBoundsDoesNotPinOrDriftLayout() throws Exception {
+        writeCompanions();
+        Path sysFile = tempDir.resolve("pan_guard.rossystem");
+        String text = String.join("\n",
+                "pan_guard:",
+                "  nodes:",
+                "    lidar:",
+                "      from: \"nav_pkg.lidar_node\"",
+                "");
+        Files.writeString(sysFile, text);
+        open(sysFile, text);
+
+        org.eclipse.glsp.graph.GGraph graph = (org.eclipse.glsp.graph.GGraph) state.getRoot();
+        org.eclipse.glsp.graph.GNode node = (org.eclipse.glsp.graph.GNode) graph.getChildren().stream()
+                .filter(c -> RosModelTypes.ROS_NODE.equals(c.getType()))
+                .findFirst().orElseThrow();
+
+        org.eclipse.glsp.server.types.ElementAndBounds unchanged =
+                new org.eclipse.glsp.server.types.ElementAndBounds();
+        unchanged.setElementId(node.getId());
+        unchanged.setNewPosition(org.eclipse.glsp.graph.util.GraphUtil.point(
+                node.getPosition().getX(), node.getPosition().getY()));
+        unchanged.setNewSize(org.eclipse.glsp.graph.util.GraphUtil.dimension(
+                node.getSize().getWidth(), node.getSize().getHeight()));
+
+        org.eclipse.glsp.server.operations.ChangeBoundsOperation noopOp =
+                new org.eclipse.glsp.server.operations.ChangeBoundsOperation(List.of(unchanged));
+        @SuppressWarnings("rawtypes")
+        OperationHandler cbHandler = registry.getOperationHandler(noopOp).orElseThrow();
+        @SuppressWarnings("unchecked")
+        java.util.Optional<Command> noopCmd = cbHandler.createCommand(noopOp);
+        assertTrue(noopCmd.isEmpty(),
+                "unchanged ChangeBoundsOperation should be a no-op");
+        assertTrue(state.getPinnedPositions().isEmpty());
+
+        org.eclipse.glsp.server.types.ElementAndBounds moved =
+                new org.eclipse.glsp.server.types.ElementAndBounds();
+        moved.setElementId(node.getId());
+        moved.setNewPosition(org.eclipse.glsp.graph.util.GraphUtil.point(
+                node.getPosition().getX() + 120.0, node.getPosition().getY() + 80.0));
+        exec(new org.eclipse.glsp.server.operations.ChangeBoundsOperation(List.of(moved)));
+        assertTrue(state.getPinnedPositions().containsKey(node.getId()));
     }
 }

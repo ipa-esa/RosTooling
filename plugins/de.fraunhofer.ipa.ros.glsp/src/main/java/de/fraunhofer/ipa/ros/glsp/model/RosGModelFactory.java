@@ -4,10 +4,13 @@ import com.google.inject.Inject;
 import de.fraunhofer.ipa.ros.glsp.RosModelTypes;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -88,9 +91,27 @@ public class RosGModelFactory extends EMFGModelFactory {
 
     public static final double NODE_WIDTH = 280.0;
     public static final double NODE_HEADER_HEIGHT = 68.0;
+    public static final double SUBSYSTEM_COLLAPSED_HEADER_HEIGHT = 44.0;
     public static final double PORT_ROW_HEIGHT = 28.0;
     public static final double NODE_BOTTOM_PADDING = 16.0;
     public static final double PORT_SIZE = 12.0;
+    /**
+     * Upper bound for a node card's width. Longer port labels wrap onto further lines (the row
+     * grows); title and 'from' are truncated beyond it (full text on hover).
+     */
+    public static final double MAX_NODE_WIDTH = 440.0;
+    /** Line height of a wrapped port label (10.5px font). */
+    public static final double PORT_LABEL_LINE_HEIGHT = 13.0;
+    /** Never wrap a label column narrower than this many characters. */
+    static final int MIN_LABEL_CHARS = 12;
+    // Average glyph widths of the card fonts (webview studio.css): port labels 10.5px sans,
+    // title 700 13px sans, 'from' subtitle 10.5px mono. Slightly generous so text fits.
+    static final double PORT_CHAR_WIDTH = 6.2;
+    static final double TITLE_CHAR_WIDTH = 8.0;
+    static final double SUBTITLE_CHAR_WIDTH = 6.5;
+    static final double CARD_MARGIN = 12.0;
+    static final double PORT_LABEL_INSET = 20.0;
+    static final double PORT_LABEL_GAP = 24.0;
 
     @Inject
     protected RosModelState rosModelState;
@@ -128,6 +149,7 @@ public class RosGModelFactory extends EMFGModelFactory {
         ggraph.getArgs().put("fromFile", nullToEmpty(rosSystem.getFromFile()));
 
         Map<RosInterface, String> interfaceToPortId = new HashMap<>();
+        Map<RosInterface, String> collapsedInterfaceToSubId = new HashMap<>();
 
         // 1. Transform components (RosNode, SubSystem)
         for (Component comp : rosSystem.getComponents()) {
@@ -135,7 +157,8 @@ public class RosGModelFactory extends EMFGModelFactory {
                 GNode nodeElement = createRosNodeElement(rosNode, interfaceToPortId);
                 ggraph.getChildren().add(nodeElement);
             } else if (comp instanceof SubSystem subSystem) {
-                GNode subNodeElement = createSubSystemElement(subSystem, interfaceToPortId);
+                GNode subNodeElement = createSubSystemElement(
+                        rosSystem, subSystem, interfaceToPortId, collapsedInterfaceToSubId);
                 ggraph.getChildren().add(subNodeElement);
             }
         }
@@ -149,7 +172,8 @@ public class RosGModelFactory extends EMFGModelFactory {
         // 3. Transform connections into port-to-port GEdges
         for (Connection conn : rosSystem.getConnections()) {
             if (conn instanceof RosSystemConnection sysConn) {
-                createConnectionEdge(sysConn, interfaceToPortId).ifPresent(edge -> ggraph.getChildren().add(edge));
+                createConnectionEdge(sysConn, interfaceToPortId, collapsedInterfaceToSubId)
+                        .ifPresent(edge -> ggraph.getChildren().add(edge));
             }
         }
 
@@ -284,16 +308,28 @@ public class RosGModelFactory extends EMFGModelFactory {
             }
         }
 
-        int maxRows = Math.max(targetPorts.size(), sourcePorts.size());
-        double nodeHeight = NODE_HEADER_HEIGHT + (maxRows * PORT_ROW_HEIGHT) + NODE_BOTTOM_PADDING;
-
         int activeParams = rosNode.getRosparameters().size();
         int totalParams = isResolvedOrigin ? Math.max(activeParams, originNode.getParameter().size()) : activeParams;
 
+        // Card width follows its texts (title + badges, 'from', west + east port labels), so
+        // interface names are not cut off; the client truncates only beyond MAX_NODE_WIDTH.
+        String title = namespace.isEmpty() ? nodeName : namespace.replaceAll("/$", "") + "/" + nodeName;
+        double badges = 86.0 + (isLifecycle ? 30.0 : 0.0);
+        double headerMinWidth = Math.max(
+                2 * CARD_MARGIN + title.length() * TITLE_CHAR_WIDTH + badges,
+                2 * CARD_MARGIN + fromRef.length() * SUBTITLE_CHAR_WIDTH);
+        double nodeWidth = computeCardWidth(NODE_WIDTH, headerMinWidth, targetPorts, sourcePorts);
+
+        // A long 'from' wraps too; the header grows by one line per extra line.
+        int fromMaxChars = (int) Math.floor((nodeWidth - 2 * CARD_MARGIN) / SUBTITLE_CHAR_WIDTH);
+        List<String> fromLines = wrapLabel(fromRef, fromMaxChars);
+        double headerHeight = NODE_HEADER_HEIGHT + (fromLines.size() - 1) * PORT_LABEL_LINE_HEIGHT;
+
         GNodeBuilder builder = new GNodeBuilder(RosModelTypes.ROS_NODE)
                 .id(nodeId)
-                .layout("vbox")
-                .size(NODE_WIDTH, nodeHeight)
+                .addArgument("titleMaxChars", (int) Math.floor((nodeWidth - 2 * CARD_MARGIN - badges) / TITLE_CHAR_WIDTH))
+                .addArgument("fromLines", String.join("\n", fromLines))
+                .addArgument("headerHeight", headerHeight)
                 .addArgument("nodeName", nodeName)
                 .addArgument("namespace", namespace)
                 .addArgument("from", fromRef)
@@ -316,23 +352,121 @@ public class RosGModelFactory extends EMFGModelFactory {
                 .text(activeParams + "/" + totalParams + " params")
                 .build());
 
-        // Add Target GPorts on WEST (x = 0)
-        for (int i = 0; i < targetPorts.size(); i++) {
-            PortDescriptor pd = targetPorts.get(i);
-            double portY = NODE_HEADER_HEIGHT + (i * PORT_ROW_HEIGHT) + ((PORT_ROW_HEIGHT - PORT_SIZE) / 2.0);
-            GPort port = buildGPort(pd, nodeId, 0.0, portY);
-            builder.add(port);
-        }
-
-        // Add Source GPorts on EAST (x = NODE_WIDTH)
-        for (int i = 0; i < sourcePorts.size(); i++) {
-            PortDescriptor pd = sourcePorts.get(i);
-            double portY = NODE_HEADER_HEIGHT + (i * PORT_ROW_HEIGHT) + ((PORT_ROW_HEIGHT - PORT_SIZE) / 2.0);
-            GPort port = buildGPort(pd, nodeId, NODE_WIDTH, portY);
-            builder.add(port);
-        }
+        double nodeHeight = layoutAndAddPorts(builder, nodeId, nodeWidth, headerHeight, targetPorts, sourcePorts);
+        builder.size(nodeWidth, nodeHeight);
 
         return builder.build();
+    }
+
+    /**
+     * Computes card width in 10px steps within [minWidth, MAX_NODE_WIDTH] from header text and
+     * widest west/east port labels so names avoid truncation where possible.
+     */
+    protected static double computeCardWidth(
+            final double minWidth,
+            final double headerMinWidth,
+            final List<PortDescriptor> targetPorts,
+            final List<PortDescriptor> sourcePorts) {
+        int westChars = targetPorts.stream().mapToInt(pd -> portLabel(pd).length()).max().orElse(0);
+        int eastChars = sourcePorts.stream().mapToInt(pd -> portLabel(pd).length()).max().orElse(0);
+        double westText = westChars * PORT_CHAR_WIDTH;
+        double eastText = eastChars * PORT_CHAR_WIDTH;
+        double portsWidth = 2 * PORT_LABEL_INSET + westText + eastText
+                + (westChars > 0 && eastChars > 0 ? PORT_LABEL_GAP : 0);
+        double raw = Math.max(minWidth, Math.max(portsWidth, headerMinWidth));
+        return Math.min(MAX_NODE_WIDTH, Math.ceil(raw / 10.0) * 10.0);
+    }
+
+    /**
+     * Wraps port labels to fit {@code cardWidth}, attaches West/East {@link GPort} elements to
+     * {@code builder}, and returns the resulting total card height.
+     */
+    protected double layoutAndAddPorts(
+            final GNodeBuilder builder,
+            final String ownerId,
+            final double cardWidth,
+            final double headerHeight,
+            final List<PortDescriptor> targetPorts,
+            final List<PortDescriptor> sourcePorts) {
+        int westChars = targetPorts.stream().mapToInt(pd -> portLabel(pd).length()).max().orElse(0);
+        int eastChars = sourcePorts.stream().mapToInt(pd -> portLabel(pd).length()).max().orElse(0);
+        double westText = westChars * PORT_CHAR_WIDTH;
+        double labelSpace = cardWidth - 2 * PORT_LABEL_INSET - (westChars > 0 && eastChars > 0 ? PORT_LABEL_GAP : 0);
+        double westShare = westChars + eastChars == 0 ? 0 : labelSpace * westText / (westText + eastChars * PORT_CHAR_WIDTH);
+        int westMaxChars = Math.max(MIN_LABEL_CHARS, (int) Math.floor(westShare / PORT_CHAR_WIDTH));
+        int eastMaxChars = Math.max(MIN_LABEL_CHARS, (int) Math.floor((labelSpace - westShare) / PORT_CHAR_WIDTH));
+
+        List<List<String>> westLines = new ArrayList<>();
+        for (PortDescriptor pd : targetPorts) {
+            westLines.add(wrapLabel(portLabel(pd), westMaxChars));
+        }
+        List<List<String>> eastLines = new ArrayList<>();
+        for (PortDescriptor pd : sourcePorts) {
+            eastLines.add(wrapLabel(portLabel(pd), eastMaxChars));
+        }
+
+        double westY = headerHeight;
+        for (int i = 0; i < targetPorts.size(); i++) {
+            PortDescriptor pd = targetPorts.get(i);
+            GPort port = buildGPort(pd, ownerId, 0.0, westY + (PORT_ROW_HEIGHT - PORT_SIZE) / 2.0);
+            port.getArgs().put("labelLines", String.join("\n", westLines.get(i)));
+            builder.add(port);
+            westY += rowHeight(westLines.get(i));
+        }
+
+        double eastY = headerHeight;
+        for (int i = 0; i < sourcePorts.size(); i++) {
+            PortDescriptor pd = sourcePorts.get(i);
+            GPort port = buildGPort(pd, ownerId, cardWidth, eastY + (PORT_ROW_HEIGHT - PORT_SIZE) / 2.0);
+            port.getArgs().put("labelLines", String.join("\n", eastLines.get(i)));
+            builder.add(port);
+            eastY += rowHeight(eastLines.get(i));
+        }
+
+        return headerHeight + Math.max(rowsHeight(westLines), rowsHeight(eastLines)) + NODE_BOTTOM_PADDING;
+    }
+
+    static double rowHeight(final List<String> lines) {
+        return PORT_ROW_HEIGHT + Math.max(0, lines.size() - 1) * PORT_LABEL_LINE_HEIGHT;
+    }
+
+    static double rowsHeight(final List<List<String>> rows) {
+        return rows.stream().mapToDouble(RosGModelFactory::rowHeight).sum();
+    }
+
+    /**
+     * Wraps a port label to lines of at most {@code maxChars}, preferring to break after
+     * '/', '_', ':', '.' or a space (the separator stays on the earlier line).
+     */
+    static List<String> wrapLabel(final String label, final int maxChars) {
+        List<String> lines = new ArrayList<>();
+        String rest = label.trim();
+        int max = Math.max(1, maxChars);
+        while (rest.length() > max) {
+            int cut = -1;
+            for (int i = max; i >= max / 2; i--) {
+                char c = rest.charAt(i - 1);
+                if (c == '/' || c == '_' || c == ':' || c == ' ' || c == '.') {
+                    cut = i;
+                    break;
+                }
+            }
+            if (cut < 0) {
+                cut = max;
+            }
+            lines.add(rest.substring(0, cut).trim());
+            rest = rest.substring(cut).trim();
+        }
+        if (!rest.isEmpty() || lines.isEmpty()) {
+            lines.add(rest);
+        }
+        return lines;
+    }
+
+    /** The label a port shows next to its box: "name : Type". */
+    static String portLabel(final PortDescriptor pd) {
+        String spec = pd.specName == null ? "" : pd.specName;
+        return pd.name + (spec.isEmpty() ? "" : " : " + spec.substring(spec.lastIndexOf('/') + 1));
     }
 
     protected GPort buildGPort(
@@ -418,8 +552,10 @@ public class RosGModelFactory extends EMFGModelFactory {
     }
 
     protected GNode createSubSystemElement(
+            final system.System outerSystem,
             final SubSystem subSystem,
-            final Map<RosInterface, String> interfaceToPortId) {
+            final Map<RosInterface, String> interfaceToPortId,
+            final Map<RosInterface, String> collapsedInterfaceToSubId) {
         String subId = getElementId(subSystem);
         system.System refSys = subSystem.getSystem();
         String sysName = (refSys != null && !refSys.eIsProxy() && refSys.getName() != null)
@@ -431,7 +567,6 @@ public class RosGModelFactory extends EMFGModelFactory {
 
         GNodeBuilder builder = new GNodeBuilder(RosModelTypes.SUBSYSTEM_NODE)
                 .id(subId)
-                .size(collapsed ? 260.0 : 340.0, collapsed ? 84.0 : 220.0)
                 .addArgument("subSystemName", sysName)
                 .addArgument("collapsed", collapsed);
 
@@ -440,22 +575,126 @@ public class RosGModelFactory extends EMFGModelFactory {
                 .text("SubSystem: " + sysName)
                 .build());
 
-        if (!collapsed && refSys != null && !refSys.eIsProxy()) {
+        if (refSys != null && !refSys.eIsProxy()) {
             // Members live in another resource: their EMF fragments ("//@components.0") would
             // collide with this file's ids, so they are scoped under the subsystem element.
             String previousScope = foreignIdScope;
             foreignIdScope = subId;
             try {
-                for (Component childComp : refSys.getComponents()) {
-                    if (childComp instanceof RosNode childNode) {
-                        builder.add(createRosNodeElement(childNode, interfaceToPortId));
+                if (!collapsed) {
+                    builder.size(340.0, 220.0);
+                    for (Component childComp : refSys.getComponents()) {
+                        if (childComp instanceof RosNode childNode) {
+                            builder.add(createRosNodeElement(childNode, interfaceToPortId));
+                        }
                     }
+                } else {
+                    addCollapsedBoundaryPorts(
+                            outerSystem, refSys, subId, sysName, builder,
+                            interfaceToPortId, collapsedInterfaceToSubId);
                 }
             } finally {
                 foreignIdScope = previousScope;
             }
+        } else {
+            builder.size(collapsed ? 260.0 : 340.0, collapsed ? 84.0 : 220.0);
         }
         return builder.build();
+    }
+
+    /**
+     * Promotes interfaces inside a collapsed subsystem that connect to nodes outside it onto the
+     * collapsed subsystem card's West/East boundary so ELK keeps all external connections wired.
+     */
+    protected void addCollapsedBoundaryPorts(
+            final system.System outerSystem,
+            final system.System refSys,
+            final String subId,
+            final String sysName,
+            final GNodeBuilder builder,
+            final Map<RosInterface, String> interfaceToPortId,
+            final Map<RosInterface, String> collapsedInterfaceToSubId) {
+        Map<RosInterface, String> interfaceToOwnerName = new LinkedHashMap<>();
+        collectSystemInterfaces(refSys, interfaceToOwnerName, new HashSet<>());
+        for (RosInterface ri : interfaceToOwnerName.keySet()) {
+            collapsedInterfaceToSubId.put(ri, subId);
+        }
+
+        Set<RosInterface> boundaryInterfaces = new LinkedHashSet<>();
+        for (Connection conn : outerSystem.getConnections()) {
+            if (conn instanceof RosSystemConnection sysConn) {
+                RosInterface fromIf = sysConn.getFrom();
+                RosInterface toIf = sysConn.getTo();
+                boolean fromIn = fromIf != null && interfaceToOwnerName.containsKey(fromIf);
+                boolean toIn = toIf != null && interfaceToOwnerName.containsKey(toIf);
+                if (fromIn && !toIn) {
+                    boundaryInterfaces.add(fromIf);
+                } else if (toIn && !fromIn) {
+                    boundaryInterfaces.add(toIf);
+                }
+            }
+        }
+
+        Map<String, Integer> nameCounts = new HashMap<>();
+        for (RosInterface ri : boundaryInterfaces) {
+            nameCounts.merge(nullToEmpty(ri.getName()), 1, Integer::sum);
+        }
+
+        List<PortDescriptor> targetPorts = new ArrayList<>();
+        List<PortDescriptor> sourcePorts = new ArrayList<>();
+        for (RosInterface ri : boundaryInterfaces) {
+            PortDescriptor raw = createExplicitPortDescriptor(subId, ri);
+            if (raw == null) {
+                continue;
+            }
+            interfaceToPortId.put(ri, raw.portId);
+            String displayName = nameCounts.getOrDefault(raw.name, 0) > 1
+                    && !nullToEmpty(interfaceToOwnerName.get(ri)).isEmpty()
+                    ? interfaceToOwnerName.get(ri) + "." + raw.name
+                    : raw.name;
+            PortDescriptor pd = displayName.equals(raw.name)
+                    ? raw
+                    : new PortDescriptor(raw.portId, raw.portType, displayName, raw.originName,
+                            raw.specName, raw.isExplicit, raw.originElement);
+            if (RosModelTypes.isTargetPort(pd.portType)) {
+                targetPorts.add(pd);
+            } else {
+                sourcePorts.add(pd);
+            }
+        }
+
+        builder.addArgument("boundaryPortCount", targetPorts.size() + sourcePorts.size());
+        if (targetPorts.isEmpty() && sourcePorts.isEmpty()) {
+            double titleWidth = CARD_MARGIN + ("SubSystem: " + sysName).length() * TITLE_CHAR_WIDTH + 40.0;
+            double subWidth = Math.min(MAX_NODE_WIDTH, Math.ceil(Math.max(260.0, titleWidth) / 10.0) * 10.0);
+            builder.size(subWidth, 84.0);
+            return;
+        }
+
+        double titleMinWidth = CARD_MARGIN + ("SubSystem: " + sysName).length() * TITLE_CHAR_WIDTH + 40.0;
+        double subWidth = computeCardWidth(260.0, titleMinWidth, targetPorts, sourcePorts);
+        double subHeight = layoutAndAddPorts(
+                builder, subId, subWidth, SUBSYSTEM_COLLAPSED_HEADER_HEIGHT, targetPorts, sourcePorts);
+        builder.size(subWidth, subHeight);
+    }
+
+    private static void collectSystemInterfaces(
+            final system.System sys,
+            final Map<RosInterface, String> interfaceToOwnerName,
+            final Set<system.System> visited) {
+        if (sys == null || sys.eIsProxy() || !visited.add(sys)) {
+            return;
+        }
+        for (Component comp : sys.getComponents()) {
+            if (comp instanceof RosNode rn) {
+                String nodeName = nullToEmpty(rn.getName());
+                for (RosInterface ri : rn.getRosinterfaces()) {
+                    interfaceToOwnerName.put(ri, nodeName);
+                }
+            } else if (comp instanceof SubSystem nested) {
+                collectSystemInterfaces(nested.getSystem(), interfaceToOwnerName, visited);
+            }
+        }
     }
 
     protected GNode createProcessElement(final Process proc) {
@@ -488,10 +727,18 @@ public class RosGModelFactory extends EMFGModelFactory {
 
     protected Optional<GEdge> createConnectionEdge(
             final RosSystemConnection sysConn,
-            final Map<RosInterface, String> interfaceToPortId) {
+            final Map<RosInterface, String> interfaceToPortId,
+            final Map<RosInterface, String> collapsedInterfaceToSubId) {
         RosInterface fromIf = sysConn.getFrom();
         RosInterface toIf = sysConn.getTo();
         if (fromIf == null || toIf == null) {
+            return Optional.empty();
+        }
+        // Skip connections hidden inside a collapsed subsystem (internal or unpromoted).
+        String fromCollapsedSub = collapsedInterfaceToSubId.get(fromIf);
+        String toCollapsedSub = collapsedInterfaceToSubId.get(toIf);
+        if ((fromCollapsedSub != null && (!interfaceToPortId.containsKey(fromIf) || fromCollapsedSub.equals(toCollapsedSub)))
+                || (toCollapsedSub != null && !interfaceToPortId.containsKey(toIf))) {
             return Optional.empty();
         }
         String sourceId = interfaceToPortId.getOrDefault(fromIf, getElementId(fromIf));
