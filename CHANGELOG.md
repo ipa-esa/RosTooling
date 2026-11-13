@@ -5,6 +5,22 @@ All notable changes to the **RosTooling** model and generator plugins will be do
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 2026-11-13
+
+### Added
+- **Eclipse GLSP 2.4 Diagram & Model Server (`de.fraunhofer.ipa.ros.glsp`)**:
+  - Implemented `RosGlspModule`, `RosDiagramConfiguration`, and `RosXtextModelStorage` to load `.rossystem`, `.ros2`, `.ros1`, and `.ros` Xtext resources with companion models and optional `.layout` sidecars, plus empty-resource bootstrapping for new files.
+  - Added `RosGModelFactory` and `RosLayoutEngine` for server-side ELK layered layout, orthogonal routing, pinned position persistence, composable `Process` containers, and collapsed subsystem boundary ports (`ToggleSubSystemOperationHandler`).
+  - Added GLSP semantic operation and action handlers (`CreateRosNodeOperationHandler`, `CreateConnectionOperationHandler`, `ReconnectConnectionOperationHandler`, `DeleteRosElementOperationHandler`, `EditRosPropertyOperationHandler`, `RosPackageSetEditor`, `ChangeBoundsOperationHandler`, `IgnoreRoutingPointsOperationHandler`, `RequestRosIndexActionHandler`, `RequestRosTextEditsActionHandler`).
+  - Added `RosCatalogueResolver` and `RosModelValidator` for catalogue resolution and live Xtext diagnostics.
+- **Surgical Node-Model Serialization (`RosAstNodeModelSerializer`, `RosPackageSetSerializer`, `RosDslText`)**:
+  - Implemented `INode`/`ICompositeNode`-guided span edits so unaffected lines, formatting, and `#` comments are preserved across `.rossystem`, `.ros2`, `.ros1`, and `.ros` files.
+  - Added initial serialization and property edits for new models (`fromFile:`, `subSystems:`, `Package.name`, `Parameter` `value:`/`default:`, QoS blocks, `active_in:`, and `TopicSpec`/`ServiceSpec`/`ActionSpec`).
+
+### Fixed
+- **Pan & Drag Boundary Guard**:
+  - Ignored zero/sub-pixel no-op `ChangeBoundsOperation` updates so canvas panning does not pin or move selected nodes unintentionally.
+
 ## [3.3.3] - 2026-11-09
 
 ### Added
