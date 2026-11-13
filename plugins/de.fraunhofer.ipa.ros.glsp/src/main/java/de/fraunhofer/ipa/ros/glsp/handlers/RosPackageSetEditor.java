@@ -105,6 +105,7 @@ public final class RosPackageSetEditor {
             final RosModelState state, final Package pkg, final String prop, final String key, final String val) {
         if (is(prop, "name", "packageName")) {
             pkg.setName(val);
+            state.markDirty(pkg, "name");
         } else if (is(prop, "fromGitRepo")) {
             pkg.setFromGitRepo(val == null || val.isBlank() ? null : val.trim());
             state.markDirty(pkg, "fromGitRepo");

@@ -117,6 +117,7 @@ final class RosPackageSetSerializer {
         return sem instanceof Package
                 || sem instanceof Artifact
                 || sem instanceof InterfaceType
+                || sem instanceof Parameter
                 || sem instanceof SpecBase
                 || sem instanceof MessagePart;
     }
@@ -476,9 +477,25 @@ final class RosPackageSetSerializer {
         RosAstNodeModelSerializer.checkFeatureTokenEdit(
                 param, RosPackage.Literals.INTERFACE_TYPE__NAME, param.getName(), false, text, edits);
         if (param.getValue() != null) {
-            RosAstNodeModelSerializer.checkFeatureRawSpanEdit(
-                    param, RosPackage.Literals.PARAMETER__VALUE,
-                    RosAstNodeModelSerializer.formatDslParameterValue(param.getValue()), text, edits);
+            List<INode> valNodes = NodeModelUtils.findNodesForFeature(param, RosPackage.Literals.PARAMETER__VALUE);
+            String renderedVal = RosAstNodeModelSerializer.formatDslParameterValue(param.getValue());
+            if (!valNodes.isEmpty()) {
+                RosAstNodeModelSerializer.checkFeatureRawSpanEdit(
+                        param, RosPackage.Literals.PARAMETER__VALUE, renderedVal, text, edits);
+            } else {
+                List<INode> nsNodes = NodeModelUtils.findNodesForFeature(param, RosPackage.Literals.INTERFACE_TYPE__NAMESPACE);
+                List<INode> typeNodes = NodeModelUtils.findNodesForFeature(param, RosPackage.Literals.PARAMETER__TYPE);
+                List<INode> anchorNodes = !nsNodes.isEmpty() ? nsNodes : typeNodes;
+                int anchor = anchorNodes.isEmpty()
+                        ? RosAstNodeModelSerializer.findElementBlockEndOffset(text, comp)
+                        : RosAstNodeModelSerializer.findLineEndOffsetWithoutNewline(
+                                text, RosAstNodeModelSerializer.lastNonHiddenOffset(anchorNodes.get(anchorNodes.size() - 1)));
+                ILeafNode typeKw = findOwnKeywordLeaf(param, comp, "type:", Integer.MAX_VALUE);
+                int col = typeKw != null
+                        ? column(typeKw.getOffset())
+                        : column(RosAstNodeModelSerializer.firstNonHiddenOffset(comp)) + 2;
+                edits.add(new SpanEdit(anchor, 0, "\n" + spaces(col) + "value: " + renderedVal));
+            }
         }
         if (state.isDirty(param, "type")) {
             emitParameterType(param, comp);
@@ -641,6 +658,46 @@ final class RosPackageSetSerializer {
     // ---------------------------------------------------------------------------------------
     // Rendering of new elements
     // ---------------------------------------------------------------------------------------
+
+    /** Renders a newly created package / package-set model (empty source file) in canonical DSL syntax. */
+    static String renderFullModel(final RosModelState state, final List<Package> packages) {
+        if (packages == null || packages.isEmpty()) {
+            return "";
+        }
+        RosPackageSetSerializer helper = new RosPackageSetSerializer(state, "", List.of());
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < packages.size(); i++) {
+            if (i > 0) {
+                sb.append('\n');
+            }
+            sb.append(helper.renderPackage(packages.get(i)));
+        }
+        return sb.toString();
+    }
+
+    private String renderPackage(final Package pkg) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(pkg.getName()).append(":\n");
+        if (pkg.getFromGitRepo() != null && !pkg.getFromGitRepo().isBlank()) {
+            sb.append("  fromGitRepo: ").append(RosDslText.quote(pkg.getFromGitRepo())).append('\n');
+        }
+        if (!pkg.getArtifact().isEmpty()) {
+            sb.append("  artifacts:\n");
+            for (Artifact art : pkg.getArtifact()) {
+                sb.append(renderArtifact(art, "    "));
+            }
+        }
+        for (Class<? extends SpecBase> specClass : List.of(TopicSpec.class, ServiceSpec.class, ActionSpec.class)) {
+            List<SpecBase> matching = pkg.getSpec().stream().filter(specClass::isInstance).toList();
+            if (!matching.isEmpty()) {
+                sb.append("  ").append(RosDslText.sectionKeyword(matching.get(0))).append('\n');
+                for (SpecBase spec : matching) {
+                    sb.append(renderSpec(spec, "    "));
+                }
+            }
+        }
+        return sb.toString();
+    }
 
     private String renderArtifact(final Artifact art, final String indent) {
         StringBuilder sb = new StringBuilder();

@@ -98,7 +98,13 @@ public final class RosAstNodeModelSerializer {
             return "";
         }
         if (extractContext(modelState) == null) {
-            return rootModel instanceof system.System sys ? serializeFullSystem(sys) : "";
+            if (rootModel instanceof system.System sys) {
+                return serializeFullSystem(sys);
+            }
+            if (modelState.isPackageModel()) {
+                return RosPackageSetSerializer.renderFullModel(modelState, modelState.getPackageModelPackages());
+            }
+            return "";
         }
         return computeAndCommit(modelState).newText;
     }
@@ -112,20 +118,17 @@ public final class RosAstNodeModelSerializer {
         EObject rootModel = modelState.getSemanticModel();
         OptionalXtextContext ctx = rootModel == null ? null : extractContext(modelState);
         if (ctx == null) {
-            // A brand-new .rossystem (no text yet): its first text is written by the serializer.
-            if (rootModel instanceof system.System sys && hasContent(sys)
-                    && modelState.getXtextResource().isPresent()) {
-                XtextResource res = modelState.getXtextResource().get();
-                String created = serializeFullSystem(sys);
-                res.reparse(created);
-                if (!res.getContents().isEmpty()) {
-                    modelState.setSemanticModel(res.getContents().get(0));
+            // A brand-new .rossystem or .ros2/.ros1/.ros (no text yet): its first text is written by the serializer.
+            if (modelState.getXtextResource().isPresent()) {
+                String created = null;
+                if (rootModel instanceof system.System sys && hasContent(sys)) {
+                    created = serializeFullSystem(sys);
+                } else if (modelState.isPackageModel() && hasPackageContent(modelState)) {
+                    created = RosPackageSetSerializer.renderFullModel(modelState, modelState.getPackageModelPackages());
                 }
-                if (res.getResourceSet() != null) {
-                    org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(res.getResourceSet());
+                if (created != null && !created.isEmpty()) {
+                    return commitNewModelText(modelState, modelState.getXtextResource().get(), created);
                 }
-                modelState.clearTextEditState();
-                return new TextChange("", created, List.of(new SpanEdit(0, 0, created)));
             }
             modelState.clearTextEditState();
             return new TextChange("", "", List.of());
@@ -252,8 +255,17 @@ public final class RosAstNodeModelSerializer {
 
         // 2. Check System-level scalar properties
         checkFeatureTokenEdit(sys, RossystemPackage.Literals.SYSTEM__NAME, sys.getName(), false, text, edits);
-        if (sys.getFromFile() != null) {
-            checkFeatureTokenEdit(sys, RossystemPackage.Literals.SYSTEM__FROM_FILE, sys.getFromFile(), true, text, edits);
+        if (sys.getFromFile() != null && !sys.getFromFile().isBlank()) {
+            List<INode> fromNodes = NodeModelUtils.findNodesForFeature(sys, RossystemPackage.Literals.SYSTEM__FROM_FILE);
+            if (fromNodes.isEmpty()) {
+                List<INode> nameNodes = NodeModelUtils.findNodesForFeature(sys, RossystemPackage.Literals.SYSTEM__NAME);
+                int anchor = !nameNodes.isEmpty()
+                        ? findLineEndOffsetWithoutNewline(text, lastNonHiddenOffset(nameNodes.get(0)))
+                        : findLineEndOffsetWithoutNewline(text, firstNonHiddenOffset(rootNode));
+                edits.add(new SpanEdit(anchor, 0, "\n  fromFile: " + RosDslText.quote(sys.getFromFile())));
+            } else {
+                checkFeatureTokenEdit(sys, RossystemPackage.Literals.SYSTEM__FROM_FILE, sys.getFromFile(), true, text, edits);
+            }
         }
 
         // 3a. Newly added SubSystems: one reference line each in the 'subSystems:' section
@@ -763,8 +775,33 @@ public final class RosAstNodeModelSerializer {
         }
     }
 
+    private static TextChange commitNewModelText(
+            final RosModelState modelState, final XtextResource res, final String created) throws IOException {
+        res.reparse(created);
+        if (!res.getContents().isEmpty()) {
+            modelState.setSemanticModel(res.getContents().get(0));
+        }
+        if (res.getResourceSet() != null) {
+            org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(res.getResourceSet());
+        }
+        modelState.clearTextEditState();
+        return new TextChange("", created, List.of(new SpanEdit(0, 0, created)));
+    }
+
     private static boolean hasContent(final system.System sys) {
         return !sys.getComponents().isEmpty() || !sys.getProcesses().isEmpty() || !sys.getConnections().isEmpty();
+    }
+
+    private static boolean hasPackageContent(final RosModelState modelState) {
+        for (ros.Package pkg : modelState.getPackageModelPackages()) {
+            if (!pkg.getArtifact().isEmpty()
+                    || !pkg.getSpec().isEmpty()
+                    || (pkg.getFromGitRepo() != null && !pkg.getFromGitRepo().isBlank())
+                    || modelState.isDirty(pkg, "name")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Text of a system that has no source yet (new file). Section order follows RosSystem.xtext. */

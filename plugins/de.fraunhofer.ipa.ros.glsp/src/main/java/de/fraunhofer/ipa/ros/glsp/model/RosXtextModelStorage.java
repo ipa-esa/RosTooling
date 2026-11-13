@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
@@ -112,9 +113,14 @@ public class RosXtextModelStorage extends EMFSourceModelStorage {
 
         // The editor may hold unsaved text; parse that instead of the on-disk content.
         String sourceText = action.getOptions() != null ? action.getOptions().get("sourceText") : null;
-        Resource mainResource = isNewSystemFile(sourceUri, sourceText)
-                ? createEmptySystemResource(resourceSet, sourceUri)
-                : resourceSet.getResource(sourceUri, true);
+        Resource mainResource;
+        if (isNewSystemFile(sourceUri, sourceText)) {
+            mainResource = createEmptySystemResource(resourceSet, sourceUri);
+        } else if (isNewPackageFile(sourceUri, sourceText)) {
+            mainResource = createEmptyPackageResource(resourceSet, sourceUri);
+        } else {
+            mainResource = resourceSet.getResource(sourceUri, true);
+        }
         if (sourceText != null && !sourceText.isBlank()
                 && mainResource instanceof org.eclipse.xtext.resource.XtextResource xtextRes) {
             try {
@@ -141,13 +147,25 @@ public class RosXtextModelStorage extends EMFSourceModelStorage {
 
     /** A .rossystem that does not exist yet (or is empty) is created from an empty Ecore System. */
     protected boolean isNewSystemFile(final URI sourceUri, final String sourceText) {
-        if (!"rossystem".equals(sourceUri.fileExtension())) {
-            return false;
-        }
+        return "rossystem".equals(sourceUri.fileExtension()) && isBlankSource(sourceUri, sourceText);
+    }
+
+    /** A .ros2 / .ros1 / .ros file that does not exist yet (or is empty) starts from an empty Package. */
+    protected boolean isNewPackageFile(final URI sourceUri, final String sourceText) {
+        String ext = sourceUri.fileExtension();
+        return ("ros2".equals(ext) || "ros1".equals(ext) || "ros".equals(ext))
+                && isBlankSource(sourceUri, sourceText);
+    }
+
+    private static boolean isBlankSource(final URI sourceUri, final String sourceText) {
         if (sourceText != null) {
             return sourceText.isBlank();
         }
-        File file = new File(sourceUri.toFileString());
+        String localPath = sourceUri.toFileString();
+        if (localPath == null) {
+            return false;
+        }
+        File file = new File(localPath);
         try {
             return !file.exists() || Files.readString(file.toPath(), StandardCharsets.UTF_8).isBlank();
         } catch (IOException e) {
@@ -165,6 +183,34 @@ public class RosXtextModelStorage extends EMFSourceModelStorage {
         String base = sourceUri.lastSegment() == null ? "system" : sourceUri.trimFileExtension().lastSegment();
         sys.setName(base.replaceAll("[^A-Za-z0-9_]", "_"));
         res.getContents().add(sys);
+        return res;
+    }
+
+    /**
+     * New package model: an Xtext resource holding an empty {@code AmentPackage} (.ros2),
+     * {@code CatkinPackage} (.ros1), or {@code PackageSet} (.ros) named after the file.
+     */
+    protected Resource createEmptyPackageResource(final ResourceSet resourceSet, final URI sourceUri) {
+        Resource res = resourceSet.createResource(sourceUri);
+        String base = sourceUri.lastSegment() == null ? "ros_pkg" : sourceUri.trimFileExtension().lastSegment();
+        String pkgName = base.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_]", "_");
+        if (pkgName.isBlank()) {
+            pkgName = "ros_pkg";
+        }
+        String ext = sourceUri.fileExtension();
+        if ("ros".equals(ext)) {
+            ros.PackageSet pkgSet = ros.RosFactory.eINSTANCE.createPackageSet();
+            ros.Package pkg = ros.RosFactory.eINSTANCE.createPackage();
+            pkg.setName(pkgName);
+            pkgSet.getPackage().add(pkg);
+            res.getContents().add(pkgSet);
+        } else {
+            ros.Package pkg = "ros1".equals(ext)
+                    ? ros.RosFactory.eINSTANCE.createCatkinPackage()
+                    : ros.RosFactory.eINSTANCE.createAmentPackage();
+            pkg.setName(pkgName);
+            res.getContents().add(pkg);
+        }
         return res;
     }
 

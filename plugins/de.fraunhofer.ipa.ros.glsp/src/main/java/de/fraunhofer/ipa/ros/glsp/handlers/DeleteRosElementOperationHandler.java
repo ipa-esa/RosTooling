@@ -49,6 +49,7 @@ public class DeleteRosElementOperationHandler extends EMFOperationHandler<Delete
                             if (removable instanceof ros.Package
                                     || removable instanceof ros.Artifact
                                     || removable instanceof ros.InterfaceType
+                                    || removable instanceof ros.Parameter
                                     || removable instanceof ros.SpecBase
                                     || removable instanceof primitives.MessagePart) {
                                 EcoreUtil.remove(removable);

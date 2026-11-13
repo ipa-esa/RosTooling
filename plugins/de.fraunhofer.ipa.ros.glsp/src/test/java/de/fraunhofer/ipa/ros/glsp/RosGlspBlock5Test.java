@@ -513,4 +513,85 @@ class RosGlspBlock5Test {
         exec(new org.eclipse.glsp.server.operations.ChangeBoundsOperation(List.of(moved)));
         assertTrue(state.getPinnedPositions().containsKey(node.getId()));
     }
+
+    @Test
+    void missingRos2CanBeCreatedAndParametersDeletedSemantically() throws Exception {
+        writeCompanions();
+        Path ros2File = tempDir.resolve("my-new-pkg.ros2");
+        assertFalse(Files.exists(ros2File));
+
+        open(ros2File, "");
+        assertTrue(state.isPackageModel());
+        assertEquals("my_new_pkg", state.getPackageModelPackages().get(0).getName());
+
+        exec(new EditRosPropertyOperation("root", "fromGitRepo", null, "https://github.com/example/my_new_pkg.git", null));
+        exec(new EditRosPropertyOperation("root", "addArtifact", "sensor_driver", "sensor_node", null));
+        exec(new EditRosPropertyOperation("sensor_driver", "isLifecycle", null, "true", null));
+        exec(new EditRosPropertyOperation("sensor_driver", "addInterface", "scan", "nav_msgs/msg/LaserScan", "pub"));
+        exec(new EditRosPropertyOperation("sensor_driver", "addParameter", "frame_id", "laser_frame", "String"));
+        exec(new EditRosPropertyOperation("sensor_driver", "addParameter", "tmp_param", "1", "Integer"));
+        exec(new EditRosPropertyOperation("sensor_driver.scan", "qos", "profile", "sensor_qos", null));
+        exec(new EditRosPropertyOperation("sensor_driver.scan", "activeStates", null, "active", null));
+
+        String text = commit().newText;
+        assertTrue(text.startsWith("my_new_pkg:\n"), text);
+        assertTrue(text.contains("  fromGitRepo: \"https://github.com/example/my_new_pkg.git\""), text);
+        assertTrue(text.contains("    sensor_driver:\n      node: sensor_node\n      lifecycle: true"), text);
+        assertTrue(text.contains("          type: \"nav_msgs/msg/LaserScan\""), text);
+        assertTrue(text.contains("          active_in: [ Active ]"), text);
+        assertTrue(text.contains("            profile: sensor_qos"), text);
+        assertTrue(text.contains("          type: String\n          default: \"laser_frame\""), text);
+        assertTrue(text.contains("          type: Integer\n          default: 1"), text);
+
+        // Reload committed text and test Parameter deletion + value insertion
+        Files.writeString(ros2File, text);
+        open(ros2File, text);
+        exec(new DeleteOperation(List.of("sensor_driver.tmp_param")));
+        exec(new EditRosPropertyOperation("sensor_driver.frame_id", "value", null, "base_laser", "String"));
+        String updated = commit().newText;
+        assertFalse(updated.contains("tmp_param"), updated);
+        assertTrue(updated.contains("frame_id:\n"), updated);
+        assertTrue(updated.contains("value: \"base_laser\""), updated);
+
+        // Verify zero Xtext validation errors on the resulting .ros2 resource
+        org.eclipse.xtext.resource.XtextResource xr = state.getXtextResource().orElseThrow();
+        List<org.eclipse.xtext.validation.Issue> errors = xr.getResourceServiceProvider()
+                .getResourceValidator()
+                .validate(xr, org.eclipse.xtext.validation.CheckMode.ALL, org.eclipse.xtext.util.CancelIndicator.NullImpl)
+                .stream()
+                .filter(i -> i.getSeverity() == org.eclipse.xtext.diagnostics.Severity.ERROR)
+                .toList();
+        assertTrue(errors.isEmpty(), "Expected no validation errors, got: " + errors + "\nText:\n" + updated);
+    }
+
+    @Test
+    void missingRosSpecFileCanBeCreatedSemantically() throws Exception {
+        Path rosFile = tempDir.resolve("warehouse_msgs.ros");
+        assertFalse(Files.exists(rosFile));
+
+        open(rosFile, "");
+        assertTrue(state.isPackageModel());
+        assertEquals(1, state.getPackageModelPackages().size());
+
+        exec(new EditRosPropertyOperation("root", "addSpec", "Scan", "msg", null));
+        exec(new EditRosPropertyOperation("Scan", "addField", "ranges", "float32[]", "message"));
+        exec(new EditRosPropertyOperation("Scan", "addField", "angle_increment", "float32", "message"));
+
+        String text = commit().newText;
+        assertFalse(text.isBlank(), "commit should produce non-blank .ros text");
+        assertTrue(text.contains("warehouse_msgs:\n  msgs:\n    Scan\n      message\n"), text);
+        assertTrue(text.contains("float32[] ranges"), text);
+        assertTrue(text.contains("float32 angle_increment"), text);
+
+        Files.writeString(rosFile, text);
+        open(rosFile, text);
+        org.eclipse.glsp.graph.GGraph graph = (org.eclipse.glsp.graph.GGraph) state.getRoot();
+        org.eclipse.glsp.graph.GModelElement pkgEl = graph.getChildren().stream()
+                .filter(c -> "node:ros-package".equals(c.getType()))
+                .findFirst()
+                .orElseThrow();
+        String specsJson = String.valueOf(pkgEl.getArgs().get("specsJson"));
+        assertTrue(specsJson.contains("\"name\":\"Scan\""), specsJson);
+        assertTrue(specsJson.contains("\"name\":\"ranges\""), specsJson);
+    }
 }

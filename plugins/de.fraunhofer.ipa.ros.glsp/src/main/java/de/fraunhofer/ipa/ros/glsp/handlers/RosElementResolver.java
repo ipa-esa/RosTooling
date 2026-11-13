@@ -116,6 +116,15 @@ public final class RosElementResolver {
             }
         }
         if (modelState.isPackageModel()) {
+            if ("root".equals(idOrName)) {
+                if (root instanceof ros.Package) {
+                    return Optional.of(root);
+                }
+                List<ros.Package> pkgs = modelState.getPackageModelPackages();
+                if (!pkgs.isEmpty()) {
+                    return Optional.of(pkgs.get(0));
+                }
+            }
             Optional<EObject> byName = findInPackages(modelState.getPackageModelPackages(), idOrName);
             if (byName.isPresent()) {
                 return byName;
