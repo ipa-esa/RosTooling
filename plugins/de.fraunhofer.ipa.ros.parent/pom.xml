@@ -51,6 +51,7 @@
         <module>../de.fraunhofer.ipa.rossystem.xtext.ui</module>
         <module>../de.fraunhofer.ipa.rossystem.edit</module>
         <module>../de.fraunhofer.ipa.rossystem.editor</module>
+        <module>../de.fraunhofer.ipa.ros.glsp</module>
         <!--module>../de.fraunhofer.ipa.rossystem.xtext.tests</module-->
         <!--module>../de.fraunhofer.ipa.rossystem.deployment</module-->
 

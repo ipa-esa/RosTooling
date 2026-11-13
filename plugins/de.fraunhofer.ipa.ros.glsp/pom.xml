@@ -2,9 +2,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.fraunhofer.ipa.ros</groupId>
+    <parent>
+        <groupId>de.fraunhofer.ipa.ros</groupId>
+        <artifactId>de.fraunhofer.ipa.ros.parent</artifactId>
+        <version>3.4.0</version>
+        <relativePath>../de.fraunhofer.ipa.ros.parent/pom.xml</relativePath>
+    </parent>
     <artifactId>de.fraunhofer.ipa.ros.glsp</artifactId>
-    <version>3.3.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>de.fraunhofer.ipa.ros.glsp</name>
     <description>Eclipse GLSP Server for RosTooling Ecore and Xtext Models</description>
@@ -74,51 +78,141 @@
             <groupId>de.fraunhofer.ipa.ros</groupId>
             <artifactId>de.fraunhofer.ipa.ros</artifactId>
             <version>${project.version}</version>
+            <!-- In the reactor Tycho injects the bundle's whole p2 closure into its pom. Signed p2 jars
+                 next to the Maven Central ones break class loading, so take only the bundle itself; the
+                 third-party jars and RosTooling siblings it needs are declared here explicitly. -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.ipa.ros</groupId>
             <artifactId>de.fraunhofer.ipa.ros.xtext</artifactId>
             <version>${project.version}</version>
+            <!-- In the reactor Tycho injects the bundle's whole p2 closure into its pom. Signed p2 jars
+                 next to the Maven Central ones break class loading, so take only the bundle itself; the
+                 third-party jars and RosTooling siblings it needs are declared here explicitly. -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.ipa.ros</groupId>
             <artifactId>de.fraunhofer.ipa.ros.xtext.ide</artifactId>
             <version>${project.version}</version>
+            <!-- In the reactor Tycho injects the bundle's whole p2 closure into its pom. Signed p2 jars
+                 next to the Maven Central ones break class loading, so take only the bundle itself; the
+                 third-party jars and RosTooling siblings it needs are declared here explicitly. -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.ipa.ros</groupId>
             <artifactId>de.fraunhofer.ipa.ros1.xtext</artifactId>
             <version>${project.version}</version>
+            <!-- In the reactor Tycho injects the bundle's whole p2 closure into its pom. Signed p2 jars
+                 next to the Maven Central ones break class loading, so take only the bundle itself; the
+                 third-party jars and RosTooling siblings it needs are declared here explicitly. -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.ipa.ros</groupId>
             <artifactId>de.fraunhofer.ipa.ros1.xtext.ide</artifactId>
             <version>${project.version}</version>
+            <!-- In the reactor Tycho injects the bundle's whole p2 closure into its pom. Signed p2 jars
+                 next to the Maven Central ones break class loading, so take only the bundle itself; the
+                 third-party jars and RosTooling siblings it needs are declared here explicitly. -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.ipa.ros</groupId>
             <artifactId>de.fraunhofer.ipa.ros2.xtext</artifactId>
             <version>${project.version}</version>
+            <!-- In the reactor Tycho injects the bundle's whole p2 closure into its pom. Signed p2 jars
+                 next to the Maven Central ones break class loading, so take only the bundle itself; the
+                 third-party jars and RosTooling siblings it needs are declared here explicitly. -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.ipa.ros</groupId>
             <artifactId>de.fraunhofer.ipa.ros2.xtext.ide</artifactId>
             <version>${project.version}</version>
+            <!-- In the reactor Tycho injects the bundle's whole p2 closure into its pom. Signed p2 jars
+                 next to the Maven Central ones break class loading, so take only the bundle itself; the
+                 third-party jars and RosTooling siblings it needs are declared here explicitly. -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.ipa.ros</groupId>
             <artifactId>de.fraunhofer.ipa.rossystem</artifactId>
             <version>${project.version}</version>
+            <!-- In the reactor Tycho injects the bundle's whole p2 closure into its pom. Signed p2 jars
+                 next to the Maven Central ones break class loading, so take only the bundle itself; the
+                 third-party jars and RosTooling siblings it needs are declared here explicitly. -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.ipa.ros</groupId>
             <artifactId>de.fraunhofer.ipa.rossystem.xtext</artifactId>
             <version>${project.version}</version>
+            <!-- In the reactor Tycho injects the bundle's whole p2 closure into its pom. Signed p2 jars
+                 next to the Maven Central ones break class loading, so take only the bundle itself; the
+                 third-party jars and RosTooling siblings it needs are declared here explicitly. -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.ipa.ros</groupId>
             <artifactId>de.fraunhofer.ipa.rossystem.xtext.ide</artifactId>
             <version>${project.version}</version>
+            <!-- In the reactor Tycho injects the bundle's whole p2 closure into its pom. Signed p2 jars
+                 next to the Maven Central ones break class loading, so take only the bundle itself; the
+                 third-party jars and RosTooling siblings it needs are declared here explicitly. -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- JUnit 5 for Verification Gate Tests -->
