@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.fraunhofer.ipa.ros</groupId>
     <artifactId>de.fraunhofer.ipa.ros.glsp</artifactId>
-    <version>3.3.3-SNAPSHOT</version>
+    <version>3.4.0</version>
     <packaging>jar</packaging>
     <name>de.fraunhofer.ipa.ros.glsp</name>
     <description>Eclipse GLSP Server for RosTooling Ecore and Xtext Models</description>

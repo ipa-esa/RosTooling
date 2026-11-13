@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: de.fraunhofer.ipa.ros.glsp
 Bundle-SymbolicName: de.fraunhofer.ipa.ros.glsp;singleton:=true
-Bundle-Version: 3.3.3.qualifier
+Bundle-Version: 3.4.0
 Bundle-Vendor: Fraunhofer IPA
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: de.fraunhofer.ipa.ros,
