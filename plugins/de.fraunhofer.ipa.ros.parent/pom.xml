@@ -34,6 +34,7 @@
         <module>../de.fraunhofer.ipa.ros1.xtext</module>
         <module>../de.fraunhofer.ipa.ros1.xtext.ide</module>
         <module>../de.fraunhofer.ipa.ros1.xtext.ui</module>
+        <module>../de.fraunhofer.ipa.ros2.distro</module>
         <module>../de.fraunhofer.ipa.ros2.xtext</module>
         <module>../de.fraunhofer.ipa.ros2.xtext.ide</module>
         <module>../de.fraunhofer.ipa.ros2.xtext.ui</module>

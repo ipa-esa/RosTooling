@@ -130,6 +130,10 @@ POSSIBILITY OF SUCH DAMAGE.
          version="3.4.0"/>
 
    <plugin
+         id="de.fraunhofer.ipa.ros2.distro"
+         version="3.4.0"/>
+
+   <plugin
          id="de.fraunhofer.ipa.ros2.xtext"
          version="3.4.0"/>
 

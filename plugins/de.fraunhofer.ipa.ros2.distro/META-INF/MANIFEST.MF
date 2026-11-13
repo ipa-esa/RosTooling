@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: de.fraunhofer.ipa.ros2.distro
+Bundle-ManifestVersion: 2
+Bundle-Name: ROS 2 distribution profiles for the RosTooling generators
+Bundle-Vendor: Fraunhofer IPA
+Bundle-Version: 3.4.0
+Bundle-SymbolicName: de.fraunhofer.ipa.ros2.distro
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: de.fraunhofer.ipa.ros2.distro,
+ de.fraunhofer.ipa.ros2.distro.dialect
