@@ -1,0 +1,54 @@
+golden_pkg:
+  artifacts:
+    io_node:
+      node: io_node
+      publishers:
+        status_out:
+          type: 'std_msgs/msg/String'
+        pose_out:
+          type: 'geometry_msgs/msg/PoseStamped'
+          qos:
+            reliability: best_effort
+            durability: transient_local
+            depth: 5
+      subscribers:
+        scan_in:
+          type: 'sensor_msgs/msg/LaserScan'
+          qos:
+            profile: sensor_qos
+        cmd_in:
+          type: 'geometry_msgs/msg/Twist'
+      parameters:
+        rate_hz:
+          type: Double
+          default: 10.0
+        max_count:
+          type: Integer
+          default: 5
+        enabled:
+          type: Boolean
+          default: true
+        frame_id:
+          type: String
+          default: "base_link"
+    service_node:
+      node: service_node
+      lifecycle: true
+      publishers:
+        heartbeat:
+          type: 'std_msgs/msg/String'
+          active_in: [Active, Inactive]
+      serviceservers:
+        reset:
+          type: 'std_srvs/srv/Trigger'
+      serviceclients:
+        enable_client:
+          type: 'std_srvs/srv/SetBool'
+    action_node:
+      node: action_node
+      actionservers:
+        lookup:
+          type: 'tf2_msgs/action/LookupTransform'
+      actionclients:
+        lookup_client:
+          type: 'tf2_msgs/action/LookupTransform'

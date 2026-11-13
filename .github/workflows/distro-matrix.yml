@@ -1,0 +1,38 @@
+name: ROS 2 distro matrix
+
+# Builds and smoke-tests the stored golden packages of the .ros2 generator on every supported
+# ROS 2 distribution. The golden files are produced (and kept in sync with the templates) by
+# Ros2GoldenGenerationTest in the main build; see tools/distro-matrix/README.md.
+
+on:
+  push:
+    paths:
+      - 'plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/golden/**'
+      - 'tools/distro-matrix/**'
+      - '.github/workflows/distro-matrix.yml'
+  pull_request:
+    paths:
+      - 'plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/golden/**'
+      - 'tools/distro-matrix/**'
+      - '.github/workflows/distro-matrix.yml'
+  schedule:
+    - cron: '0 3 * * 1'   # weekly, to catch Rolling changes
+
+jobs:
+  golden-build:
+    name: ${{ matrix.distro }}
+    runs-on: ubuntu-latest
+    container: ros:${{ matrix.distro }}
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [humble, jazzy, kilted, lyrical, rolling]
+    continue-on-error: ${{ matrix.distro == 'rolling' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build and smoke-test golden packages
+        shell: bash
+        env:
+          IN_CONTAINER: '1'
+        run: tools/distro-matrix/build-golden.sh ${{ matrix.distro }}

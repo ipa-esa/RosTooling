@@ -1,0 +1,23 @@
+std_srvs:
+  srvs:
+    Trigger
+      request
+      response
+        bool success
+        string message
+    SetBool
+      request
+        bool data
+      response
+        bool success
+        string message
+tf2_msgs:
+  actions:
+    LookupTransform
+      goal
+        string target_frame
+        string source_frame
+      result
+        'geometry_msgs/msg/TransformStamped' transform
+      feedback
+        string status
