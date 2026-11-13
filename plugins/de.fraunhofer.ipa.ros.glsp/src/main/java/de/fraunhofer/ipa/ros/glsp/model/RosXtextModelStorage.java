@@ -128,7 +128,8 @@ public class RosXtextModelStorage extends EMFSourceModelStorage {
             throw new GLSPServerException("Failed to load RosTooling model from URI: " + sourceUri);
         }
 
-        EcoreUtil.resolveAll(resourceSet);
+        // References into the shared catalogue (as the language server sees it), then resolveAll.
+        RosCatalogueResolver.resolveFromCatalogue(resourceSet);
 
         EObject rootObject = mainResource.getContents().get(0);
         rosModelState.setSourceUri(sourceUri);

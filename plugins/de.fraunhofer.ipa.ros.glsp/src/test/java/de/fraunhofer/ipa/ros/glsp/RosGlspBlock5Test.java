@@ -221,6 +221,111 @@ class RosGlspBlock5Test {
     }
 
     @Test
+    void catalogueTypesResolveLikeInTheLanguageServer() throws Exception {
+        // A catalogue outside the model's package (like ~/.rostooling/catalogue_repos).
+        Path catalogue = Files.createDirectories(tempDir.resolve("catalogue/RosCommonObjects/basic_msgs"));
+        Files.writeString(catalogue.resolve("sensor_msgs.ros"), String.join("\n",
+                "sensor_msgs:", "  msgs:", "    Image", "      message", "        uint32 height", ""));
+        Path pkg = Files.createDirectories(tempDir.resolve("ws/vision_pkg"));
+        Files.writeString(pkg.resolve("package.xml"), "<package/>\n");
+        Files.writeString(pkg.resolve("vision_pkg.ros2"), String.join("\n",
+                "vision_pkg:",
+                "  artifacts:",
+                "    camera:",
+                "      node: camera",
+                "      publishers:",
+                "        image:",
+                "          type: \"sensor_msgs/msg/Image\"",
+                "    detector:",
+                "      node: detector",
+                "      subscribers:",
+                "        image_in:",
+                "          type: \"sensor_msgs/msg/Image\"",
+                ""));
+        Path sysFile = pkg.resolve("vision.rossystem");
+        Files.writeString(sysFile, String.join("\n",
+                "vision:",
+                "  nodes:",
+                "    camera:",
+                "      from: \"vision_pkg.camera\"",
+                "      interfaces:",
+                "        - image: pub-> \"camera::image\"",
+                "    detector:",
+                "      from: \"vision_pkg.detector\"",
+                "      interfaces:",
+                "        - image_in: sub-> \"detector::image_in\"",
+                "  connections:",
+                "    - [ image , image_in ]",
+                ""));
+        String previous = System.getProperty("rostooling.catalogue.path");
+        System.setProperty("rostooling.catalogue.path", tempDir.resolve("catalogue").toString());
+        try {
+            open(sysFile, null);
+            java.util.List<org.eclipse.glsp.server.features.validation.Marker> markers =
+                    injector.getInstance(org.eclipse.glsp.server.features.validation.ModelValidator.class)
+                            .validate(List.of(), "live");
+            assertTrue(markers.stream().noneMatch(m -> "error".equals(m.getType())),
+                    markers.stream().map(m -> m.getElementId() + ": " + m.getDescription()).toList().toString());
+            ros.Publisher pub = (ros.Publisher) ((system.RosPublisherReference) ((system.RosNode) state.getRosSystem()
+                    .orElseThrow().getComponents().get(0)).getRosinterfaces().get(0).getReference()).getFrom();
+            assertFalse(pub.getMessage().eIsProxy(), "catalogue message type must resolve");
+        } finally {
+            if (previous == null) {
+                System.clearProperty("rostooling.catalogue.path");
+            } else {
+                System.setProperty("rostooling.catalogue.path", previous);
+            }
+        }
+    }
+
+    @Test
+    void movedNodesKeepElkOrthogonalRoutes() throws Exception {
+        writeCompanions();
+        Path sysFile = tempDir.resolve("layout_system.rossystem");
+        Files.writeString(sysFile, String.join("\n",
+                "layout_system:",
+                "  nodes:",
+                "    lidar:",
+                "      from: \"nav_pkg.lidar_node\"",
+                "    planner:",
+                "      from: \"nav_pkg.planner_node\"",
+                "    planner_b:",
+                "      from: \"nav_pkg.planner_node\"",
+                "  connections:",
+                "    - [ \"lidar::scan\" , \"planner::scan_in\" ]",
+                "    - [ \"lidar::scan\" , \"planner_b::scan_in\" ]",
+                ""));
+        open(sysFile, null);
+        org.eclipse.glsp.server.layout.LayoutEngine engine =
+                injector.getInstance(org.eclipse.glsp.server.layout.LayoutEngine.class);
+        org.eclipse.glsp.graph.GGraph graph = (org.eclipse.glsp.graph.GGraph) state.getRoot();
+        java.util.function.Function<String, org.eclipse.glsp.graph.GNode> node = name -> graph.getChildren().stream()
+                .filter(c -> c instanceof org.eclipse.glsp.graph.GNode n && name.equals(n.getArgs().get("nodeName")))
+                .map(c -> (org.eclipse.glsp.graph.GNode) c).findFirst().orElseThrow();
+        engine.layout();
+        double lidarY = node.apply("lidar").getPosition().getY();
+
+        // Drag planner_b far below everything else.
+        state.setPinnedPosition(node.apply("planner_b").getId(),
+                org.eclipse.glsp.graph.util.GraphUtil.point(node.apply("planner").getPosition().getX(), lidarY + 900));
+        engine.layout();
+
+        assertTrue(node.apply("planner_b").getPosition().getY() > node.apply("planner").getPosition().getY() + 200,
+                "the moved node keeps its place (as an ELK interactive hint)");
+        for (var child : graph.getChildren()) {
+            if (child instanceof org.eclipse.glsp.graph.GEdge edge) {
+                var pts = edge.getRoutingPoints();
+                assertFalse(pts.isEmpty(), "every wire keeps an ELK route: " + edge.getId());
+                for (int i = 1; i < pts.size(); i++) {
+                    boolean axisAligned = Math.abs(pts.get(i).getX() - pts.get(i - 1).getX()) < 0.5
+                            || Math.abs(pts.get(i).getY() - pts.get(i - 1).getY()) < 0.5;
+                    assertTrue(axisAligned, "orthogonal ELK route expected for " + edge.getId() + ": " + pts);
+                }
+            }
+        }
+    }
+
+    @Test
     void blankSourceTextIsTreatedAsANewSystem() throws Exception {
         writeCompanions();
         Path sysFile = tempDir.resolve("fresh-sys.rossystem");

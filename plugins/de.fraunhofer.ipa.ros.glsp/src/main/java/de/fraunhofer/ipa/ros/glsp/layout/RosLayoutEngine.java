@@ -2,6 +2,9 @@ package de.fraunhofer.ipa.ros.glsp.layout;
 
 import de.fraunhofer.ipa.ros.glsp.RosModelTypes;
 import org.eclipse.elk.alg.layered.options.CrossingMinimizationStrategy;
+import org.eclipse.elk.alg.layered.options.CycleBreakingStrategy;
+import org.eclipse.elk.alg.layered.options.LayeringStrategy;
+import org.eclipse.elk.alg.layered.options.NodePlacementStrategy;
 import org.eclipse.elk.alg.layered.options.LayeredMetaDataProvider;
 import org.eclipse.elk.alg.layered.options.LayeredOptions;
 import org.eclipse.elk.core.math.ElkPadding;
@@ -33,41 +36,51 @@ public class RosLayoutEngine extends ElkLayoutEngine {
     @Override
     public void layout() {
         if (modelState.getRoot() instanceof GGraph ggraph) {
-            GLSPLayoutConfigurator configurator = createConfigurator();
-            this.layout(ggraph, configurator);
-            applyPinnedPositions(ggraph);
+            this.layout(ggraph, createConfigurator());
+            if (applyPinnedPositions(ggraph)) {
+                // Moved nodes: a second ELK pass in interactive mode takes every node's current
+                // position (ELK's own, or where the user dropped it) as the hint for layer, order and
+                // height, and routes ALL wires orthogonally around the blocks again. Layered layout
+                // cannot fix exact coordinates, so a moved node snaps to the layer column nearest to
+                // where it was dropped.
+                this.layout(ggraph, createInteractiveConfigurator());
+            }
         }
     }
 
     /**
-     * User-pinned nodes (ChangeBoundsOperation, persisted in the optional .layout sidecar) override
-     * the ELK position. Wires attached to a pinned node lose their ELK route so the client routes
-     * them from the ports (ELK cannot honour fixed positions in layered mode).
+     * Places user-pinned nodes (ChangeBoundsOperation, persisted in the optional .layout sidecar) at
+     * their pinned positions as hints for the interactive ELK pass.
+     *
+     * @return whether any node was pinned
      */
-    protected void applyPinnedPositions(final GGraph ggraph) {
+    protected boolean applyPinnedPositions(final GGraph ggraph) {
         if (rosModelState == null || rosModelState.getPinnedPositions().isEmpty()) {
-            return;
+            return false;
         }
-        java.util.Set<String> moved = new java.util.HashSet<>();
+        boolean any = false;
         for (org.eclipse.glsp.graph.GModelElement child : ggraph.getChildren()) {
             if (child instanceof org.eclipse.glsp.graph.GNode node
                     && rosModelState.getPinnedPositions().containsKey(node.getId())) {
                 org.eclipse.glsp.graph.GPoint p = rosModelState.getPinnedPositions().get(node.getId());
                 node.setPosition(org.eclipse.glsp.graph.util.GraphUtil.point(p.getX(), p.getY()));
-                moved.add(node.getId());
-                node.eAllContents().forEachRemaining(o -> {
-                    if (o instanceof org.eclipse.glsp.graph.GModelElement el) {
-                        moved.add(el.getId());
-                    }
-                });
+                any = true;
             }
         }
-        for (org.eclipse.glsp.graph.GModelElement child : ggraph.getChildren()) {
-            if (child instanceof org.eclipse.glsp.graph.GEdge edge
-                    && (moved.contains(edge.getSourceId()) || moved.contains(edge.getTargetId()))) {
-                edge.getRoutingPoints().clear();
-            }
+        return any;
+    }
+
+    /** The regular configuration with ELK's interactive strategies (positions are hints). */
+    public GLSPLayoutConfigurator createInteractiveConfigurator() {
+        GLSPLayoutConfigurator configurator = createConfigurator();
+        for (String type : new String[] {DefaultTypes.GRAPH, RosModelTypes.SUBSYSTEM_NODE, RosModelTypes.PROCESS_NODE}) {
+            configurator.configureByType(type)
+                    .setProperty(LayeredOptions.CYCLE_BREAKING_STRATEGY, CycleBreakingStrategy.INTERACTIVE)
+                    .setProperty(LayeredOptions.LAYERING_STRATEGY, LayeringStrategy.INTERACTIVE)
+                    .setProperty(LayeredOptions.CROSSING_MINIMIZATION_STRATEGY, CrossingMinimizationStrategy.INTERACTIVE)
+                    .setProperty(LayeredOptions.NODE_PLACEMENT_STRATEGY, NodePlacementStrategy.INTERACTIVE);
         }
+        return configurator;
     }
 
     public GLSPLayoutConfigurator createConfigurator() {
