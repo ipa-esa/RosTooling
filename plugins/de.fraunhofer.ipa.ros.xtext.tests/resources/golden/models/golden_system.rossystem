@@ -1,0 +1,19 @@
+golden_system:
+  nodes:
+    service_node:
+      from: "golden_pkg.service_node"
+      interfaces:
+        - heartbeat: pub-> "service_node::heartbeat"
+    monitor:
+      from: "golden_pkg.service_node"
+      namespace: "robot"
+    io_node:
+      from: "golden_pkg.io_node"
+      interfaces:
+        - status: pub-> "io_node::status_out"
+      parameters:
+        - rate_hz: "io_node::rate_hz"
+          value: 20.0
+    action_node:
+      from: "golden_pkg.action_node"
+      namespace: "/robot"

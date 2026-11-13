@@ -1,0 +1,20 @@
+@startuml
+
+/'SUBSYSTEMS'/
+
+  component service_node {
+
+/' PORTS DEFINED AS AVAILABLE IN THE ROSSYSTEM FILE '/
+
+/' PORTS FROM THE ORIGINAL NODE '/
+  }
+
+  component io_node {
+
+/' PORTS DEFINED AS AVAILABLE IN THE ROSSYSTEM FILE '/
+
+/' PORTS FROM THE ORIGINAL NODE '/
+  }
+
+
+@enduml

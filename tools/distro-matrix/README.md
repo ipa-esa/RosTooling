@@ -55,3 +55,17 @@ tools/distro-matrix/build-golden.sh lyrical cpp
 The script mounts the repository read-only into `ros:<distro>`, runs `colcon build` with
 `-Werror=deprecated` (CMake) and `-Werror=deprecated-declarations` (C++), then starts every
 generated executable and checks it is still running after a few seconds.
+
+It then builds the stored `.rossystem` packages
+(`resources/golden/expected/rossystem/<system>/`, generated from
+`resources/golden/models/*.rossystem` by `RosSystemGoldenGenerationTest`) in the same workspace
+and runs `ros2 launch <system> <system>.launch.py`. Every node listed for that system in
+`LAUNCH_NODES` in `build-golden.sh` must show up in `ros2 node list`, every node in
+`LAUNCH_LIFECYCLE` must answer `ros2 lifecycle get` with `unconfigured`, and the launch log must
+contain no Traceback and no dead process. Systems that load composable nodes (`LAUNCH_NEEDS_CPP`)
+are launched in the cpp workspace only. When you add or change a `.rossystem` fixture, update
+those three tables.
+
+The `.rossystem` generator has no distribution parameter: its output is one tree per fixture, and
+launch-API differences between distributions would first need a `Ros2Target` threaded through
+`RosSystemGenerator`.

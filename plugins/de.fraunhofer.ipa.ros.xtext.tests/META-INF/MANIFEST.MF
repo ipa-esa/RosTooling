@@ -17,7 +17,8 @@ Require-Bundle: de.fraunhofer.ipa.ros.xtext,
  de.fraunhofer.ipa.ros1.xtext;bundle-version="2.0.0",
  de.fraunhofer.ipa.ros2.xtext;bundle-version="2.0.0",
  de.fraunhofer.ipa.ros2.distro;bundle-version="3.4.0",
- de.fraunhofer.ipa.rossystem;bundle-version="2.0.0"
+ de.fraunhofer.ipa.rossystem;bundle-version="2.0.0",
+ de.fraunhofer.ipa.rossystem.xtext;bundle-version="3.4.0"
 Import-Package: org.apache.log4j,
  org.junit;version="4.5.0",
  org.junit.runner;version="4.5.0",

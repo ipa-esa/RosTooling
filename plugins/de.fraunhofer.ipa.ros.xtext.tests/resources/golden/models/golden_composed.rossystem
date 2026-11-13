@@ -1,0 +1,11 @@
+golden_composed:
+  processes:
+    golden_container:
+      nodes: [ service_node, io_node ]
+      threads: 1
+  nodes:
+    service_node:
+      from: "golden_pkg.service_node"
+    io_node:
+      from: "golden_pkg.io_node"
+      namespace: "robot"

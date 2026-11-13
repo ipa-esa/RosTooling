@@ -4,16 +4,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -53,12 +49,6 @@ public class Ros2GoldenGenerationTest {
     private static final Path EXPECTED = Paths.get("resources", "golden", "expected", "ros2");
     private static final String PACKAGE_MODEL = "golden_pkg.ros2";
     private static final List<String> LANGUAGES = List.of("cpp", "python");
-    private static final String OUTPUT_PREFIX = "DEFAULT_OUTPUT";
-
-    static boolean updateRequested() {
-        return "1".equals(System.getenv("ROSTOOLING_UPDATE_GOLDEN"))
-                || Boolean.getBoolean("rostooling.updateGolden");
-    }
 
     static List<String> distros() {
         return Ros2Distros.names();
@@ -76,12 +66,12 @@ public class Ros2GoldenGenerationTest {
                 Resource model = loadFixture(injector);
                 InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
                 generator.generateTargeted(model, fsa, null, language, distro, List.of());
-                Map<String, String> actual = textFiles(fsa);
+                Map<String, String> actual = GoldenFiles.textFiles(fsa);
                 Path expectedRoot = EXPECTED.resolve(distro).resolve(language);
-                if (updateRequested()) {
-                    write(expectedRoot, actual);
+                if (GoldenFiles.updateRequested()) {
+                    GoldenFiles.write(expectedRoot, actual);
                 } else {
-                    compare(expectedRoot, actual, distro + "/" + language, mismatches);
+                    GoldenFiles.compare(expectedRoot, actual, distro + "/" + language, mismatches);
                 }
             }
         }
@@ -94,10 +84,10 @@ public class Ros2GoldenGenerationTest {
 
     private Resource loadFixture(Injector injector) throws IOException {
         XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
-        for (Path spec : listFiles(MESSAGES, ".ros")) {
+        for (Path spec : GoldenFiles.listFiles(MESSAGES, ".ros")) {
             resourceSet.getResource(URI.createFileURI(spec.toAbsolutePath().toString()), true);
         }
-        for (Path spec : listFiles(MODELS, ".ros")) {
+        for (Path spec : GoldenFiles.listFiles(MODELS, ".ros")) {
             resourceSet.getResource(URI.createFileURI(spec.toAbsolutePath().toString()), true);
         }
         Resource model = resourceSet.getResource(
@@ -110,61 +100,5 @@ public class Ros2GoldenGenerationTest {
                 .collect(Collectors.toList());
         assertTrue("Fixture " + PACKAGE_MODEL + " has errors: " + errors, errors.isEmpty());
         return model;
-    }
-
-    private static List<Path> listFiles(Path dir, String extension) throws IOException {
-        try (Stream<Path> files = Files.list(dir)) {
-            return files.filter(p -> p.toString().endsWith(extension)).sorted().collect(Collectors.toList());
-        }
-    }
-
-    private static Map<String, String> textFiles(InMemoryFileSystemAccess fsa) {
-        Map<String, String> files = new TreeMap<>();
-        fsa.getTextFiles().forEach((key, content) -> {
-            String path = key.startsWith(OUTPUT_PREFIX) ? key.substring(OUTPUT_PREFIX.length()) : key;
-            files.put(path.replaceFirst("^/", ""), content.toString());
-        });
-        return files;
-    }
-
-    private static void write(Path root, Map<String, String> files) throws IOException {
-        if (Files.exists(root)) {
-            try (Stream<Path> walk = Files.walk(root)) {
-                for (Path p : walk.sorted((a, b) -> b.compareTo(a)).collect(Collectors.toList())) {
-                    Files.delete(p);
-                }
-            }
-        }
-        for (Map.Entry<String, String> file : files.entrySet()) {
-            Path target = root.resolve(file.getKey());
-            Files.createDirectories(target.getParent());
-            Files.write(target, file.getValue().getBytes(StandardCharsets.UTF_8));
-        }
-    }
-
-    private static void compare(Path root, Map<String, String> actual, String label, List<String> mismatches)
-            throws IOException {
-        Map<String, String> expected = new TreeMap<>();
-        if (Files.exists(root)) {
-            try (Stream<Path> walk = Files.walk(root)) {
-                for (Path p : walk.filter(Files::isRegularFile).collect(Collectors.toList())) {
-                    expected.put(root.relativize(p).toString().replace('\\', '/'),
-                            new String(Files.readAllBytes(p), StandardCharsets.UTF_8));
-                }
-            }
-        }
-        for (Map.Entry<String, String> file : actual.entrySet()) {
-            String want = expected.get(file.getKey());
-            if (want == null) {
-                mismatches.add(label + ": unexpected new file " + file.getKey());
-            } else if (!want.equals(file.getValue())) {
-                mismatches.add(label + ": content differs in " + file.getKey());
-            }
-        }
-        for (String path : expected.keySet()) {
-            if (!actual.containsKey(path)) {
-                mismatches.add(label + ": file no longer generated " + path);
-            }
-        }
     }
 }

@@ -30,6 +30,11 @@ class LaunchFileCompiler_ROS2 {
     @Inject extension GeneratorHelpers
 
 
+    /**
+     * ROS 2 launch file of a system. launch_ros' LifecycleNode takes {@code namespace} as a
+     * required keyword argument on every supported distribution, so lifecycle nodes always get
+     * one ({@code ""} when the model sets none); plain Node and ComposableNode keep it optional.
+     */
     def compile_toROS2launch(System system) '''
 «IF YamlFileGenerated(system)»import os«ENDIF»
 from launch import LaunchDescription
@@ -102,7 +107,8 @@ def generate_launch_description():
   «IF !component.namespace.nullOrEmpty»«GeneratorHelpers.removeLeadingSlash(component.namespace)»_«(component as RosNode).name» = «actionClass»(«ELSE»
   «(component as RosNode).name» = «actionClass»(«ENDIF»
     package="«((component as RosNode).from.eContainer.eContainer as AmentPackageImpl).name»",«IF !component.namespace.nullOrEmpty»
-    namespace="«component.namespace»",«ENDIF»
+    namespace="«component.namespace»",«ELSEIF isLc»
+    namespace="",«ENDIF»
     executable="«((component as RosNode).from.eContainer as Artifact).name»",
     output='screen',
     name="«(component as RosNode).name»"«compile_remappings_str(component as RosNode, system.connections)»«IF !component.rosparameters.nullOrEmpty»«IF generate_yaml(component)»,
