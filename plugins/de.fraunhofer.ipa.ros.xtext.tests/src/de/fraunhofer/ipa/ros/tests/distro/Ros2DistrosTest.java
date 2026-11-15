@@ -114,6 +114,14 @@ public class Ros2DistrosTest {
                 .map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
         assertEquals("distro-matrix.yml matrix", Ros2Distros.names(), ciDistros);
 
+        String readme = Files.readString(Paths.get("..", "..", "README.md"));
+        Matcher badge = Pattern.compile("%2Fbadges%2F([a-z]+)\\.json").matcher(readme);
+        List<String> badgeDistros = new ArrayList<>();
+        while (badge.find()) {
+            badgeDistros.add(badge.group(1));
+        }
+        assertEquals("status badges in README.md", Ros2Distros.names(), badgeDistros);
+
         Path golden = Paths.get("resources", "golden", "expected", "ros2");
         try (Stream<Path> dirs = Files.list(golden)) {
             Set<String> goldenDistros = dirs.filter(Files::isDirectory)

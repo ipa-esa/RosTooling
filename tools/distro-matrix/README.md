@@ -38,7 +38,16 @@ to the extension and to agents.
 4. For each failure: change a value, flip a variant, or add a variant (enum constant + dialect
    `case`; the compiler lists every switch that must handle it). Repeat 2–3 until green.
 5. Review the golden diff between the previous distribution and the new one, add the distribution to
-   the CI matrix (`.github/workflows/distro-matrix.yml`), commit.
+   the CI matrix (`.github/workflows/distro-matrix.yml`) and a row to the status table in the
+   top-level `README.md`, commit.
+
+## Status badges
+
+Every distribution has its own badge in the top-level README. Each matrix job turns its build
+step's outcome into a shields.io JSON file (`badge-json.sh`); after the matrix, the `publish-badges`
+job pushes these files to the `badges` branch, on the default branch only (pushes, the weekly run,
+or *Run workflow* by hand). Passing is green, failing red (rolling too, although it may fail),
+cancelled grey; a job that broke before building shows a red `error`.
 
 Retiring a distribution: remove it from `ALL`, delete its golden directory, then inline the
 variants the registry test reports.
