@@ -5,6 +5,44 @@ All notable changes to the **RosTooling** model and generator plugins will be do
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0] - 2026-11-16
+
+### Added
+- **ROS 2 Distribution Registry (`de.fraunhofer.ipa.ros2.distro`, new bundle)**:
+  - Added `Ros2Distros` as the single list of supported distributions (Humble, Jazzy, Kilted, Lyrical, Rolling); each entry derives from its predecessor and overrides only what changed. `auto` resolves to `$ROS_DISTRO`, else the newest LTS; unknown names are rejected with the supported list.
+  - Added `Ros2Distro` values (C++ standard, CMake minimum), variants (`ServiceQosArgument`, `RateImplementation`) and status, taken from the official `ros:<distro>` images.
+  - Added `CppDialect`, `CMakeDialect` and `Ros2Target` as the only code that turns a distribution into generated code fragments.
+- **Distribution-Aware `.ros2` Code Generation**:
+  - The C++/Python wrapper, runner and build-file templates take a `Ros2Target` and get distribution-specific fragments from the dialects: service QoS (`rmw_qos_profile_services_default` on Humble, `rclcpp::ServicesQoS()` from Jazzy), loop rate (`Clock::sleep_until` on Humble, which has no `rclcpp::Rate(hz, clock)`), and `cmake_minimum_required` / `CMAKE_CXX_STANDARD`.
+  - `Ros2GeneratorCommandService` resolves the requested distribution up front (`auto` by default), reports the one it used and returns the supported names for an unknown one. Added the LSP command `ros2.listDistros`.
+- **Receiver-Driven Auto-Connect over GLSP (`RosAutoConnector`)**:
+  - Added `requestRosAutoConnect` / `setRosAutoConnect`: candidate connections by compatibility (complementary kinds, equal resolved types), grouped by receiver port, ranked `remap` > `directed-remap` > `contract` > `fuzzy` > `type-unique` > `type-ambiguous`, with at most one preselection per receiver, an emitter fan-out summary, already-connected receivers, skipped items and an optional verdict for a proposed selection.
+  - Added `applyRosAutoConnect { selected }`, which recomputes the candidates and applies them in one `ChangeCommand` (one undo step). A service/action client with more than one selected server gets none; a topic subscriber takes every selected publisher; stale ids are rejected.
+  - Endpoints include interfaces declared inside subsystems (recursively); undeclared subsystem interfaces are reported as skipped.
+- **Golden-File Tests and Distribution Build Matrix**:
+  - Re-enabled `de.fraunhofer.ipa.ros.xtext.tests` in the parent build. Added `Ros2GoldenGenerationTest` (every distribution, C++ and Python), `RosSystemGoldenGenerationTest` and `Ros2DistrosTest` (registry consistency with the CI matrix, golden folders and README badges); `ROSTOOLING_UPDATE_GOLDEN=1` rewrites the expected files.
+  - Added the `distro-matrix` workflow and `tools/distro-matrix/build-golden.sh`, which build the golden packages in `ros:<distro>` with deprecations as errors, start every executable and launch the system packages. One status badge per distribution is shown in the README.
+
+### Changed
+- **Generated Build Files**:
+  - `target_link_libraries(... ${pkg_TARGETS})` replaces `ament_target_dependencies` (deprecated in Kilted, removed in Lyrical and Rolling); `setup.py` uses `extras_require` instead of `tests_require`.
+  - Generated `.rossystem` system packages and `.ros2` packages from Kilted on require CMake 3.20 (CMake 4 rejects older minimums).
+- **Default Target Distribution**:
+  - Without `$ROS_DISTRO`, generation now targets the newest LTS (Jazzy) instead of Humble. Set `ROS_DISTRO=humble` or pass the distribution explicitly to keep Humble output.
+- **GLSP Server Packaging**:
+  - `de.fraunhofer.ipa.ros.glsp` is now a module of the parent reactor and is published to GitHub Packages with the other bundles. Dependencies Tycho injects into the reactor bundles are excluded, because signed p2 jars next to the Maven Central ones broke class loading.
+  - The `de.fraunhofer.ipa.ros.xtext.tests` bundle is built and tested in CI but not published.
+
+### Fixed
+- **Lifecycle Nodes in ROS 2 Launch Files**:
+  - `LaunchFileCompiler_ROS2` always passes `namespace=` to `LifecycleNode` (empty when the model sets none); launch files previously failed with a `TypeError` on every supported distribution.
+- **Connections into Subsystems**:
+  - Subsystem interfaces resolve by scoped port id or qualified path (`sub::[...::]node::iface`) without editing other files, and new connections are written with that qualified reference, so manual wiring into subsystems now works.
+- **Phantom Interfaces in Saved Models**:
+  - `RosAstNodeModelSerializer` writes an interface that is not yet in the file only when a connection uses it, so interfaces synthesized in memory by the rossystem scope provider and validator no longer leak into the file on unrelated edits.
+- **Lifecycle Generation Test**:
+  - Fixed `Ros2ParsingTest.testLifecycleCppCodeGeneration`, which looked for the lifecycle overrides in the runner instead of the node header.
+
 ## [3.4.0] - 2026-11-13
 
 ### Added
