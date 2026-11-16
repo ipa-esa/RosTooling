@@ -1,0 +1,123 @@
+name: ROS 2 distro matrix
+
+# Builds and smoke-tests the stored golden packages of the .ros2 generator on every supported
+# ROS 2 distribution. The golden files are produced (and kept in sync with the templates) by
+# Ros2GoldenGenerationTest in the main build; see tools/distro-matrix/README.md.
+#
+# Runs on the default branch also publish one status badge per distribution to the `badges`
+# branch (shown in the top-level README). The workflow's own badge cannot be used for that: it
+# covers the whole matrix and stays green when rolling fails, because rolling may fail.
+
+on:
+  push:
+    paths:
+      - 'plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/golden/**'
+      - 'tools/distro-matrix/**'
+      - '.github/workflows/distro-matrix.yml'
+  pull_request:
+    paths:
+      - 'plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/golden/**'
+      - 'tools/distro-matrix/**'
+      - '.github/workflows/distro-matrix.yml'
+  schedule:
+    - cron: '0 3 * * 1'   # weekly, to catch Rolling changes
+  workflow_dispatch:      # refresh the badges by hand
+
+permissions:
+  contents: read
+
+jobs:
+  golden-build:
+    name: ${{ matrix.distro }}
+    runs-on: ubuntu-latest
+    container: ros:${{ matrix.distro }}
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [humble, jazzy, kilted, lyrical, rolling]
+    continue-on-error: ${{ matrix.distro == 'rolling' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build and smoke-test golden packages
+        id: build
+        shell: bash
+        env:
+          IN_CONTAINER: '1'
+        run: tools/distro-matrix/build-golden.sh ${{ matrix.distro }}
+      # The badge takes the build step's own outcome. The job result is no use here: with
+      # continue-on-error it reports success for a failed rolling build.
+      - name: Record badge
+        if: always()
+        shell: bash
+        env:
+          DISTRO: ${{ matrix.distro }}
+          OUTCOME: ${{ steps.build.outcome }}
+        run: |
+          mkdir -p badge
+          if [ -x tools/distro-matrix/badge-json.sh ]; then
+            tools/distro-matrix/badge-json.sh "$DISTRO" "${OUTCOME:-missing}" > "badge/$DISTRO.json"
+          fi
+      - name: Upload badge
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: badge-${{ matrix.distro }}
+          path: badge/${{ matrix.distro }}.json
+          if-no-files-found: ignore
+          retention-days: 1
+
+  publish-badges:
+    name: Publish badges
+    needs: golden-build
+    # Also after failures and cancellations, so a stale green badge is always replaced.
+    if: >-
+      always() &&
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+      (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: distro-matrix-badges
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download badges
+        uses: actions/download-artifact@v4
+        with:
+          pattern: badge-*
+          merge-multiple: true
+          path: badge
+      - name: Fill in missing badges
+        shell: bash
+        env:
+          MATRIX_RESULT: ${{ needs.golden-build.result }}
+        run: |
+          # A job that never got to its badge step was cancelled or broke while starting up.
+          if [ "$MATRIX_RESULT" = cancelled ]; then missing=cancelled; else missing=missing; fi
+          distros=$(sed -n 's/^ *distro: *\[\(.*\)\].*/\1/p' .github/workflows/distro-matrix.yml | tr -d ' ' | tr ',' ' ')
+          mkdir -p badge
+          for d in $distros; do
+            [ -f "badge/$d.json" ] || tools/distro-matrix/badge-json.sh "$d" "$missing" > "badge/$d.json"
+          done
+          cat badge/*.json
+      - name: Push to the badges branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if ! git clone --quiet --depth 1 --branch badges "$remote" site; then
+            git init --quiet -b badges site
+            git -C site remote add origin "$remote"
+          fi
+          cp badge/*.json site/
+          cd site
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          if git diff --cached --quiet; then echo "badges unchanged"; exit 0; fi
+          git commit --quiet -m "Distro matrix badges from run ${GITHUB_RUN_ID}"
+          git push --quiet origin HEAD:badges

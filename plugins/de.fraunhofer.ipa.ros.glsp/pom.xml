@@ -146,6 +146,17 @@
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.ipa.ros</groupId>
+            <artifactId>de.fraunhofer.ipa.ros2.distro</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.fraunhofer.ipa.ros</groupId>
             <artifactId>de.fraunhofer.ipa.ros2.xtext</artifactId>
             <version>${project.version}</version>
             <!-- In the reactor Tycho injects the bundle's whole p2 closure into its pom. Signed p2 jars

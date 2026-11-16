@@ -19,6 +19,8 @@ import de.fraunhofer.ipa.ros2.generator.Ros2CppWrapperCompiler
 import de.fraunhofer.ipa.ros2.generator.Ros2CppRunnerCompiler
 import de.fraunhofer.ipa.ros2.generator.Ros2PythonWrapperCompiler
 import de.fraunhofer.ipa.ros2.generator.Ros2BuildArtifactsCompiler
+import de.fraunhofer.ipa.ros2.distro.Ros2Distros
+import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target
 
 @RunWith(XtextRunner)
 @InjectWith(Ros2InjectorProvider)
@@ -151,7 +153,7 @@ class Ros2ParsingTest {
         Assert.assertTrue(header.contains('pub_image_out_;'))
 
         // 2. Source assertions
-        val source = cppWrapperCompiler.compileSource(model, node)
+        val source = cppWrapperCompiler.compileSource(model, node, Ros2Target.of(Ros2Distros.get("jazzy")))
         Assert.assertTrue(source.contains(': rclcpp_lifecycle::LifecycleNode("lifecycle_node", options)'))
         Assert.assertTrue(source.contains('pub_image_out_->on_activate();'))
         Assert.assertTrue(source.contains('pub_image_out_->on_deactivate();'))
@@ -163,16 +165,18 @@ class Ros2ParsingTest {
         Assert.assertTrue(algo.contains('virtual bool on_deactivate()'))
 
         // 4. Runner assertions
+        // Lifecycle transitions are forwarded to the algorithm in the generated *Node.hpp
+        val nodeHeader = cppRunnerCompiler.compileCppNodeHeader(model, node, Ros2Target.of(Ros2Distros.get("jazzy")))
+        Assert.assertTrue(nodeHeader.contains('CallbackReturn on_configure(const rclcpp_lifecycle::State & state) override'))
+        Assert.assertTrue(nodeHeader.contains('algorithm_->on_configure()'))
         val runner = cppRunnerCompiler.compileCppRunner(model, node)
-        Assert.assertTrue(runner.contains('CallbackReturn on_configure(const rclcpp_lifecycle::State & state) override'))
-        Assert.assertTrue(runner.contains('algorithm_->on_configure()'))
         Assert.assertTrue(runner.contains('rclcpp::spin(node->get_node_base_interface());'))
 
         // 5. Build artifact assertions
-        val pkgXml = buildArtifactsCompiler.compilePackageXml(model, #[node], #[], "humble")
+        val pkgXml = buildArtifactsCompiler.compilePackageXml(model, #[node], #[])
         Assert.assertTrue(pkgXml.contains('<depend>rclcpp_lifecycle</depend>'))
 
-        val cmake = buildArtifactsCompiler.compileCMakeLists(model, #[node], #[], "humble")
+        val cmake = buildArtifactsCompiler.compileCMakeLists(model, #[node], #[], Ros2Target.of(Ros2Distros.get("humble")))
         Assert.assertTrue(cmake.contains('find_package(rclcpp_lifecycle REQUIRED)'))
         Assert.assertTrue(cmake.contains('rclcpp_lifecycle'))
     }

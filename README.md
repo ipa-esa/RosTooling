@@ -14,6 +14,17 @@ The models have associated tools, the following are some examples:
 - [Graphical editor](https://github.com/ipa-esa/RosTooling_Extension.git) (external)
 - [Agentic studio](https://github.com/Mohamedgalil/ipa-rostooling-studio.git) (external)
 
+Generated ROS 2 code, built and smoke-tested in the official `ros:<distro>` images
+([distro matrix](https://github.com/ipa-esa/RosTooling/actions/workflows/distro-matrix.yml), see [tools/distro-matrix](tools/distro-matrix/README.md)):
+
+| Distribution | Status |
+|---|---|
+| Humble | [![humble](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fipa-esa%2FRosTooling%2Fbadges%2Fhumble.json)](https://github.com/ipa-esa/RosTooling/actions/workflows/distro-matrix.yml) |
+| Jazzy | [![jazzy](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fipa-esa%2FRosTooling%2Fbadges%2Fjazzy.json)](https://github.com/ipa-esa/RosTooling/actions/workflows/distro-matrix.yml) |
+| Kilted | [![kilted](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fipa-esa%2FRosTooling%2Fbadges%2Fkilted.json)](https://github.com/ipa-esa/RosTooling/actions/workflows/distro-matrix.yml) |
+| Lyrical | [![lyrical](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fipa-esa%2FRosTooling%2Fbadges%2Flyrical.json)](https://github.com/ipa-esa/RosTooling/actions/workflows/distro-matrix.yml) |
+| Rolling (allowed to fail) | [![rolling](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fipa-esa%2FRosTooling%2Fbadges%2Frolling.json)](https://github.com/ipa-esa/RosTooling/actions/workflows/distro-matrix.yml) |
+
 Technical Maintainer: [**ipa-nhg**](https://github.com/ipa-nhg/) (**Nadia Hammoudeh Garcia**, **Fraunhofer IPA**) - **nadia.hammoudeh.garcia@ipa.fraunhofer.de**
 
 The **documentation** of the RosTooling is available under [https://ipa320.github.io/RosTooling.github.io/](https://ipa320.github.io/RosTooling.github.io/).

@@ -1,0 +1,4 @@
+io_node:
+  ros__parameters:
+    rate_hz: 20.0
+

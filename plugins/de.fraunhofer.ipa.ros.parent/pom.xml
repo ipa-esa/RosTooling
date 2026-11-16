@@ -34,6 +34,7 @@
         <module>../de.fraunhofer.ipa.ros1.xtext</module>
         <module>../de.fraunhofer.ipa.ros1.xtext.ide</module>
         <module>../de.fraunhofer.ipa.ros1.xtext.ui</module>
+        <module>../de.fraunhofer.ipa.ros2.distro</module>
         <module>../de.fraunhofer.ipa.ros2.xtext</module>
         <module>../de.fraunhofer.ipa.ros2.xtext.ide</module>
         <module>../de.fraunhofer.ipa.ros2.xtext.ui</module>
@@ -43,7 +44,7 @@
         <!--module>../de.fraunhofer.ipa.rossystem.model.combination</module-->
         <!--module>../de.fraunhofer.ipa.ros.model.spec.check</module-->
         <!--module>../de.fraunhofer.ipa.ros.observer.generator</module-->
-        <!--module>../de.fraunhofer.ipa.ros.xtext.tests</module-->
+        <module>../de.fraunhofer.ipa.ros.xtext.tests</module>
 
         <module>../de.fraunhofer.ipa.rossystem</module>
         <module>../de.fraunhofer.ipa.rossystem.xtext</module>

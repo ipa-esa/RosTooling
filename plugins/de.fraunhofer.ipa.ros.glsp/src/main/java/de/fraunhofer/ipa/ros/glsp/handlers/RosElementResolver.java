@@ -273,6 +273,23 @@ public final class RosElementResolver {
         }
         Resource res = modelState.getSemanticResource();
 
+        // Case 0a: scoped diagram id of an element inside a subsystem ("<subsystem id>::<fragment>").
+        // Interfaces of other files are only resolved, never created: an inherited port there would
+        // need an edit of the subsystem's own file.
+        if (portIdentifier.contains(de.fraunhofer.ipa.ros.glsp.model.RosGModelFactory.SCOPE_SEPARATOR + "/")) {
+            if (portIdentifier.contains("__port__")) {
+                return Optional.empty();
+            }
+            return findByIdOrName(modelState, portIdentifier)
+                    .filter(RosInterface.class::isInstance)
+                    .map(RosInterface.class::cast);
+        }
+
+        // Case 0b: qualified path "node::iface" or "sub::[...::]node::iface" (RosSystemScopeProvider names)
+        if (portIdentifier.contains("::")) {
+            return resolveQualifiedInterface(sys, res, portIdentifier);
+        }
+
         // Case 1: Synthetic inherited port ID "<nodeId>__port__<kind>__<originName>"
         int markerIdx = portIdentifier.indexOf("__port__");
         if (markerIdx > 0) {
@@ -331,6 +348,120 @@ public final class RosElementResolver {
             }
         }
         return Optional.empty();
+    }
+
+    /**
+     * Resolves {@code node::iface} on the system's own nodes (promoting an inherited port if needed)
+     * or {@code sub::[...::]node::iface} inside subsystems (existing interfaces only).
+     */
+    static Optional<RosInterface> resolveQualifiedInterface(final system.System sys, final Resource res,
+            final String qualified) {
+        String[] parts = qualified.replace("\"", "").split("::");
+        if (parts.length < 2) {
+            return Optional.empty();
+        }
+        String ifaceName = parts[parts.length - 1];
+        String nodeName = parts[parts.length - 2];
+        if (parts.length == 2) {
+            Optional<RosNode> rn = findRosNode(sys, res, nodeName);
+            if (rn.isEmpty()) {
+                return Optional.empty();
+            }
+            for (RosInterface ri : rn.get().getRosinterfaces()) {
+                if (ifaceName.equals(ri.getName())) {
+                    return Optional.of(ri);
+                }
+            }
+            return Optional.ofNullable(getOrCreateInterfaceOnNode(rn.get(), ifaceName, ifaceName, null));
+        }
+        system.System current = sys;
+        for (int i = 0; i < parts.length - 2 && current != null; i++) {
+            system.System next = null;
+            for (Component comp : current.getComponents()) {
+                if (comp instanceof system.SubSystem sub) {
+                    system.System ref = referencedSystem(sub, sys);
+                    if (ref != null && parts[i].equals(ref.getName())) {
+                        next = ref;
+                        break;
+                    }
+                }
+            }
+            current = next;
+        }
+        if (current == null) {
+            return Optional.empty();
+        }
+        for (Component comp : current.getComponents()) {
+            if (comp instanceof RosNode rn && nodeName.equals(rn.getName())) {
+                for (RosInterface ri : rn.getRosinterfaces()) {
+                    if (ifaceName.equals(ri.getName())) {
+                        return Optional.of(ri);
+                    }
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    /** The system a SubSystem component references, resolved against {@code context}. */
+    public static system.System referencedSystem(final system.SubSystem sub, final EObject context) {
+        system.System ref = sub.getSystem();
+        if (ref != null && ref.eIsProxy()) {
+            EObject resolved = EcoreUtil.resolve(ref, context);
+            ref = resolved instanceof system.System s ? s : null;
+        }
+        return ref == null || ref.eIsProxy() ? null : ref;
+    }
+
+    /**
+     * Names of the subsystems from {@code root} down to {@code target} (the referenced systems'
+     * names, as RosSystemScopeProvider uses them), or null when {@code target} is not reachable.
+     */
+    public static List<String> subsystemPath(final system.System root, final system.System target) {
+        return subsystemPath(root, target, new java.util.HashSet<>());
+    }
+
+    private static List<String> subsystemPath(final system.System current, final system.System target,
+            final java.util.Set<system.System> visited) {
+        if (current == null || !visited.add(current)) {
+            return null;
+        }
+        for (Component comp : current.getComponents()) {
+            if (comp instanceof system.SubSystem sub) {
+                system.System ref = referencedSystem(sub, current);
+                if (ref == null) {
+                    continue;
+                }
+                if (ref == target) {
+                    return new java.util.ArrayList<>(List.of(String.valueOf(ref.getName())));
+                }
+                List<String> rest = subsystemPath(ref, target, visited);
+                if (rest != null) {
+                    rest.add(0, String.valueOf(ref.getName()));
+                    return rest;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Reference to {@code ri} from connections of {@code root}: {@code node::iface} for the root's
+     * own nodes, {@code sub::[...::]node::iface} for nodes inside subsystems.
+     */
+    public static String qualifiedRef(final system.System root, final RosInterface ri) {
+        if (ri == null) {
+            return "";
+        }
+        if (!(ri.eContainer() instanceof RosNode rn) || rn.getName() == null) {
+            return String.valueOf(ri.getName());
+        }
+        String local = rn.getName() + "::" + ri.getName();
+        if (root == null || !(rn.eContainer() instanceof system.System owner) || owner == root) {
+            return local;
+        }
+        List<String> path = subsystemPath(root, owner);
+        return path == null ? local : String.join("::", path) + "::" + local;
     }
 
     public static RosInterface getOrCreateInterfaceOnNode(
@@ -468,9 +599,41 @@ public final class RosElementResolver {
         return null;
     }
 
+    /** The message/service/action spec of an origin interface (ros.Publisher, ros.ServiceServer, ...). */
+    public static SpecBase getOriginSpec(final EObject origin) {
+        if (origin == null || origin.eIsProxy()) {
+            return null;
+        }
+        if (origin instanceof Publisher p) return p.getMessage();
+        if (origin instanceof Subscriber s) return s.getMessage();
+        if (origin instanceof ServiceServer ss) return ss.getService();
+        if (origin instanceof ServiceClient sc) return sc.getService();
+        if (origin instanceof ActionServer as) return as.getAction();
+        if (origin instanceof ActionClient ac) return ac.getAction();
+        return null;
+    }
+
+    /** The origin interface a RosInterface refers to (ros.Publisher, ros.ServiceServer, ...), or null. */
+    public static EObject getOriginInterface(final RosInterface ri) {
+        InterfaceReference ref = ri == null ? null : ri.getReference();
+        if (ref instanceof RosPublisherReference r) return r.getFrom();
+        if (ref instanceof RosSubscriberReference r) return r.getFrom();
+        if (ref instanceof RosServiceServerReference r) return r.getFrom();
+        if (ref instanceof RosServiceClientReference r) return r.getFrom();
+        if (ref instanceof RosActionServerReference r) return r.getFrom();
+        if (ref instanceof RosActionClientReference r) return r.getFrom();
+        return null;
+    }
+
     public static boolean areCompatibleInterfaces(final RosInterface first, final RosInterface second) {
-        String t1 = getPortType(first);
-        String t2 = getPortType(second);
+        return areCompatible(getPortType(first), getSpecBase(first), getPortType(second), getSpecBase(second));
+    }
+
+    /**
+     * Port compatibility on kinds and specs, usable for interfaces that are only inherited from the
+     * origin node (no RosInterface yet): complementary kinds and, when both are resolved, the same spec.
+     */
+    public static boolean areCompatible(final String t1, final SpecBase s1, final String t2, final SpecBase s2) {
         if (t1 == null || t2 == null) {
             return false;
         }
@@ -478,8 +641,6 @@ public final class RosElementResolver {
         if (!t2.equals(expectedComplement)) {
             return false;
         }
-        SpecBase s1 = getSpecBase(first);
-        SpecBase s2 = getSpecBase(second);
         if (s1 != null && !s1.eIsProxy() && s2 != null && !s2.eIsProxy()) {
             String f1 = s1.getFullname();
             String f2 = s2.getFullname();

@@ -1,0 +1,36 @@
+@startuml
+
+/'SUBSYSTEMS'/
+
+  component service_node {
+
+/' PORTS DEFINED AS AVAILABLE IN THE ROSSYSTEM FILE '/
+    portout service_node.heartbeat as "heartbeat" #blue
+
+/' PORTS FROM THE ORIGINAL NODE '/
+  }
+
+  component monitor {
+
+/' PORTS DEFINED AS AVAILABLE IN THE ROSSYSTEM FILE '/
+
+/' PORTS FROM THE ORIGINAL NODE '/
+  }
+
+  component io_node {
+
+/' PORTS DEFINED AS AVAILABLE IN THE ROSSYSTEM FILE '/
+    portout io_node.status as "status" #blue
+
+/' PORTS FROM THE ORIGINAL NODE '/
+  }
+
+  component action_node {
+
+/' PORTS DEFINED AS AVAILABLE IN THE ROSSYSTEM FILE '/
+
+/' PORTS FROM THE ORIGINAL NODE '/
+  }
+
+
+@enduml

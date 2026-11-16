@@ -8,6 +8,8 @@ import ros.ExternalDependency
 import java.util.List
 import java.util.Set
 import java.util.HashSet
+import java.util.LinkedHashSet
+import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target
 
 class Ros2BuildArtifactsCompiler {
 
@@ -41,7 +43,7 @@ class Ros2BuildArtifactsCompiler {
         return false
     }
 
-    def String compilePackageXml(Package pkg, List<Node> cppNodes, List<Node> pythonNodes, String distro) {
+    def String compilePackageXml(Package pkg, List<Node> cppNodes, List<Node> pythonNodes) {
         val isHybrid = !cppNodes.empty && !pythonNodes.empty
         val isPurePython = cppNodes.empty && !pythonNodes.empty
         val allNodes = new java.util.ArrayList<Node>()
@@ -103,7 +105,18 @@ class Ros2BuildArtifactsCompiler {
 '''
     }
 
-    def String compileCMakeLists(Package pkg, List<Node> cppNodes, List<Node> pythonNodes, String distro) {
+    /** rclcpp packages plus the node's interface packages, in a stable order, for linking. */
+    def List<String> componentLinkPackages(Node node) {
+        val pkgs = new LinkedHashSet<String>()
+        pkgs.add("rclcpp")
+        pkgs.add("rclcpp_components")
+        if (node.isLifecycle) pkgs.add("rclcpp_lifecycle")
+        if (node.hasActions) pkgs.add("rclcpp_action")
+        pkgs.addAll(node.dependencies)
+        return pkgs.toList
+    }
+
+    def String compileCMakeLists(Package pkg, List<Node> cppNodes, List<Node> pythonNodes, Ros2Target target) {
         val isHybrid = !cppNodes.empty && !pythonNodes.empty
         val allNodes = new java.util.ArrayList<Node>()
         allNodes.addAll(cppNodes)
@@ -111,17 +124,12 @@ class Ros2BuildArtifactsCompiler {
         val deps = getAllDependencies(allNodes)
         val hasActions = hasAnyActions(allNodes)
         val hasLifecycle = hasLifecycle(cppNodes)
-        val isJazzyOrRolling = "jazzy".equalsIgnoreCase(distro) || "rolling".equalsIgnoreCase(distro)
 
         return '''
-cmake_minimum_required(VERSION 3.8)
+«target.cmake.minimumRequired»
 project(«pkg.name.toLowerCase»)
 
-«IF isJazzyOrRolling»
-set(CMAKE_CXX_STANDARD 20)
-«ELSE»
-set(CMAKE_CXX_STANDARD 17)
-«ENDIF»
+«target.cmake.cxxStandard»
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -157,15 +165,7 @@ target_include_directories(«artCamel»_component PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
-ament_target_dependencies(«artCamel»_component
-  rclcpp
-  rclcpp_components
-  «IF node.isLifecycle»rclcpp_lifecycle«ENDIF»
-  «IF node.hasActions»rclcpp_action«ENDIF»
-  «FOR dep : node.dependencies»
-  «dep»
-  «ENDFOR»
-)
+«target.cmake.linkPackages(artCamel + "_component", "PUBLIC", componentLinkPackages(node))»
 rclcpp_components_register_nodes(«artCamel»_component "«pkg.name.toLowerCase»::«artCamel»Node")
 
 # -----------------------------------------------------------------------------
@@ -174,12 +174,8 @@ rclcpp_components_register_nodes(«artCamel»_component "«pkg.name.toLowerCase�
 add_executable(«node.artifactName»
   src/«artCamel»Runner.cpp
 )
-target_link_libraries(«node.artifactName»
+target_link_libraries(«node.artifactName» PRIVATE
   «artCamel»_component
-)
-ament_target_dependencies(«node.artifactName»
-  rclcpp
-  «IF node.isLifecycle»rclcpp_lifecycle«ENDIF»
 )
 «ENDFOR»
 
@@ -255,7 +251,9 @@ setup(
     maintainer_email='user@todo.todo',
     description='ROS 2 package «pkg.name» with generated Python node wrappers',
     license='Apache-2.0',
-    tests_require=['pytest'],
+    extras_require={
+        'test': ['pytest'],
+    },
     entry_points={
         'console_scripts': [
             «FOR node : pythonNodes»

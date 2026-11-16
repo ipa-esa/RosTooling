@@ -90,6 +90,7 @@ public class RosGlspModule extends EMFDiagramModule {
         super.configureActionHandlers(binding);
         binding.add(RequestRosIndexActionHandler.class);
         binding.add(RequestRosTextEditsActionHandler.class);
+        binding.add(de.fraunhofer.ipa.ros.glsp.handlers.RequestRosAutoConnectActionHandler.class);
     }
 
     @Override
@@ -103,6 +104,7 @@ public class RosGlspModule extends EMFDiagramModule {
         binding.add(ToggleSubSystemOperationHandler.class);
         binding.add(ChangeBoundsOperationHandler.class);
         binding.add(IgnoreRoutingPointsOperationHandler.class);
+        binding.add(de.fraunhofer.ipa.ros.glsp.handlers.ApplyRosAutoConnectOperationHandler.class);
     }
 
     @Override
