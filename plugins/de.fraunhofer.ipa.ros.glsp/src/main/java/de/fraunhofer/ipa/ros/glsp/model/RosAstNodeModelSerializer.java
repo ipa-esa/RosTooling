@@ -399,13 +399,19 @@ public final class RosAstNodeModelSerializer {
             }
         }
 
-        // Check existing RosInterfaces & collect new RosInterfaces
+        // Check existing RosInterfaces & collect new RosInterfaces. A new interface is only written
+        // when a connection uses it: GLSP creates interfaces solely to connect inherited ports, while
+        // the rossystem scope provider and validator (getAllInterfaces) synthesize interfaces for
+        // nodes without an interfaces: block during linking/validation, which must not reach the text.
+        Set<RosInterface> connected = connectedInterfaces(rosNode);
         List<RosInterface> newInterfaces = new ArrayList<>();
         ICompositeNode lastExistingIfComp = null;
         for (RosInterface ri : rosNode.getRosinterfaces()) {
             ICompositeNode ifComp = NodeModelUtils.findActualNodeFor(ri);
             if (ifComp == null) {
-                newInterfaces.add(ri);
+                if (connected.contains(ri)) {
+                    newInterfaces.add(ri);
+                }
             } else {
                 lastExistingIfComp = ifComp;
                 checkFeatureTokenEdit(ri, RossystemPackage.Literals.ROS_INTERFACE__NAME, ri.getName(), false, text, edits);
@@ -692,16 +698,30 @@ public final class RosAstNodeModelSerializer {
      * the same interface names - cannot make the reference ambiguous.
      */
     static String connectionLine(final RosSystemConnection sc) {
-        return "    - [ " + quote(connectionRef(sc.getFrom())) + " , " + quote(connectionRef(sc.getTo())) + " ]\n";
+        system.System root = sc.eContainer() instanceof system.System s ? s : null;
+        return "    - [ " + quote(connectionRef(root, sc.getFrom())) + " , " + quote(connectionRef(root, sc.getTo())) + " ]\n";
     }
 
-    static String connectionRef(final RosInterface ri) {
-        if (ri == null) {
-            return "";
+    /** Interfaces of {@code rosNode} used as an endpoint by a connection of its system. */
+    private static Set<RosInterface> connectedInterfaces(final RosNode rosNode) {
+        Set<RosInterface> out = java.util.Collections.newSetFromMap(new IdentityHashMap<>());
+        if (rosNode.eContainer() instanceof system.System sys) {
+            for (system.Connection c : sys.getConnections()) {
+                if (c instanceof RosSystemConnection sc) {
+                    if (sc.getFrom() != null && sc.getFrom().eContainer() == rosNode) out.add(sc.getFrom());
+                    if (sc.getTo() != null && sc.getTo().eContainer() == rosNode) out.add(sc.getTo());
+                }
+            }
         }
-        return ri.eContainer() instanceof RosNode rn && rn.getName() != null
-                ? rn.getName() + "::" + ri.getName()
-                : ri.getName();
+        return out;
+    }
+
+    /**
+     * {@code node::iface} for the system's own nodes, {@code sub::[...::]node::iface} for interfaces
+     * of nodes inside subsystems (RosSystemScopeProvider's qualified names).
+     */
+    static String connectionRef(final system.System root, final RosInterface ri) {
+        return de.fraunhofer.ipa.ros.glsp.handlers.RosElementResolver.qualifiedRef(root, ri);
     }
 
     private static String quote(final String s) {
@@ -864,9 +884,17 @@ public final class RosAstNodeModelSerializer {
         if (rn.getNamespace() != null && !rn.getNamespace().isEmpty()) {
             sb.append(indent).append("  namespace: \"").append(rn.getNamespace()).append("\"\n");
         }
-        if (!rn.getRosinterfaces().isEmpty()) {
+        // Interfaces from the text or used by a connection; not ones synthesized by linking/validation.
+        Set<RosInterface> connected = connectedInterfaces(rn);
+        List<RosInterface> interfaces = new ArrayList<>();
+        for (RosInterface ri : rn.getRosinterfaces()) {
+            if (NodeModelUtils.findActualNodeFor(ri) != null || connected.contains(ri)) {
+                interfaces.add(ri);
+            }
+        }
+        if (!interfaces.isEmpty()) {
             sb.append(indent).append("  interfaces:\n");
-            for (RosInterface ri : rn.getRosinterfaces()) {
+            for (RosInterface ri : interfaces) {
                 sb.append(serializeRosInterface(ri, indent + "    "));
             }
         }
