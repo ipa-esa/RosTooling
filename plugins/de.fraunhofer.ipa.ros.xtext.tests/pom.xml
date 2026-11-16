@@ -11,6 +11,11 @@
     <artifactId>de.fraunhofer.ipa.ros.xtext.tests</artifactId>
     <packaging>eclipse-test-plugin</packaging>
 
+    <properties>
+        <!-- Test bundle with golden files: built and run in CI, never published to GitHub Packages. -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
