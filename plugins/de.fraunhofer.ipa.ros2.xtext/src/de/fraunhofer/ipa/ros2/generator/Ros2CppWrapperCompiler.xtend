@@ -1304,10 +1304,11 @@ private:
 } // namespace «pkg.name.toLowerCase»
 '''
 
-    def String compilePluginWrapperHpp(Package pkg, Artifact art, Plugin plugin) {
+    def String compilePluginWrapperHpp(Package pkg, Artifact art, Plugin plugin, Ros2Target target) {
         val pkgLower = pkg.name.toLowerCase
         val cls = pluginClassName(plugin)
         val hasAct = plugin.hasActions
+        val hasSrv = !plugin.serviceserver.empty || !plugin.serviceclient.empty
         return '''
 #pragma once
 
@@ -1363,6 +1364,9 @@ public:
             return;
         }
         (void)param_prefix;
+        «IF hasSrv»
+        client_cb_group_ = node->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+        «ENDIF»
         «FOR param : plugin.parameter»
         {
             const std::string pname = param_prefix.empty() ? "«param.name»" : (param_prefix + ".«param.name»");
@@ -1410,11 +1414,13 @@ public:
                 if (handle_«sanitizeName(srv.name)»_cb_) {
                     handle_«sanitizeName(srv.name)»_cb_(req, res);
                 }
-            });
+            },
+            «target.cpp.serviceQos»,
+            client_cb_group_);
         «ENDFOR»
         «FOR client : plugin.serviceclient»
         client_«sanitizeName(client.name)»_ = node->template create_client<«client.service.specPackage»::srv::«client.service.specName»>(
-            "«client.name»");
+            "«client.name»", «target.cpp.serviceQos», client_cb_group_);
         «ENDFOR»
         «FOR act : plugin.actionserver»
         act_srv_«sanitizeName(act.name)»_ = rclcpp_action::create_server<«act.action.specPackage»::action::«act.action.specName»>(
@@ -1499,6 +1505,9 @@ public:
     «ENDFOR»
 
 private:
+    «IF hasSrv»
+    rclcpp::CallbackGroup::SharedPtr client_cb_group_;
+    «ENDIF»
     «FOR param : plugin.parameter»
     «getCppType(param.type)» «sanitizeName(param.name)»_param_{};
     «ENDFOR»

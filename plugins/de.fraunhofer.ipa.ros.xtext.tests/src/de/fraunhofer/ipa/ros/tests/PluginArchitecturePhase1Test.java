@@ -13,6 +13,9 @@ import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
 import de.fraunhofer.ipa.ros.validation.RosValidator;
 import de.fraunhofer.ipa.ros2.Ros2RuntimeModule;
 import de.fraunhofer.ipa.ros2.Ros2StandaloneSetup;
+import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
+import de.fraunhofer.ipa.ros2.distro.Ros2Distros;
+import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target;
 import de.fraunhofer.ipa.ros2.generator.Ros2Generator;
 import de.fraunhofer.ipa.rossystem.RosSystemRuntimeModule;
 import de.fraunhofer.ipa.rossystem.RosSystemStandaloneSetup;
@@ -94,6 +97,13 @@ public class PluginArchitecturePhase1Test {
                     String
                       message
                         string data
+                std_srvs:
+                  srvs:
+                    Trigger
+                      request
+                      response
+                        bool success
+                        string message
                 example_interfaces:
                   actions:
                     ComputePath
@@ -269,6 +279,50 @@ public class PluginArchitecturePhase1Test {
                 List.of("planner_plugins_pkg/include/planner_plugins_pkg/straight_line_plugin.hpp"));
         assertFalse(fsaSecond.getTextFiles().containsKey(userKey));
         assertTrue(fsaSecond.getTextFiles().containsKey(wrapperKey));
+    }
+
+    @Test
+    public void generatePluginlibAcrossDistroMatrixConformsToDialects() throws Exception {
+        XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
+        loadFromString(rs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        Resource plugRes = loadFromString(rs, "inmemory:/srv_plugins.ros2", """
+                srv_plugins_pkg:
+                  artifacts:
+                    srv_plugin_lib:
+                      plugins:
+                        ServicePlugin:
+                          implements: "nav2_core::GlobalPlanner"
+                          loader: pluginlib
+                          serviceservers:
+                            reset_plan:
+                              type: "std_srvs/srv/Trigger"
+                          serviceclients:
+                            clear_costmap:
+                              type: "std_srvs/srv/Trigger"
+                """);
+        EcoreUtil.resolveAll(rs);
+
+        Ros2Generator gen = ros2Injector.getInstance(Ros2Generator.class);
+        String wrapperKey = "DEFAULT_OUTPUTsrv_plugins_pkg/include/srv_plugins_pkg/service_plugin_plugin_wrapper.hpp";
+        String cmakeKey = "DEFAULT_OUTPUTsrv_plugins_pkg/CMakeLists.txt";
+
+        for (Ros2Distro distro : Ros2Distros.all()) {
+            Ros2Target target = Ros2Target.of(distro);
+            InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
+            gen.generateTargeted(plugRes, fsa, null, "cpp", distro.name(), List.of());
+
+            String wrapperHpp = fsa.getTextFiles().get(wrapperKey).toString();
+            String cmake = fsa.getTextFiles().get(cmakeKey).toString();
+
+            assertTrue("Distro " + distro.name() + " CMake min version",
+                    cmake.contains(target.getCmake().minimumRequired()));
+            assertTrue("Distro " + distro.name() + " C++ standard",
+                    cmake.contains(target.getCmake().cxxStandard()));
+            assertTrue("Distro " + distro.name() + " service QoS dialect in plugin wrapper",
+                    wrapperHpp.contains(target.getCpp().serviceQos()));
+            assertTrue("Distro " + distro.name() + " reentrant callback group in plugin wrapper",
+                    wrapperHpp.contains("client_cb_group_ = node->create_callback_group(rclcpp::CallbackGroupType::Reentrant);"));
+        }
     }
 
     @Test

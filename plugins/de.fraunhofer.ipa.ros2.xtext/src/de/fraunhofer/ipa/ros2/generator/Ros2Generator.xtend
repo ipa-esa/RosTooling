@@ -200,7 +200,7 @@ class Ros2Generator extends AbstractGenerator {
                                 val userPath = pkgName + "/include/" + pkgName + "/" + snakePlugin + "_plugin.hpp"
                                 val cppPath = pkgName + "/src/" + snakePlugin + "_plugin.cpp"
 
-                                fsa.generateFile(wrapperPath, compilePluginWrapperHpp(pkg, art, pl))
+                                fsa.generateFile(wrapperPath, compilePluginWrapperHpp(pkg, art, pl, target))
                                 fsa.generateFile(cppPath, compilePluginCpp(pkg, art, pl))
 
                                 val userHeaderExists = existingList.exists[
