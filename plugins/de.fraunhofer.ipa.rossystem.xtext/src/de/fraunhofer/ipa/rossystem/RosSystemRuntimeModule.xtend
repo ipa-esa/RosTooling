@@ -4,8 +4,10 @@
 package de.fraunhofer.ipa.rossystem
 
 import de.fraunhofer.ipa.ros.RosBasicsValueConverterService
+import de.fraunhofer.ipa.ros.documentation.RosExtensionDocumentationProvider
 import de.fraunhofer.ipa.ros.linking.RosLinkingDiagnosticMessageProvider
 import org.eclipse.xtext.conversion.IValueConverterService
+import org.eclipse.xtext.documentation.IEObjectDocumentationProvider
 import org.eclipse.xtext.linking.ILinkingDiagnosticMessageProvider
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.scoping.IScopeProvider
@@ -30,5 +32,9 @@ class RosSystemRuntimeModule extends AbstractRosSystemRuntimeModule {
 
     def Class<? extends ILinkingDiagnosticMessageProvider> bindILinkingDiagnosticMessageProvider() {
         return RosLinkingDiagnosticMessageProvider
+    }
+
+    def Class<? extends IEObjectDocumentationProvider> bindIEObjectDocumentationProvider() {
+        return RosExtensionDocumentationProvider
     }
 }

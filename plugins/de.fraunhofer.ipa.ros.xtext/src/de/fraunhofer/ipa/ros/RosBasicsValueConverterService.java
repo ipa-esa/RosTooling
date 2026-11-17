@@ -54,6 +54,9 @@ public class RosBasicsValueConverterService extends Ecore2XtextTerminalConverter
         return new IValueConverter<String>() {
             @Override
             public String toValue(final String string, final INode node) throws ValueConverterException {
+                if (node != null && node.getSemanticElement() instanceof ros.ExtensionScalarValue scalar) {
+                    scalar.setRawKind(detectRawKind(string));
+                }
                 return unquoteIfQuoted(string);
             }
 
@@ -62,6 +65,32 @@ public class RosBasicsValueConverterService extends Ecore2XtextTerminalConverter
                 return value;
             }
         };
+    }
+
+    private static String detectRawKind(final String raw) {
+        if (raw == null) {
+            return "string";
+        }
+        String trimmed = raw.trim();
+        if (trimmed.length() >= 2
+                && ((trimmed.startsWith("\"") && trimmed.endsWith("\""))
+                        || (trimmed.startsWith("'") && trimmed.endsWith("'")))) {
+            return "string";
+        }
+        if ("true".equals(trimmed) || "false".equals(trimmed)) {
+            return "boolean";
+        }
+        try {
+            Long.parseLong(trimmed);
+            return "int";
+        } catch (NumberFormatException ignored) {
+        }
+        try {
+            Double.parseDouble(trimmed);
+            return "double";
+        } catch (NumberFormatException ignored) {
+        }
+        return "id";
     }
 
     private static String unquoteIfQuoted(final String raw) {

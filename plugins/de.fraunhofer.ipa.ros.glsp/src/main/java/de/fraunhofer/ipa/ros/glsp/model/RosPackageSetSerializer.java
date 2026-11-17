@@ -2,6 +2,7 @@ package de.fraunhofer.ipa.ros.glsp.model;
 
 import de.fraunhofer.ipa.ros.glsp.handlers.RosPackageSetEditor;
 import de.fraunhofer.ipa.ros.glsp.model.RosAstNodeModelSerializer.SpanEdit;
+import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ import primitives.MessagePart;
 import primitives.PrimitivesPackage;
 import ros.ActionSpec;
 import ros.Artifact;
+import ros.ExtensionBlock;
 import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.LifecycleState;
@@ -124,7 +126,8 @@ final class RosPackageSetSerializer {
                 || sem instanceof InterfaceType
                 || sem instanceof Parameter
                 || sem instanceof SpecBase
-                || sem instanceof MessagePart;
+                || sem instanceof MessagePart
+                || sem instanceof ExtensionBlock;
     }
 
     /** When the last element of a section is deleted, the section keyword line must go too. */
@@ -277,6 +280,7 @@ final class RosPackageSetSerializer {
             List<EObject> liveItems = new ArrayList<>(RosPackageSetEditor.allInterfaces(node));
             liveItems.addAll(node.getParameter());
             liveItems.addAll(node.getPluginSlots());
+            liveItems.addAll(node.getExtensions());
             int nodeEnd = lastLiveChildEnd(liveItems, nameLineEnd);
             visitHolderSections(node, nodeComp, nodeCol, nodeEnd);
 
@@ -299,6 +303,7 @@ final class RosPackageSetSerializer {
                     return sb.toString();
                 });
             }
+            RosAstNodeModelSerializer.collectExtensionBlockEdits(node, nodeCol, nodeEnd, text, edits);
         }
 
         ICompositeNode artComp = NodeModelUtils.findActualNodeFor(art);
@@ -324,8 +329,10 @@ final class RosPackageSetSerializer {
                     int plHeaderEnd = featureLineEnd(pl, RosPackage.Literals.INTERFACE_HOLDER__NAME, plComp);
                     List<EObject> plLive = new ArrayList<>(RosPackageSetEditor.allInterfaces(pl));
                     plLive.addAll(pl.getParameter());
+                    plLive.addAll(pl.getExtensions());
                     int plEnd = lastLiveChildEnd(plLive, plHeaderEnd);
                     visitHolderSections(pl, plComp, plCol, plEnd);
+                    RosAstNodeModelSerializer.collectExtensionBlockEdits(pl, plCol, plEnd, text, edits);
                 }
             }
             if (!freshPlugins.isEmpty()) {
@@ -796,6 +803,9 @@ final class RosPackageSetSerializer {
                     sb.append(renderPluginSlot(slot, inner + "  "));
                 }
             }
+            for (ExtensionBlock ext : node.getExtensions()) {
+                sb.append(ExtensionSchemaMapper.renderBlockDsl(ext, inner));
+            }
         }
         if (!art.getPlugins().isEmpty()) {
             sb.append(inner).append("plugins:\n");
@@ -840,6 +850,9 @@ final class RosPackageSetSerializer {
             for (InterfaceType i : items) {
                 sb.append(i instanceof Parameter p ? renderParameter(p, inner + "  ") : renderInterface(i, inner + "  "));
             }
+        }
+        for (ExtensionBlock ext : plugin.getExtensions()) {
+            sb.append(ExtensionSchemaMapper.renderBlockDsl(ext, inner));
         }
         return sb.toString();
     }

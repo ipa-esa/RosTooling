@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.glsp.model;
 
+import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -20,6 +21,8 @@ import org.eclipse.xtext.resource.XtextResource;
 import ros.ActionClient;
 import ros.ActionServer;
 import ros.Artifact;
+import ros.Extensible;
+import ros.ExtensionBlock;
 import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.Node;
@@ -229,7 +232,8 @@ public final class RosAstNodeModelSerializer {
                                 || sem instanceof system.Process
                                 || sem instanceof RosInterface
                                 || sem instanceof RosParameter
-                                || sem instanceof RosSystemConnection)
+                                || sem instanceof RosSystemConnection
+                                || sem instanceof ExtensionBlock)
                         && !liveObjects.contains(sem)) {
                     // Skip if an ancestor is already marked for deletion
                     boolean ancestorDeleted = false;
@@ -379,6 +383,10 @@ public final class RosAstNodeModelSerializer {
                 edits.add(new SpanEdit(insertPos, 0, section));
             }
         }
+
+        ICompositeNode sysComp = NodeModelUtils.findActualNodeFor(sys);
+        int sysAnchor = sysComp != null ? findElementBlockEndOffset(text, sysComp) : text.length();
+        collectExtensionBlockEdits(sys, 2, sysAnchor, text, edits);
     }
 
     private static void collectExistingRosNodeEdits(
@@ -443,6 +451,8 @@ public final class RosAstNodeModelSerializer {
             } else {
                 lastExistingIfComp = ifComp;
                 checkFeatureTokenEdit(ri, RossystemPackage.Literals.ROS_INTERFACE__NAME, ri.getName(), false, text, edits);
+                int ifCol = Math.max(0, firstNonHiddenOffset(ifComp) - lineStartOf(text, firstNonHiddenOffset(ifComp)));
+                collectExtensionBlockEdits(ri, ifCol + 2, findElementBlockEndOffset(text, ifComp), text, edits);
             }
         }
 
@@ -492,6 +502,37 @@ public final class RosAstNodeModelSerializer {
                 String section = "\n      parameters:\n" + stripTrailingNewline(paramBlock.toString());
                 edits.add(new SpanEdit(insertPos, 0, section));
             }
+        }
+
+        int rnCol = Math.max(0, firstNonHiddenOffset(nodeComp) - lineStartOf(text, firstNonHiddenOffset(nodeComp)));
+        collectExtensionBlockEdits(rosNode, rnCol + 2, findElementBlockEndOffset(text, nodeComp), text, edits);
+    }
+
+    static void collectExtensionBlockEdits(
+            final Extensible holder,
+            final int indentCol,
+            final int fallbackAnchor,
+            final String text,
+            final List<SpanEdit> edits) {
+        if (holder == null || holder.getExtensions().isEmpty()) {
+            return;
+        }
+        String indent = " ".repeat(Math.max(0, indentCol));
+        ICompositeNode lastExistingBlock = null;
+        StringBuilder fresh = new StringBuilder();
+        for (ExtensionBlock block : holder.getExtensions()) {
+            ICompositeNode blockComp = NodeModelUtils.findActualNodeFor(block);
+            if (blockComp != null) {
+                lastExistingBlock = blockComp;
+            } else {
+                fresh.append(ExtensionSchemaMapper.renderBlockDsl(block, indent));
+            }
+        }
+        if (fresh.length() > 0) {
+            int anchor = lastExistingBlock != null
+                    ? findElementBlockEndOffset(text, lastExistingBlock)
+                    : fallbackAnchor;
+            edits.add(new SpanEdit(Math.max(0, anchor), 0, "\n" + stripTrailingNewline(fresh.toString())));
         }
     }
 
@@ -837,7 +878,10 @@ public final class RosAstNodeModelSerializer {
     }
 
     private static boolean hasContent(final system.System sys) {
-        return !sys.getComponents().isEmpty() || !sys.getProcesses().isEmpty() || !sys.getConnections().isEmpty();
+        return !sys.getComponents().isEmpty()
+                || !sys.getProcesses().isEmpty()
+                || !sys.getConnections().isEmpty()
+                || !sys.getExtensions().isEmpty();
     }
 
     private static boolean hasPackageContent(final RosModelState modelState) {
@@ -902,6 +946,9 @@ public final class RosAstNodeModelSerializer {
                 }
             }
         }
+        for (ExtensionBlock ext : sys.getExtensions()) {
+            sb.append(ExtensionSchemaMapper.renderBlockDsl(ext, "  "));
+        }
         return sb.toString();
     }
 
@@ -944,6 +991,9 @@ public final class RosAstNodeModelSerializer {
                 sb.append(serializeRosParameter(rp, rn, indent + "    "));
             }
         }
+        for (ExtensionBlock ext : rn.getExtensions()) {
+            sb.append(ExtensionSchemaMapper.renderBlockDsl(ext, indent + "  "));
+        }
         return sb.toString();
     }
 
@@ -970,7 +1020,15 @@ public final class RosAstNodeModelSerializer {
             prefix = "ac->";
             targetRef = formatInterfaceTargetCrossRef(acRef.getFrom());
         }
-        return indent + "- " + ri.getName() + ": " + prefix + " \"" + targetRef + "\"\n";
+        String line = indent + "- " + ri.getName() + ": " + prefix + " \"" + targetRef + "\"\n";
+        if (ri.getExtensions().isEmpty()) {
+            return line;
+        }
+        StringBuilder sb = new StringBuilder(line);
+        for (ExtensionBlock ext : ri.getExtensions()) {
+            sb.append(ExtensionSchemaMapper.renderBlockDsl(ext, indent + "  "));
+        }
+        return sb.toString();
     }
 
     public static String serializeRosParameter(

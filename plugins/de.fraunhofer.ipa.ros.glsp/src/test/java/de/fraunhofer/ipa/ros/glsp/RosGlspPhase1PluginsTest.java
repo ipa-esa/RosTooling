@@ -259,4 +259,33 @@ class RosGlspPhase1PluginsTest {
         assertTrue(saved.contains("plugins: [\"plugin_pkg.MyPlanner\"]"), saved);
         assertTrue(saved.contains("host_inst::plugin_debug"), saved);
     }
+
+    @Test
+    void extensionBlockSetRemoveAndSerializeInGlsp() throws Exception {
+        Path pkgFile = tempDir.resolve("ext_pkg.ros2");
+        Files.writeString(pkgFile, """
+                ext_pkg:
+                  artifacts:
+                    app_bin:
+                      node: app_node
+                """);
+
+        Session s = open(pkgFile, "phase2-ext-pkg");
+        exec(s, new EditRosPropertyOperation("app_node", "setExtensionBlock", "meta",
+                "{\"mode\":\"fast\",\"retries\":3,\"tags\":[\"a\",\"b\"]}", null));
+        String updated = RosAstNodeModelSerializer.computeAndCommit(s.state).newText;
+        assertTrue(updated.contains("@meta:"), updated);
+        assertTrue(updated.contains("retries: 3"), updated);
+
+        Files.writeString(pkgFile, updated);
+        Session reopened = open(pkgFile, "phase2-ext-pkg-2");
+        GModelElement nodeCard = findNodesByName(reopened.state.getRoot(), RosModelTypes.ROS_NODE).get(0);
+        String extsJson = String.valueOf(nodeCard.getArgs().get("extensionsJson"));
+        assertTrue(extsJson.contains("\"name\":\"meta\""), extsJson);
+        assertTrue(extsJson.contains("\"mode\":\"fast\""), extsJson);
+
+        exec(reopened, new EditRosPropertyOperation("app_node", "removeExtensionBlock", "meta", "", null));
+        String removed = RosAstNodeModelSerializer.computeAndCommit(reopened.state).newText;
+        assertFalse(removed.contains("@meta:"), removed);
+    }
 }

@@ -3,9 +3,14 @@
  */
 package de.fraunhofer.ipa.ros.ide
 
+import de.fraunhofer.ipa.ros.ide.contentassist.RosExtensionIdeContentProposalProvider
+import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider
 
 /**
  * Use this class to register ide components.
  */
 class BasicsIdeModule extends AbstractBasicsIdeModule {
+    def Class<? extends IdeContentProposalProvider> bindIdeContentProposalProvider() {
+        return RosExtensionIdeContentProposalProvider
+    }
 }

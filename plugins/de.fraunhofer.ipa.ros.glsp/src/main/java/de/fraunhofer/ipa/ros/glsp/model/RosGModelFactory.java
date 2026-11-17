@@ -1,7 +1,11 @@
 package de.fraunhofer.ipa.ros.glsp.model;
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import de.fraunhofer.ipa.ros.glsp.RosModelTypes;
+import de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor;
+import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,6 +42,8 @@ import ros.ActionClient;
 import ros.ActionServer;
 import ros.AmentPackage;
 import ros.Artifact;
+import ros.Extensible;
+import ros.ExtensionBlock;
 import ros.InterfaceHolder;
 import ros.Node;
 import ros.Package;
@@ -150,6 +156,7 @@ public class RosGModelFactory extends EMFGModelFactory {
         ggraph.getArgs().put("modelKind", "rossystem");
         ggraph.getArgs().put("systemName", nullToEmpty(rosSystem.getName()));
         ggraph.getArgs().put("fromFile", nullToEmpty(rosSystem.getFromFile()));
+        ggraph.getArgs().put("extensionsJson", serializeExtensionsJson(rosSystem));
 
         Map<RosInterface, String> interfaceToPortId = new HashMap<>();
         Map<RosInterface, String> collapsedInterfaceToSubId = new HashMap<>();
@@ -287,7 +294,8 @@ public class RosGModelFactory extends EMFGModelFactory {
                 .addArgument("pluginsCount", pluginNames.size())
                 .addArgument("activeParams", activeParams)
                 .addArgument("totalParams", totalParams)
-                .addArgument("parametersJson", serializeRosParameters(rosNode, originNode, resolvedPlugins));
+                .addArgument("parametersJson", serializeRosParameters(rosNode, originNode, resolvedPlugins))
+                .addArgument("extensionsJson", serializeExtensionsJson(rosNode));
 
         // Header labels
         builder.add(new GLabelBuilder(RosModelTypes.LABEL_NAME)
@@ -861,7 +869,8 @@ public class RosGModelFactory extends EMFGModelFactory {
                             .addArgument("pluginSlotsCount", node.getPluginSlots().size())
                             .addArgument("pluginSlotsJson", serializeNodePluginSlots(node))
                             .addArgument("interfacesJson", serializeRosNodeInterfaces(node))
-                            .addArgument("parametersJson", serializeNodeParameters(node));
+                            .addArgument("parametersJson", serializeNodeParameters(node))
+                            .addArgument("extensionsJson", serializeExtensionsJson(node));
                     pkgBuilder.add(nodeBuilder.build());
                 }
                 for (Plugin plugin : artifact.getPlugins()) {
@@ -884,7 +893,8 @@ public class RosGModelFactory extends EMFGModelFactory {
                             .addArgument("actionclientsCount", plugin.getActionclient().size())
                             .addArgument("parametersCount", plugin.getParameter().size())
                             .addArgument("interfacesJson", serializeRosNodeInterfaces(plugin))
-                            .addArgument("parametersJson", serializeNodeParameters(plugin));
+                            .addArgument("parametersJson", serializeNodeParameters(plugin))
+                            .addArgument("extensionsJson", serializeExtensionsJson(plugin));
                     pkgBuilder.add(pluginBuilder.build());
                 }
             }
@@ -941,6 +951,24 @@ public class RosGModelFactory extends EMFGModelFactory {
                     + ",\"value\":\"" + escapeJson(formatParameterValue(p.getValue())) + "\"}");
         }
         return "[" + String.join(",", items) + "]";
+    }
+
+    protected String serializeExtensionsJson(final Extensible holder) {
+        if (holder == null || holder.getExtensions().isEmpty()) {
+            return "[]";
+        }
+        List<Map<String, Object>> out = new ArrayList<>();
+        for (ExtensionBlock block : holder.getExtensions()) {
+            BlockDescriptor desc = PluginRegistry.INSTANCE.blockDescriptor(block.getName());
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("name", block.getName());
+            item.put("entries", ExtensionSchemaMapper.blockToMap(block));
+            if (desc != null) {
+                item.put("schema", ExtensionSchemaMapper.schemaToJsonMap(desc));
+            }
+            out.add(item);
+        }
+        return new Gson().toJson(out);
     }
 
     protected String serializeNodePluginSlots(final Node node) {

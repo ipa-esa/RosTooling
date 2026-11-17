@@ -5,9 +5,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.fraunhofer.ipa.ros.glsp.model.RosDslText;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
+import de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor;
+import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
+import de.fraunhofer.ipa.ros2.ide.RosPluginCommandSupport;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -20,6 +25,8 @@ import primitives.MessagePart;
 import primitives.PrimitivesFactory;
 import ros.ActionSpec;
 import ros.Artifact;
+import ros.Extensible;
+import ros.ExtensionBlock;
 import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.LifecycleState;
@@ -109,6 +116,12 @@ public final class RosPackageSetEditor {
         }
         if (target instanceof InterfaceType iface) {
             return applyInterface(state, iface, prop, key, val);
+        }
+        if (target instanceof Extensible ext) {
+            ResourceSet rs = state != null && state.getSemanticResource() != null
+                    ? state.getSemanticResource().getResourceSet()
+                    : null;
+            return applyExtensibleEdit(ext, prop, key, val, rs);
         }
         if (target instanceof SpecBase spec) {
             return applySpec(state, spec, prop, key, val, valType);
@@ -237,7 +250,89 @@ public final class RosPackageSetEditor {
             state.markDirty(node, "pluginSlots");
             return true;
         }
+        if (is(prop, "setExtensionBlock", "removeExtensionBlock")) {
+            ResourceSet rs = state != null && state.getSemanticResource() != null
+                    ? state.getSemanticResource().getResourceSet()
+                    : null;
+            return applyExtensibleEdit(node, prop, key, val, rs);
+        }
         return applyHolder(state, node, prop, key, val, valType);
+    }
+
+    /** Applies {@code setExtensionBlock} or {@code removeExtensionBlock} on any {@link Extensible} element. */
+    @SuppressWarnings("unchecked")
+    public static boolean applyExtensibleEdit(
+            final Extensible target,
+            final String prop,
+            final String key,
+            final String val,
+            final ResourceSet rs) {
+        if (target == null) {
+            return false;
+        }
+        if (is(prop, "removeExtensionBlock")) {
+            String blockName = normalizeExtensionBlockName(nonBlank(key, val));
+            if (blockName.isEmpty()) {
+                return true;
+            }
+            target.getExtensions().removeIf(b -> blockName.equals(b.getName()));
+            return true;
+        }
+        if (!is(prop, "setExtensionBlock")) {
+            return false;
+        }
+        String blockName = normalizeExtensionBlockName(key);
+        Map<String, Object> entries = Map.of();
+        if (val != null && !val.isBlank()) {
+            try {
+                JsonElement parsed = JsonParser.parseString(val.trim());
+                if (parsed != null && parsed.isJsonObject()) {
+                    Map<String, Object> rawMap = RosPluginCommandSupport.toJavaMap(parsed.getAsJsonObject());
+                    if (rawMap.containsKey("blockName") && rawMap.get("entries") instanceof Map<?, ?>) {
+                        blockName = normalizeExtensionBlockName(String.valueOf(rawMap.get("blockName")));
+                        entries = (Map<String, Object>) rawMap.get("entries");
+                    } else if (rawMap.containsKey("name") && rawMap.get("entries") instanceof Map<?, ?>) {
+                        blockName = normalizeExtensionBlockName(String.valueOf(rawMap.get("name")));
+                        entries = (Map<String, Object>) rawMap.get("entries");
+                    } else {
+                        entries = rawMap;
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        if (blockName.isEmpty()) {
+            return true;
+        }
+        BlockDescriptor desc = PluginRegistry.INSTANCE.blockDescriptor(blockName);
+        ExtensionBlock replacement = ExtensionSchemaMapper.fromMap(blockName, entries, desc, rs);
+        int existingIdx = -1;
+        for (int i = 0; i < target.getExtensions().size(); i++) {
+            if (blockName.equals(target.getExtensions().get(i).getName())) {
+                existingIdx = i;
+                break;
+            }
+        }
+        if (existingIdx >= 0) {
+            target.getExtensions().set(existingIdx, replacement);
+        } else {
+            target.getExtensions().add(replacement);
+        }
+        return true;
+    }
+
+    private static String normalizeExtensionBlockName(final String raw) {
+        if (raw == null) {
+            return "";
+        }
+        String t = raw.trim();
+        if (t.startsWith("@")) {
+            t = t.substring(1);
+        }
+        if (t.endsWith(":")) {
+            t = t.substring(0, t.length() - 1);
+        }
+        return t.trim();
     }
 
     private static boolean applyPluginSlot(final PluginSlot slot, final String prop, final String val) {
@@ -280,6 +375,12 @@ public final class RosPackageSetEditor {
         if (is(prop, "loader")) {
             plugin.setLoader("external".equalsIgnoreCase(val) ? PluginLoader.EXTERNAL : PluginLoader.PLUGINLIB);
             return true;
+        }
+        if (is(prop, "setExtensionBlock", "removeExtensionBlock")) {
+            ResourceSet rs = state != null && state.getSemanticResource() != null
+                    ? state.getSemanticResource().getResourceSet()
+                    : null;
+            return applyExtensibleEdit(plugin, prop, key, val, rs);
         }
         return applyHolder(state, plugin, prop, key, val, valType);
     }

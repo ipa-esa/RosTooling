@@ -9,6 +9,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.glsp.server.emf.EMFOperationHandler;
 import ros.Artifact;
+import ros.Extensible;
 import ros.InterfaceType;
 import ros.Node;
 import ros.Package;
@@ -56,6 +57,18 @@ public class EditRosPropertyOperationHandler extends EMFOperationHandler<EditRos
                 String key = operation.getKey() != null ? operation.getKey().trim() : null;
                 String val = operation.getValue() != null ? operation.getValue() : "";
                 String valType = operation.getValueType();
+
+                if (target instanceof Extensible ext
+                        && RosPackageSetEditor.applyExtensibleEdit(
+                                ext,
+                                prop,
+                                key,
+                                val,
+                                rosModelState.getSemanticResource() != null
+                                        ? rosModelState.getSemanticResource().getResourceSet()
+                                        : null)) {
+                    return;
+                }
 
                 if (rosModelState.isPackageModel()
                         && RosPackageSetEditor.apply(rosModelState, target, prop, key, val, valType)) {

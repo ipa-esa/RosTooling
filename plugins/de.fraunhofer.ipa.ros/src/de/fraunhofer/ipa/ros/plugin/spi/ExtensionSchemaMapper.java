@@ -40,7 +40,142 @@ public final class ExtensionSchemaMapper {
     private static final Set<String> KNOWN_REF_PREFIXES = Set.of(
             "ac", "sc", "as", "ss", "pub", "sub", "param", "ref");
 
+    /**
+     * Schema resolution result for an AST node inside an {@link ExtensionBlock}.
+     */
+    public record ResolvedSchemaContext(
+            ExtensionBlock block,
+            PluginRegistry.RegisteredBlock registered,
+            EClass containerClass,
+            EStructuralFeature feature) {
+    }
+
     private ExtensionSchemaMapper() {
+    }
+
+    /**
+     * Resolves the schema {@link EClass} and active {@link EStructuralFeature} for an
+     * {@link ExtensionBlock}, {@link ExtensionEntry}, or nested value AST element.
+     */
+    public static ResolvedSchemaContext resolveSchemaContext(final EObject element) {
+        if (element == null) {
+            return null;
+        }
+        List<ExtensionEntry> path = new ArrayList<>();
+        EObject cursor = element;
+        ExtensionBlock rootBlock = null;
+        while (cursor != null) {
+            if (cursor instanceof ExtensionEntry e) {
+                path.add(e);
+            } else if (cursor instanceof ExtensionBlock b) {
+                rootBlock = b;
+                break;
+            }
+            cursor = cursor.eContainer();
+        }
+        if (rootBlock == null || rootBlock.getName() == null) {
+            return null;
+        }
+        PluginRegistry.RegisteredBlock registered = PluginRegistry.INSTANCE.resolveBlock(rootBlock.getName());
+        if (registered == null || registered.descriptor().schemaClass() == null) {
+            return new ResolvedSchemaContext(rootBlock, registered, null, null);
+        }
+        java.util.Collections.reverse(path);
+        EClass currentClass = registered.descriptor().schemaClass();
+        EStructuralFeature resolvedFeature = null;
+        for (int i = 0; i < path.size(); i++) {
+            if (currentClass == null) {
+                return new ResolvedSchemaContext(rootBlock, registered, null, null);
+            }
+            ExtensionEntry step = path.get(i);
+            EStructuralFeature feat = step.getKey() != null ? currentClass.getEStructuralFeature(step.getKey()) : null;
+            if (feat == null) {
+                return new ResolvedSchemaContext(rootBlock, registered, currentClass, null);
+            }
+            resolvedFeature = feat;
+            if (feat instanceof EReference ref && ref.isContainment()) {
+                if (i == path.size() - 1) {
+                    // Caller might be inside step's ExtensionMapValue looking for child keys
+                    if (element instanceof ExtensionMapValue
+                            || element.eContainer() instanceof ExtensionMapValue) {
+                        currentClass = ref.getEReferenceType();
+                    }
+                    break;
+                }
+                if (ref.isMany() && step.getValue() instanceof ExtensionMapValue
+                        && i + 1 < path.size()
+                        && path.get(i + 1).eContainer() == step.getValue()) {
+                    // Keyed map wrapper over named containment items: advance past map key step
+                    i++;
+                }
+                currentClass = ref.getEReferenceType();
+                resolvedFeature = null;
+            } else {
+                break;
+            }
+        }
+        return new ResolvedSchemaContext(rootBlock, registered, currentClass, resolvedFeature);
+    }
+
+    /**
+     * Returns valid {@code kind->} reference prefixes accepted by a schema {@link EStructuralFeature},
+     * or an empty list if the feature is not a non-containment reference.
+     */
+    public static List<String> expectedRefPrefixes(final EStructuralFeature feature) {
+        if (!(feature instanceof EReference ref) || ref.isContainment() || ref.getEReferenceType() == null) {
+            return List.of();
+        }
+        String typeName = ref.getEReferenceType().getName();
+        if ("Publisher".equals(typeName) || "RosPublisherReference".equals(typeName)) {
+            return List.of("pub->");
+        }
+        if ("Subscriber".equals(typeName) || "RosSubscriberReference".equals(typeName)) {
+            return List.of("sub->");
+        }
+        if ("ServiceServer".equals(typeName) || "RosServiceServerReference".equals(typeName)) {
+            return List.of("ss->");
+        }
+        if ("ServiceClient".equals(typeName) || "RosServiceClientReference".equals(typeName)) {
+            return List.of("sc->");
+        }
+        if ("ActionServer".equals(typeName) || "RosActionServerReference".equals(typeName)) {
+            return List.of("as->");
+        }
+        if ("ActionClient".equals(typeName) || "RosActionClientReference".equals(typeName)) {
+            return List.of("ac->");
+        }
+        if ("Parameter".equals(typeName) || "RosParameter".equals(typeName)) {
+            return List.of("param->");
+        }
+        return List.of("pub->", "sub->", "ss->", "sc->", "as->", "ac->", "param->");
+    }
+
+    /**
+     * Describes an {@link EStructuralFeature} type in human-readable form for hover and completion.
+     */
+    public static String describeFeatureType(final EStructuralFeature feature) {
+        if (feature == null) {
+            return "any";
+        }
+        String base;
+        if (feature instanceof EAttribute attr) {
+            EDataType dt = attr.getEAttributeType();
+            if (dt instanceof EEnum eEnum) {
+                List<String> lits = new ArrayList<>();
+                for (EEnumLiteral lit : eEnum.getELiterals()) {
+                    lits.add(lit.getLiteral());
+                }
+                base = "enum(" + String.join(" | ", lits) + ")";
+            } else {
+                base = dt != null ? dt.getName() : "string";
+            }
+        } else if (feature instanceof EReference ref) {
+            String target = ref.getEReferenceType() != null ? ref.getEReferenceType().getName() : "Object";
+            base = ref.isContainment() ? "object(" + target + ")" : "ref->" + target;
+        } else {
+            base = "any";
+        }
+        return feature.isMany() ? "list<" + base + ">" : base;
     }
 
     /**
@@ -429,7 +564,8 @@ public final class ExtensionSchemaMapper {
         if (rawValue instanceof Map<?, ?> rawMap) {
             if (rawMap.containsKey("refKind") && rawMap.containsKey("rawTarget")) {
                 ExtensionRefValue refVal = RosFactory.eINSTANCE.createExtensionRefValue();
-                refVal.setRefKind(String.valueOf(rawMap.get("refKind")));
+                String rk = String.valueOf(rawMap.get("refKind")).trim();
+                refVal.setRefKind(rk.endsWith("->") ? rk : rk + "->");
                 refVal.setRawTarget(String.valueOf(rawMap.get("rawTarget")));
                 return refVal;
             }
@@ -464,7 +600,7 @@ public final class ExtensionSchemaMapper {
                 String targetName = strVal.substring(arrow + 2).trim();
                 if (expectRef || (feature == null && KNOWN_REF_PREFIXES.contains(prefix))) {
                     ExtensionRefValue refVal = RosFactory.eINSTANCE.createExtensionRefValue();
-                    refVal.setRefKind(prefix);
+                    refVal.setRefKind(prefix + "->");
                     refVal.setRawTarget(targetName);
                     return refVal;
                 }
@@ -555,8 +691,7 @@ public final class ExtensionSchemaMapper {
             return nested;
         }
         if (value instanceof ExtensionRefValue refVal) {
-            String targetText = refTargetText(refVal);
-            return refVal.getRefKind() != null ? refVal.getRefKind() + "->" + targetText : targetText;
+            return formatRefValue(refVal);
         }
         return null;
     }
@@ -671,34 +806,7 @@ public final class ExtensionSchemaMapper {
         sb.append(indent).append(entry.getKey()).append(": ");
         ExtensionValue val = entry.getValue();
         if (val instanceof ExtensionListValue listVal) {
-            if (listVal.getItems().isEmpty()) {
-                sb.append("[]\n");
-                return;
-            }
-            if (allScalarsOrRefs(listVal.getItems()) && listVal.getItems().size() <= 4) {
-                sb.append("[");
-                for (int i = 0; i < listVal.getItems().size(); i++) {
-                    if (i > 0) {
-                        sb.append(", ");
-                    }
-                    sb.append(renderInlineValue(listVal.getItems().get(i)));
-                }
-                sb.append("]\n");
-                return;
-            }
-            sb.append("\n");
-            for (ExtensionValue item : listVal.getItems()) {
-                if (item instanceof ExtensionMapValue mapVal && canRenderBraceMap(mapVal)) {
-                    sb.append(indent).append("  - ").append(renderBraceMap(mapVal)).append("\n");
-                } else if (item instanceof ExtensionMapValue mapVal) {
-                    sb.append(indent).append("  -\n");
-                    for (ExtensionEntry nested : mapVal.getEntries()) {
-                        renderEntryDsl(sb, nested, indent + "    ");
-                    }
-                } else {
-                    sb.append(indent).append("  - ").append(renderInlineValue(item)).append("\n");
-                }
-            }
+            sb.append(renderInlineValue(listVal)).append("\n");
         } else if (val instanceof ExtensionMapValue mapVal) {
             if (canRenderBraceMap(mapVal) && mapVal.getEntries().size() <= 3) {
                 sb.append(renderBraceMap(mapVal)).append("\n");
@@ -711,15 +819,6 @@ public final class ExtensionSchemaMapper {
         } else {
             sb.append(renderInlineValue(val)).append("\n");
         }
-    }
-
-    private static boolean allScalarsOrRefs(final List<ExtensionValue> items) {
-        for (ExtensionValue v : items) {
-            if (!(v instanceof ExtensionScalarValue) && !(v instanceof ExtensionRefValue)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private static boolean canRenderBraceMap(final ExtensionMapValue mapVal) {
@@ -747,8 +846,7 @@ public final class ExtensionSchemaMapper {
 
     private static String renderInlineValue(final ExtensionValue val) {
         if (val instanceof ExtensionRefValue refVal) {
-            String target = refTargetText(refVal);
-            return refVal.getRefKind() != null ? refVal.getRefKind() + "->" + target : target;
+            return formatRefValue(refVal);
         }
         if (val instanceof ExtensionScalarValue scalar) {
             String raw = scalar.getValue() != null ? scalar.getValue() : "";
@@ -764,7 +862,27 @@ public final class ExtensionSchemaMapper {
         if (val instanceof ExtensionMapValue mapVal) {
             return renderBraceMap(mapVal);
         }
+        if (val instanceof ExtensionListValue listVal) {
+            StringBuilder listSb = new StringBuilder("[");
+            for (int i = 0; i < listVal.getItems().size(); i++) {
+                if (i > 0) {
+                    listSb.append(", ");
+                }
+                listSb.append(renderInlineValue(listVal.getItems().get(i)));
+            }
+            listSb.append("]");
+            return listSb.toString();
+        }
         return "\"\"";
+    }
+
+    private static String formatRefValue(final ExtensionRefValue refVal) {
+        String target = refTargetText(refVal);
+        String rk = refVal.getRefKind();
+        if (rk == null || rk.isBlank()) {
+            return target;
+        }
+        return (rk.endsWith("->") ? rk : rk + "->") + target;
     }
 
     private static String refTargetText(final ExtensionRefValue refVal) {

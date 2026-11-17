@@ -66,7 +66,7 @@ public final class PluginRegistry {
         Set<String> enabled = parseIdSet(firstNonBlank(
                 System.getProperty(PROP_PLUGINS_ENABLED),
                 System.getenv(ENV_PLUGINS_ENABLED)));
-        if (!dirs.isEmpty() && !enabled.isEmpty()) {
+        if (!enabled.isEmpty()) {
             loadFromPathsInternal(dirs, enabled);
         }
     }
@@ -107,8 +107,9 @@ public final class PluginRegistry {
         }
 
         Map<String, RosToolingPlugin> discovered = new LinkedHashMap<>();
-        // Also scan current context classloader in case plugins are on classpath, but activate ONLY enabledIds.
+        // Also scan current context classloader and OSGi services, activating ONLY enabledIds.
         scanServiceLoader(PluginRegistry.class.getClassLoader(), discovered);
+        scanOsgiServices(discovered);
 
         if (!jarUrls.isEmpty()) {
             URLClassLoader cl = new URLClassLoader(
@@ -148,6 +149,48 @@ public final class PluginRegistry {
             }
         } catch (Throwable t) {
             loadErrors.add("Failed to load RosToolingPlugin providers: " + t.getMessage());
+        }
+    }
+
+    /**
+     * Discovers {@link RosToolingPlugin} instances registered in the OSGi service registry when
+     * running inside Eclipse/OSGi, without introducing a hard compile-time dependency on OSGi in
+     * standalone/headless deployments.
+     */
+    private void scanOsgiServices(final Map<String, RosToolingPlugin> out) {
+        try {
+            Class<?> frameworkUtil = Class.forName("org.osgi.framework.FrameworkUtil");
+            Object bundle = frameworkUtil.getMethod("getBundle", Class.class)
+                    .invoke(null, PluginRegistry.class);
+            if (bundle == null) {
+                return;
+            }
+            Object bundleContext = bundle.getClass().getMethod("getBundleContext").invoke(bundle);
+            if (bundleContext == null) {
+                return;
+            }
+            Class<?> serviceRefClass = Class.forName("org.osgi.framework.ServiceReference");
+            Object refsObj = bundleContext.getClass()
+                    .getMethod("getServiceReferences", Class.class, String.class)
+                    .invoke(bundleContext, RosToolingPlugin.class, null);
+            if (!(refsObj instanceof Collection<?> refs)) {
+                return;
+            }
+            var getService = bundleContext.getClass().getMethod("getService", serviceRefClass);
+            for (Object ref : refs) {
+                if (ref == null) {
+                    continue;
+                }
+                Object service = getService.invoke(bundleContext, ref);
+                if (service instanceof RosToolingPlugin plugin
+                        && plugin.id() != null && !plugin.id().isBlank()) {
+                    out.putIfAbsent(plugin.id(), plugin);
+                }
+            }
+        } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
+            // Standalone non-OSGi environment: ignore cleanly.
+        } catch (Throwable t) {
+            loadErrors.add("Failed to query OSGi RosToolingPlugin services: " + t.getMessage());
         }
     }
 

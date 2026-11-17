@@ -35,6 +35,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
 import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
 import de.fraunhofer.ipa.ros2.distro.Ros2Distros;
 import de.fraunhofer.ipa.ros2.distro.UnknownDistroException;
@@ -44,6 +45,11 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
 
     /** Lists the supported ROS 2 distributions; the single source for MCP tools and the extension. */
     public static final String LIST_DISTROS = "ros2.listDistros";
+    public static final String LIST_PLUGIN_TOOLS = "rostooling.listPluginTools";
+    public static final String EXECUTE_PLUGIN_TOOL = "rostooling.executePluginTool";
+    public static final String GET_EXTENSION_BLOCK = "rostooling.getExtensionBlock";
+    public static final String SET_EXTENSION_BLOCK = "rostooling.setExtensionBlock";
+    public static final String GENERATE_PLUGIN_OUTPUTS = "rostooling.generatePluginOutputs";
 
     @Inject Provider<GeneratorDelegate> generatorProvider;
     @Inject IResourceServiceProvider.Registry resourceServiceRegistry;
@@ -59,12 +65,20 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
 
     @Override
     public List<String> initialize() {
-        log("Advertising commands: ros2.generateWrappersServer, ros2.generateCppWrapper, ros2.generatePythonWrapper, " + LIST_DISTROS);
+        PluginRegistry.INSTANCE.ensureLoadedFromEnvironment();
+        log("Advertising commands: ros2.generateWrappersServer, ros2.generateCppWrapper, ros2.generatePythonWrapper, "
+                + LIST_DISTROS + ", " + LIST_PLUGIN_TOOLS + ", " + EXECUTE_PLUGIN_TOOL + ", "
+                + GET_EXTENSION_BLOCK + ", " + SET_EXTENSION_BLOCK + ", " + GENERATE_PLUGIN_OUTPUTS);
         return Lists.newArrayList(
             "ros2.generateWrappersServer",
             "ros2.generateCppWrapper",
             "ros2.generatePythonWrapper",
-            LIST_DISTROS
+            LIST_DISTROS,
+            LIST_PLUGIN_TOOLS,
+            EXECUTE_PLUGIN_TOOL,
+            GET_EXTENSION_BLOCK,
+            SET_EXTENSION_BLOCK,
+            GENERATE_PLUGIN_OUTPUTS
         );
     }
 
@@ -74,6 +88,25 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
         log("Executing command: " + command);
         if (LIST_DISTROS.equals(command)) {
             return listDistros();
+        }
+        if (LIST_PLUGIN_TOOLS.equals(command)) {
+            return RosPluginCommandSupport.listPluginTools();
+        }
+        if (EXECUTE_PLUGIN_TOOL.equals(command)) {
+            Map<String, Object> req = parseReqArg(params.getArguments());
+            return RosPluginCommandSupport.executePluginTool(req, access, resourceServiceRegistry);
+        }
+        if (GET_EXTENSION_BLOCK.equals(command)) {
+            Map<String, Object> req = parseReqArg(params.getArguments());
+            return RosPluginCommandSupport.getExtensionBlock(req, access, resourceServiceRegistry);
+        }
+        if (SET_EXTENSION_BLOCK.equals(command)) {
+            Map<String, Object> req = parseReqArg(params.getArguments());
+            return RosPluginCommandSupport.setExtensionBlock(req, access, resourceServiceRegistry);
+        }
+        if (GENERATE_PLUGIN_OUTPUTS.equals(command)) {
+            Map<String, Object> req = parseReqArg(params.getArguments());
+            return RosPluginCommandSupport.generatePluginOutputs(req, access, resourceServiceRegistry, cancelIndicator);
         }
         if (!"ros2.generateWrappersServer".equals(command) &&
             !"ros2.generateWrappers".equals(command) &&
@@ -162,7 +195,7 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                     genContext.setCancelIndicator(cancelIndicator != null ? cancelIndicator : CancelIndicator.NullImpl);
 
                     if (generator instanceof Ros2Generator) {
-                        ((Ros2Generator) generator).generateTargeted(
+                        Ros2Generator.PluginGenerationOutcome outcome = ((Ros2Generator) generator).generateTargetedWithPlugins(
                             resource,
                             fsa,
                             finalTargetNodes,
@@ -170,6 +203,11 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                             finalDistro,
                             finalExistingFiles
                         );
+                        if (!outcome.pluginConflictErrors.isEmpty()) {
+                            String conflictMsg = String.join("; ", outcome.pluginConflictErrors);
+                            log("PLUGIN CONFLICT ERROR: " + conflictMsg);
+                            return Map.of("error", conflictMsg);
+                        }
                     } else {
                         generator.doGenerate(resource, fsa, genContext);
                     }
@@ -218,6 +256,13 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
             result.put("autoError", e.getMessage());
         }
         return result;
+    }
+
+    private Map<String, Object> parseReqArg(List<Object> args) {
+        if (args == null || args.isEmpty()) {
+            return Map.of();
+        }
+        return RosPluginCommandSupport.toJavaMap(args.get(0));
     }
 
     private String parseStringArg(Object arg) {
