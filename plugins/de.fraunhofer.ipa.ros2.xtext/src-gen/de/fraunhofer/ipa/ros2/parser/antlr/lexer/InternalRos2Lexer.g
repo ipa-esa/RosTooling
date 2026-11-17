@@ -135,11 +135,15 @@ Float32 : 'float32';
 
 Float64 : 'float64';
 
+Format : 'format:';
+
 Int16_1 : 'int16[]';
 
 Int32_1 : 'int32[]';
 
 Int64_1 : 'int64[]';
+
+Library : 'library';
 
 Loader : 'loader:';
 
@@ -194,6 +198,8 @@ Value_1 : 'value:';
 Array : 'Array';
 
 Base : 'base:';
+
+Class : 'class';
 
 Int16 : 'int16';
 

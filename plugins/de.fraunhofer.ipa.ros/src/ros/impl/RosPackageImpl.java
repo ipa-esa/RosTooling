@@ -70,6 +70,7 @@ import ros.ParameterValue;
 import ros.Plugin;
 import ros.PluginLoader;
 import ros.PluginSlot;
+import ros.PluginSlotValueFormat;
 import ros.PrivateNamespace;
 import ros.Publisher;
 import ros.QualityOfService;
@@ -551,6 +552,13 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EEnum pluginSlotValueFormatEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EDataType graphNameEDataType = null;
 
 	/**
@@ -1020,6 +1028,16 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	@Override
 	public EAttribute getPluginSlot_DefaultPlugin() {
 		return (EAttribute)pluginSlotEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPluginSlot_ValueFormat() {
+		return (EAttribute)pluginSlotEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2268,6 +2286,16 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
+	public EEnum getPluginSlotValueFormat() {
+		return pluginSlotValueFormatEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EDataType getGraphName() {
 		return graphNameEDataType;
 	}
@@ -2352,6 +2380,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__BASE);
 		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__PARAMETER);
 		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__DEFAULT_PLUGIN);
+		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__VALUE_FORMAT);
 
 		packageEClass = createEClass(PACKAGE);
 		createEAttribute(packageEClass, PACKAGE__NAME);
@@ -2529,6 +2558,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		// Create enums
 		lifecycleStateEEnum = createEEnum(LIFECYCLE_STATE);
 		pluginLoaderEEnum = createEEnum(PLUGIN_LOADER);
+		pluginSlotValueFormatEEnum = createEEnum(PLUGIN_SLOT_VALUE_FORMAT);
 
 		// Create data types
 		graphNameEDataType = createEDataType(GRAPH_NAME);
@@ -2664,6 +2694,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		initEAttribute(getPluginSlot_Base(), ecorePackage.getEString(), "base", null, 1, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPluginSlot_Parameter(), ecorePackage.getEString(), "parameter", null, 1, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPluginSlot_DefaultPlugin(), ecorePackage.getEString(), "defaultPlugin", null, 0, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPluginSlot_ValueFormat(), this.getPluginSlotValueFormat(), "valueFormat", "class", 0, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(packageEClass, ros.Package.class, "Package", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPackage_Name(), ecorePackage.getEString(), "name", null, 1, 1, ros.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2848,6 +2879,10 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		initEEnum(pluginLoaderEEnum, PluginLoader.class, "PluginLoader");
 		addEEnumLiteral(pluginLoaderEEnum, PluginLoader.PLUGINLIB);
 		addEEnumLiteral(pluginLoaderEEnum, PluginLoader.EXTERNAL);
+
+		initEEnum(pluginSlotValueFormatEEnum, PluginSlotValueFormat.class, "PluginSlotValueFormat");
+		addEEnumLiteral(pluginSlotValueFormatEEnum, PluginSlotValueFormat.CLASS);
+		addEEnumLiteral(pluginSlotValueFormatEEnum, PluginSlotValueFormat.LIBRARY);
 
 		// Initialize data types
 		initEDataType(graphNameEDataType, String.class, "GraphName", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

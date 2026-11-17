@@ -183,34 +183,29 @@ class RosSystemValidator extends AbstractRosSystemValidator {
         }
         if (plugin === null || plugin.eIsProxy) {
             // Unresolved link already flagged by Xtext linker.
-        } else if (plugin.loader == PluginLoader.PLUGINLIB) {
-            val expectedImpl = plugin.implements
-            val hasMatchingSlot = fromNode !== null && !fromNode.eIsProxy
-                && fromNode.pluginSlots.exists[base == expectedImpl]
-            if (!hasMatchingSlot) {
+        } else {
+            val expectedImpl = plugin.implements?.trim
+            if (expectedImpl === null || expectedImpl.empty) {
                 error(
-                    "Node '" + rosNode.name + "' attaches pluginlib plugin '" + plugin.name
-                        + "' (implements '" + expectedImpl + "'), but host node '"
-                        + (if (fromNode !== null && !fromNode.eIsProxy) fromNode.name else "?")
-                        + "' declares no matching pluginslot with base '" + expectedImpl + "'",
+                    "Node '" + rosNode.name + "' attaches plugin '" + plugin.name
+                        + "', which must declare 'implements:' matching a pluginslot on host node '"
+                        + (if (fromNode !== null && !fromNode.eIsProxy) fromNode.name else "?") + "'",
                     rosNode,
                     RossystemPackage.Literals.ROS_NODE__PLUGINS,
                     INCOMPATIBLE_PLUGIN
                 )
-            }
-        } else if (plugin.loader == PluginLoader.EXTERNAL
-                && plugin.implements !== null && !plugin.implements.trim.empty
-                && fromNode !== null && !fromNode.eIsProxy && !fromNode.pluginSlots.empty) {
-            val expectedImpl = plugin.implements
-            if (!fromNode.pluginSlots.exists[base == expectedImpl]) {
-                error(
-                    "Node '" + rosNode.name + "' attaches external plugin '" + plugin.name
-                        + "' (implements '" + expectedImpl + "'), which does not match any pluginslot on host node '"
-                        + fromNode.name + "'",
-                    rosNode,
-                    RossystemPackage.Literals.ROS_NODE__PLUGINS,
-                    INCOMPATIBLE_PLUGIN
-                )
+            } else if (fromNode !== null && !fromNode.eIsProxy) {
+                val hasMatchingSlot = fromNode.pluginSlots.exists[base == expectedImpl]
+                if (!hasMatchingSlot) {
+                    error(
+                        "Node '" + rosNode.name + "' attaches plugin '" + plugin.name
+                            + "' (implements '" + expectedImpl + "'), which does not match any pluginslot on host node '"
+                            + fromNode.name + "'",
+                        rosNode,
+                        RossystemPackage.Literals.ROS_NODE__PLUGINS,
+                        INCOMPATIBLE_PLUGIN
+                    )
+                }
             }
         }
     }

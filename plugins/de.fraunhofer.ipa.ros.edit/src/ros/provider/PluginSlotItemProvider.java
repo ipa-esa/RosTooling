@@ -64,6 +64,7 @@ public class PluginSlotItemProvider
 			addBasePropertyDescriptor(object);
 			addParameterPropertyDescriptor(object);
 			addDefaultPluginPropertyDescriptor(object);
+			addValueFormatPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -157,6 +158,28 @@ public class PluginSlotItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Value Format feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addValueFormatPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_PluginSlot_valueFormat_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_PluginSlot_valueFormat_feature", "_UI_PluginSlot_type"),
+				 RosPackage.Literals.PLUGIN_SLOT__VALUE_FORMAT,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns PluginSlot.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -198,6 +221,7 @@ public class PluginSlotItemProvider
 			case RosPackage.PLUGIN_SLOT__BASE:
 			case RosPackage.PLUGIN_SLOT__PARAMETER:
 			case RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN:
+			case RosPackage.PLUGIN_SLOT__VALUE_FORMAT:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

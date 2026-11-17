@@ -487,6 +487,18 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getPluginLoaderAccess().getRule();
 	}
 	
+	//enum PluginSlotValueFormat returns PluginSlotValueFormat:
+	//    CLASS = 'class' |
+	//    LIBRARY = 'library'
+	//;
+	public RosGrammarAccess.PluginSlotValueFormatElements getPluginSlotValueFormatAccess() {
+		return gaRos.getPluginSlotValueFormatAccess();
+	}
+	
+	public EnumRule getPluginSlotValueFormatRule() {
+		return getPluginSlotValueFormatAccess().getRule();
+	}
+	
 	//Plugin returns Plugin:
 	//    {Plugin}
 	//    name=RosNames':'
@@ -547,11 +559,13 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    (BEGIN
 	//        (('base:' base=EString) &
 	//         ('parameter:' parameter=EString) &
+	//         ('format:' valueFormat=PluginSlotValueFormat)? &
 	//         ('default:' defaultPlugin=EString)?)
 	//    END) |
 	//    ('{'
 	//        'base:' base=EString
 	//        ','? 'parameter:' parameter=EString
+	//        (','? 'format:' valueFormat=PluginSlotValueFormat)?
 	//        (','? 'default:' defaultPlugin=EString)?
 	//    '}')
 	//    );
@@ -565,7 +579,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//@Override
 	//EString returns ecore::EString:
-	//    STRING | ID | 'pluginlib' | 'external';
+	//    STRING | ID | 'pluginlib' | 'external' | 'class' | 'library';
 	public RosGrammarAccess.EStringElements getEStringAccess() {
 		return gaRos.getEStringAccess();
 	}
@@ -576,7 +590,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//@Override
 	//RosNames returns ecore::EString:
-	//    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external';
+	//    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external' | 'class' | 'library';
 	public RosGrammarAccess.RosNamesElements getRosNamesAccess() {
 		return gaRos.getRosNamesAccess();
 	}
@@ -587,7 +601,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//@Override
 	//ExtensionKey returns ecore::EString:
-	//    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' |
+	//    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' | 'class' | 'library' |
 	//    'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
 	//    'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
 	public RosGrammarAccess.ExtensionKeyElements getExtensionKeyAccess() {
@@ -604,7 +618,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
 	//    'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
 	//    'actionservers:' | 'actionclients:' | 'parameters:' |
-	//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:';
+	//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:';
 	public RosGrammarAccess.ExtensionColonKeyElements getExtensionColonKeyAccess() {
 		return gaRos.getExtensionColonKeyAccess();
 	}

@@ -32,6 +32,7 @@ import ros.ParameterValue;
 import ros.Plugin;
 import ros.PluginLoader;
 import ros.PluginSlot;
+import ros.PluginSlotValueFormat;
 import ros.QualityOfService;
 import ros.RosFactory;
 import ros.ServiceSpec;
@@ -99,6 +100,9 @@ public final class RosPackageSetEditor {
         }
         if (target instanceof Plugin pl) {
             return applyPlugin(state, pl, prop, key, val, valType);
+        }
+        if (target instanceof PluginSlot slot) {
+            return applyPluginSlot(slot, prop, val);
         }
         if (target instanceof Parameter param) {
             return applyParameter(state, param, prop, val, valType);
@@ -209,18 +213,23 @@ public final class RosPackageSetEditor {
             String base = nonBlank(val, "");
             String param = nonBlank(valType, "");
             String def = "";
+            String formatStr = "";
             if (val != null && val.trim().startsWith("{")) {
                 try {
                     JsonObject obj = JsonParser.parseString(val).getAsJsonObject();
                     base = jsonStr(obj, "base", base);
                     param = jsonStr(obj, "parameter", param);
                     def = jsonStr(obj, "default", def);
+                    formatStr = jsonStr(obj, "format", jsonStr(obj, "valueFormat", formatStr));
                 } catch (Exception ignored) {
                     // Fall back to literal values
                 }
             }
             slot.setBase(base);
             slot.setParameter(param);
+            if ("library".equalsIgnoreCase(formatStr.trim())) {
+                slot.setValueFormat(PluginSlotValueFormat.LIBRARY);
+            }
             if (!blank(def)) {
                 slot.setDefaultPlugin(def);
             }
@@ -229,6 +238,32 @@ public final class RosPackageSetEditor {
             return true;
         }
         return applyHolder(state, node, prop, key, val, valType);
+    }
+
+    private static boolean applyPluginSlot(final PluginSlot slot, final String prop, final String val) {
+        if (is(prop, "name")) {
+            slot.setName(val == null ? "" : val.trim());
+            return true;
+        }
+        if (is(prop, "base")) {
+            slot.setBase(val == null ? "" : val.trim());
+            return true;
+        }
+        if (is(prop, "parameter")) {
+            slot.setParameter(val == null ? "" : val.trim());
+            return true;
+        }
+        if (is(prop, "default", "defaultPlugin")) {
+            slot.setDefaultPlugin(val == null || val.isBlank() ? null : val.trim());
+            return true;
+        }
+        if (is(prop, "format", "valueFormat")) {
+            slot.setValueFormat("library".equalsIgnoreCase(val == null ? "" : val.trim())
+                    ? PluginSlotValueFormat.LIBRARY
+                    : PluginSlotValueFormat.CLASS);
+            return true;
+        }
+        return false;
     }
 
     private static boolean applyPlugin(

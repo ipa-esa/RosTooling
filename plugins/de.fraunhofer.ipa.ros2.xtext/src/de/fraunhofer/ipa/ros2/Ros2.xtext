@@ -250,7 +250,7 @@ ExtensionColonKey returns ecore::EString:
     'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
     'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
     'actionservers:' | 'actionclients:' | 'parameters:' |
-    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' |
+    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:' |
     'artifacts:' | 'lifecycle:' | 'profile:' | 'history:' | 'depth:' |
     'reliability:' | 'durability:' | 'lease_duration:' | 'liveliness:' |
     'lifespan:' | 'deadline:' | 'active_in:' | 'qos:';

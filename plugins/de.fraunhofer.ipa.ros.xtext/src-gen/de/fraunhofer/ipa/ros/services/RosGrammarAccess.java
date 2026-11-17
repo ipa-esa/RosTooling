@@ -1540,9 +1540,13 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final Assignment cParameterAssignment_3_0_1_1_1 = (Assignment)cGroup_3_0_1_1.eContents().get(1);
 		private final RuleCall cParameterEStringParserRuleCall_3_0_1_1_1_0 = (RuleCall)cParameterAssignment_3_0_1_1_1.eContents().get(0);
 		private final Group cGroup_3_0_1_2 = (Group)cUnorderedGroup_3_0_1.eContents().get(2);
-		private final Keyword cDefaultKeyword_3_0_1_2_0 = (Keyword)cGroup_3_0_1_2.eContents().get(0);
-		private final Assignment cDefaultPluginAssignment_3_0_1_2_1 = (Assignment)cGroup_3_0_1_2.eContents().get(1);
-		private final RuleCall cDefaultPluginEStringParserRuleCall_3_0_1_2_1_0 = (RuleCall)cDefaultPluginAssignment_3_0_1_2_1.eContents().get(0);
+		private final Keyword cFormatKeyword_3_0_1_2_0 = (Keyword)cGroup_3_0_1_2.eContents().get(0);
+		private final Assignment cValueFormatAssignment_3_0_1_2_1 = (Assignment)cGroup_3_0_1_2.eContents().get(1);
+		private final RuleCall cValueFormatPluginSlotValueFormatEnumRuleCall_3_0_1_2_1_0 = (RuleCall)cValueFormatAssignment_3_0_1_2_1.eContents().get(0);
+		private final Group cGroup_3_0_1_3 = (Group)cUnorderedGroup_3_0_1.eContents().get(3);
+		private final Keyword cDefaultKeyword_3_0_1_3_0 = (Keyword)cGroup_3_0_1_3.eContents().get(0);
+		private final Assignment cDefaultPluginAssignment_3_0_1_3_1 = (Assignment)cGroup_3_0_1_3.eContents().get(1);
+		private final RuleCall cDefaultPluginEStringParserRuleCall_3_0_1_3_1_0 = (RuleCall)cDefaultPluginAssignment_3_0_1_3_1.eContents().get(0);
 		private final RuleCall cENDTerminalRuleCall_3_0_2 = (RuleCall)cGroup_3_0.eContents().get(2);
 		private final Group cGroup_3_1 = (Group)cAlternatives_3.eContents().get(1);
 		private final Keyword cLeftCurlyBracketKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
@@ -1555,10 +1559,15 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final RuleCall cParameterEStringParserRuleCall_3_1_5_0 = (RuleCall)cParameterAssignment_3_1_5.eContents().get(0);
 		private final Group cGroup_3_1_6 = (Group)cGroup_3_1.eContents().get(6);
 		private final Keyword cCommaKeyword_3_1_6_0 = (Keyword)cGroup_3_1_6.eContents().get(0);
-		private final Keyword cDefaultKeyword_3_1_6_1 = (Keyword)cGroup_3_1_6.eContents().get(1);
-		private final Assignment cDefaultPluginAssignment_3_1_6_2 = (Assignment)cGroup_3_1_6.eContents().get(2);
-		private final RuleCall cDefaultPluginEStringParserRuleCall_3_1_6_2_0 = (RuleCall)cDefaultPluginAssignment_3_1_6_2.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_3_1_7 = (Keyword)cGroup_3_1.eContents().get(7);
+		private final Keyword cFormatKeyword_3_1_6_1 = (Keyword)cGroup_3_1_6.eContents().get(1);
+		private final Assignment cValueFormatAssignment_3_1_6_2 = (Assignment)cGroup_3_1_6.eContents().get(2);
+		private final RuleCall cValueFormatPluginSlotValueFormatEnumRuleCall_3_1_6_2_0 = (RuleCall)cValueFormatAssignment_3_1_6_2.eContents().get(0);
+		private final Group cGroup_3_1_7 = (Group)cGroup_3_1.eContents().get(7);
+		private final Keyword cCommaKeyword_3_1_7_0 = (Keyword)cGroup_3_1_7.eContents().get(0);
+		private final Keyword cDefaultKeyword_3_1_7_1 = (Keyword)cGroup_3_1_7.eContents().get(1);
+		private final Assignment cDefaultPluginAssignment_3_1_7_2 = (Assignment)cGroup_3_1_7.eContents().get(2);
+		private final RuleCall cDefaultPluginEStringParserRuleCall_3_1_7_2_0 = (RuleCall)cDefaultPluginAssignment_3_1_7_2.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_3_1_8 = (Keyword)cGroup_3_1.eContents().get(8);
 		
 		//PluginSlot returns PluginSlot:
 		//    {PluginSlot}
@@ -1567,11 +1576,13 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//    (BEGIN
 		//        (('base:' base=EString) &
 		//         ('parameter:' parameter=EString) &
+		//         ('format:' valueFormat=PluginSlotValueFormat)? &
 		//         ('default:' defaultPlugin=EString)?)
 		//    END) |
 		//    ('{'
 		//        'base:' base=EString
 		//        ','? 'parameter:' parameter=EString
+		//        (','? 'format:' valueFormat=PluginSlotValueFormat)?
 		//        (','? 'default:' defaultPlugin=EString)?
 		//    '}')
 		//    );
@@ -1583,11 +1594,13 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//(BEGIN
 		//    (('base:' base=EString) &
 		//     ('parameter:' parameter=EString) &
+		//     ('format:' valueFormat=PluginSlotValueFormat)? &
 		//     ('default:' defaultPlugin=EString)?)
 		//END) |
 		//('{'
 		//    'base:' base=EString
 		//    ','? 'parameter:' parameter=EString
+		//    (','? 'format:' valueFormat=PluginSlotValueFormat)?
 		//    (','? 'default:' defaultPlugin=EString)?
 		//'}')
 		//)
@@ -1609,11 +1622,13 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//(BEGIN
 		//    (('base:' base=EString) &
 		//     ('parameter:' parameter=EString) &
+		//     ('format:' valueFormat=PluginSlotValueFormat)? &
 		//     ('default:' defaultPlugin=EString)?)
 		//END) |
 		//('{'
 		//    'base:' base=EString
 		//    ','? 'parameter:' parameter=EString
+		//    (','? 'format:' valueFormat=PluginSlotValueFormat)?
 		//    (','? 'default:' defaultPlugin=EString)?
 		//'}')
 		//)
@@ -1622,6 +1637,7 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//(BEGIN
 		//    (('base:' base=EString) &
 		//     ('parameter:' parameter=EString) &
+		//     ('format:' valueFormat=PluginSlotValueFormat)? &
 		//     ('default:' defaultPlugin=EString)?)
 		//END)
 		public Group getGroup_3_0() { return cGroup_3_0; }
@@ -1631,6 +1647,7 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		
 		//(('base:' base=EString) &
 		// ('parameter:' parameter=EString) &
+		// ('format:' valueFormat=PluginSlotValueFormat)? &
 		// ('default:' defaultPlugin=EString)?)
 		public UnorderedGroup getUnorderedGroup_3_0_1() { return cUnorderedGroup_3_0_1; }
 		
@@ -1658,17 +1675,29 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//EString
 		public RuleCall getParameterEStringParserRuleCall_3_0_1_1_1_0() { return cParameterEStringParserRuleCall_3_0_1_1_1_0; }
 		
-		//('default:' defaultPlugin=EString)?
+		//('format:' valueFormat=PluginSlotValueFormat)?
 		public Group getGroup_3_0_1_2() { return cGroup_3_0_1_2; }
 		
+		//'format:'
+		public Keyword getFormatKeyword_3_0_1_2_0() { return cFormatKeyword_3_0_1_2_0; }
+		
+		//valueFormat=PluginSlotValueFormat
+		public Assignment getValueFormatAssignment_3_0_1_2_1() { return cValueFormatAssignment_3_0_1_2_1; }
+		
+		//PluginSlotValueFormat
+		public RuleCall getValueFormatPluginSlotValueFormatEnumRuleCall_3_0_1_2_1_0() { return cValueFormatPluginSlotValueFormatEnumRuleCall_3_0_1_2_1_0; }
+		
+		//('default:' defaultPlugin=EString)?
+		public Group getGroup_3_0_1_3() { return cGroup_3_0_1_3; }
+		
 		//'default:'
-		public Keyword getDefaultKeyword_3_0_1_2_0() { return cDefaultKeyword_3_0_1_2_0; }
+		public Keyword getDefaultKeyword_3_0_1_3_0() { return cDefaultKeyword_3_0_1_3_0; }
 		
 		//defaultPlugin=EString
-		public Assignment getDefaultPluginAssignment_3_0_1_2_1() { return cDefaultPluginAssignment_3_0_1_2_1; }
+		public Assignment getDefaultPluginAssignment_3_0_1_3_1() { return cDefaultPluginAssignment_3_0_1_3_1; }
 		
 		//EString
-		public RuleCall getDefaultPluginEStringParserRuleCall_3_0_1_2_1_0() { return cDefaultPluginEStringParserRuleCall_3_0_1_2_1_0; }
+		public RuleCall getDefaultPluginEStringParserRuleCall_3_0_1_3_1_0() { return cDefaultPluginEStringParserRuleCall_3_0_1_3_1_0; }
 		
 		//END
 		public RuleCall getENDTerminalRuleCall_3_0_2() { return cENDTerminalRuleCall_3_0_2; }
@@ -1676,6 +1705,7 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//('{'
 		//    'base:' base=EString
 		//    ','? 'parameter:' parameter=EString
+		//    (','? 'format:' valueFormat=PluginSlotValueFormat)?
 		//    (','? 'default:' defaultPlugin=EString)?
 		//'}')
 		public Group getGroup_3_1() { return cGroup_3_1; }
@@ -1704,23 +1734,38 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//EString
 		public RuleCall getParameterEStringParserRuleCall_3_1_5_0() { return cParameterEStringParserRuleCall_3_1_5_0; }
 		
-		//(','? 'default:' defaultPlugin=EString)?
+		//(','? 'format:' valueFormat=PluginSlotValueFormat)?
 		public Group getGroup_3_1_6() { return cGroup_3_1_6; }
 		
 		//','?
 		public Keyword getCommaKeyword_3_1_6_0() { return cCommaKeyword_3_1_6_0; }
 		
+		//'format:'
+		public Keyword getFormatKeyword_3_1_6_1() { return cFormatKeyword_3_1_6_1; }
+		
+		//valueFormat=PluginSlotValueFormat
+		public Assignment getValueFormatAssignment_3_1_6_2() { return cValueFormatAssignment_3_1_6_2; }
+		
+		//PluginSlotValueFormat
+		public RuleCall getValueFormatPluginSlotValueFormatEnumRuleCall_3_1_6_2_0() { return cValueFormatPluginSlotValueFormatEnumRuleCall_3_1_6_2_0; }
+		
+		//(','? 'default:' defaultPlugin=EString)?
+		public Group getGroup_3_1_7() { return cGroup_3_1_7; }
+		
+		//','?
+		public Keyword getCommaKeyword_3_1_7_0() { return cCommaKeyword_3_1_7_0; }
+		
 		//'default:'
-		public Keyword getDefaultKeyword_3_1_6_1() { return cDefaultKeyword_3_1_6_1; }
+		public Keyword getDefaultKeyword_3_1_7_1() { return cDefaultKeyword_3_1_7_1; }
 		
 		//defaultPlugin=EString
-		public Assignment getDefaultPluginAssignment_3_1_6_2() { return cDefaultPluginAssignment_3_1_6_2; }
+		public Assignment getDefaultPluginAssignment_3_1_7_2() { return cDefaultPluginAssignment_3_1_7_2; }
 		
 		//EString
-		public RuleCall getDefaultPluginEStringParserRuleCall_3_1_6_2_0() { return cDefaultPluginEStringParserRuleCall_3_1_6_2_0; }
+		public RuleCall getDefaultPluginEStringParserRuleCall_3_1_7_2_0() { return cDefaultPluginEStringParserRuleCall_3_1_7_2_0; }
 		
 		//'}'
-		public Keyword getRightCurlyBracketKeyword_3_1_7() { return cRightCurlyBracketKeyword_3_1_7; }
+		public Keyword getRightCurlyBracketKeyword_3_1_8() { return cRightCurlyBracketKeyword_3_1_8; }
 	}
 	public class EStringElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.EString");
@@ -1729,13 +1774,15 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final RuleCall cIDTerminalRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final Keyword cPluginlibKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
 		private final Keyword cExternalKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Keyword cClassKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
+		private final Keyword cLibraryKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
 		
 		//@Override
 		//EString returns ecore::EString:
-		//    STRING | ID | 'pluginlib' | 'external';
+		//    STRING | ID | 'pluginlib' | 'external' | 'class' | 'library';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//STRING | ID | 'pluginlib' | 'external'
+		//STRING | ID | 'pluginlib' | 'external' | 'class' | 'library'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//STRING
@@ -1749,6 +1796,12 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		
 		//'external'
 		public Keyword getExternalKeyword_3() { return cExternalKeyword_3; }
+		
+		//'class'
+		public Keyword getClassKeyword_4() { return cClassKeyword_4; }
+		
+		//'library'
+		public Keyword getLibraryKeyword_5() { return cLibraryKeyword_5; }
 	}
 	public class RosNamesElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.RosNames");
@@ -1758,13 +1811,15 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final Keyword cNodeKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
 		private final Keyword cPluginlibKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
 		private final Keyword cExternalKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
+		private final Keyword cClassKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		private final Keyword cLibraryKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
 		
 		//@Override
 		//RosNames returns ecore::EString:
-		//    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external';
+		//    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external' | 'class' | 'library';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external'
+		//ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external' | 'class' | 'library'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//ROS_CONVENTION_A
@@ -1781,6 +1836,12 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		
 		//'external'
 		public Keyword getExternalKeyword_4() { return cExternalKeyword_4; }
+		
+		//'class'
+		public Keyword getClassKeyword_5() { return cClassKeyword_5; }
+		
+		//'library'
+		public Keyword getLibraryKeyword_6() { return cLibraryKeyword_6; }
 	}
 	public class ExtensionKeyElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.ExtensionKey");
@@ -1791,40 +1852,42 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final Keyword cNodeKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
 		private final Keyword cPluginlibKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
 		private final Keyword cExternalKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
-		private final Keyword cStringKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
-		private final Keyword cIntegerKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
-		private final Keyword cDoubleKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
-		private final Keyword cBooleanKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
-		private final Keyword cBase64Keyword_10 = (Keyword)cAlternatives.eContents().get(10);
-		private final Keyword cArrayKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
-		private final Keyword cListKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
-		private final Keyword cStructKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
-		private final Keyword cDateKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
-		private final Keyword cAnyKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
-		private final Keyword cBoolKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
-		private final Keyword cInt8Keyword_17 = (Keyword)cAlternatives.eContents().get(17);
-		private final Keyword cUint8Keyword_18 = (Keyword)cAlternatives.eContents().get(18);
-		private final Keyword cInt16Keyword_19 = (Keyword)cAlternatives.eContents().get(19);
-		private final Keyword cUint16Keyword_20 = (Keyword)cAlternatives.eContents().get(20);
-		private final Keyword cInt32Keyword_21 = (Keyword)cAlternatives.eContents().get(21);
-		private final Keyword cUint32Keyword_22 = (Keyword)cAlternatives.eContents().get(22);
-		private final Keyword cInt64Keyword_23 = (Keyword)cAlternatives.eContents().get(23);
-		private final Keyword cUint64Keyword_24 = (Keyword)cAlternatives.eContents().get(24);
-		private final Keyword cFloat32Keyword_25 = (Keyword)cAlternatives.eContents().get(25);
-		private final Keyword cFloat64Keyword_26 = (Keyword)cAlternatives.eContents().get(26);
-		private final Keyword cStringKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
-		private final Keyword cCharKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
-		private final Keyword cByteKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
-		private final Keyword cHeaderKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
+		private final Keyword cClassKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
+		private final Keyword cLibraryKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
+		private final Keyword cStringKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
+		private final Keyword cIntegerKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
+		private final Keyword cDoubleKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
+		private final Keyword cBooleanKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
+		private final Keyword cBase64Keyword_12 = (Keyword)cAlternatives.eContents().get(12);
+		private final Keyword cArrayKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
+		private final Keyword cListKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
+		private final Keyword cStructKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
+		private final Keyword cDateKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
+		private final Keyword cAnyKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
+		private final Keyword cBoolKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
+		private final Keyword cInt8Keyword_19 = (Keyword)cAlternatives.eContents().get(19);
+		private final Keyword cUint8Keyword_20 = (Keyword)cAlternatives.eContents().get(20);
+		private final Keyword cInt16Keyword_21 = (Keyword)cAlternatives.eContents().get(21);
+		private final Keyword cUint16Keyword_22 = (Keyword)cAlternatives.eContents().get(22);
+		private final Keyword cInt32Keyword_23 = (Keyword)cAlternatives.eContents().get(23);
+		private final Keyword cUint32Keyword_24 = (Keyword)cAlternatives.eContents().get(24);
+		private final Keyword cInt64Keyword_25 = (Keyword)cAlternatives.eContents().get(25);
+		private final Keyword cUint64Keyword_26 = (Keyword)cAlternatives.eContents().get(26);
+		private final Keyword cFloat32Keyword_27 = (Keyword)cAlternatives.eContents().get(27);
+		private final Keyword cFloat64Keyword_28 = (Keyword)cAlternatives.eContents().get(28);
+		private final Keyword cStringKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
+		private final Keyword cCharKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
+		private final Keyword cByteKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
+		private final Keyword cHeaderKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
 		
 		//@Override
 		//ExtensionKey returns ecore::EString:
-		//    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' |
+		//    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' | 'class' | 'library' |
 		//    'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
 		//    'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' |
+		//ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' | 'class' | 'library' |
 		//'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
 		//'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header'
 		public Alternatives getAlternatives() { return cAlternatives; }
@@ -1847,80 +1910,86 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//'external'
 		public Keyword getExternalKeyword_5() { return cExternalKeyword_5; }
 		
+		//'class'
+		public Keyword getClassKeyword_6() { return cClassKeyword_6; }
+		
+		//'library'
+		public Keyword getLibraryKeyword_7() { return cLibraryKeyword_7; }
+		
 		//'String'
-		public Keyword getStringKeyword_6() { return cStringKeyword_6; }
+		public Keyword getStringKeyword_8() { return cStringKeyword_8; }
 		
 		//'Integer'
-		public Keyword getIntegerKeyword_7() { return cIntegerKeyword_7; }
+		public Keyword getIntegerKeyword_9() { return cIntegerKeyword_9; }
 		
 		//'Double'
-		public Keyword getDoubleKeyword_8() { return cDoubleKeyword_8; }
+		public Keyword getDoubleKeyword_10() { return cDoubleKeyword_10; }
 		
 		//'Boolean'
-		public Keyword getBooleanKeyword_9() { return cBooleanKeyword_9; }
+		public Keyword getBooleanKeyword_11() { return cBooleanKeyword_11; }
 		
 		//'Base64'
-		public Keyword getBase64Keyword_10() { return cBase64Keyword_10; }
+		public Keyword getBase64Keyword_12() { return cBase64Keyword_12; }
 		
 		//'Array'
-		public Keyword getArrayKeyword_11() { return cArrayKeyword_11; }
+		public Keyword getArrayKeyword_13() { return cArrayKeyword_13; }
 		
 		//'List'
-		public Keyword getListKeyword_12() { return cListKeyword_12; }
+		public Keyword getListKeyword_14() { return cListKeyword_14; }
 		
 		//'Struct'
-		public Keyword getStructKeyword_13() { return cStructKeyword_13; }
+		public Keyword getStructKeyword_15() { return cStructKeyword_15; }
 		
 		//'Date'
-		public Keyword getDateKeyword_14() { return cDateKeyword_14; }
+		public Keyword getDateKeyword_16() { return cDateKeyword_16; }
 		
 		//'Any'
-		public Keyword getAnyKeyword_15() { return cAnyKeyword_15; }
+		public Keyword getAnyKeyword_17() { return cAnyKeyword_17; }
 		
 		//'bool'
-		public Keyword getBoolKeyword_16() { return cBoolKeyword_16; }
+		public Keyword getBoolKeyword_18() { return cBoolKeyword_18; }
 		
 		//'int8'
-		public Keyword getInt8Keyword_17() { return cInt8Keyword_17; }
+		public Keyword getInt8Keyword_19() { return cInt8Keyword_19; }
 		
 		//'uint8'
-		public Keyword getUint8Keyword_18() { return cUint8Keyword_18; }
+		public Keyword getUint8Keyword_20() { return cUint8Keyword_20; }
 		
 		//'int16'
-		public Keyword getInt16Keyword_19() { return cInt16Keyword_19; }
+		public Keyword getInt16Keyword_21() { return cInt16Keyword_21; }
 		
 		//'uint16'
-		public Keyword getUint16Keyword_20() { return cUint16Keyword_20; }
+		public Keyword getUint16Keyword_22() { return cUint16Keyword_22; }
 		
 		//'int32'
-		public Keyword getInt32Keyword_21() { return cInt32Keyword_21; }
+		public Keyword getInt32Keyword_23() { return cInt32Keyword_23; }
 		
 		//'uint32'
-		public Keyword getUint32Keyword_22() { return cUint32Keyword_22; }
+		public Keyword getUint32Keyword_24() { return cUint32Keyword_24; }
 		
 		//'int64'
-		public Keyword getInt64Keyword_23() { return cInt64Keyword_23; }
+		public Keyword getInt64Keyword_25() { return cInt64Keyword_25; }
 		
 		//'uint64'
-		public Keyword getUint64Keyword_24() { return cUint64Keyword_24; }
+		public Keyword getUint64Keyword_26() { return cUint64Keyword_26; }
 		
 		//'float32'
-		public Keyword getFloat32Keyword_25() { return cFloat32Keyword_25; }
+		public Keyword getFloat32Keyword_27() { return cFloat32Keyword_27; }
 		
 		//'float64'
-		public Keyword getFloat64Keyword_26() { return cFloat64Keyword_26; }
+		public Keyword getFloat64Keyword_28() { return cFloat64Keyword_28; }
 		
 		//'string'
-		public Keyword getStringKeyword_27() { return cStringKeyword_27; }
+		public Keyword getStringKeyword_29() { return cStringKeyword_29; }
 		
 		//'char'
-		public Keyword getCharKeyword_28() { return cCharKeyword_28; }
+		public Keyword getCharKeyword_30() { return cCharKeyword_30; }
 		
 		//'byte'
-		public Keyword getByteKeyword_29() { return cByteKeyword_29; }
+		public Keyword getByteKeyword_31() { return cByteKeyword_31; }
 		
 		//'Header'
-		public Keyword getHeaderKeyword_30() { return cHeaderKeyword_30; }
+		public Keyword getHeaderKeyword_32() { return cHeaderKeyword_32; }
 	}
 	public class ExtensionColonKeyElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.ExtensionColonKey");
@@ -1948,6 +2017,7 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final Keyword cPluginslotsKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
 		private final Keyword cBaseKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
 		private final Keyword cParameterKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
+		private final Keyword cFormatKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
 		
 		//@Override
 		//ExtensionColonKey returns ecore::EString:
@@ -1955,14 +2025,14 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//    'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
 		//    'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
 		//    'actionservers:' | 'actionclients:' | 'parameters:' |
-		//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:';
+		//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'ns:' | 'type:' | 'value:' | 'default:' |
 		//'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
 		//'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
 		//'actionservers:' | 'actionclients:' | 'parameters:' |
-		//'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:'
+		//'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'ns:'
@@ -2033,6 +2103,9 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		
 		//'parameter:'
 		public Keyword getParameterKeyword_22() { return cParameterKeyword_22; }
+		
+		//'format:'
+		public Keyword getFormatKeyword_23() { return cFormatKeyword_23; }
 	}
 	public class PublisherElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.Publisher");
@@ -2608,6 +2681,36 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//'external'
 		public Keyword getEXTERNALExternalKeyword_1_0() { return cEXTERNALExternalKeyword_1_0; }
 	}
+	public class PluginSlotValueFormatElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
+		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.PluginSlotValueFormat");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final EnumLiteralDeclaration cCLASSEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
+		private final Keyword cCLASSClassKeyword_0_0 = (Keyword)cCLASSEnumLiteralDeclaration_0.eContents().get(0);
+		private final EnumLiteralDeclaration cLIBRARYEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
+		private final Keyword cLIBRARYLibraryKeyword_1_0 = (Keyword)cLIBRARYEnumLiteralDeclaration_1.eContents().get(0);
+		
+		//enum PluginSlotValueFormat returns PluginSlotValueFormat:
+		//    CLASS = 'class' |
+		//    LIBRARY = 'library'
+		//;
+		public EnumRule getRule() { return rule; }
+		
+		//CLASS = 'class' |
+		//LIBRARY = 'library'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//CLASS = 'class'
+		public EnumLiteralDeclaration getCLASSEnumLiteralDeclaration_0() { return cCLASSEnumLiteralDeclaration_0; }
+		
+		//'class'
+		public Keyword getCLASSClassKeyword_0_0() { return cCLASSClassKeyword_0_0; }
+		
+		//LIBRARY = 'library'
+		public EnumLiteralDeclaration getLIBRARYEnumLiteralDeclaration_1() { return cLIBRARYEnumLiteralDeclaration_1; }
+		
+		//'library'
+		public Keyword getLIBRARYLibraryKeyword_1_0() { return cLIBRARYLibraryKeyword_1_0; }
+	}
 	
 	private final PackageSetElements pPackageSet;
 	private final PackageElements pPackage;
@@ -2619,6 +2722,7 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	private final ArtifactElements pArtifact;
 	private final NodeElements pNode;
 	private final PluginLoaderElements ePluginLoader;
+	private final PluginSlotValueFormatElements ePluginSlotValueFormat;
 	private final PluginElements pPlugin;
 	private final PluginSlotElements pPluginSlot;
 	private final EStringElements pEString;
@@ -2658,6 +2762,7 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		this.pArtifact = new ArtifactElements();
 		this.pNode = new NodeElements();
 		this.ePluginLoader = new PluginLoaderElements();
+		this.ePluginSlotValueFormat = new PluginSlotValueFormatElements();
 		this.pPlugin = new PluginElements();
 		this.pPluginSlot = new PluginSlotElements();
 		this.pEString = new EStringElements();
@@ -2939,6 +3044,18 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		return getPluginLoaderAccess().getRule();
 	}
 	
+	//enum PluginSlotValueFormat returns PluginSlotValueFormat:
+	//    CLASS = 'class' |
+	//    LIBRARY = 'library'
+	//;
+	public PluginSlotValueFormatElements getPluginSlotValueFormatAccess() {
+		return ePluginSlotValueFormat;
+	}
+	
+	public EnumRule getPluginSlotValueFormatRule() {
+		return getPluginSlotValueFormatAccess().getRule();
+	}
+	
 	//Plugin returns Plugin:
 	//    {Plugin}
 	//    name=RosNames':'
@@ -2999,11 +3116,13 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	//    (BEGIN
 	//        (('base:' base=EString) &
 	//         ('parameter:' parameter=EString) &
+	//         ('format:' valueFormat=PluginSlotValueFormat)? &
 	//         ('default:' defaultPlugin=EString)?)
 	//    END) |
 	//    ('{'
 	//        'base:' base=EString
 	//        ','? 'parameter:' parameter=EString
+	//        (','? 'format:' valueFormat=PluginSlotValueFormat)?
 	//        (','? 'default:' defaultPlugin=EString)?
 	//    '}')
 	//    );
@@ -3017,7 +3136,7 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	
 	//@Override
 	//EString returns ecore::EString:
-	//    STRING | ID | 'pluginlib' | 'external';
+	//    STRING | ID | 'pluginlib' | 'external' | 'class' | 'library';
 	public EStringElements getEStringAccess() {
 		return pEString;
 	}
@@ -3028,7 +3147,7 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	
 	//@Override
 	//RosNames returns ecore::EString:
-	//    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external';
+	//    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external' | 'class' | 'library';
 	public RosNamesElements getRosNamesAccess() {
 		return pRosNames;
 	}
@@ -3039,7 +3158,7 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	
 	//@Override
 	//ExtensionKey returns ecore::EString:
-	//    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' |
+	//    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' | 'class' | 'library' |
 	//    'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
 	//    'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
 	public ExtensionKeyElements getExtensionKeyAccess() {
@@ -3056,7 +3175,7 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	//    'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
 	//    'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
 	//    'actionservers:' | 'actionclients:' | 'parameters:' |
-	//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:';
+	//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:';
 	public ExtensionColonKeyElements getExtensionColonKeyAccess() {
 		return pExtensionColonKey;
 	}

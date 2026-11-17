@@ -553,7 +553,13 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *     PluginSlot returns PluginSlot
 	 *
 	 * Constraint:
-	 *     (name=EString ((base=EString | parameter=EString | defaultPlugin=EString)+ | (base=EString parameter=EString defaultPlugin=EString?))?)
+	 *     (
+	 *         name=EString 
+	 *         (
+	 *             (base=EString | parameter=EString | valueFormat=PluginSlotValueFormat | defaultPlugin=EString)+ | 
+	 *             (base=EString parameter=EString valueFormat=PluginSlotValueFormat? defaultPlugin=EString?)
+	 *         )?
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_PluginSlot(ISerializationContext context, PluginSlot semanticObject) {

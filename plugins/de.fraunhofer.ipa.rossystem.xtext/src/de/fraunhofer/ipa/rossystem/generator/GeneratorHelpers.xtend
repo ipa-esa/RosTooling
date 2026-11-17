@@ -1,6 +1,7 @@
 package de.fraunhofer.ipa.rossystem.generator
 
 import java.util.ArrayList
+import java.util.LinkedHashSet
 import java.util.List
 import java.util.HashSet
 import java.util.Set
@@ -14,10 +15,9 @@ import ros.ParameterValue
 import ros.ParameterStringType
 import ros.ParameterString
 import ros.Plugin
-import ros.PluginLoader
 import ros.PluginSlot
+import ros.PluginSlotValueFormat
 import ros.impl.AmentPackageImpl
-import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry
 import system.Process
 import system.RosParameter
 import ros.impl.ParameterBooleanImpl
@@ -640,6 +640,23 @@ class GeneratorHelpers {
         return null
     }
 
+    /**
+     * Resolves auto-populated parameter entries for host {@link PluginSlot}s strictly from the
+     * {@code .ros2}/{@code .rossystem} model:
+     * <ul>
+     *   <li>Matching requires {@code plugin.implements == slot.base} for every loader.</li>
+     *   <li>{@code format: class} (default) emits {@code pkg::Plugin}; {@code format: library}
+     *       emits the owning {@link Artifact} name deduplicated in attachment order.</li>
+     * </ul>
+     *
+     * <p>Known limits (out of scope for core slot emission):
+     * <ul>
+     *   <li>Plain upstream {@code TreeExecutionServer} expects {@code package_name/subfolder}
+     *       entries in its {@code plugins} parameter, which users configure explicitly in
+     *       {@code .rossystem} {@code parameters:}.</li>
+     *   <li>Nav2-style nested {@code <name>.plugin} parameter maps are out of scope.</li>
+     * </ul>
+     */
     def List<SlotParamEntry> getSlotParameterEntries(RosNode component) {
         val result = new ArrayList<SlotParamEntry>()
         if (component === null || component.from === null || component.from.pluginSlots.empty) {
@@ -660,18 +677,17 @@ class GeneratorHelpers {
             }
         }
 
-        val singleSlot = component.from.pluginSlots.size == 1
         for (PluginSlot slot : component.from.pluginSlots) {
             val paramName = slot.parameter
             if (paramName !== null && !paramName.empty && !explicitParamNames.contains(paramName)) {
-                val matchedValues = new ArrayList<String>()
+                val matchedSet = new LinkedHashSet<String>()
                 for (Plugin pl : component.plugins) {
-                    val matches = (pl.implements !== null && pl.implements == slot.base)
-                        || (pl.loader == PluginLoader.EXTERNAL && (pl.implements === null || pl.implements.trim.empty) && singleSlot)
-                    if (matches) {
-                        matchedValues.add(resolveSlotValueForPlugin(pl, slot))
+                    val expectedImpl = pl.implements?.trim
+                    if (!pl.eIsProxy && expectedImpl !== null && !expectedImpl.empty && expectedImpl == slot.base) {
+                        matchedSet.add(resolveSlotValueForPlugin(pl, slot))
                     }
                 }
+                val matchedValues = new ArrayList<String>(matchedSet)
                 if (matchedValues.empty && slot.defaultPlugin !== null && !slot.defaultPlugin.trim.empty) {
                     matchedValues.add(slot.defaultPlugin.trim)
                 }
@@ -686,18 +702,14 @@ class GeneratorHelpers {
     }
 
     def private String resolveSlotValueForPlugin(Plugin plugin, PluginSlot slot) {
-        if (plugin.loader == PluginLoader.EXTERNAL) {
-            for (extPlugin : PluginRegistry.INSTANCE.activePlugins) {
-                val custom = extPlugin.slotParameterEntry(plugin, slot)
-                if (custom !== null && custom.isPresent) {
-                    return custom.get
-                }
+        if (slot.valueFormat == PluginSlotValueFormat.LIBRARY) {
+            val art = if (plugin.eContainer instanceof Artifact) plugin.eContainer as Artifact else null
+            if (art !== null && !art.name.nullOrEmpty) {
+                return art.name
             }
+            return plugin.name
         }
         val pkgName = getPluginPackageName(plugin)
-        if (plugin.loader == PluginLoader.EXTERNAL && (plugin.implements === null || plugin.implements.trim.empty)) {
-            return pkgName ?: plugin.name
-        }
         return if (!pkgName.nullOrEmpty) pkgName + "::" + plugin.name else plugin.name
     }
 

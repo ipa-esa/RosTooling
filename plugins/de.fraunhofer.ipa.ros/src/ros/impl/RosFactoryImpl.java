@@ -57,6 +57,7 @@ import ros.ParameterStructTypeMember;
 import ros.Plugin;
 import ros.PluginLoader;
 import ros.PluginSlot;
+import ros.PluginSlotValueFormat;
 import ros.PrivateNamespace;
 import ros.Publisher;
 import ros.QualityOfService;
@@ -186,6 +187,8 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 				return createLifecycleStateFromString(eDataType, initialValue);
 			case RosPackage.PLUGIN_LOADER:
 				return createPluginLoaderFromString(eDataType, initialValue);
+			case RosPackage.PLUGIN_SLOT_VALUE_FORMAT:
+				return createPluginSlotValueFormatFromString(eDataType, initialValue);
 			case RosPackage.GRAPH_NAME:
 				return createGraphNameFromString(eDataType, initialValue);
 			default:
@@ -205,6 +208,8 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 				return convertLifecycleStateToString(eDataType, instanceValue);
 			case RosPackage.PLUGIN_LOADER:
 				return convertPluginLoaderToString(eDataType, instanceValue);
+			case RosPackage.PLUGIN_SLOT_VALUE_FORMAT:
+				return convertPluginSlotValueFormatToString(eDataType, instanceValue);
 			case RosPackage.GRAPH_NAME:
 				return convertGraphNameToString(eDataType, instanceValue);
 			default:
@@ -854,6 +859,26 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 	 * @generated
 	 */
 	public String convertPluginLoaderToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PluginSlotValueFormat createPluginSlotValueFormatFromString(EDataType eDataType, String initialValue) {
+		PluginSlotValueFormat result = PluginSlotValueFormat.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertPluginSlotValueFormatToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

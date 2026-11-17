@@ -1,8 +1,5 @@
 package de.fraunhofer.ipa.ros.scoping;
 
-import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
-import de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin;
-import de.fraunhofer.ipa.ros.plugin.spi.ScopeContribution;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -19,11 +16,10 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.SimpleScope;
 import ros.ExtensionRefValue;
 import ros.InterfaceHolder;
-import ros.Plugin;
 
 /**
  * Shared scoping helpers for {@link ExtensionRefValue#getTarget()} across {@code .ros},
- * {@code .ros1}, {@code .ros2}, and {@code .rossystem} models, plus plugin scope contributions.
+ * {@code .ros1}, {@code .ros2}, and {@code .rossystem} models.
  */
 public final class ExtensionScopingHelper {
 
@@ -71,19 +67,6 @@ public final class ExtensionScopingHelper {
                             descriptions.add(EObjectDescription.create(qualifiedQn, cand));
                         }
                     }
-                }
-            }
-        }
-
-        List<ScopeContribution> pluginContributions = new ArrayList<>();
-        for (RosToolingPlugin plugin : PluginRegistry.INSTANCE.activePlugins()) {
-            plugin.contributeScope(context, reference, pluginContributions);
-        }
-        for (ScopeContribution contrib : pluginContributions) {
-            if (contrib != null && contrib.name() != null && !contrib.name().isBlank() && contrib.target() != null) {
-                QualifiedName qn = QualifiedName.create(contrib.name());
-                if (addedNames.add(qn)) {
-                    descriptions.add(EObjectDescription.create(qn, contrib.target()));
                 }
             }
         }

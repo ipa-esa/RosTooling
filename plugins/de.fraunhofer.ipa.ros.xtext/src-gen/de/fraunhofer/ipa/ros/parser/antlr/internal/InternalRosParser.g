@@ -1603,16 +1603,50 @@ rulePluginSlot returns [EObject current=null]
 							{
 								getUnorderedGroupHelper().select(grammarAccess.getPluginSlotAccess().getUnorderedGroup_3_0_1(), 2);
 							}
-										({true}?=>(otherlv_9=Default
+										({true}?=>(otherlv_9=Format
 										{
-											newLeafNode(otherlv_9, grammarAccess.getPluginSlotAccess().getDefaultKeyword_3_0_1_2_0());
+											newLeafNode(otherlv_9, grammarAccess.getPluginSlotAccess().getFormatKeyword_3_0_1_2_0());
 										}
 										(
 											(
 												{
-													newCompositeNode(grammarAccess.getPluginSlotAccess().getDefaultPluginEStringParserRuleCall_3_0_1_2_1_0());
+													newCompositeNode(grammarAccess.getPluginSlotAccess().getValueFormatPluginSlotValueFormatEnumRuleCall_3_0_1_2_1_0());
 												}
-												lv_defaultPlugin_10_0=ruleEString
+												lv_valueFormat_10_0=rulePluginSlotValueFormat
+												{
+													if ($current==null) {
+														$current = createModelElementForParent(grammarAccess.getPluginSlotRule());
+													}
+													set(
+														$current,
+														"valueFormat",
+														lv_valueFormat_10_0,
+														"de.fraunhofer.ipa.ros.Ros.PluginSlotValueFormat");
+													afterParserOrEnumRuleCall();
+												}
+											)
+										)
+										))
+							{ 
+								getUnorderedGroupHelper().returnFromSelection(grammarAccess.getPluginSlotAccess().getUnorderedGroup_3_0_1());
+							}
+						)
+					)|
+					(
+						{getUnorderedGroupHelper().canSelect(grammarAccess.getPluginSlotAccess().getUnorderedGroup_3_0_1(), 3)}?=>(
+							{
+								getUnorderedGroupHelper().select(grammarAccess.getPluginSlotAccess().getUnorderedGroup_3_0_1(), 3);
+							}
+										({true}?=>(otherlv_11=Default
+										{
+											newLeafNode(otherlv_11, grammarAccess.getPluginSlotAccess().getDefaultKeyword_3_0_1_3_0());
+										}
+										(
+											(
+												{
+													newCompositeNode(grammarAccess.getPluginSlotAccess().getDefaultPluginEStringParserRuleCall_3_0_1_3_1_0());
+												}
+												lv_defaultPlugin_12_0=ruleEString
 												{
 													if ($current==null) {
 														$current = createModelElementForParent(grammarAccess.getPluginSlotRule());
@@ -1620,7 +1654,7 @@ rulePluginSlot returns [EObject current=null]
 													set(
 														$current,
 														"defaultPlugin",
-														lv_defaultPlugin_10_0,
+														lv_defaultPlugin_12_0,
 														"de.fraunhofer.ipa.ros.Ros.EString");
 													afterParserOrEnumRuleCall();
 												}
@@ -1640,27 +1674,27 @@ rulePluginSlot returns [EObject current=null]
 						  getUnorderedGroupHelper().leave(grammarAccess.getPluginSlotAccess().getUnorderedGroup_3_0_1());
 						}
 				)
-				this_END_11=RULE_END
+				this_END_13=RULE_END
 				{
-					newLeafNode(this_END_11, grammarAccess.getPluginSlotAccess().getENDTerminalRuleCall_3_0_2());
+					newLeafNode(this_END_13, grammarAccess.getPluginSlotAccess().getENDTerminalRuleCall_3_0_2());
 				}
 			)
 			    |
 			(
-				otherlv_12=LeftCurlyBracket
+				otherlv_14=LeftCurlyBracket
 				{
-					newLeafNode(otherlv_12, grammarAccess.getPluginSlotAccess().getLeftCurlyBracketKeyword_3_1_0());
+					newLeafNode(otherlv_14, grammarAccess.getPluginSlotAccess().getLeftCurlyBracketKeyword_3_1_0());
 				}
-				otherlv_13=Base
+				otherlv_15=Base
 				{
-					newLeafNode(otherlv_13, grammarAccess.getPluginSlotAccess().getBaseKeyword_3_1_1());
+					newLeafNode(otherlv_15, grammarAccess.getPluginSlotAccess().getBaseKeyword_3_1_1());
 				}
 				(
 					(
 						{
 							newCompositeNode(grammarAccess.getPluginSlotAccess().getBaseEStringParserRuleCall_3_1_2_0());
 						}
-						lv_base_14_0=ruleEString
+						lv_base_16_0=ruleEString
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getPluginSlotRule());
@@ -1668,28 +1702,28 @@ rulePluginSlot returns [EObject current=null]
 							set(
 								$current,
 								"base",
-								lv_base_14_0,
+								lv_base_16_0,
 								"de.fraunhofer.ipa.ros.Ros.EString");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
 				(
-					otherlv_15=Comma
+					otherlv_17=Comma
 					{
-						newLeafNode(otherlv_15, grammarAccess.getPluginSlotAccess().getCommaKeyword_3_1_3());
+						newLeafNode(otherlv_17, grammarAccess.getPluginSlotAccess().getCommaKeyword_3_1_3());
 					}
 				)?
-				otherlv_16=Parameter
+				otherlv_18=Parameter
 				{
-					newLeafNode(otherlv_16, grammarAccess.getPluginSlotAccess().getParameterKeyword_3_1_4());
+					newLeafNode(otherlv_18, grammarAccess.getPluginSlotAccess().getParameterKeyword_3_1_4());
 				}
 				(
 					(
 						{
 							newCompositeNode(grammarAccess.getPluginSlotAccess().getParameterEStringParserRuleCall_3_1_5_0());
 						}
-						lv_parameter_17_0=ruleEString
+						lv_parameter_19_0=ruleEString
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getPluginSlotRule());
@@ -1697,7 +1731,7 @@ rulePluginSlot returns [EObject current=null]
 							set(
 								$current,
 								"parameter",
-								lv_parameter_17_0,
+								lv_parameter_19_0,
 								"de.fraunhofer.ipa.ros.Ros.EString");
 							afterParserOrEnumRuleCall();
 						}
@@ -1705,21 +1739,52 @@ rulePluginSlot returns [EObject current=null]
 				)
 				(
 					(
-						otherlv_18=Comma
+						otherlv_20=Comma
 						{
-							newLeafNode(otherlv_18, grammarAccess.getPluginSlotAccess().getCommaKeyword_3_1_6_0());
+							newLeafNode(otherlv_20, grammarAccess.getPluginSlotAccess().getCommaKeyword_3_1_6_0());
 						}
 					)?
-					otherlv_19=Default
+					otherlv_21=Format
 					{
-						newLeafNode(otherlv_19, grammarAccess.getPluginSlotAccess().getDefaultKeyword_3_1_6_1());
+						newLeafNode(otherlv_21, grammarAccess.getPluginSlotAccess().getFormatKeyword_3_1_6_1());
 					}
 					(
 						(
 							{
-								newCompositeNode(grammarAccess.getPluginSlotAccess().getDefaultPluginEStringParserRuleCall_3_1_6_2_0());
+								newCompositeNode(grammarAccess.getPluginSlotAccess().getValueFormatPluginSlotValueFormatEnumRuleCall_3_1_6_2_0());
 							}
-							lv_defaultPlugin_20_0=ruleEString
+							lv_valueFormat_22_0=rulePluginSlotValueFormat
+							{
+								if ($current==null) {
+									$current = createModelElementForParent(grammarAccess.getPluginSlotRule());
+								}
+								set(
+									$current,
+									"valueFormat",
+									lv_valueFormat_22_0,
+									"de.fraunhofer.ipa.ros.Ros.PluginSlotValueFormat");
+								afterParserOrEnumRuleCall();
+							}
+						)
+					)
+				)?
+				(
+					(
+						otherlv_23=Comma
+						{
+							newLeafNode(otherlv_23, grammarAccess.getPluginSlotAccess().getCommaKeyword_3_1_7_0());
+						}
+					)?
+					otherlv_24=Default
+					{
+						newLeafNode(otherlv_24, grammarAccess.getPluginSlotAccess().getDefaultKeyword_3_1_7_1());
+					}
+					(
+						(
+							{
+								newCompositeNode(grammarAccess.getPluginSlotAccess().getDefaultPluginEStringParserRuleCall_3_1_7_2_0());
+							}
+							lv_defaultPlugin_25_0=ruleEString
 							{
 								if ($current==null) {
 									$current = createModelElementForParent(grammarAccess.getPluginSlotRule());
@@ -1727,16 +1792,16 @@ rulePluginSlot returns [EObject current=null]
 								set(
 									$current,
 									"defaultPlugin",
-									lv_defaultPlugin_20_0,
+									lv_defaultPlugin_25_0,
 									"de.fraunhofer.ipa.ros.Ros.EString");
 								afterParserOrEnumRuleCall();
 							}
 						)
 					)
 				)?
-				otherlv_21=RightCurlyBracket
+				otherlv_26=RightCurlyBracket
 				{
-					newLeafNode(otherlv_21, grammarAccess.getPluginSlotAccess().getRightCurlyBracketKeyword_3_1_7());
+					newLeafNode(otherlv_26, grammarAccess.getPluginSlotAccess().getRightCurlyBracketKeyword_3_1_8());
 				}
 			)
 		)
@@ -1785,6 +1850,18 @@ ruleEString returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()
 		{
 			$current.merge(kw);
 			newLeafNode(kw, grammarAccess.getEStringAccess().getExternalKeyword_3());
+		}
+		    |
+		kw=Class
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getEStringAccess().getClassKeyword_4());
+		}
+		    |
+		kw=Library
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getEStringAccess().getLibraryKeyword_5());
 		}
 	)
 ;
@@ -1837,6 +1914,18 @@ ruleRosNames returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken(
 		{
 			$current.merge(kw);
 			newLeafNode(kw, grammarAccess.getRosNamesAccess().getExternalKeyword_4());
+		}
+		    |
+		kw=Class
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getRosNamesAccess().getClassKeyword_5());
+		}
+		    |
+		kw=Library
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getRosNamesAccess().getLibraryKeyword_6());
 		}
 	)
 ;
@@ -1902,154 +1991,166 @@ ruleExtensionKey returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleTo
 			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getExternalKeyword_5());
 		}
 		    |
+		kw=Class
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getClassKeyword_6());
+		}
+		    |
+		kw=Library
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getLibraryKeyword_7());
+		}
+		    |
 		kw=String
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getStringKeyword_6());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getStringKeyword_8());
 		}
 		    |
 		kw=Integer
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getIntegerKeyword_7());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getIntegerKeyword_9());
 		}
 		    |
 		kw=Double
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getDoubleKeyword_8());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getDoubleKeyword_10());
 		}
 		    |
 		kw=Boolean
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getBooleanKeyword_9());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getBooleanKeyword_11());
 		}
 		    |
 		kw=Base64
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getBase64Keyword_10());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getBase64Keyword_12());
 		}
 		    |
 		kw=Array
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getArrayKeyword_11());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getArrayKeyword_13());
 		}
 		    |
 		kw=List
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getListKeyword_12());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getListKeyword_14());
 		}
 		    |
 		kw=Struct
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getStructKeyword_13());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getStructKeyword_15());
 		}
 		    |
 		kw=Date
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getDateKeyword_14());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getDateKeyword_16());
 		}
 		    |
 		kw=Any
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getAnyKeyword_15());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getAnyKeyword_17());
 		}
 		    |
 		kw=Bool
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getBoolKeyword_16());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getBoolKeyword_18());
 		}
 		    |
 		kw=Int8
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getInt8Keyword_17());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getInt8Keyword_19());
 		}
 		    |
 		kw=Uint8
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getUint8Keyword_18());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getUint8Keyword_20());
 		}
 		    |
 		kw=Int16
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getInt16Keyword_19());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getInt16Keyword_21());
 		}
 		    |
 		kw=Uint16
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getUint16Keyword_20());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getUint16Keyword_22());
 		}
 		    |
 		kw=Int32
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getInt32Keyword_21());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getInt32Keyword_23());
 		}
 		    |
 		kw=Uint32
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getUint32Keyword_22());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getUint32Keyword_24());
 		}
 		    |
 		kw=Int64
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getInt64Keyword_23());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getInt64Keyword_25());
 		}
 		    |
 		kw=Uint64
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getUint64Keyword_24());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getUint64Keyword_26());
 		}
 		    |
 		kw=Float32
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getFloat32Keyword_25());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getFloat32Keyword_27());
 		}
 		    |
 		kw=Float64
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getFloat64Keyword_26());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getFloat64Keyword_28());
 		}
 		    |
 		kw=String_1
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getStringKeyword_27());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getStringKeyword_29());
 		}
 		    |
 		kw=Char
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getCharKeyword_28());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getCharKeyword_30());
 		}
 		    |
 		kw=Byte
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getByteKeyword_29());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getByteKeyword_31());
 		}
 		    |
 		kw=Header
 		{
 			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getHeaderKeyword_30());
+			newLeafNode(kw, grammarAccess.getExtensionKeyAccess().getHeaderKeyword_32());
 		}
 	)
 ;
@@ -2206,6 +2307,12 @@ ruleExtensionColonKey returns [AntlrDatatypeRuleToken current=new AntlrDatatypeR
 		{
 			$current.merge(kw);
 			newLeafNode(kw, grammarAccess.getExtensionColonKeyAccess().getParameterKeyword_22());
+		}
+		    |
+		kw=Format
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getExtensionColonKeyAccess().getFormatKeyword_23());
 		}
 	)
 ;
@@ -7022,6 +7129,33 @@ rulePluginLoader returns [Enumerator current=null]
 			{
 				$current = grammarAccess.getPluginLoaderAccess().getEXTERNALEnumLiteralDeclaration_1().getEnumLiteral().getInstance();
 				newLeafNode(enumLiteral_1, grammarAccess.getPluginLoaderAccess().getEXTERNALEnumLiteralDeclaration_1());
+			}
+		)
+	)
+;
+
+// Rule PluginSlotValueFormat
+rulePluginSlotValueFormat returns [Enumerator current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			enumLiteral_0=Class
+			{
+				$current = grammarAccess.getPluginSlotValueFormatAccess().getCLASSEnumLiteralDeclaration_0().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_0, grammarAccess.getPluginSlotValueFormatAccess().getCLASSEnumLiteralDeclaration_0());
+			}
+		)
+		    |
+		(
+			enumLiteral_1=Library
+			{
+				$current = grammarAccess.getPluginSlotValueFormatAccess().getLIBRARYEnumLiteralDeclaration_1().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_1, grammarAccess.getPluginSlotValueFormatAccess().getLIBRARYEnumLiteralDeclaration_1());
 			}
 		)
 	)

@@ -10,6 +10,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import ros.PluginSlot;
+import ros.PluginSlotValueFormat;
 import ros.RosPackage;
 
 /**
@@ -24,6 +25,7 @@ import ros.RosPackage;
  *   <li>{@link ros.impl.PluginSlotImpl#getBase <em>Base</em>}</li>
  *   <li>{@link ros.impl.PluginSlotImpl#getParameter <em>Parameter</em>}</li>
  *   <li>{@link ros.impl.PluginSlotImpl#getDefaultPlugin <em>Default Plugin</em>}</li>
+ *   <li>{@link ros.impl.PluginSlotImpl#getValueFormat <em>Value Format</em>}</li>
  * </ul>
  *
  * @generated
@@ -108,6 +110,26 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 	 * @ordered
 	 */
 	protected String defaultPlugin = DEFAULT_PLUGIN_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getValueFormat() <em>Value Format</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValueFormat()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final PluginSlotValueFormat VALUE_FORMAT_EDEFAULT = PluginSlotValueFormat.CLASS;
+
+	/**
+	 * The cached value of the '{@link #getValueFormat() <em>Value Format</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValueFormat()
+	 * @generated
+	 * @ordered
+	 */
+	protected PluginSlotValueFormat valueFormat = VALUE_FORMAT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -226,6 +248,29 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 	 * @generated
 	 */
 	@Override
+	public PluginSlotValueFormat getValueFormat() {
+		return valueFormat;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setValueFormat(PluginSlotValueFormat newValueFormat) {
+		PluginSlotValueFormat oldValueFormat = valueFormat;
+		valueFormat = newValueFormat == null ? VALUE_FORMAT_EDEFAULT : newValueFormat;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RosPackage.PLUGIN_SLOT__VALUE_FORMAT, oldValueFormat, valueFormat));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case RosPackage.PLUGIN_SLOT__NAME:
@@ -236,6 +281,8 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 				return getParameter();
 			case RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN:
 				return getDefaultPlugin();
+			case RosPackage.PLUGIN_SLOT__VALUE_FORMAT:
+				return getValueFormat();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -259,6 +306,9 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 				return;
 			case RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN:
 				setDefaultPlugin((String)newValue);
+				return;
+			case RosPackage.PLUGIN_SLOT__VALUE_FORMAT:
+				setValueFormat((PluginSlotValueFormat)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -284,6 +334,9 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 			case RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN:
 				setDefaultPlugin(DEFAULT_PLUGIN_EDEFAULT);
 				return;
+			case RosPackage.PLUGIN_SLOT__VALUE_FORMAT:
+				setValueFormat(VALUE_FORMAT_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -304,6 +357,8 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 				return PARAMETER_EDEFAULT == null ? parameter != null : !PARAMETER_EDEFAULT.equals(parameter);
 			case RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN:
 				return DEFAULT_PLUGIN_EDEFAULT == null ? defaultPlugin != null : !DEFAULT_PLUGIN_EDEFAULT.equals(defaultPlugin);
+			case RosPackage.PLUGIN_SLOT__VALUE_FORMAT:
+				return valueFormat != VALUE_FORMAT_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -326,6 +381,8 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 		result.append(parameter);
 		result.append(", defaultPlugin: ");
 		result.append(defaultPlugin);
+		result.append(", valueFormat: ");
+		result.append(valueFormat);
 		result.append(')');
 		return result.toString();
 	}

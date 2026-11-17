@@ -946,10 +946,12 @@ public class RosGModelFactory extends EMFGModelFactory {
     protected String serializeNodePluginSlots(final Node node) {
         List<String> items = new ArrayList<>();
         for (PluginSlot slot : node.getPluginSlots()) {
+            String fmt = slot.getValueFormat() != null ? slot.getValueFormat().getLiteral() : "class";
             items.add("{\"id\":\"" + escapeJson(getElementId(slot))
                     + "\",\"name\":\"" + escapeJson(nullToEmpty(slot.getName()))
                     + "\",\"base\":\"" + escapeJson(nullToEmpty(slot.getBase()))
                     + "\",\"parameter\":\"" + escapeJson(nullToEmpty(slot.getParameter()))
+                    + "\",\"format\":\"" + escapeJson(fmt)
                     + "\",\"default\":\"" + escapeJson(nullToEmpty(slot.getDefaultPlugin())) + "\"}");
         }
         return "[" + String.join(",", items) + "]";

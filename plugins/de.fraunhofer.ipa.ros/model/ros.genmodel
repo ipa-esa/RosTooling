@@ -16,6 +16,10 @@
       <genEnumLiterals ecoreEnumLiteral="ros.ecore#//PluginLoader/PLUGINLIB"/>
       <genEnumLiterals ecoreEnumLiteral="ros.ecore#//PluginLoader/EXTERNAL"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ros.ecore#//PluginSlotValueFormat">
+      <genEnumLiterals ecoreEnumLiteral="ros.ecore#//PluginSlotValueFormat/CLASS"/>
+      <genEnumLiterals ecoreEnumLiteral="ros.ecore#//PluginSlotValueFormat/LIBRARY"/>
+    </genEnums>
     <genDataTypes ecoreDataType="ros.ecore#//GraphName"/>
     <genClasses image="false" ecoreClass="ros.ecore#//Extensible">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Extensible/extensions"/>
@@ -67,6 +71,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginSlot/base"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginSlot/parameter"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginSlot/defaultPlugin"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginSlot/valueFormat"/>
     </genClasses>
     <genClasses ecoreClass="ros.ecore#//Package">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//Package/name"/>

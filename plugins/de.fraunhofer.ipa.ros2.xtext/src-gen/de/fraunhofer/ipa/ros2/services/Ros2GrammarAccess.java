@@ -2928,19 +2928,20 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Keyword cPluginslotsKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
 		private final Keyword cBaseKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
 		private final Keyword cParameterKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
-		private final Keyword cArtifactsKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
-		private final Keyword cLifecycleKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
-		private final Keyword cProfileKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
-		private final Keyword cHistoryKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
-		private final Keyword cDepthKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
-		private final Keyword cReliabilityKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
-		private final Keyword cDurabilityKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
-		private final Keyword cLease_durationKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
-		private final Keyword cLivelinessKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
-		private final Keyword cLifespanKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
-		private final Keyword cDeadlineKeyword_33 = (Keyword)cAlternatives.eContents().get(33);
-		private final Keyword cActive_inKeyword_34 = (Keyword)cAlternatives.eContents().get(34);
-		private final Keyword cQosKeyword_35 = (Keyword)cAlternatives.eContents().get(35);
+		private final Keyword cFormatKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
+		private final Keyword cArtifactsKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
+		private final Keyword cLifecycleKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
+		private final Keyword cProfileKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
+		private final Keyword cHistoryKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
+		private final Keyword cDepthKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
+		private final Keyword cReliabilityKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
+		private final Keyword cDurabilityKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
+		private final Keyword cLease_durationKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
+		private final Keyword cLivelinessKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
+		private final Keyword cLifespanKeyword_33 = (Keyword)cAlternatives.eContents().get(33);
+		private final Keyword cDeadlineKeyword_34 = (Keyword)cAlternatives.eContents().get(34);
+		private final Keyword cActive_inKeyword_35 = (Keyword)cAlternatives.eContents().get(35);
+		private final Keyword cQosKeyword_36 = (Keyword)cAlternatives.eContents().get(36);
 		
 		//@Override
 		//ExtensionColonKey returns ecore::EString:
@@ -2948,7 +2949,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
 		//    'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
 		//    'actionservers:' | 'actionclients:' | 'parameters:' |
-		//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' |
+		//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:' |
 		//    'artifacts:' | 'lifecycle:' | 'profile:' | 'history:' | 'depth:' |
 		//    'reliability:' | 'durability:' | 'lease_duration:' | 'liveliness:' |
 		//    'lifespan:' | 'deadline:' | 'active_in:' | 'qos:';
@@ -2958,7 +2959,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
 		//'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
 		//'actionservers:' | 'actionclients:' | 'parameters:' |
-		//'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' |
+		//'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:' |
 		//'artifacts:' | 'lifecycle:' | 'profile:' | 'history:' | 'depth:' |
 		//'reliability:' | 'durability:' | 'lease_duration:' | 'liveliness:' |
 		//'lifespan:' | 'deadline:' | 'active_in:' | 'qos:'
@@ -3033,44 +3034,47 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//'parameter:'
 		public Keyword getParameterKeyword_22() { return cParameterKeyword_22; }
 		
+		//'format:'
+		public Keyword getFormatKeyword_23() { return cFormatKeyword_23; }
+		
 		//'artifacts:'
-		public Keyword getArtifactsKeyword_23() { return cArtifactsKeyword_23; }
+		public Keyword getArtifactsKeyword_24() { return cArtifactsKeyword_24; }
 		
 		//'lifecycle:'
-		public Keyword getLifecycleKeyword_24() { return cLifecycleKeyword_24; }
+		public Keyword getLifecycleKeyword_25() { return cLifecycleKeyword_25; }
 		
 		//'profile:'
-		public Keyword getProfileKeyword_25() { return cProfileKeyword_25; }
+		public Keyword getProfileKeyword_26() { return cProfileKeyword_26; }
 		
 		//'history:'
-		public Keyword getHistoryKeyword_26() { return cHistoryKeyword_26; }
+		public Keyword getHistoryKeyword_27() { return cHistoryKeyword_27; }
 		
 		//'depth:'
-		public Keyword getDepthKeyword_27() { return cDepthKeyword_27; }
+		public Keyword getDepthKeyword_28() { return cDepthKeyword_28; }
 		
 		//'reliability:'
-		public Keyword getReliabilityKeyword_28() { return cReliabilityKeyword_28; }
+		public Keyword getReliabilityKeyword_29() { return cReliabilityKeyword_29; }
 		
 		//'durability:'
-		public Keyword getDurabilityKeyword_29() { return cDurabilityKeyword_29; }
+		public Keyword getDurabilityKeyword_30() { return cDurabilityKeyword_30; }
 		
 		//'lease_duration:'
-		public Keyword getLease_durationKeyword_30() { return cLease_durationKeyword_30; }
+		public Keyword getLease_durationKeyword_31() { return cLease_durationKeyword_31; }
 		
 		//'liveliness:'
-		public Keyword getLivelinessKeyword_31() { return cLivelinessKeyword_31; }
+		public Keyword getLivelinessKeyword_32() { return cLivelinessKeyword_32; }
 		
 		//'lifespan:'
-		public Keyword getLifespanKeyword_32() { return cLifespanKeyword_32; }
+		public Keyword getLifespanKeyword_33() { return cLifespanKeyword_33; }
 		
 		//'deadline:'
-		public Keyword getDeadlineKeyword_33() { return cDeadlineKeyword_33; }
+		public Keyword getDeadlineKeyword_34() { return cDeadlineKeyword_34; }
 		
 		//'active_in:'
-		public Keyword getActive_inKeyword_34() { return cActive_inKeyword_34; }
+		public Keyword getActive_inKeyword_35() { return cActive_inKeyword_35; }
 		
 		//'qos:'
-		public Keyword getQosKeyword_35() { return cQosKeyword_35; }
+		public Keyword getQosKeyword_36() { return cQosKeyword_36; }
 	}
 	
 	public class LifecycleStateElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
@@ -3533,7 +3537,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
 	//    'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
 	//    'actionservers:' | 'actionclients:' | 'parameters:' |
-	//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' |
+	//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:' |
 	//    'artifacts:' | 'lifecycle:' | 'profile:' | 'history:' | 'depth:' |
 	//    'reliability:' | 'durability:' | 'lease_duration:' | 'liveliness:' |
 	//    'lifespan:' | 'deadline:' | 'active_in:' | 'qos:';
@@ -3708,6 +3712,18 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getPluginLoaderAccess().getRule();
 	}
 	
+	//enum PluginSlotValueFormat returns PluginSlotValueFormat:
+	//    CLASS = 'class' |
+	//    LIBRARY = 'library'
+	//;
+	public RosGrammarAccess.PluginSlotValueFormatElements getPluginSlotValueFormatAccess() {
+		return gaRos.getPluginSlotValueFormatAccess();
+	}
+	
+	public EnumRule getPluginSlotValueFormatRule() {
+		return getPluginSlotValueFormatAccess().getRule();
+	}
+	
 	//Plugin returns Plugin:
 	//    {Plugin}
 	//    name=RosNames':'
@@ -3768,11 +3784,13 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    (BEGIN
 	//        (('base:' base=EString) &
 	//         ('parameter:' parameter=EString) &
+	//         ('format:' valueFormat=PluginSlotValueFormat)? &
 	//         ('default:' defaultPlugin=EString)?)
 	//    END) |
 	//    ('{'
 	//        'base:' base=EString
 	//        ','? 'parameter:' parameter=EString
+	//        (','? 'format:' valueFormat=PluginSlotValueFormat)?
 	//        (','? 'default:' defaultPlugin=EString)?
 	//    '}')
 	//    );
@@ -3786,7 +3804,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//@Override
 	//EString returns ecore::EString:
-	//    STRING | ID | 'pluginlib' | 'external';
+	//    STRING | ID | 'pluginlib' | 'external' | 'class' | 'library';
 	public RosGrammarAccess.EStringElements getEStringAccess() {
 		return gaRos.getEStringAccess();
 	}
@@ -3797,7 +3815,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//@Override
 	//RosNames returns ecore::EString:
-	//    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external';
+	//    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external' | 'class' | 'library';
 	public RosGrammarAccess.RosNamesElements getRosNamesAccess() {
 		return gaRos.getRosNamesAccess();
 	}
@@ -3808,7 +3826,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//@Override
 	//ExtensionKey returns ecore::EString:
-	//    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' |
+	//    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' | 'class' | 'library' |
 	//    'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
 	//    'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
 	public RosGrammarAccess.ExtensionKeyElements getExtensionKeyAccess() {

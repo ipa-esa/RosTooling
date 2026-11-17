@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link ros.PluginSlot#getBase <em>Base</em>}</li>
  *   <li>{@link ros.PluginSlot#getParameter <em>Parameter</em>}</li>
  *   <li>{@link ros.PluginSlot#getDefaultPlugin <em>Default Plugin</em>}</li>
+ *   <li>{@link ros.PluginSlot#getValueFormat <em>Value Format</em>}</li>
  * </ul>
  *
  * @see ros.RosPackage#getPluginSlot()
@@ -111,5 +112,31 @@ public interface PluginSlot extends EObject {
 	 * @generated
 	 */
 	void setDefaultPlugin(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Value Format</b></em>' attribute.
+	 * The default value is <code>"class"</code>.
+	 * The literals are from the enumeration {@link ros.PluginSlotValueFormat}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Value Format</em>' attribute.
+	 * @see ros.PluginSlotValueFormat
+	 * @see #setValueFormat(PluginSlotValueFormat)
+	 * @see ros.RosPackage#getPluginSlot_ValueFormat()
+	 * @model default="class"
+	 * @generated
+	 */
+	PluginSlotValueFormat getValueFormat();
+
+	/**
+	 * Sets the value of the '{@link ros.PluginSlot#getValueFormat <em>Value Format</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Value Format</em>' attribute.
+	 * @see ros.PluginSlotValueFormat
+	 * @see #getValueFormat()
+	 * @generated
+	 */
+	void setValueFormat(PluginSlotValueFormat value);
 
 } // PluginSlot

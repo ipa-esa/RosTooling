@@ -144,6 +144,33 @@ class RosGlspPhase1PluginsTest {
     }
 
     @Test
+    void addPluginSlotWithLibraryFormatSerializesAndExposesFormatInGModel() throws Exception {
+        Path pkgFile = tempDir.resolve("host_slot.ros2");
+        Files.writeString(pkgFile, """
+                host_slot:
+                  artifacts:
+                    orch_bin:
+                      node: orch_node
+                      parameters:
+                        leaf_libraries:
+                          type: Array [ String ]
+                """);
+
+        Session s = open(pkgFile, "phase1-slot-format");
+        exec(s, new EditRosPropertyOperation("orch_node", "addPluginSlot", "leaves",
+                "{\"base\":\"custom_core::LeafBase\",\"parameter\":\"leaf_libraries\",\"format\":\"library\"}", null));
+
+        String updated = RosAstNodeModelSerializer.computeAndCommit(s.state).newText;
+        assertTrue(updated.contains("format: library"), "Expected format: library in .ros2:\n" + updated);
+
+        Files.writeString(pkgFile, updated);
+        Session reopened = open(pkgFile, "phase1-slot-format-2");
+        GModelElement card = findNodesByName(reopened.state.getRoot(), RosModelTypes.ROS_NODE).get(0);
+        String slotsJson = String.valueOf(card.getArgs().get("pluginSlotsJson"));
+        assertTrue(slotsJson.contains("\"format\":\"library\""), "Expected format in pluginSlotsJson: " + slotsJson);
+    }
+
+    @Test
     void hostNodeWithPluginSlotsAndAutoConnectWorksEndToEnd() throws Exception {
         Path rosFile = tempDir.resolve("std_msgs.ros");
         Files.writeString(rosFile, """

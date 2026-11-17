@@ -61,6 +61,10 @@
     <eLiterals name="PLUGINLIB" literal="pluginlib"/>
     <eLiterals name="EXTERNAL" value="1" literal="external"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PluginSlotValueFormat">
+    <eLiterals name="CLASS" literal="class"/>
+    <eLiterals name="LIBRARY" value="1" literal="library"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Plugin" eSuperTypes="#//InterfaceHolder">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="implements" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="loader" eType="#//PluginLoader"
@@ -71,6 +75,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="base" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="parameter" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultPlugin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueFormat" eType="#//PluginSlotValueFormat"
+        defaultValueLiteral="class"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Package">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"

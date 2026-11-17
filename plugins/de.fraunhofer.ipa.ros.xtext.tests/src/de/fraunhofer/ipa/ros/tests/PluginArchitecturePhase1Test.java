@@ -38,6 +38,7 @@ import org.junit.Before;
 import org.junit.Test;
 import ros.AmentPackage;
 import ros.PluginLoader;
+import ros.PluginSlotValueFormat;
 
 /**
  * Phase 1 verification tests: core ROS 2 {@code pluginlib} and {@code external} plugins,
@@ -172,6 +173,10 @@ public class PluginArchitecturePhase1Test {
         assertTrue("Host validation errors: " + hostErrors, hostErrors.isEmpty());
         assertTrue("Plugin validation errors: " + plugErrors, plugErrors.isEmpty());
 
+        AmentPackage hostPkg = (AmentPackage) hostRes.getContents().get(0);
+        assertEquals(PluginSlotValueFormat.CLASS,
+                hostPkg.getArtifact().get(0).getNode().getPluginSlots().get(0).getValueFormat());
+
         AmentPackage pkg = (AmentPackage) plugRes.getContents().get(0);
         assertEquals(1, pkg.getArtifact().size());
         assertEquals(null, pkg.getArtifact().get(0).getNode());
@@ -183,6 +188,7 @@ public class PluginArchitecturePhase1Test {
     public void validateRejectsMissingImplementsAndInvalidSlots() throws Exception {
         XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
         loadFromString(rs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        loadFromString(rs, "inmemory:/host_for_val.ros2", hostPkgModel());
         Resource badPlugRes = loadFromString(rs, "inmemory:/bad_plug.ros2", """
                 bad_plug_pkg:
                   artifacts:
@@ -190,6 +196,17 @@ public class PluginArchitecturePhase1Test {
                       plugins:
                         BrokenPlugin:
                           loader: pluginlib
+                """);
+        Resource unattachedExtRes = loadFromString(rs, "inmemory:/unattached_ext.ros2", """
+                unattached_ext_pkg:
+                  artifacts:
+                    ext_lib:
+                      plugins:
+                        UnattachedExt:
+                          loader: external
+                        MismatchedExt:
+                          loader: external
+                          implements: "other_core::WrongBase"
                 """);
         Resource badSlotRes = loadFromString(rs, "inmemory:/bad_slot.ros2", """
                 bad_slot_pkg:
@@ -214,10 +231,59 @@ public class PluginArchitecturePhase1Test {
                 i.getSeverity() == Severity.ERROR
                         && RosValidator.PLUGIN_MISSING_IMPLEMENTS.equals(i.getCode())));
 
+        // Unattached external plugins do not require 'implements:' in .ros2.
+        List<Issue> unattachedExtErrors = validate(ros2Injector, unattachedExtRes).stream()
+                .filter(i -> i.getSeverity() == Severity.ERROR).toList();
+        assertTrue("Unattached external plugin errors: " + unattachedExtErrors, unattachedExtErrors.isEmpty());
+
         List<Issue> slotIssues = validate(ros2Injector, badSlotRes);
         assertTrue(slotIssues.stream().anyMatch(i -> RosValidator.SLOT_INVALID_BASE.equals(i.getCode())));
         assertTrue(slotIssues.stream().anyMatch(i -> RosValidator.SLOT_MISSING_PARAM.equals(i.getCode())));
         assertTrue(slotIssues.stream().anyMatch(i -> RosValidator.SLOT_INVALID_PARAM_TYPE.equals(i.getCode())));
+
+        // In .rossystem, strict matching rejects ANY attached plugin (even external) lacking 'implements:'
+        // or whose 'implements:' does not match a host PluginSlot.base.
+        XtextResourceSet sysRs = rosSystemInjector.getInstance(XtextResourceSet.class);
+        loadFromString(sysRs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        loadFromString(sysRs, "inmemory:/host_for_val.ros2", hostPkgModel());
+        loadFromString(sysRs, "inmemory:/unattached_ext.ros2", """
+                unattached_ext_pkg:
+                  artifacts:
+                    ext_lib:
+                      plugins:
+                        UnattachedExt:
+                          loader: external
+                        MismatchedExt:
+                          loader: external
+                          implements: "other_core::WrongBase"
+                """);
+        Resource extNoImplSys = loadFromString(sysRs, "inmemory:/ext_no_impl.rossystem", """
+                ext_no_impl:
+                  nodes:
+                    planner_inst:
+                      from: "planner_host_pkg.planner_server"
+                      plugins: ["unattached_ext_pkg.UnattachedExt"]
+                """);
+        Resource extMismatchSys = loadFromString(sysRs, "inmemory:/ext_mismatch.rossystem", """
+                ext_mismatch:
+                  nodes:
+                    planner_inst:
+                      from: "planner_host_pkg.planner_server"
+                      plugins: ["unattached_ext_pkg.MismatchedExt"]
+                """);
+        EcoreUtil.resolveAll(sysRs);
+
+        List<Issue> noImplIssues = validate(rosSystemInjector, extNoImplSys);
+        assertTrue("Expected INCOMPATIBLE_PLUGIN for external plugin without implements: " + noImplIssues,
+                noImplIssues.stream().anyMatch(i ->
+                        i.getSeverity() == Severity.ERROR
+                                && RosSystemValidator.INCOMPATIBLE_PLUGIN.equals(i.getCode())));
+
+        List<Issue> mismatchIssues = validate(rosSystemInjector, extMismatchSys);
+        assertTrue("Expected INCOMPATIBLE_PLUGIN for external plugin with mismatched implements: " + mismatchIssues,
+                mismatchIssues.stream().anyMatch(i ->
+                        i.getSeverity() == Severity.ERROR
+                                && RosSystemValidator.INCOMPATIBLE_PLUGIN.equals(i.getCode())));
     }
 
     @Test
@@ -412,5 +478,131 @@ public class PluginArchitecturePhase1Test {
         assertTrue(badIssues.stream().anyMatch(i ->
                 i.getSeverity() == Severity.ERROR
                         && RosSystemValidator.INCOMPATIBLE_PLUGIN.equals(i.getCode())));
+    }
+
+    @Test
+    public void parseAndGenerateExternalLoaderPluginAndSlot() throws Exception {
+        String orchestratorPkg = """
+                custom_host_pkg:
+                  artifacts:
+                    host_orchestrator:
+                      node: host_orchestrator
+                      parameters:
+                        leaf_libraries:
+                          type: Array [ String ]
+                        strategy_plugin:
+                          type: String
+                        extra_cfg:
+                          type: Struct [ mode String ]
+                      pluginslots:
+                        leaves_slot:
+                          base: "custom_core::ActionBase"
+                          parameter: leaf_libraries
+                          format: library
+                        strategy_slot:
+                          base: "custom_core::StrategyBase"
+                          parameter: strategy_plugin
+                          format: class
+                """;
+        String leavesPkg = """
+                custom_leaves_pkg:
+                  artifacts:
+                    leaves_lib:
+                      plugins:
+                        ActionLeafA:
+                          implements: "custom_core::ActionBase"
+                          loader: external
+                          publishers:
+                            leaf_status:
+                              type: "std_msgs/msg/String"
+                        ActionLeafB:
+                          implements: "custom_core::ActionBase"
+                          loader: external
+                        StandaloneHelper:
+                          loader: external
+                    extra_leaves_lib:
+                      plugins:
+                        ActionLeafC:
+                          implements: "custom_core::ActionBase"
+                          loader: external
+                    strategy_lib:
+                      plugins:
+                        FastStrategy:
+                          implements: "custom_core::StrategyBase"
+                          loader: external
+                """;
+
+        XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
+        loadFromString(rs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        Resource hostRes = loadFromString(rs, "inmemory:/custom_host.ros2", orchestratorPkg);
+        Resource leavesRes = loadFromString(rs, "inmemory:/custom_leaves.ros2", leavesPkg);
+        EcoreUtil.resolveAll(rs);
+
+        List<Issue> hostErrors = validate(ros2Injector, hostRes).stream()
+                .filter(i -> i.getSeverity() == Severity.ERROR).toList();
+        List<Issue> leavesErrors = validate(ros2Injector, leavesRes).stream()
+                .filter(i -> i.getSeverity() == Severity.ERROR).toList();
+        assertTrue("Host validation errors: " + hostErrors, hostErrors.isEmpty());
+        assertTrue("Leaves validation errors: " + leavesErrors, leavesErrors.isEmpty());
+
+        AmentPackage hostPkg = (AmentPackage) hostRes.getContents().get(0);
+        assertEquals(PluginSlotValueFormat.LIBRARY,
+                hostPkg.getArtifact().get(0).getNode().getPluginSlots().get(0).getValueFormat());
+        assertEquals(PluginSlotValueFormat.CLASS,
+                hostPkg.getArtifact().get(0).getNode().getPluginSlots().get(1).getValueFormat());
+
+        // System wiring (inline launch params AND yaml config):
+        // Attach two external plugins from leaves_lib plus one from extra_leaves_lib to library-format slot,
+        // and one external plugin to class-format slot (confirming loader does not dictate format).
+        XtextResourceSet sysRs = rosSystemInjector.getInstance(XtextResourceSet.class);
+        loadFromString(sysRs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        loadFromString(sysRs, "inmemory:/custom_host.ros2", orchestratorPkg);
+        loadFromString(sysRs, "inmemory:/custom_leaves.ros2", leavesPkg);
+
+        Resource inlineSys = loadFromString(sysRs, "inmemory:/ext_sys.rossystem", """
+                ext_sys:
+                  nodes:
+                    orch:
+                      from: "custom_host_pkg.host_orchestrator"
+                      plugins: ["custom_leaves_pkg.ActionLeafA", "custom_leaves_pkg.ActionLeafB", "custom_leaves_pkg.ActionLeafC", "custom_leaves_pkg.FastStrategy"]
+                """);
+        EcoreUtil.resolveAll(sysRs);
+
+        List<Issue> inlineErrors = validate(rosSystemInjector, inlineSys).stream()
+                .filter(i -> i.getSeverity() == Severity.ERROR).toList();
+        assertTrue("Unexpected system validation errors: " + inlineErrors, inlineErrors.isEmpty());
+
+        RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
+        InMemoryFileSystemAccess inlineFsa = new InMemoryFileSystemAccess();
+        sysGen.generateSystemTargeted(inlineSys, inlineFsa, List.of());
+
+        String launch = inlineFsa.getTextFiles().get("DEFAULT_OUTPUText_sys/launch/ext_sys.launch.py").toString();
+        assertTrue("Expected deduplicated library names in launch: " + launch,
+                launch.contains("\"leaf_libraries\": [\"leaves_lib\", \"extra_leaves_lib\"]"));
+        assertTrue("Expected pkg::Class for external plugin bound to format:class slot: " + launch,
+                launch.contains("\"strategy_plugin\": ParameterValue(\"custom_leaves_pkg::FastStrategy\", value_type=str)"));
+
+        // Also check YAML emission when a struct parameter triggers config/*.yaml generation.
+        Resource yamlSys = loadFromString(sysRs, "inmemory:/ext_yaml_sys.rossystem", """
+                ext_yaml_sys:
+                  nodes:
+                    orch:
+                      from: "custom_host_pkg.host_orchestrator"
+                      plugins: ["custom_leaves_pkg.ActionLeafA", "custom_leaves_pkg.ActionLeafB", "custom_leaves_pkg.ActionLeafC", "custom_leaves_pkg.FastStrategy"]
+                      parameters:
+                        - extra_cfg: "custom_host_pkg.host_orchestrator.extra_cfg"
+                          value: [
+                            mode: "fast"
+                          ]
+                """);
+        EcoreUtil.resolveAll(sysRs);
+        InMemoryFileSystemAccess yamlFsa = new InMemoryFileSystemAccess();
+        sysGen.generateSystemTargeted(yamlSys, yamlFsa, List.of());
+
+        String yaml = yamlFsa.getTextFiles().get("DEFAULT_OUTPUText_yaml_sys/config/orch.yaml").toString();
+        assertTrue("Expected deduplicated library names in YAML: " + yaml,
+                yaml.contains("leaf_libraries: [\"leaves_lib\", \"extra_leaves_lib\"]"));
+        assertTrue("Expected pkg::Class in YAML for format:class slot: " + yaml,
+                yaml.contains("strategy_plugin: \"custom_leaves_pkg::FastStrategy\""));
     }
 }

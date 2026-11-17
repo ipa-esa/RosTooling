@@ -32,6 +32,7 @@ import ros.Parameter;
 import ros.Plugin;
 import ros.PluginLoader;
 import ros.PluginSlot;
+import ros.PluginSlotValueFormat;
 import ros.QualityOfService;
 import ros.RosPackage;
 import ros.ServiceSpec;
@@ -811,6 +812,9 @@ final class RosPackageSetSerializer {
         sb.append(indent).append(slot.getName()).append(":\n");
         sb.append(inner).append("base: ").append(RosDslText.quote(slot.getBase())).append('\n');
         sb.append(inner).append("parameter: ").append(slot.getParameter()).append('\n');
+        if (slot.getValueFormat() == PluginSlotValueFormat.LIBRARY) {
+            sb.append(inner).append("format: library\n");
+        }
         if (slot.getDefaultPlugin() != null && !slot.getDefaultPlugin().isBlank()) {
             sb.append(inner).append("default: ").append(RosDslText.quote(slot.getDefaultPlugin())).append('\n');
         }

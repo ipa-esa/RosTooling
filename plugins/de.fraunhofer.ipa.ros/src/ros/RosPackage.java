@@ -802,13 +802,22 @@ public interface RosPackage extends EPackage {
 	int PLUGIN_SLOT__DEFAULT_PLUGIN = 3;
 
 	/**
+	 * The feature id for the '<em><b>Value Format</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_SLOT__VALUE_FORMAT = 4;
+
+	/**
 	 * The number of structural features of the '<em>Plugin Slot</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PLUGIN_SLOT_FEATURE_COUNT = 4;
+	int PLUGIN_SLOT_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Plugin Slot</em>' class.
@@ -3357,6 +3366,16 @@ public interface RosPackage extends EPackage {
 	int PLUGIN_LOADER = 64;
 
 	/**
+	 * The meta object id for the '{@link ros.PluginSlotValueFormat <em>Plugin Slot Value Format</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.PluginSlotValueFormat
+	 * @see ros.impl.RosPackageImpl#getPluginSlotValueFormat()
+	 * @generated
+	 */
+	int PLUGIN_SLOT_VALUE_FORMAT = 65;
+
+	/**
 	 * The meta object id for the '<em>Graph Name</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3364,7 +3383,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getGraphName()
 	 * @generated
 	 */
-	int GRAPH_NAME = 65;
+	int GRAPH_NAME = 66;
 
 
 	/**
@@ -3794,6 +3813,17 @@ public interface RosPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getPluginSlot_DefaultPlugin();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.PluginSlot#getValueFormat <em>Value Format</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value Format</em>'.
+	 * @see ros.PluginSlot#getValueFormat()
+	 * @see #getPluginSlot()
+	 * @generated
+	 */
+	EAttribute getPluginSlot_ValueFormat();
 
 	/**
 	 * Returns the meta object for class '{@link ros.Package <em>Package</em>}'.
@@ -5107,6 +5137,16 @@ public interface RosPackage extends EPackage {
 	EEnum getPluginLoader();
 
 	/**
+	 * Returns the meta object for enum '{@link ros.PluginSlotValueFormat <em>Plugin Slot Value Format</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Plugin Slot Value Format</em>'.
+	 * @see ros.PluginSlotValueFormat
+	 * @generated
+	 */
+	EEnum getPluginSlotValueFormat();
+
+	/**
 	 * Returns the meta object for data type '{@link java.lang.String <em>Graph Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5483,6 +5523,14 @@ public interface RosPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PLUGIN_SLOT__DEFAULT_PLUGIN = eINSTANCE.getPluginSlot_DefaultPlugin();
+
+		/**
+		 * The meta object literal for the '<em><b>Value Format</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PLUGIN_SLOT__VALUE_FORMAT = eINSTANCE.getPluginSlot_ValueFormat();
 
 		/**
 		 * The meta object literal for the '{@link ros.impl.PackageImpl <em>Package</em>}' class.
@@ -6581,6 +6629,16 @@ public interface RosPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum PLUGIN_LOADER = eINSTANCE.getPluginLoader();
+
+		/**
+		 * The meta object literal for the '{@link ros.PluginSlotValueFormat <em>Plugin Slot Value Format</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.PluginSlotValueFormat
+		 * @see ros.impl.RosPackageImpl#getPluginSlotValueFormat()
+		 * @generated
+		 */
+		EEnum PLUGIN_SLOT_VALUE_FORMAT = eINSTANCE.getPluginSlotValueFormat();
 
 		/**
 		 * The meta object literal for the '<em>Graph Name</em>' data type.

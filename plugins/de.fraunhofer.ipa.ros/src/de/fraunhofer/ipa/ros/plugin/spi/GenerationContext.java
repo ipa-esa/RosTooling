@@ -1,6 +1,5 @@
 package de.fraunhofer.ipa.ros.plugin.spi;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -32,7 +31,6 @@ public final class GenerationContext {
     private final Set<String> pluginDeletedFiles = new LinkedHashSet<>();
     private final Map<Plugin, String> externalRegistrations;
     private final PackageBuild packageBuild;
-    private final List<String> apiChanges;
     private final List<String> errors;
     private final PluginRegistry registry;
 
@@ -46,7 +44,6 @@ public final class GenerationContext {
             final Map<String, String> allPluginOwnedFiles,
             final Map<Plugin, String> externalRegistrations,
             final PackageBuild packageBuild,
-            final List<String> apiChanges,
             final List<String> errors,
             final PluginRegistry registry) {
         this.pluginId = Objects.requireNonNull(pluginId, "pluginId");
@@ -60,7 +57,6 @@ public final class GenerationContext {
         this.allPluginOwnedFiles = allPluginOwnedFiles;
         this.externalRegistrations = externalRegistrations;
         this.packageBuild = Objects.requireNonNull(packageBuild, "packageBuild");
-        this.apiChanges = apiChanges;
         this.errors = errors;
         this.registry = registry;
     }
@@ -153,12 +149,6 @@ public final class GenerationContext {
         externalRegistrations.put(plugin, pluginId);
     }
 
-    public void recordApiChange(final String summary) {
-        if (summary != null && !summary.isBlank()) {
-            apiChanges.add(summary.trim());
-        }
-    }
-
     public boolean fileExists(final String relativePath) {
         String norm = normalizePackageRelativePath(relativePath);
         String pkgName = packageModel.getName().toLowerCase();
@@ -195,9 +185,5 @@ public final class GenerationContext {
 
     public Set<String> deletedFiles() {
         return Collections.unmodifiableSet(pluginDeletedFiles);
-    }
-
-    public List<String> apiChanges() {
-        return Collections.unmodifiableList(new ArrayList<>(apiChanges));
     }
 }

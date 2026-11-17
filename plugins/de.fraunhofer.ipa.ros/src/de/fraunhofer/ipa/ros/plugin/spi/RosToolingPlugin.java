@@ -1,11 +1,6 @@
 package de.fraunhofer.ipa.ros.plugin.spi;
 
 import java.util.List;
-import java.util.Optional;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import ros.Plugin;
-import ros.PluginSlot;
 
 /**
  * Service Provider Interface implemented by third-party RosTooling plugins (loaded via Java
@@ -55,15 +50,6 @@ public interface RosToolingPlugin {
     List<BlockDescriptor> blocks();
 
     /**
-     * Optional custom scoping contributions for cross-references inside this plugin's blocks.
-     */
-    default void contributeScope(
-            final EObject context,
-            final EReference reference,
-            final List<ScopeContribution> out) {
-    }
-
-    /**
      * Semantic validation hook invoked after core generic schema validation succeeds.
      */
     void validate(ValidationContext context);
@@ -78,13 +64,5 @@ public interface RosToolingPlugin {
      */
     default List<PluginToolDescriptor> tools() {
         return List.of();
-    }
-
-    /**
-     * Optional parameter value contribution when an {@code external}-loaded {@link Plugin} binds
-     * to a host {@link PluginSlot} during system launch/parameter emission.
-     */
-    default Optional<String> slotParameterEntry(final Plugin plugin, final PluginSlot slot) {
-        return Optional.empty();
     }
 }

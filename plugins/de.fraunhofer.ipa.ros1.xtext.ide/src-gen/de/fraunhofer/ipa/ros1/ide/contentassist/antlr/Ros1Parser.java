@@ -56,6 +56,7 @@ public class Ros1Parser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getExtensionRefValueAccess().getRefKindAlternatives_1_0(), "rule__ExtensionRefValue__RefKindAlternatives_1_0");
 			builder.put(grammarAccess.getExtensionScalarLiteralAccess().getAlternatives(), "rule__ExtensionScalarLiteral__Alternatives");
 			builder.put(grammarAccess.getPluginLoaderAccess().getAlternatives(), "rule__PluginLoader__Alternatives");
+			builder.put(grammarAccess.getPluginSlotValueFormatAccess().getAlternatives(), "rule__PluginSlotValueFormat__Alternatives");
 			builder.put(grammarAccess.getCatkinPackageAccess().getGroup(), "rule__CatkinPackage__Group__0");
 			builder.put(grammarAccess.getCatkinPackageAccess().getGroup_4(), "rule__CatkinPackage__Group_4__0");
 			builder.put(grammarAccess.getCatkinPackageAccess().getGroup_5(), "rule__CatkinPackage__Group_5__0");
@@ -105,8 +106,10 @@ public class Ros1Parser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getPluginSlotAccess().getGroup_3_0_1_0(), "rule__PluginSlot__Group_3_0_1_0__0");
 			builder.put(grammarAccess.getPluginSlotAccess().getGroup_3_0_1_1(), "rule__PluginSlot__Group_3_0_1_1__0");
 			builder.put(grammarAccess.getPluginSlotAccess().getGroup_3_0_1_2(), "rule__PluginSlot__Group_3_0_1_2__0");
+			builder.put(grammarAccess.getPluginSlotAccess().getGroup_3_0_1_3(), "rule__PluginSlot__Group_3_0_1_3__0");
 			builder.put(grammarAccess.getPluginSlotAccess().getGroup_3_1(), "rule__PluginSlot__Group_3_1__0");
 			builder.put(grammarAccess.getPluginSlotAccess().getGroup_3_1_6(), "rule__PluginSlot__Group_3_1_6__0");
+			builder.put(grammarAccess.getPluginSlotAccess().getGroup_3_1_7(), "rule__PluginSlot__Group_3_1_7__0");
 			builder.put(grammarAccess.getPublisherAccess().getGroup(), "rule__Publisher__Group__0");
 			builder.put(grammarAccess.getPublisherAccess().getGroup_6(), "rule__Publisher__Group_6__0");
 			builder.put(grammarAccess.getSubscriberAccess().getGroup(), "rule__Subscriber__Group__0");
@@ -261,10 +264,12 @@ public class Ros1Parser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getPluginSlotAccess().getNameAssignment_1(), "rule__PluginSlot__NameAssignment_1");
 			builder.put(grammarAccess.getPluginSlotAccess().getBaseAssignment_3_0_1_0_1(), "rule__PluginSlot__BaseAssignment_3_0_1_0_1");
 			builder.put(grammarAccess.getPluginSlotAccess().getParameterAssignment_3_0_1_1_1(), "rule__PluginSlot__ParameterAssignment_3_0_1_1_1");
-			builder.put(grammarAccess.getPluginSlotAccess().getDefaultPluginAssignment_3_0_1_2_1(), "rule__PluginSlot__DefaultPluginAssignment_3_0_1_2_1");
+			builder.put(grammarAccess.getPluginSlotAccess().getValueFormatAssignment_3_0_1_2_1(), "rule__PluginSlot__ValueFormatAssignment_3_0_1_2_1");
+			builder.put(grammarAccess.getPluginSlotAccess().getDefaultPluginAssignment_3_0_1_3_1(), "rule__PluginSlot__DefaultPluginAssignment_3_0_1_3_1");
 			builder.put(grammarAccess.getPluginSlotAccess().getBaseAssignment_3_1_2(), "rule__PluginSlot__BaseAssignment_3_1_2");
 			builder.put(grammarAccess.getPluginSlotAccess().getParameterAssignment_3_1_5(), "rule__PluginSlot__ParameterAssignment_3_1_5");
-			builder.put(grammarAccess.getPluginSlotAccess().getDefaultPluginAssignment_3_1_6_2(), "rule__PluginSlot__DefaultPluginAssignment_3_1_6_2");
+			builder.put(grammarAccess.getPluginSlotAccess().getValueFormatAssignment_3_1_6_2(), "rule__PluginSlot__ValueFormatAssignment_3_1_6_2");
+			builder.put(grammarAccess.getPluginSlotAccess().getDefaultPluginAssignment_3_1_7_2(), "rule__PluginSlot__DefaultPluginAssignment_3_1_7_2");
 			builder.put(grammarAccess.getPublisherAccess().getNameAssignment_1(), "rule__Publisher__NameAssignment_1");
 			builder.put(grammarAccess.getPublisherAccess().getMessageAssignment_5(), "rule__Publisher__MessageAssignment_5");
 			builder.put(grammarAccess.getPublisherAccess().getNamespaceAssignment_6_1(), "rule__Publisher__NamespaceAssignment_6_1");
