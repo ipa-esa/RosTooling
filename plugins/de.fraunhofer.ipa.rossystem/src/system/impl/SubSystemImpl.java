@@ -26,131 +26,131 @@ import system.SubSystem;
  */
 public class SubSystemImpl extends ComponentImpl implements SubSystem {
     /**
-     * The cached value of the '{@link #getSystem() <em>System</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getSystem() <em>System</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getSystem()
-     * @generated
-     * @ordered
-     */
+	 * @see #getSystem()
+	 * @generated
+	 * @ordered
+	 */
     protected system.System system;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected SubSystemImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RossystemPackage.Literals.SUB_SYSTEM;
-    }
+		return RossystemPackage.Literals.SUB_SYSTEM;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public system.System getSystem() {
-        if (system != null && system.eIsProxy()) {
-            InternalEObject oldSystem = (InternalEObject)system;
-            system = (system.System)eResolveProxy(oldSystem);
-            if (system != oldSystem) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RossystemPackage.SUB_SYSTEM__SYSTEM, oldSystem, system));
-            }
-        }
-        return system;
-    }
+		if (system != null && system.eIsProxy()) {
+			InternalEObject oldSystem = (InternalEObject)system;
+			system = (system.System)eResolveProxy(oldSystem);
+			if (system != oldSystem) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RossystemPackage.SUB_SYSTEM__SYSTEM, oldSystem, system));
+			}
+		}
+		return system;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public system.System basicGetSystem() {
-        return system;
-    }
+		return system;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setSystem(system.System newSystem) {
-        system.System oldSystem = system;
-        system = newSystem;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.SUB_SYSTEM__SYSTEM, oldSystem, system));
-    }
+		system.System oldSystem = system;
+		system = newSystem;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.SUB_SYSTEM__SYSTEM, oldSystem, system));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case RossystemPackage.SUB_SYSTEM__SYSTEM:
-                if (resolve) return getSystem();
-                return basicGetSystem();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case RossystemPackage.SUB_SYSTEM__SYSTEM:
+				if (resolve) return getSystem();
+				return basicGetSystem();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case RossystemPackage.SUB_SYSTEM__SYSTEM:
-                setSystem((system.System)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case RossystemPackage.SUB_SYSTEM__SYSTEM:
+				setSystem((system.System)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.SUB_SYSTEM__SYSTEM:
-                setSystem((system.System)null);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.SUB_SYSTEM__SYSTEM:
+				setSystem((system.System)null);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.SUB_SYSTEM__SYSTEM:
-                return system != null;
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.SUB_SYSTEM__SYSTEM:
+				return system != null;
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //SubSystemImpl

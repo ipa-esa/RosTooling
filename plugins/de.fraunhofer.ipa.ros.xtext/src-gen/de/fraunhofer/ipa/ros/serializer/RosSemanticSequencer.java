@@ -51,6 +51,12 @@ import ros.ActionServer;
 import ros.ActionSpec;
 import ros.ArrayTopicSpecMsgRef;
 import ros.Artifact;
+import ros.ExtensionBlock;
+import ros.ExtensionEntry;
+import ros.ExtensionListValue;
+import ros.ExtensionMapValue;
+import ros.ExtensionRefValue;
+import ros.ExtensionScalarValue;
 import ros.ExternalDependency;
 import ros.GlobalNamespace;
 import ros.MessageDefinition;
@@ -78,6 +84,8 @@ import ros.ParameterStruct;
 import ros.ParameterStructMember;
 import ros.ParameterStructType;
 import ros.ParameterStructTypeMember;
+import ros.Plugin;
+import ros.PluginSlot;
 import ros.PrivateNamespace;
 import ros.Publisher;
 import ros.RelativeNamespace;
@@ -217,6 +225,35 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 			case RosPackage.ARTIFACT:
 				sequence_Artifact(context, (Artifact) semanticObject); 
 				return; 
+			case RosPackage.EXTENSION_BLOCK:
+				sequence_ExtensionBlock(context, (ExtensionBlock) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_ENTRY:
+				sequence_ExtensionEntry(context, (ExtensionEntry) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_LIST_VALUE:
+				sequence_ExtensionListValue(context, (ExtensionListValue) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_MAP_VALUE:
+				if (rule == grammarAccess.getExtensionValueRule()) {
+					sequence_ExtensionBraceMapValue_ExtensionIndentedMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getExtensionBraceMapValueRule()) {
+					sequence_ExtensionBraceMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getExtensionIndentedMapValueRule()) {
+					sequence_ExtensionIndentedMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else break;
+			case RosPackage.EXTENSION_REF_VALUE:
+				sequence_ExtensionRefValue(context, (ExtensionRefValue) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_SCALAR_VALUE:
+				sequence_ExtensionScalarValue(context, (ExtensionScalarValue) semanticObject); 
+				return; 
 			case RosPackage.EXTERNAL_DEPENDENCY:
 				sequence_ExternalDependency(context, (ExternalDependency) semanticObject); 
 				return; 
@@ -304,6 +341,12 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 			case RosPackage.PARAMETER_STRUCT_TYPE_MEMBER:
 				sequence_ParameterStructTypeMember(context, (ParameterStructTypeMember) semanticObject); 
 				return; 
+			case RosPackage.PLUGIN:
+				sequence_Plugin(context, (Plugin) semanticObject); 
+				return; 
+			case RosPackage.PLUGIN_SLOT:
+				sequence_PluginSlot(context, (PluginSlot) semanticObject); 
+				return; 
 			case RosPackage.PRIVATE_NAMESPACE:
 				sequence_PrivateNamespace(context, (PrivateNamespace) semanticObject); 
 				return; 
@@ -384,7 +427,7 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *     Artifact returns Artifact
 	 *
 	 * Constraint:
-	 *     (name=RosNames node=Node?)
+	 *     (name=RosNames node=Node? plugins+=Plugin*)
 	 * </pre>
 	 */
 	protected void sequence_Artifact(ISerializationContext context, Artifact semanticObject) {
@@ -442,7 +485,9 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *             serviceclient+=ServiceClient | 
 	 *             actionserver+=ActionServer | 
 	 *             actionclient+=ActionClient | 
-	 *             parameter+=Parameter
+	 *             parameter+=Parameter | 
+	 *             pluginSlots+=PluginSlot | 
+	 *             extensions+=ExtensionBlock
 	 *         )*
 	 *     )
 	 * </pre>
@@ -498,6 +543,48 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 * </pre>
 	 */
 	protected void sequence_Package_Impl(ISerializationContext context, ros.Package semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     PluginSlot returns PluginSlot
+	 *
+	 * Constraint:
+	 *     (name=EString ((base=EString | parameter=EString | defaultPlugin=EString)+ | (base=EString parameter=EString defaultPlugin=EString?))?)
+	 * </pre>
+	 */
+	protected void sequence_PluginSlot(ISerializationContext context, PluginSlot semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     Plugin returns Plugin
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=RosNames 
+	 *         (
+	 *             implements=EString | 
+	 *             loader=PluginLoader | 
+	 *             publisher+=Publisher | 
+	 *             subscriber+=Subscriber | 
+	 *             serviceserver+=ServiceServer | 
+	 *             serviceclient+=ServiceClient | 
+	 *             actionserver+=ActionServer | 
+	 *             actionclient+=ActionClient | 
+	 *             parameter+=Parameter | 
+	 *             extensions+=ExtensionBlock
+	 *         )*
+	 *     )
+	 * </pre>
+	 */
+	protected void sequence_Plugin(ISerializationContext context, Plugin semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

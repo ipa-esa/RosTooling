@@ -9,12 +9,20 @@ import ros.ActionServer
 import ros.Artifact
 import ros.Node
 import ros.Package
+import ros.Parameter
+import ros.ParameterArrayType
+import ros.ParameterListType
+import ros.ParameterStringType
+import ros.ParameterType
+import ros.Plugin
+import ros.PluginLoader
+import ros.PluginSlot
 import ros.Publisher
+import ros.QualityOfService
+import ros.RosPackage
 import ros.ServiceClient
 import ros.ServiceServer
 import ros.Subscriber
-import ros.Parameter
-import ros.QualityOfService
 
 /**
  * This class contains custom validation rules.
@@ -161,6 +169,102 @@ class RosValidator extends AbstractRosValidator {
             error("Durations of lease_duration, lifespan, deadline should be specified as a string of nanoseconds which can convert to int, or as infinite", null, INVALID_VALUE)
         }
     }
+  }
+
+  public static val PLUGIN_MISSING_IMPLEMENTS = 'plugin.missingImplements'
+  public static val PLUGIN_INVALID_IMPLEMENTS = 'plugin.invalidImplements'
+  public static val SLOT_DUPLICATE = 'slot.duplicate'
+  public static val SLOT_INVALID_BASE = 'slot.invalidBase'
+  public static val SLOT_MISSING_PARAM = 'slot.missingParameter'
+  public static val SLOT_INVALID_PARAM_TYPE = 'slot.invalidParameterType'
+
+  @Check
+  def void checkPluginDefinition(Plugin plugin) {
+    val impl = plugin.implements?.trim
+    if (plugin.loader == PluginLoader.PLUGINLIB) {
+      if (impl === null || impl.empty) {
+        error(
+          "Plugin '" + plugin.name + "' with loader 'pluginlib' must specify 'implements: \"pkg::BaseClass\"'",
+          plugin,
+          RosPackage.Literals.PLUGIN__IMPLEMENTS,
+          PLUGIN_MISSING_IMPLEMENTS
+        )
+        return
+      }
+      if (!isValidQualifiedCppType(impl)) {
+        error(
+          "Plugin '" + plugin.name + "' field 'implements' must be a C++ namespace-qualified base class (e.g. 'nav2_core::GlobalPlanner')",
+          plugin,
+          RosPackage.Literals.PLUGIN__IMPLEMENTS,
+          PLUGIN_INVALID_IMPLEMENTS
+        )
+      }
+    } else if (impl !== null && !impl.empty && !isValidQualifiedCppType(impl)) {
+      error(
+        "Plugin '" + plugin.name + "' field 'implements' must be a C++ namespace-qualified base class (e.g. 'pkg::BaseClass')",
+        plugin,
+        RosPackage.Literals.PLUGIN__IMPLEMENTS,
+        PLUGIN_INVALID_IMPLEMENTS
+      )
+    }
+  }
+
+  @Check
+  def void checkNodePluginSlots(Node node) {
+    val seenSlotNames = newHashSet
+    for (PluginSlot slot : node.pluginSlots) {
+      if (slot.name !== null && !seenSlotNames.add(slot.name)) {
+        error(
+          "Duplicate pluginslot '" + slot.name + "' on node '" + node.name + "'",
+          slot,
+          RosPackage.Literals.PLUGIN_SLOT__NAME,
+          SLOT_DUPLICATE
+        )
+      }
+      val baseType = slot.base?.trim
+      if (baseType === null || !isValidQualifiedCppType(baseType)) {
+        error(
+          "PluginSlot '" + slot.name + "' must declare a C++ qualified 'base:' class (e.g. 'nav2_core::GlobalPlanner')",
+          slot,
+          RosPackage.Literals.PLUGIN_SLOT__BASE,
+          SLOT_INVALID_BASE
+        )
+      }
+      val paramName = slot.parameter?.trim
+      val declaredParam = node.parameter.findFirst[p | p.name == paramName]
+      if (declaredParam === null) {
+        error(
+          "PluginSlot '" + slot.name + "' references parameter '" + slot.parameter + "', which is not declared on node '" + node.name + "'",
+          slot,
+          RosPackage.Literals.PLUGIN_SLOT__PARAMETER,
+          SLOT_MISSING_PARAM
+        )
+      } else if (!isStringOrStringArrayType(declaredParam.type)) {
+        error(
+          "PluginSlot '" + slot.name + "' parameter '" + slot.parameter + "' must have type String or Array[String]",
+          slot,
+          RosPackage.Literals.PLUGIN_SLOT__PARAMETER,
+          SLOT_INVALID_PARAM_TYPE
+        )
+      }
+    }
+  }
+
+  def private boolean isValidQualifiedCppType(String fqn) {
+    return fqn !== null && fqn.contains("::") && !fqn.startsWith("::") && !fqn.endsWith("::")
+  }
+
+  def private boolean isStringOrStringArrayType(ParameterType paramType) {
+    if (paramType instanceof ParameterStringType) {
+      return true
+    }
+    if (paramType instanceof ParameterArrayType) {
+      return paramType.type instanceof ParameterStringType
+    }
+    if (paramType instanceof ParameterListType) {
+      return !paramType.sequence.empty && paramType.sequence.forall[it instanceof ParameterStringType]
+    }
+    return false
   }
 
 }

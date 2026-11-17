@@ -38,8 +38,11 @@ import ros.ActionClient;
 import ros.ActionServer;
 import ros.AmentPackage;
 import ros.Artifact;
+import ros.InterfaceHolder;
 import ros.Node;
 import ros.Package;
+import ros.Plugin;
+import ros.PluginSlot;
 import de.fraunhofer.ipa.ros.glsp.handlers.RosPackageSetEditor;
 import primitives.MessagePart;
 import ros.ActionSpec;
@@ -226,95 +229,41 @@ public class RosGModelFactory extends EMFGModelFactory {
             }
         }
 
-        // Also include inherited interfaces from origin ros.Node not yet wrapped in RosInterface
+        // Also include inherited interfaces from origin ros.Node and attached Plugins not yet wrapped in RosInterface
         if (isResolvedOrigin) {
-            for (Subscriber sub : originNode.getSubscriber()) {
-                if (!explicitByOrigin.containsKey(sub)) {
-                    String spec = resolveSpecName(sub, RosPackage.Literals.SUBSCRIBER__MESSAGE, sub.getMessage());
-                    targetPorts.add(new PortDescriptor(
-                            nodeId + "__port__sub__" + sub.getName(),
-                            RosModelTypes.PORT_SUB,
-                            sub.getName(),
-                            sub.getName(),
-                            spec,
-                            false,
-                            sub));
-                }
+            addInheritedHolderPorts(nodeId, originNode, explicitByOrigin, targetPorts, sourcePorts);
+        }
+        List<Plugin> resolvedPlugins = new ArrayList<>();
+        for (Plugin pl : rosNode.getPlugins()) {
+            Plugin resolved = pl;
+            if (resolved != null && resolved.eIsProxy()) {
+                EObject r = EcoreUtil.resolve(resolved, rosNode);
+                resolved = r instanceof Plugin p ? p : null;
             }
-            for (ServiceClient sc : originNode.getServiceclient()) {
-                if (!explicitByOrigin.containsKey(sc)) {
-                    String spec = resolveSpecName(sc, RosPackage.Literals.SERVICE_CLIENT__SERVICE, sc.getService());
-                    targetPorts.add(new PortDescriptor(
-                            nodeId + "__port__sc__" + sc.getName(),
-                            RosModelTypes.PORT_SC,
-                            sc.getName(),
-                            sc.getName(),
-                            spec,
-                            false,
-                            sc));
-                }
-            }
-            for (ActionClient ac : originNode.getActionclient()) {
-                if (!explicitByOrigin.containsKey(ac)) {
-                    String spec = resolveSpecName(ac, RosPackage.Literals.ACTION_CLIENT__ACTION, ac.getAction());
-                    targetPorts.add(new PortDescriptor(
-                            nodeId + "__port__ac__" + ac.getName(),
-                            RosModelTypes.PORT_AC,
-                            ac.getName(),
-                            ac.getName(),
-                            spec,
-                            false,
-                            ac));
-                }
-            }
-            for (Publisher pub : originNode.getPublisher()) {
-                if (!explicitByOrigin.containsKey(pub)) {
-                    String spec = resolveSpecName(pub, RosPackage.Literals.PUBLISHER__MESSAGE, pub.getMessage());
-                    sourcePorts.add(new PortDescriptor(
-                            nodeId + "__port__pub__" + pub.getName(),
-                            RosModelTypes.PORT_PUB,
-                            pub.getName(),
-                            pub.getName(),
-                            spec,
-                            false,
-                            pub));
-                }
-            }
-            for (ServiceServer ss : originNode.getServiceserver()) {
-                if (!explicitByOrigin.containsKey(ss)) {
-                    String spec = resolveSpecName(ss, RosPackage.Literals.SERVICE_SERVER__SERVICE, ss.getService());
-                    sourcePorts.add(new PortDescriptor(
-                            nodeId + "__port__ss__" + ss.getName(),
-                            RosModelTypes.PORT_SS,
-                            ss.getName(),
-                            ss.getName(),
-                            spec,
-                            false,
-                            ss));
-                }
-            }
-            for (ActionServer as : originNode.getActionserver()) {
-                if (!explicitByOrigin.containsKey(as)) {
-                    String spec = resolveSpecName(as, RosPackage.Literals.ACTION_SERVER__ACTION, as.getAction());
-                    sourcePorts.add(new PortDescriptor(
-                            nodeId + "__port__as__" + as.getName(),
-                            RosModelTypes.PORT_AS,
-                            as.getName(),
-                            as.getName(),
-                            spec,
-                            false,
-                            as));
-                }
+            if (resolved != null && !resolved.eIsProxy()) {
+                resolvedPlugins.add(resolved);
+                addInheritedHolderPorts(nodeId, resolved, explicitByOrigin, targetPorts, sourcePorts);
             }
         }
 
         int activeParams = rosNode.getRosparameters().size();
-        int totalParams = isResolvedOrigin ? Math.max(activeParams, originNode.getParameter().size()) : activeParams;
+        int holderParams = isResolvedOrigin ? originNode.getParameter().size() : 0;
+        for (Plugin pl : resolvedPlugins) {
+            holderParams += pl.getParameter().size();
+        }
+        int totalParams = Math.max(activeParams, holderParams);
+
+        List<String> pluginNames = new ArrayList<>();
+        for (Plugin pl : resolvedPlugins) {
+            if (pl.getName() != null) {
+                pluginNames.add(pl.getName());
+            }
+        }
 
         // Card width follows its texts (title + badges, 'from', west + east port labels), so
         // interface names are not cut off; the client truncates only beyond MAX_NODE_WIDTH.
         String title = namespace.isEmpty() ? nodeName : namespace.replaceAll("/$", "") + "/" + nodeName;
-        double badges = 86.0 + (isLifecycle ? 30.0 : 0.0);
+        double badges = 86.0 + (isLifecycle ? 30.0 : 0.0) + (pluginNames.isEmpty() ? 0.0 : 56.0);
         double headerMinWidth = Math.max(
                 2 * CARD_MARGIN + title.length() * TITLE_CHAR_WIDTH + badges,
                 2 * CARD_MARGIN + fromRef.length() * SUBTITLE_CHAR_WIDTH);
@@ -334,9 +283,11 @@ public class RosGModelFactory extends EMFGModelFactory {
                 .addArgument("namespace", namespace)
                 .addArgument("from", fromRef)
                 .addArgument("isLifecycle", isLifecycle)
+                .addArgument("plugins", String.join(", ", pluginNames))
+                .addArgument("pluginsCount", pluginNames.size())
                 .addArgument("activeParams", activeParams)
                 .addArgument("totalParams", totalParams)
-                .addArgument("parametersJson", serializeRosParameters(rosNode, originNode));
+                .addArgument("parametersJson", serializeRosParameters(rosNode, originNode, resolvedPlugins));
 
         // Header labels
         builder.add(new GLabelBuilder(RosModelTypes.LABEL_NAME)
@@ -351,11 +302,103 @@ public class RosGModelFactory extends EMFGModelFactory {
                 .id(nodeId + "_label_params")
                 .text(activeParams + "/" + totalParams + " params")
                 .build());
+        if (!pluginNames.isEmpty()) {
+            builder.add(new GLabelBuilder(RosModelTypes.LABEL_BADGE)
+                    .id(nodeId + "_label_plugins")
+                    .text(pluginNames.size() + (pluginNames.size() == 1 ? " plugin" : " plugins"))
+                    .build());
+        }
 
         double nodeHeight = layoutAndAddPorts(builder, nodeId, nodeWidth, headerHeight, targetPorts, sourcePorts);
         builder.size(nodeWidth, nodeHeight);
 
         return builder.build();
+    }
+
+    private void addInheritedHolderPorts(
+            final String nodeId,
+            final InterfaceHolder holder,
+            final Map<EObject, RosInterface> explicitByOrigin,
+            final List<PortDescriptor> targetPorts,
+            final List<PortDescriptor> sourcePorts) {
+        for (Subscriber sub : holder.getSubscriber()) {
+            if (!explicitByOrigin.containsKey(sub)) {
+                String spec = resolveSpecName(sub, RosPackage.Literals.SUBSCRIBER__MESSAGE, sub.getMessage());
+                targetPorts.add(new PortDescriptor(
+                        nodeId + "__port__sub__" + sub.getName(),
+                        RosModelTypes.PORT_SUB,
+                        sub.getName(),
+                        sub.getName(),
+                        spec,
+                        false,
+                        sub));
+            }
+        }
+        for (ServiceClient sc : holder.getServiceclient()) {
+            if (!explicitByOrigin.containsKey(sc)) {
+                String spec = resolveSpecName(sc, RosPackage.Literals.SERVICE_CLIENT__SERVICE, sc.getService());
+                targetPorts.add(new PortDescriptor(
+                        nodeId + "__port__sc__" + sc.getName(),
+                        RosModelTypes.PORT_SC,
+                        sc.getName(),
+                        sc.getName(),
+                        spec,
+                        false,
+                        sc));
+            }
+        }
+        for (ActionClient ac : holder.getActionclient()) {
+            if (!explicitByOrigin.containsKey(ac)) {
+                String spec = resolveSpecName(ac, RosPackage.Literals.ACTION_CLIENT__ACTION, ac.getAction());
+                targetPorts.add(new PortDescriptor(
+                        nodeId + "__port__ac__" + ac.getName(),
+                        RosModelTypes.PORT_AC,
+                        ac.getName(),
+                        ac.getName(),
+                        spec,
+                        false,
+                        ac));
+            }
+        }
+        for (Publisher pub : holder.getPublisher()) {
+            if (!explicitByOrigin.containsKey(pub)) {
+                String spec = resolveSpecName(pub, RosPackage.Literals.PUBLISHER__MESSAGE, pub.getMessage());
+                sourcePorts.add(new PortDescriptor(
+                        nodeId + "__port__pub__" + pub.getName(),
+                        RosModelTypes.PORT_PUB,
+                        pub.getName(),
+                        pub.getName(),
+                        spec,
+                        false,
+                        pub));
+            }
+        }
+        for (ServiceServer ss : holder.getServiceserver()) {
+            if (!explicitByOrigin.containsKey(ss)) {
+                String spec = resolveSpecName(ss, RosPackage.Literals.SERVICE_SERVER__SERVICE, ss.getService());
+                sourcePorts.add(new PortDescriptor(
+                        nodeId + "__port__ss__" + ss.getName(),
+                        RosModelTypes.PORT_SS,
+                        ss.getName(),
+                        ss.getName(),
+                        spec,
+                        false,
+                        ss));
+            }
+        }
+        for (ActionServer as : holder.getActionserver()) {
+            if (!explicitByOrigin.containsKey(as)) {
+                String spec = resolveSpecName(as, RosPackage.Literals.ACTION_SERVER__ACTION, as.getAction());
+                sourcePorts.add(new PortDescriptor(
+                        nodeId + "__port__as__" + as.getName(),
+                        RosModelTypes.PORT_AS,
+                        as.getName(),
+                        as.getName(),
+                        spec,
+                        false,
+                        as));
+            }
+        }
     }
 
     /**
@@ -815,20 +858,55 @@ public class RosGModelFactory extends EMFGModelFactory {
                             .addArgument("actionserversCount", node.getActionserver().size())
                             .addArgument("actionclientsCount", node.getActionclient().size())
                             .addArgument("parametersCount", node.getParameter().size())
+                            .addArgument("pluginSlotsCount", node.getPluginSlots().size())
+                            .addArgument("pluginSlotsJson", serializeNodePluginSlots(node))
                             .addArgument("interfacesJson", serializeRosNodeInterfaces(node))
                             .addArgument("parametersJson", serializeNodeParameters(node));
                     pkgBuilder.add(nodeBuilder.build());
+                }
+                for (Plugin plugin : artifact.getPlugins()) {
+                    String pluginId = getElementId(plugin);
+                    GNodeBuilder pluginBuilder = new GNodeBuilder(RosModelTypes.ROS_NODE)
+                            .id(pluginId)
+                            .size(NODE_WIDTH, 160.0)
+                            .addArgument("packageName", nullToEmpty(pkg.getName()))
+                            .addArgument("artifactName", nullToEmpty(artifact.getName()))
+                            .addArgument("artifactId", getElementId(artifact))
+                            .addArgument("nodeName", nullToEmpty(plugin.getName()))
+                            .addArgument("isPlugin", true)
+                            .addArgument("implements", nullToEmpty(plugin.getImplements()))
+                            .addArgument("loader", plugin.getLoader() != null ? plugin.getLoader().getLiteral() : "pluginlib")
+                            .addArgument("publishersCount", plugin.getPublisher().size())
+                            .addArgument("subscribersCount", plugin.getSubscriber().size())
+                            .addArgument("serviceserversCount", plugin.getServiceserver().size())
+                            .addArgument("serviceclientsCount", plugin.getServiceclient().size())
+                            .addArgument("actionserversCount", plugin.getActionserver().size())
+                            .addArgument("actionclientsCount", plugin.getActionclient().size())
+                            .addArgument("parametersCount", plugin.getParameter().size())
+                            .addArgument("interfacesJson", serializeRosNodeInterfaces(plugin))
+                            .addArgument("parametersJson", serializeNodeParameters(plugin));
+                    pkgBuilder.add(pluginBuilder.build());
                 }
             }
             ggraph.getChildren().add(pkgBuilder.build());
         }
     }
 
-    protected String serializeRosParameters(final RosNode rosNode, final Node originNode) {
+    protected String serializeRosParameters(
+            final RosNode rosNode,
+            final Node originNode,
+            final List<Plugin> resolvedPlugins) {
         Map<String, String> entries = new LinkedHashMap<>();
         if (originNode != null && !originNode.eIsProxy()) {
             for (Parameter p : originNode.getParameter()) {
                 entries.put(p.getName(), formatParameterValue(p.getValue()));
+            }
+        }
+        if (resolvedPlugins != null) {
+            for (Plugin pl : resolvedPlugins) {
+                for (Parameter p : pl.getParameter()) {
+                    entries.putIfAbsent(p.getName(), formatParameterValue(p.getValue()));
+                }
             }
         }
         for (RosParameter rp : rosNode.getRosparameters()) {
@@ -848,7 +926,7 @@ public class RosGModelFactory extends EMFGModelFactory {
         return sb.toString();
     }
 
-    protected String serializeNodeParameters(final Node node) {
+    protected String serializeNodeParameters(final InterfaceHolder node) {
         List<String> items = new ArrayList<>();
         for (Parameter p : node.getParameter()) {
             ParameterType pt = p.getType();
@@ -865,7 +943,19 @@ public class RosGModelFactory extends EMFGModelFactory {
         return "[" + String.join(",", items) + "]";
     }
 
-    protected String serializeRosNodeInterfaces(final Node node) {
+    protected String serializeNodePluginSlots(final Node node) {
+        List<String> items = new ArrayList<>();
+        for (PluginSlot slot : node.getPluginSlots()) {
+            items.add("{\"id\":\"" + escapeJson(getElementId(slot))
+                    + "\",\"name\":\"" + escapeJson(nullToEmpty(slot.getName()))
+                    + "\",\"base\":\"" + escapeJson(nullToEmpty(slot.getBase()))
+                    + "\",\"parameter\":\"" + escapeJson(nullToEmpty(slot.getParameter()))
+                    + "\",\"default\":\"" + escapeJson(nullToEmpty(slot.getDefaultPlugin())) + "\"}");
+        }
+        return "[" + String.join(",", items) + "]";
+    }
+
+    protected String serializeRosNodeInterfaces(final InterfaceHolder node) {
         List<String> items = new ArrayList<>();
         for (InterfaceType iface : RosPackageSetEditor.allInterfaces(node)) {
             String kind = iface.eClass().getName();

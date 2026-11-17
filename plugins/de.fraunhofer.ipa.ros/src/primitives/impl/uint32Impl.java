@@ -16,22 +16,22 @@ import primitives.uint32;
  */
 public class uint32Impl extends AbstractTypeImpl implements uint32 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint32Impl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.UINT32;
-    }
+		return PrimitivesPackage.Literals.UINT32;
+	}
 
 } //uint32Impl

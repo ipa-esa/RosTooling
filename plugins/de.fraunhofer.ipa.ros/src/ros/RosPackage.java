@@ -61,68 +61,51 @@ public interface RosPackage extends EPackage {
 	RosPackage eINSTANCE = ros.impl.RosPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link ros.impl.NodeImpl <em>Node</em>}' class.
+	 * The meta object id for the '{@link ros.impl.ExtensibleImpl <em>Extensible</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see ros.impl.NodeImpl
-	 * @see ros.impl.RosPackageImpl#getNode()
+	 * @see ros.impl.ExtensibleImpl
+	 * @see ros.impl.RosPackageImpl#getExtensible()
 	 * @generated
 	 */
-	int NODE = 0;
+	int EXTENSIBLE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Serviceserver</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Extensions</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__SERVICESERVER = 0;
+	int EXTENSIBLE__EXTENSIONS = 0;
 
 	/**
-	 * The feature id for the '<em><b>Publisher</b></em>' containment reference list.
+	 * The number of structural features of the '<em>Extensible</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__PUBLISHER = 1;
+	int EXTENSIBLE_FEATURE_COUNT = 1;
 
 	/**
-	 * The feature id for the '<em><b>Subscriber</b></em>' containment reference list.
+	 * The number of operations of the '<em>Extensible</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__SUBSCRIBER = 2;
+	int EXTENSIBLE_OPERATION_COUNT = 0;
 
 	/**
-	 * The feature id for the '<em><b>Serviceclient</b></em>' containment reference list.
+	 * The meta object id for the '{@link ros.impl.ExtensionBlockImpl <em>Extension Block</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see ros.impl.ExtensionBlockImpl
+	 * @see ros.impl.RosPackageImpl#getExtensionBlock()
 	 * @generated
-	 * @ordered
 	 */
-	int NODE__SERVICECLIENT = 3;
-
-	/**
-	 * The feature id for the '<em><b>Actionserver</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NODE__ACTIONSERVER = 4;
-
-	/**
-	 * The feature id for the '<em><b>Actionclient</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NODE__ACTIONCLIENT = 5;
+	int EXTENSION_BLOCK = 1;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -131,7 +114,365 @@ public interface RosPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__NAME = 6;
+	int EXTENSION_BLOCK__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Entries</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_BLOCK__ENTRIES = 1;
+
+	/**
+	 * The number of structural features of the '<em>Extension Block</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_BLOCK_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Extension Block</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_BLOCK_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link ros.impl.ExtensionEntryImpl <em>Extension Entry</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.impl.ExtensionEntryImpl
+	 * @see ros.impl.RosPackageImpl#getExtensionEntry()
+	 * @generated
+	 */
+	int EXTENSION_ENTRY = 2;
+
+	/**
+	 * The feature id for the '<em><b>Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_ENTRY__KEY = 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_ENTRY__VALUE = 1;
+
+	/**
+	 * The number of structural features of the '<em>Extension Entry</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_ENTRY_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Extension Entry</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_ENTRY_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link ros.impl.ExtensionValueImpl <em>Extension Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.impl.ExtensionValueImpl
+	 * @see ros.impl.RosPackageImpl#getExtensionValue()
+	 * @generated
+	 */
+	int EXTENSION_VALUE = 3;
+
+	/**
+	 * The number of structural features of the '<em>Extension Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_VALUE_FEATURE_COUNT = 0;
+
+	/**
+	 * The number of operations of the '<em>Extension Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_VALUE_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link ros.impl.ExtensionScalarValueImpl <em>Extension Scalar Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.impl.ExtensionScalarValueImpl
+	 * @see ros.impl.RosPackageImpl#getExtensionScalarValue()
+	 * @generated
+	 */
+	int EXTENSION_SCALAR_VALUE = 4;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_SCALAR_VALUE__VALUE = EXTENSION_VALUE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Raw Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_SCALAR_VALUE__RAW_KIND = EXTENSION_VALUE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Extension Scalar Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_SCALAR_VALUE_FEATURE_COUNT = EXTENSION_VALUE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of operations of the '<em>Extension Scalar Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_SCALAR_VALUE_OPERATION_COUNT = EXTENSION_VALUE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ros.impl.ExtensionListValueImpl <em>Extension List Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.impl.ExtensionListValueImpl
+	 * @see ros.impl.RosPackageImpl#getExtensionListValue()
+	 * @generated
+	 */
+	int EXTENSION_LIST_VALUE = 5;
+
+	/**
+	 * The feature id for the '<em><b>Items</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_LIST_VALUE__ITEMS = EXTENSION_VALUE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Extension List Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_LIST_VALUE_FEATURE_COUNT = EXTENSION_VALUE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Extension List Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_LIST_VALUE_OPERATION_COUNT = EXTENSION_VALUE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ros.impl.ExtensionMapValueImpl <em>Extension Map Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.impl.ExtensionMapValueImpl
+	 * @see ros.impl.RosPackageImpl#getExtensionMapValue()
+	 * @generated
+	 */
+	int EXTENSION_MAP_VALUE = 6;
+
+	/**
+	 * The feature id for the '<em><b>Entries</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_MAP_VALUE__ENTRIES = EXTENSION_VALUE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Extension Map Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_MAP_VALUE_FEATURE_COUNT = EXTENSION_VALUE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Extension Map Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_MAP_VALUE_OPERATION_COUNT = EXTENSION_VALUE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ros.impl.ExtensionRefValueImpl <em>Extension Ref Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.impl.ExtensionRefValueImpl
+	 * @see ros.impl.RosPackageImpl#getExtensionRefValue()
+	 * @generated
+	 */
+	int EXTENSION_REF_VALUE = 7;
+
+	/**
+	 * The feature id for the '<em><b>Ref Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_REF_VALUE__REF_KIND = EXTENSION_VALUE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_REF_VALUE__TARGET = EXTENSION_VALUE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Raw Target</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_REF_VALUE__RAW_TARGET = EXTENSION_VALUE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Extension Ref Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_REF_VALUE_FEATURE_COUNT = EXTENSION_VALUE_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of operations of the '<em>Extension Ref Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTENSION_REF_VALUE_OPERATION_COUNT = EXTENSION_VALUE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ros.impl.InterfaceHolderImpl <em>Interface Holder</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.impl.InterfaceHolderImpl
+	 * @see ros.impl.RosPackageImpl#getInterfaceHolder()
+	 * @generated
+	 */
+	int INTERFACE_HOLDER = 8;
+
+	/**
+	 * The feature id for the '<em><b>Extensions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERFACE_HOLDER__EXTENSIONS = EXTENSIBLE__EXTENSIONS;
+
+	/**
+	 * The feature id for the '<em><b>Serviceserver</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERFACE_HOLDER__SERVICESERVER = EXTENSIBLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Publisher</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERFACE_HOLDER__PUBLISHER = EXTENSIBLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Subscriber</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERFACE_HOLDER__SUBSCRIBER = EXTENSIBLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Serviceclient</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERFACE_HOLDER__SERVICECLIENT = EXTENSIBLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Actionserver</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERFACE_HOLDER__ACTIONSERVER = EXTENSIBLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Actionclient</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERFACE_HOLDER__ACTIONCLIENT = EXTENSIBLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERFACE_HOLDER__NAME = EXTENSIBLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Parameter</b></em>' containment reference list.
@@ -140,7 +481,116 @@ public interface RosPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__PARAMETER = 7;
+	int INTERFACE_HOLDER__PARAMETER = EXTENSIBLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The number of structural features of the '<em>Interface Holder</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERFACE_HOLDER_FEATURE_COUNT = EXTENSIBLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The number of operations of the '<em>Interface Holder</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERFACE_HOLDER_OPERATION_COUNT = EXTENSIBLE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ros.impl.NodeImpl <em>Node</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.impl.NodeImpl
+	 * @see ros.impl.RosPackageImpl#getNode()
+	 * @generated
+	 */
+	int NODE = 9;
+
+	/**
+	 * The feature id for the '<em><b>Extensions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__EXTENSIONS = INTERFACE_HOLDER__EXTENSIONS;
+
+	/**
+	 * The feature id for the '<em><b>Serviceserver</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__SERVICESERVER = INTERFACE_HOLDER__SERVICESERVER;
+
+	/**
+	 * The feature id for the '<em><b>Publisher</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__PUBLISHER = INTERFACE_HOLDER__PUBLISHER;
+
+	/**
+	 * The feature id for the '<em><b>Subscriber</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__SUBSCRIBER = INTERFACE_HOLDER__SUBSCRIBER;
+
+	/**
+	 * The feature id for the '<em><b>Serviceclient</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__SERVICECLIENT = INTERFACE_HOLDER__SERVICECLIENT;
+
+	/**
+	 * The feature id for the '<em><b>Actionserver</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__ACTIONSERVER = INTERFACE_HOLDER__ACTIONSERVER;
+
+	/**
+	 * The feature id for the '<em><b>Actionclient</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__ACTIONCLIENT = INTERFACE_HOLDER__ACTIONCLIENT;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__NAME = INTERFACE_HOLDER__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Parameter</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__PARAMETER = INTERFACE_HOLDER__PARAMETER;
 
 	/**
 	 * The feature id for the '<em><b>Is Lifecycle</b></em>' attribute.
@@ -149,7 +599,16 @@ public interface RosPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__IS_LIFECYCLE = 8;
+	int NODE__IS_LIFECYCLE = INTERFACE_HOLDER_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Plugin Slots</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__PLUGIN_SLOTS = INTERFACE_HOLDER_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Node</em>' class.
@@ -158,7 +617,7 @@ public interface RosPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE_FEATURE_COUNT = 9;
+	int NODE_FEATURE_COUNT = INTERFACE_HOLDER_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Node</em>' class.
@@ -167,7 +626,198 @@ public interface RosPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE_OPERATION_COUNT = 0;
+	int NODE_OPERATION_COUNT = INTERFACE_HOLDER_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ros.impl.PluginImpl <em>Plugin</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.impl.PluginImpl
+	 * @see ros.impl.RosPackageImpl#getPlugin()
+	 * @generated
+	 */
+	int PLUGIN = 10;
+
+	/**
+	 * The feature id for the '<em><b>Extensions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN__EXTENSIONS = INTERFACE_HOLDER__EXTENSIONS;
+
+	/**
+	 * The feature id for the '<em><b>Serviceserver</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN__SERVICESERVER = INTERFACE_HOLDER__SERVICESERVER;
+
+	/**
+	 * The feature id for the '<em><b>Publisher</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN__PUBLISHER = INTERFACE_HOLDER__PUBLISHER;
+
+	/**
+	 * The feature id for the '<em><b>Subscriber</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN__SUBSCRIBER = INTERFACE_HOLDER__SUBSCRIBER;
+
+	/**
+	 * The feature id for the '<em><b>Serviceclient</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN__SERVICECLIENT = INTERFACE_HOLDER__SERVICECLIENT;
+
+	/**
+	 * The feature id for the '<em><b>Actionserver</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN__ACTIONSERVER = INTERFACE_HOLDER__ACTIONSERVER;
+
+	/**
+	 * The feature id for the '<em><b>Actionclient</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN__ACTIONCLIENT = INTERFACE_HOLDER__ACTIONCLIENT;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN__NAME = INTERFACE_HOLDER__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Parameter</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN__PARAMETER = INTERFACE_HOLDER__PARAMETER;
+
+	/**
+	 * The feature id for the '<em><b>Implements</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN__IMPLEMENTS = INTERFACE_HOLDER_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Loader</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN__LOADER = INTERFACE_HOLDER_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Plugin</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_FEATURE_COUNT = INTERFACE_HOLDER_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of operations of the '<em>Plugin</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_OPERATION_COUNT = INTERFACE_HOLDER_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link ros.impl.PluginSlotImpl <em>Plugin Slot</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.impl.PluginSlotImpl
+	 * @see ros.impl.RosPackageImpl#getPluginSlot()
+	 * @generated
+	 */
+	int PLUGIN_SLOT = 11;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_SLOT__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Base</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_SLOT__BASE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Parameter</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_SLOT__PARAMETER = 2;
+
+	/**
+	 * The feature id for the '<em><b>Default Plugin</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_SLOT__DEFAULT_PLUGIN = 3;
+
+	/**
+	 * The number of structural features of the '<em>Plugin Slot</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_SLOT_FEATURE_COUNT = 4;
+
+	/**
+	 * The number of operations of the '<em>Plugin Slot</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_SLOT_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link ros.impl.PackageImpl <em>Package</em>}' class.
@@ -177,7 +827,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPackage()
 	 * @generated
 	 */
-	int PACKAGE = 1;
+	int PACKAGE = 12;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -250,7 +900,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getDependency()
 	 * @generated
 	 */
-	int DEPENDENCY = 2;
+	int DEPENDENCY = 13;
 
 	/**
 	 * The number of structural features of the '<em>Dependency</em>' class.
@@ -278,7 +928,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getSpecBase()
 	 * @generated
 	 */
-	int SPEC_BASE = 11;
+	int SPEC_BASE = 22;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -333,7 +983,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getServiceSpec()
 	 * @generated
 	 */
-	int SERVICE_SPEC = 3;
+	int SERVICE_SPEC = 14;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -406,7 +1056,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getInterfaceType()
 	 * @generated
 	 */
-	int INTERFACE_TYPE = 23;
+	int INTERFACE_TYPE = 34;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -470,7 +1120,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getServiceServer()
 	 * @generated
 	 */
-	int SERVICE_SERVER = 4;
+	int SERVICE_SERVER = 15;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -543,7 +1193,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getTopicSpec()
 	 * @generated
 	 */
-	int TOPIC_SPEC = 5;
+	int TOPIC_SPEC = 16;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -607,7 +1257,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPackageDependency()
 	 * @generated
 	 */
-	int PACKAGE_DEPENDENCY = 6;
+	int PACKAGE_DEPENDENCY = 17;
 
 	/**
 	 * The feature id for the '<em><b>Package</b></em>' reference.
@@ -644,7 +1294,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getExternalDependency()
 	 * @generated
 	 */
-	int EXTERNAL_DEPENDENCY = 7;
+	int EXTERNAL_DEPENDENCY = 18;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -681,7 +1331,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getCatkinPackage()
 	 * @generated
 	 */
-	int CATKIN_PACKAGE = 8;
+	int CATKIN_PACKAGE = 19;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -754,7 +1404,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPublisher()
 	 * @generated
 	 */
-	int PUBLISHER = 9;
+	int PUBLISHER = 20;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -827,7 +1477,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getArtifact()
 	 * @generated
 	 */
-	int ARTIFACT = 10;
+	int ARTIFACT = 21;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -848,13 +1498,22 @@ public interface RosPackage extends EPackage {
 	int ARTIFACT__NODE = 1;
 
 	/**
+	 * The feature id for the '<em><b>Plugins</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARTIFACT__PLUGINS = 2;
+
+	/**
 	 * The number of structural features of the '<em>Artifact</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ARTIFACT_FEATURE_COUNT = 2;
+	int ARTIFACT_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Artifact</em>' class.
@@ -873,7 +1532,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getSubscriber()
 	 * @generated
 	 */
-	int SUBSCRIBER = 12;
+	int SUBSCRIBER = 23;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -946,7 +1605,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getServiceClient()
 	 * @generated
 	 */
-	int SERVICE_CLIENT = 13;
+	int SERVICE_CLIENT = 24;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -1019,7 +1678,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPackageSet()
 	 * @generated
 	 */
-	int PACKAGE_SET = 14;
+	int PACKAGE_SET = 25;
 
 	/**
 	 * The feature id for the '<em><b>Package</b></em>' containment reference list.
@@ -1056,7 +1715,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getActionSpec()
 	 * @generated
 	 */
-	int ACTION_SPEC = 15;
+	int ACTION_SPEC = 26;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1138,7 +1797,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getActionServer()
 	 * @generated
 	 */
-	int ACTION_SERVER = 16;
+	int ACTION_SERVER = 27;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -1211,7 +1870,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getActionClient()
 	 * @generated
 	 */
-	int ACTION_CLIENT = 17;
+	int ACTION_CLIENT = 28;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -1284,7 +1943,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getMessageDefinition()
 	 * @generated
 	 */
-	int MESSAGE_DEFINITION = 18;
+	int MESSAGE_DEFINITION = 29;
 
 	/**
 	 * The feature id for the '<em><b>Message Part</b></em>' containment reference list.
@@ -1321,7 +1980,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getNamespace()
 	 * @generated
 	 */
-	int NAMESPACE = 19;
+	int NAMESPACE = 30;
 
 	/**
 	 * The feature id for the '<em><b>Parts</b></em>' attribute list.
@@ -1358,7 +2017,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getGlobalNamespace()
 	 * @generated
 	 */
-	int GLOBAL_NAMESPACE = 20;
+	int GLOBAL_NAMESPACE = 31;
 
 	/**
 	 * The feature id for the '<em><b>Parts</b></em>' attribute list.
@@ -1395,7 +2054,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getRelativeNamespace()
 	 * @generated
 	 */
-	int RELATIVE_NAMESPACE = 21;
+	int RELATIVE_NAMESPACE = 32;
 
 	/**
 	 * The feature id for the '<em><b>Parts</b></em>' attribute list.
@@ -1432,7 +2091,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPrivateNamespace()
 	 * @generated
 	 */
-	int PRIVATE_NAMESPACE = 22;
+	int PRIVATE_NAMESPACE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Parts</b></em>' attribute list.
@@ -1469,7 +2128,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterType()
 	 * @generated
 	 */
-	int PARAMETER_TYPE = 24;
+	int PARAMETER_TYPE = 35;
 
 	/**
 	 * The number of structural features of the '<em>Parameter Type</em>' class.
@@ -1497,7 +2156,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterListType()
 	 * @generated
 	 */
-	int PARAMETER_LIST_TYPE = 25;
+	int PARAMETER_LIST_TYPE = 36;
 
 	/**
 	 * The feature id for the '<em><b>Sequence</b></em>' containment reference list.
@@ -1543,7 +2202,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterStructType()
 	 * @generated
 	 */
-	int PARAMETER_STRUCT_TYPE = 26;
+	int PARAMETER_STRUCT_TYPE = 37;
 
 	/**
 	 * The feature id for the '<em><b>Parameterstructypetmember</b></em>' containment reference list.
@@ -1580,7 +2239,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterIntegerType()
 	 * @generated
 	 */
-	int PARAMETER_INTEGER_TYPE = 27;
+	int PARAMETER_INTEGER_TYPE = 38;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -1617,7 +2276,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterStringType()
 	 * @generated
 	 */
-	int PARAMETER_STRING_TYPE = 28;
+	int PARAMETER_STRING_TYPE = 39;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -1654,7 +2313,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterDoubleType()
 	 * @generated
 	 */
-	int PARAMETER_DOUBLE_TYPE = 29;
+	int PARAMETER_DOUBLE_TYPE = 40;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -1691,7 +2350,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameter()
 	 * @generated
 	 */
-	int PARAMETER = 30;
+	int PARAMETER = 41;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -1773,7 +2432,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterDateType()
 	 * @generated
 	 */
-	int PARAMETER_DATE_TYPE = 31;
+	int PARAMETER_DATE_TYPE = 42;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -1810,7 +2469,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterBooleanType()
 	 * @generated
 	 */
-	int PARAMETER_BOOLEAN_TYPE = 32;
+	int PARAMETER_BOOLEAN_TYPE = 43;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -1847,7 +2506,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterBase64Type()
 	 * @generated
 	 */
-	int PARAMETER_BASE64_TYPE = 33;
+	int PARAMETER_BASE64_TYPE = 44;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -1884,7 +2543,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterAnyType()
 	 * @generated
 	 */
-	int PARAMETER_ANY_TYPE = 34;
+	int PARAMETER_ANY_TYPE = 45;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -1921,7 +2580,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterStructTypeMember()
 	 * @generated
 	 */
-	int PARAMETER_STRUCT_TYPE_MEMBER = 35;
+	int PARAMETER_STRUCT_TYPE_MEMBER = 46;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1976,7 +2635,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterArrayType()
 	 * @generated
 	 */
-	int PARAMETER_ARRAY_TYPE = 36;
+	int PARAMETER_ARRAY_TYPE = 47;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' containment reference.
@@ -2022,7 +2681,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterValue()
 	 * @generated
 	 */
-	int PARAMETER_VALUE = 37;
+	int PARAMETER_VALUE = 48;
 
 	/**
 	 * The number of structural features of the '<em>Parameter Value</em>' class.
@@ -2050,7 +2709,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterAny()
 	 * @generated
 	 */
-	int PARAMETER_ANY = 38;
+	int PARAMETER_ANY = 49;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2087,7 +2746,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterString()
 	 * @generated
 	 */
-	int PARAMETER_STRING = 39;
+	int PARAMETER_STRING = 50;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2124,7 +2783,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterBase64()
 	 * @generated
 	 */
-	int PARAMETER_BASE64 = 40;
+	int PARAMETER_BASE64 = 51;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2161,7 +2820,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterInteger()
 	 * @generated
 	 */
-	int PARAMETER_INTEGER = 41;
+	int PARAMETER_INTEGER = 52;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2198,7 +2857,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterDouble()
 	 * @generated
 	 */
-	int PARAMETER_DOUBLE = 42;
+	int PARAMETER_DOUBLE = 53;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2235,7 +2894,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterBoolean()
 	 * @generated
 	 */
-	int PARAMETER_BOOLEAN = 43;
+	int PARAMETER_BOOLEAN = 54;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2272,7 +2931,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterSequence()
 	 * @generated
 	 */
-	int PARAMETER_SEQUENCE = 44;
+	int PARAMETER_SEQUENCE = 55;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' containment reference list.
@@ -2309,7 +2968,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterStruct()
 	 * @generated
 	 */
-	int PARAMETER_STRUCT = 45;
+	int PARAMETER_STRUCT = 56;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' containment reference list.
@@ -2346,7 +3005,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterStructMember()
 	 * @generated
 	 */
-	int PARAMETER_STRUCT_MEMBER = 46;
+	int PARAMETER_STRUCT_MEMBER = 57;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2392,7 +3051,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterDate()
 	 * @generated
 	 */
-	int PARAMETER_DATE = 47;
+	int PARAMETER_DATE = 58;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2429,7 +3088,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getAmentPackage()
 	 * @generated
 	 */
-	int AMENT_PACKAGE = 48;
+	int AMENT_PACKAGE = 59;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2502,7 +3161,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getQualityOfService()
 	 * @generated
 	 */
-	int QUALITY_OF_SERVICE = 49;
+	int QUALITY_OF_SERVICE = 60;
 
 	/**
 	 * The feature id for the '<em><b>Qo SProfile</b></em>' attribute.
@@ -2611,7 +3270,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getTopicSpecMsgRef()
 	 * @generated
 	 */
-	int TOPIC_SPEC_MSG_REF = 50;
+	int TOPIC_SPEC_MSG_REF = 61;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -2648,7 +3307,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getArrayTopicSpecMsgRef()
 	 * @generated
 	 */
-	int ARRAY_TOPIC_SPEC_MSG_REF = 51;
+	int ARRAY_TOPIC_SPEC_MSG_REF = 62;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -2685,7 +3344,17 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getLifecycleState()
 	 * @generated
 	 */
-	int LIFECYCLE_STATE = 52;
+	int LIFECYCLE_STATE = 63;
+
+	/**
+	 * The meta object id for the '{@link ros.PluginLoader <em>Plugin Loader</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.PluginLoader
+	 * @see ros.impl.RosPackageImpl#getPluginLoader()
+	 * @generated
+	 */
+	int PLUGIN_LOADER = 64;
 
 	/**
 	 * The meta object id for the '<em>Graph Name</em>' data type.
@@ -2695,8 +3364,318 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getGraphName()
 	 * @generated
 	 */
-	int GRAPH_NAME = 53;
+	int GRAPH_NAME = 65;
 
+
+	/**
+	 * Returns the meta object for class '{@link ros.Extensible <em>Extensible</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Extensible</em>'.
+	 * @see ros.Extensible
+	 * @generated
+	 */
+	EClass getExtensible();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.Extensible#getExtensions <em>Extensions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Extensions</em>'.
+	 * @see ros.Extensible#getExtensions()
+	 * @see #getExtensible()
+	 * @generated
+	 */
+	EReference getExtensible_Extensions();
+
+	/**
+	 * Returns the meta object for class '{@link ros.ExtensionBlock <em>Extension Block</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Extension Block</em>'.
+	 * @see ros.ExtensionBlock
+	 * @generated
+	 */
+	EClass getExtensionBlock();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.ExtensionBlock#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ros.ExtensionBlock#getName()
+	 * @see #getExtensionBlock()
+	 * @generated
+	 */
+	EAttribute getExtensionBlock_Name();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.ExtensionBlock#getEntries <em>Entries</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Entries</em>'.
+	 * @see ros.ExtensionBlock#getEntries()
+	 * @see #getExtensionBlock()
+	 * @generated
+	 */
+	EReference getExtensionBlock_Entries();
+
+	/**
+	 * Returns the meta object for class '{@link ros.ExtensionEntry <em>Extension Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Extension Entry</em>'.
+	 * @see ros.ExtensionEntry
+	 * @generated
+	 */
+	EClass getExtensionEntry();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.ExtensionEntry#getKey <em>Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Key</em>'.
+	 * @see ros.ExtensionEntry#getKey()
+	 * @see #getExtensionEntry()
+	 * @generated
+	 */
+	EAttribute getExtensionEntry_Key();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link ros.ExtensionEntry#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Value</em>'.
+	 * @see ros.ExtensionEntry#getValue()
+	 * @see #getExtensionEntry()
+	 * @generated
+	 */
+	EReference getExtensionEntry_Value();
+
+	/**
+	 * Returns the meta object for class '{@link ros.ExtensionValue <em>Extension Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Extension Value</em>'.
+	 * @see ros.ExtensionValue
+	 * @generated
+	 */
+	EClass getExtensionValue();
+
+	/**
+	 * Returns the meta object for class '{@link ros.ExtensionScalarValue <em>Extension Scalar Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Extension Scalar Value</em>'.
+	 * @see ros.ExtensionScalarValue
+	 * @generated
+	 */
+	EClass getExtensionScalarValue();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.ExtensionScalarValue#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see ros.ExtensionScalarValue#getValue()
+	 * @see #getExtensionScalarValue()
+	 * @generated
+	 */
+	EAttribute getExtensionScalarValue_Value();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.ExtensionScalarValue#getRawKind <em>Raw Kind</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Raw Kind</em>'.
+	 * @see ros.ExtensionScalarValue#getRawKind()
+	 * @see #getExtensionScalarValue()
+	 * @generated
+	 */
+	EAttribute getExtensionScalarValue_RawKind();
+
+	/**
+	 * Returns the meta object for class '{@link ros.ExtensionListValue <em>Extension List Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Extension List Value</em>'.
+	 * @see ros.ExtensionListValue
+	 * @generated
+	 */
+	EClass getExtensionListValue();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.ExtensionListValue#getItems <em>Items</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Items</em>'.
+	 * @see ros.ExtensionListValue#getItems()
+	 * @see #getExtensionListValue()
+	 * @generated
+	 */
+	EReference getExtensionListValue_Items();
+
+	/**
+	 * Returns the meta object for class '{@link ros.ExtensionMapValue <em>Extension Map Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Extension Map Value</em>'.
+	 * @see ros.ExtensionMapValue
+	 * @generated
+	 */
+	EClass getExtensionMapValue();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.ExtensionMapValue#getEntries <em>Entries</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Entries</em>'.
+	 * @see ros.ExtensionMapValue#getEntries()
+	 * @see #getExtensionMapValue()
+	 * @generated
+	 */
+	EReference getExtensionMapValue_Entries();
+
+	/**
+	 * Returns the meta object for class '{@link ros.ExtensionRefValue <em>Extension Ref Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Extension Ref Value</em>'.
+	 * @see ros.ExtensionRefValue
+	 * @generated
+	 */
+	EClass getExtensionRefValue();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.ExtensionRefValue#getRefKind <em>Ref Kind</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Ref Kind</em>'.
+	 * @see ros.ExtensionRefValue#getRefKind()
+	 * @see #getExtensionRefValue()
+	 * @generated
+	 */
+	EAttribute getExtensionRefValue_RefKind();
+
+	/**
+	 * Returns the meta object for the reference '{@link ros.ExtensionRefValue#getTarget <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Target</em>'.
+	 * @see ros.ExtensionRefValue#getTarget()
+	 * @see #getExtensionRefValue()
+	 * @generated
+	 */
+	EReference getExtensionRefValue_Target();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.ExtensionRefValue#getRawTarget <em>Raw Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Raw Target</em>'.
+	 * @see ros.ExtensionRefValue#getRawTarget()
+	 * @see #getExtensionRefValue()
+	 * @generated
+	 */
+	EAttribute getExtensionRefValue_RawTarget();
+
+	/**
+	 * Returns the meta object for class '{@link ros.InterfaceHolder <em>Interface Holder</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Interface Holder</em>'.
+	 * @see ros.InterfaceHolder
+	 * @generated
+	 */
+	EClass getInterfaceHolder();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.InterfaceHolder#getServiceserver <em>Serviceserver</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Serviceserver</em>'.
+	 * @see ros.InterfaceHolder#getServiceserver()
+	 * @see #getInterfaceHolder()
+	 * @generated
+	 */
+	EReference getInterfaceHolder_Serviceserver();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.InterfaceHolder#getPublisher <em>Publisher</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Publisher</em>'.
+	 * @see ros.InterfaceHolder#getPublisher()
+	 * @see #getInterfaceHolder()
+	 * @generated
+	 */
+	EReference getInterfaceHolder_Publisher();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.InterfaceHolder#getSubscriber <em>Subscriber</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Subscriber</em>'.
+	 * @see ros.InterfaceHolder#getSubscriber()
+	 * @see #getInterfaceHolder()
+	 * @generated
+	 */
+	EReference getInterfaceHolder_Subscriber();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.InterfaceHolder#getServiceclient <em>Serviceclient</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Serviceclient</em>'.
+	 * @see ros.InterfaceHolder#getServiceclient()
+	 * @see #getInterfaceHolder()
+	 * @generated
+	 */
+	EReference getInterfaceHolder_Serviceclient();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.InterfaceHolder#getActionserver <em>Actionserver</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Actionserver</em>'.
+	 * @see ros.InterfaceHolder#getActionserver()
+	 * @see #getInterfaceHolder()
+	 * @generated
+	 */
+	EReference getInterfaceHolder_Actionserver();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.InterfaceHolder#getActionclient <em>Actionclient</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Actionclient</em>'.
+	 * @see ros.InterfaceHolder#getActionclient()
+	 * @see #getInterfaceHolder()
+	 * @generated
+	 */
+	EReference getInterfaceHolder_Actionclient();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.InterfaceHolder#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ros.InterfaceHolder#getName()
+	 * @see #getInterfaceHolder()
+	 * @generated
+	 */
+	EAttribute getInterfaceHolder_Name();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.InterfaceHolder#getParameter <em>Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Parameter</em>'.
+	 * @see ros.InterfaceHolder#getParameter()
+	 * @see #getInterfaceHolder()
+	 * @generated
+	 */
+	EReference getInterfaceHolder_Parameter();
 
 	/**
 	 * Returns the meta object for class '{@link ros.Node <em>Node</em>}'.
@@ -2709,94 +3688,6 @@ public interface RosPackage extends EPackage {
 	EClass getNode();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link ros.Node#getServiceserver <em>Serviceserver</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Serviceserver</em>'.
-	 * @see ros.Node#getServiceserver()
-	 * @see #getNode()
-	 * @generated
-	 */
-	EReference getNode_Serviceserver();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link ros.Node#getPublisher <em>Publisher</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Publisher</em>'.
-	 * @see ros.Node#getPublisher()
-	 * @see #getNode()
-	 * @generated
-	 */
-	EReference getNode_Publisher();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link ros.Node#getSubscriber <em>Subscriber</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Subscriber</em>'.
-	 * @see ros.Node#getSubscriber()
-	 * @see #getNode()
-	 * @generated
-	 */
-	EReference getNode_Subscriber();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link ros.Node#getServiceclient <em>Serviceclient</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Serviceclient</em>'.
-	 * @see ros.Node#getServiceclient()
-	 * @see #getNode()
-	 * @generated
-	 */
-	EReference getNode_Serviceclient();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link ros.Node#getActionserver <em>Actionserver</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Actionserver</em>'.
-	 * @see ros.Node#getActionserver()
-	 * @see #getNode()
-	 * @generated
-	 */
-	EReference getNode_Actionserver();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link ros.Node#getActionclient <em>Actionclient</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Actionclient</em>'.
-	 * @see ros.Node#getActionclient()
-	 * @see #getNode()
-	 * @generated
-	 */
-	EReference getNode_Actionclient();
-
-	/**
-	 * Returns the meta object for the attribute '{@link ros.Node#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see ros.Node#getName()
-	 * @see #getNode()
-	 * @generated
-	 */
-	EAttribute getNode_Name();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link ros.Node#getParameter <em>Parameter</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Parameter</em>'.
-	 * @see ros.Node#getParameter()
-	 * @see #getNode()
-	 * @generated
-	 */
-	EReference getNode_Parameter();
-
-	/**
 	 * Returns the meta object for the attribute '{@link ros.Node#isIsLifecycle <em>Is Lifecycle</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2806,6 +3697,103 @@ public interface RosPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getNode_IsLifecycle();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.Node#getPluginSlots <em>Plugin Slots</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Plugin Slots</em>'.
+	 * @see ros.Node#getPluginSlots()
+	 * @see #getNode()
+	 * @generated
+	 */
+	EReference getNode_PluginSlots();
+
+	/**
+	 * Returns the meta object for class '{@link ros.Plugin <em>Plugin</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Plugin</em>'.
+	 * @see ros.Plugin
+	 * @generated
+	 */
+	EClass getPlugin();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.Plugin#getImplements <em>Implements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Implements</em>'.
+	 * @see ros.Plugin#getImplements()
+	 * @see #getPlugin()
+	 * @generated
+	 */
+	EAttribute getPlugin_Implements();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.Plugin#getLoader <em>Loader</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Loader</em>'.
+	 * @see ros.Plugin#getLoader()
+	 * @see #getPlugin()
+	 * @generated
+	 */
+	EAttribute getPlugin_Loader();
+
+	/**
+	 * Returns the meta object for class '{@link ros.PluginSlot <em>Plugin Slot</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Plugin Slot</em>'.
+	 * @see ros.PluginSlot
+	 * @generated
+	 */
+	EClass getPluginSlot();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.PluginSlot#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ros.PluginSlot#getName()
+	 * @see #getPluginSlot()
+	 * @generated
+	 */
+	EAttribute getPluginSlot_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.PluginSlot#getBase <em>Base</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Base</em>'.
+	 * @see ros.PluginSlot#getBase()
+	 * @see #getPluginSlot()
+	 * @generated
+	 */
+	EAttribute getPluginSlot_Base();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.PluginSlot#getParameter <em>Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Parameter</em>'.
+	 * @see ros.PluginSlot#getParameter()
+	 * @see #getPluginSlot()
+	 * @generated
+	 */
+	EAttribute getPluginSlot_Parameter();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.PluginSlot#getDefaultPlugin <em>Default Plugin</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Default Plugin</em>'.
+	 * @see ros.PluginSlot#getDefaultPlugin()
+	 * @see #getPluginSlot()
+	 * @generated
+	 */
+	EAttribute getPluginSlot_DefaultPlugin();
 
 	/**
 	 * Returns the meta object for class '{@link ros.Package <em>Package</em>}'.
@@ -3060,6 +4048,17 @@ public interface RosPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getArtifact_Node();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.Artifact#getPlugins <em>Plugins</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Plugins</em>'.
+	 * @see ros.Artifact#getPlugins()
+	 * @see #getArtifact()
+	 * @generated
+	 */
+	EReference getArtifact_Plugins();
 
 	/**
 	 * Returns the meta object for class '{@link ros.SpecBase <em>Spec Base</em>}'.
@@ -4098,6 +5097,16 @@ public interface RosPackage extends EPackage {
 	EEnum getLifecycleState();
 
 	/**
+	 * Returns the meta object for enum '{@link ros.PluginLoader <em>Plugin Loader</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Plugin Loader</em>'.
+	 * @see ros.PluginLoader
+	 * @generated
+	 */
+	EEnum getPluginLoader();
+
+	/**
 	 * Returns the meta object for data type '{@link java.lang.String <em>Graph Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4132,6 +5141,256 @@ public interface RosPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
+		 * The meta object literal for the '{@link ros.impl.ExtensibleImpl <em>Extensible</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.impl.ExtensibleImpl
+		 * @see ros.impl.RosPackageImpl#getExtensible()
+		 * @generated
+		 */
+		EClass EXTENSIBLE = eINSTANCE.getExtensible();
+
+		/**
+		 * The meta object literal for the '<em><b>Extensions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXTENSIBLE__EXTENSIONS = eINSTANCE.getExtensible_Extensions();
+
+		/**
+		 * The meta object literal for the '{@link ros.impl.ExtensionBlockImpl <em>Extension Block</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.impl.ExtensionBlockImpl
+		 * @see ros.impl.RosPackageImpl#getExtensionBlock()
+		 * @generated
+		 */
+		EClass EXTENSION_BLOCK = eINSTANCE.getExtensionBlock();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXTENSION_BLOCK__NAME = eINSTANCE.getExtensionBlock_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Entries</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXTENSION_BLOCK__ENTRIES = eINSTANCE.getExtensionBlock_Entries();
+
+		/**
+		 * The meta object literal for the '{@link ros.impl.ExtensionEntryImpl <em>Extension Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.impl.ExtensionEntryImpl
+		 * @see ros.impl.RosPackageImpl#getExtensionEntry()
+		 * @generated
+		 */
+		EClass EXTENSION_ENTRY = eINSTANCE.getExtensionEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXTENSION_ENTRY__KEY = eINSTANCE.getExtensionEntry_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXTENSION_ENTRY__VALUE = eINSTANCE.getExtensionEntry_Value();
+
+		/**
+		 * The meta object literal for the '{@link ros.impl.ExtensionValueImpl <em>Extension Value</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.impl.ExtensionValueImpl
+		 * @see ros.impl.RosPackageImpl#getExtensionValue()
+		 * @generated
+		 */
+		EClass EXTENSION_VALUE = eINSTANCE.getExtensionValue();
+
+		/**
+		 * The meta object literal for the '{@link ros.impl.ExtensionScalarValueImpl <em>Extension Scalar Value</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.impl.ExtensionScalarValueImpl
+		 * @see ros.impl.RosPackageImpl#getExtensionScalarValue()
+		 * @generated
+		 */
+		EClass EXTENSION_SCALAR_VALUE = eINSTANCE.getExtensionScalarValue();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXTENSION_SCALAR_VALUE__VALUE = eINSTANCE.getExtensionScalarValue_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Raw Kind</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXTENSION_SCALAR_VALUE__RAW_KIND = eINSTANCE.getExtensionScalarValue_RawKind();
+
+		/**
+		 * The meta object literal for the '{@link ros.impl.ExtensionListValueImpl <em>Extension List Value</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.impl.ExtensionListValueImpl
+		 * @see ros.impl.RosPackageImpl#getExtensionListValue()
+		 * @generated
+		 */
+		EClass EXTENSION_LIST_VALUE = eINSTANCE.getExtensionListValue();
+
+		/**
+		 * The meta object literal for the '<em><b>Items</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXTENSION_LIST_VALUE__ITEMS = eINSTANCE.getExtensionListValue_Items();
+
+		/**
+		 * The meta object literal for the '{@link ros.impl.ExtensionMapValueImpl <em>Extension Map Value</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.impl.ExtensionMapValueImpl
+		 * @see ros.impl.RosPackageImpl#getExtensionMapValue()
+		 * @generated
+		 */
+		EClass EXTENSION_MAP_VALUE = eINSTANCE.getExtensionMapValue();
+
+		/**
+		 * The meta object literal for the '<em><b>Entries</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXTENSION_MAP_VALUE__ENTRIES = eINSTANCE.getExtensionMapValue_Entries();
+
+		/**
+		 * The meta object literal for the '{@link ros.impl.ExtensionRefValueImpl <em>Extension Ref Value</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.impl.ExtensionRefValueImpl
+		 * @see ros.impl.RosPackageImpl#getExtensionRefValue()
+		 * @generated
+		 */
+		EClass EXTENSION_REF_VALUE = eINSTANCE.getExtensionRefValue();
+
+		/**
+		 * The meta object literal for the '<em><b>Ref Kind</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXTENSION_REF_VALUE__REF_KIND = eINSTANCE.getExtensionRefValue_RefKind();
+
+		/**
+		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXTENSION_REF_VALUE__TARGET = eINSTANCE.getExtensionRefValue_Target();
+
+		/**
+		 * The meta object literal for the '<em><b>Raw Target</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXTENSION_REF_VALUE__RAW_TARGET = eINSTANCE.getExtensionRefValue_RawTarget();
+
+		/**
+		 * The meta object literal for the '{@link ros.impl.InterfaceHolderImpl <em>Interface Holder</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.impl.InterfaceHolderImpl
+		 * @see ros.impl.RosPackageImpl#getInterfaceHolder()
+		 * @generated
+		 */
+		EClass INTERFACE_HOLDER = eINSTANCE.getInterfaceHolder();
+
+		/**
+		 * The meta object literal for the '<em><b>Serviceserver</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INTERFACE_HOLDER__SERVICESERVER = eINSTANCE.getInterfaceHolder_Serviceserver();
+
+		/**
+		 * The meta object literal for the '<em><b>Publisher</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INTERFACE_HOLDER__PUBLISHER = eINSTANCE.getInterfaceHolder_Publisher();
+
+		/**
+		 * The meta object literal for the '<em><b>Subscriber</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INTERFACE_HOLDER__SUBSCRIBER = eINSTANCE.getInterfaceHolder_Subscriber();
+
+		/**
+		 * The meta object literal for the '<em><b>Serviceclient</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INTERFACE_HOLDER__SERVICECLIENT = eINSTANCE.getInterfaceHolder_Serviceclient();
+
+		/**
+		 * The meta object literal for the '<em><b>Actionserver</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INTERFACE_HOLDER__ACTIONSERVER = eINSTANCE.getInterfaceHolder_Actionserver();
+
+		/**
+		 * The meta object literal for the '<em><b>Actionclient</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INTERFACE_HOLDER__ACTIONCLIENT = eINSTANCE.getInterfaceHolder_Actionclient();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INTERFACE_HOLDER__NAME = eINSTANCE.getInterfaceHolder_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Parameter</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INTERFACE_HOLDER__PARAMETER = eINSTANCE.getInterfaceHolder_Parameter();
+
+		/**
 		 * The meta object literal for the '{@link ros.impl.NodeImpl <em>Node</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -4142,52 +5401,56 @@ public interface RosPackage extends EPackage {
 		EClass NODE = eINSTANCE.getNode();
 
 		/**
-		 * The meta object literal for the '<em><b>Serviceserver</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Is Lifecycle</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference NODE__SERVICESERVER = eINSTANCE.getNode_Serviceserver();
+		EAttribute NODE__IS_LIFECYCLE = eINSTANCE.getNode_IsLifecycle();
 
 		/**
-		 * The meta object literal for the '<em><b>Publisher</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Plugin Slots</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference NODE__PUBLISHER = eINSTANCE.getNode_Publisher();
+		EReference NODE__PLUGIN_SLOTS = eINSTANCE.getNode_PluginSlots();
 
 		/**
-		 * The meta object literal for the '<em><b>Subscriber</b></em>' containment reference list feature.
+		 * The meta object literal for the '{@link ros.impl.PluginImpl <em>Plugin</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
+		 * @see ros.impl.PluginImpl
+		 * @see ros.impl.RosPackageImpl#getPlugin()
 		 * @generated
 		 */
-		EReference NODE__SUBSCRIBER = eINSTANCE.getNode_Subscriber();
+		EClass PLUGIN = eINSTANCE.getPlugin();
 
 		/**
-		 * The meta object literal for the '<em><b>Serviceclient</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Implements</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference NODE__SERVICECLIENT = eINSTANCE.getNode_Serviceclient();
+		EAttribute PLUGIN__IMPLEMENTS = eINSTANCE.getPlugin_Implements();
 
 		/**
-		 * The meta object literal for the '<em><b>Actionserver</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Loader</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference NODE__ACTIONSERVER = eINSTANCE.getNode_Actionserver();
+		EAttribute PLUGIN__LOADER = eINSTANCE.getPlugin_Loader();
 
 		/**
-		 * The meta object literal for the '<em><b>Actionclient</b></em>' containment reference list feature.
+		 * The meta object literal for the '{@link ros.impl.PluginSlotImpl <em>Plugin Slot</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
+		 * @see ros.impl.PluginSlotImpl
+		 * @see ros.impl.RosPackageImpl#getPluginSlot()
 		 * @generated
 		 */
-		EReference NODE__ACTIONCLIENT = eINSTANCE.getNode_Actionclient();
+		EClass PLUGIN_SLOT = eINSTANCE.getPluginSlot();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -4195,23 +5458,31 @@ public interface RosPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__NAME = eINSTANCE.getNode_Name();
+		EAttribute PLUGIN_SLOT__NAME = eINSTANCE.getPluginSlot_Name();
 
 		/**
-		 * The meta object literal for the '<em><b>Parameter</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Base</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference NODE__PARAMETER = eINSTANCE.getNode_Parameter();
+		EAttribute PLUGIN_SLOT__BASE = eINSTANCE.getPluginSlot_Base();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Lifecycle</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Parameter</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__IS_LIFECYCLE = eINSTANCE.getNode_IsLifecycle();
+		EAttribute PLUGIN_SLOT__PARAMETER = eINSTANCE.getPluginSlot_Parameter();
+
+		/**
+		 * The meta object literal for the '<em><b>Default Plugin</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PLUGIN_SLOT__DEFAULT_PLUGIN = eINSTANCE.getPluginSlot_DefaultPlugin();
 
 		/**
 		 * The meta object literal for the '{@link ros.impl.PackageImpl <em>Package</em>}' class.
@@ -4424,6 +5695,14 @@ public interface RosPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ARTIFACT__NODE = eINSTANCE.getArtifact_Node();
+
+		/**
+		 * The meta object literal for the '<em><b>Plugins</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ARTIFACT__PLUGINS = eINSTANCE.getArtifact_Plugins();
 
 		/**
 		 * The meta object literal for the '{@link ros.impl.SpecBaseImpl <em>Spec Base</em>}' class.
@@ -5292,6 +6571,16 @@ public interface RosPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum LIFECYCLE_STATE = eINSTANCE.getLifecycleState();
+
+		/**
+		 * The meta object literal for the '{@link ros.PluginLoader <em>Plugin Loader</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.PluginLoader
+		 * @see ros.impl.RosPackageImpl#getPluginLoader()
+		 * @generated
+		 */
+		EEnum PLUGIN_LOADER = eINSTANCE.getPluginLoader();
 
 		/**
 		 * The meta object literal for the '<em>Graph Name</em>' data type.

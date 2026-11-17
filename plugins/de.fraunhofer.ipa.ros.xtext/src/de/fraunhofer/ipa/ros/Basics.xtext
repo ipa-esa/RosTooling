@@ -400,3 +400,60 @@ terminal ROS_CONVENTION_A:
 
 terminal ROS_CONVENTION_PARAM:
     ( ('/' STRING ) | ( STRING '/' ) | ('~' STRING ) )* ;
+
+///////////////////
+// EXTENSION BLOCKS
+///////////////////
+ExtensionBlock returns ExtensionBlock:
+    {ExtensionBlock}
+    '@' name=ExtensionBlockName ':'
+    (
+        (BEGIN entries+=ExtensionEntry+ END) |
+        ('{' (entries+=ExtensionEntry (','? entries+=ExtensionEntry)*)? '}')
+    )?;
+
+ExtensionBlockName returns ecore::EString:
+    ID ('.' ID)*;
+
+ExtensionEntry returns ExtensionEntry:
+    {ExtensionEntry}
+    (key=ExtensionKey ':' | key=ExtensionColonKey)
+    value=ExtensionValue;
+
+ExtensionKey returns ecore::EString:
+    ID | STRING | KEYWORD | 'node' | 'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
+    'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
+
+ExtensionColonKey returns ecore::EString:
+    'ns:' | 'type:' | 'value:' | 'default:';
+
+ExtensionValue returns ExtensionValue:
+    ExtensionListValue |
+    ExtensionBraceMapValue |
+    ExtensionIndentedMapValue |
+    ExtensionRefValue |
+    ExtensionScalarValue;
+
+ExtensionListValue returns ExtensionListValue:
+    {ExtensionListValue}
+    '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']';
+
+ExtensionBraceMapValue returns ExtensionMapValue:
+    {ExtensionMapValue}
+    '{' (entries+=ExtensionEntry (','? entries+=ExtensionEntry)*)? '}';
+
+ExtensionIndentedMapValue returns ExtensionMapValue:
+    {ExtensionMapValue}
+    BEGIN entries+=ExtensionEntry+ END;
+
+ExtensionRefValue returns ExtensionRefValue:
+    {ExtensionRefValue}
+    refKind=('pub->' | 'sub->' | 'ss->' | 'sc->' | 'as->' | 'ac->' | 'param->')
+    target=[ecore::EObject|EString];
+
+ExtensionScalarValue returns ExtensionScalarValue:
+    {ExtensionScalarValue}
+    value=ExtensionScalarLiteral;
+
+ExtensionScalarLiteral returns ecore::EString:
+    BOOLEAN | DOUBLE | DECINT | INT | ExtensionKey;

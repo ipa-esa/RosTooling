@@ -89,10 +89,10 @@ def generate_launch_description():
         package="«((component as RosNode).from.eContainer.eContainer as AmentPackageImpl).name»",
         plugin="«getPluginName(component as RosNode)»",
         name="«(component as RosNode).name»"«IF !(component as RosNode).namespace.nullOrEmpty»,
-        namespace="«(component as RosNode).namespace»"«ENDIF»«compile_remappings_str(component as RosNode, system.connections)»«IF !(component as RosNode).rosparameters.nullOrEmpty»«IF generate_yaml(component as RosNode)»,
+        namespace="«(component as RosNode).namespace»"«ENDIF»«compile_remappings_str(component as RosNode, system.connections)»«IF !(component as RosNode).rosparameters.nullOrEmpty || hasAutoSlotParameters(component as RosNode)»«IF generate_yaml(component as RosNode)»,
         parameters=[«(component as RosNode).name»_config«IF hasSubstitutionParameters(component as RosNode)», {«FOR param:(component as RosNode).rosparameters»«IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ENDIF»«ENDFOR»}«ENDIF»]«ELSE»,
         parameters=[{«FOR param:(component as RosNode).rosparameters»
-          «IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ELSE»«IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDIF»«ENDFOR»}]«ENDIF»«ENDIF»
+          «IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ELSE»«IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDIF»«ENDFOR»«compile_slot_params_str(component as RosNode)»}]«ENDIF»«ENDIF»
       )«ENDFOR»
     ],
     output='screen'
@@ -111,10 +111,10 @@ def generate_launch_description():
     namespace="",«ENDIF»
     executable="«((component as RosNode).from.eContainer as Artifact).name»",
     output='screen',
-    name="«(component as RosNode).name»"«compile_remappings_str(component as RosNode, system.connections)»«IF !component.rosparameters.nullOrEmpty»«IF generate_yaml(component)»,
+    name="«(component as RosNode).name»"«compile_remappings_str(component as RosNode, system.connections)»«IF !component.rosparameters.nullOrEmpty || hasAutoSlotParameters(component as RosNode)»«IF generate_yaml(component)»,
     parameters = [«component.name»_config«IF hasSubstitutionParameters(component)», {«FOR param:component.rosparameters»«IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ENDIF»«ENDFOR»}«ENDIF»]«ELSE»,
     parameters=[{«FOR param:component.rosparameters»
-      «IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ELSE»«IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDIF»«ENDFOR»}]«ENDIF»«ENDIF»
+      «IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ELSE»«IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDIF»«ENDFOR»«compile_slot_params_str(component as RosNode)»}]«ENDIF»«ENDIF»
   )
   «ENDFOR»
 
@@ -355,6 +355,26 @@ def generate_launch_description():
             remap_str = ",\nremappings=[\n" + remap_str.substring(0,remap_str.length-2) + "]\n";
         }
         return remap_str;
+    }
+
+    def String compile_slot_params_str(RosNode node) {
+        val entries = getSlotParameterEntries(node)
+        if (entries.empty) return ""
+        val sb = new StringBuilder()
+        for (entry : entries) {
+            if (entry.array) {
+                sb.append("\n      \"").append(entry.paramName).append("\": [")
+                for (var i = 0; i < entry.values.size; i++) {
+                    if (i > 0) sb.append(", ")
+                    sb.append("\"").append(escapePythonString(entry.values.get(i))).append("\"")
+                }
+                sb.append("],")
+            } else {
+                sb.append("\n      \"").append(entry.paramName).append("\": ParameterValue(\"")
+                  .append(escapePythonString(entry.values.head)).append("\", value_type=str),")
+            }
+        }
+        return sb.toString()
     }
 //
 //    def String compile_parameters_str(EList<RosParameter> rosParameters) {

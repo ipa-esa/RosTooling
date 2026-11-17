@@ -16,22 +16,22 @@ import primitives.int64;
  */
 public class int64Impl extends AbstractTypeImpl implements int64 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int64Impl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.INT64;
-    }
+		return PrimitivesPackage.Literals.INT64;
+	}
 
 } //int64Impl

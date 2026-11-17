@@ -16,22 +16,22 @@ import primitives.string;
  */
 public class stringImpl extends AbstractTypeImpl implements string {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected stringImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.STRING;
-    }
+		return PrimitivesPackage.Literals.STRING;
+	}
 
 } //stringImpl

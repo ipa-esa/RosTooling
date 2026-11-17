@@ -51,6 +51,12 @@ import ros.ActionSpec;
 import ros.ArrayTopicSpecMsgRef;
 import ros.Artifact;
 import ros.CatkinPackage;
+import ros.ExtensionBlock;
+import ros.ExtensionEntry;
+import ros.ExtensionListValue;
+import ros.ExtensionMapValue;
+import ros.ExtensionRefValue;
+import ros.ExtensionScalarValue;
 import ros.ExternalDependency;
 import ros.GlobalNamespace;
 import ros.MessageDefinition;
@@ -78,6 +84,8 @@ import ros.ParameterStruct;
 import ros.ParameterStructMember;
 import ros.ParameterStructType;
 import ros.ParameterStructTypeMember;
+import ros.Plugin;
+import ros.PluginSlot;
 import ros.PrivateNamespace;
 import ros.Publisher;
 import ros.RelativeNamespace;
@@ -220,6 +228,35 @@ public class Ros1SemanticSequencer extends RosSemanticSequencer {
 			case RosPackage.CATKIN_PACKAGE:
 				sequence_CatkinPackage(context, (CatkinPackage) semanticObject); 
 				return; 
+			case RosPackage.EXTENSION_BLOCK:
+				sequence_ExtensionBlock(context, (ExtensionBlock) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_ENTRY:
+				sequence_ExtensionEntry(context, (ExtensionEntry) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_LIST_VALUE:
+				sequence_ExtensionListValue(context, (ExtensionListValue) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_MAP_VALUE:
+				if (rule == grammarAccess.getExtensionValueRule()) {
+					sequence_ExtensionBraceMapValue_ExtensionIndentedMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getExtensionBraceMapValueRule()) {
+					sequence_ExtensionBraceMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getExtensionIndentedMapValueRule()) {
+					sequence_ExtensionIndentedMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else break;
+			case RosPackage.EXTENSION_REF_VALUE:
+				sequence_ExtensionRefValue(context, (ExtensionRefValue) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_SCALAR_VALUE:
+				sequence_ExtensionScalarValue(context, (ExtensionScalarValue) semanticObject); 
+				return; 
 			case RosPackage.EXTERNAL_DEPENDENCY:
 				sequence_ExternalDependency(context, (ExternalDependency) semanticObject); 
 				return; 
@@ -306,6 +343,12 @@ public class Ros1SemanticSequencer extends RosSemanticSequencer {
 				return; 
 			case RosPackage.PARAMETER_STRUCT_TYPE_MEMBER:
 				sequence_ParameterStructTypeMember(context, (ParameterStructTypeMember) semanticObject); 
+				return; 
+			case RosPackage.PLUGIN:
+				sequence_Plugin(context, (Plugin) semanticObject); 
+				return; 
+			case RosPackage.PLUGIN_SLOT:
+				sequence_PluginSlot(context, (PluginSlot) semanticObject); 
 				return; 
 			case RosPackage.PRIVATE_NAMESPACE:
 				sequence_PrivateNamespace(context, (PrivateNamespace) semanticObject); 

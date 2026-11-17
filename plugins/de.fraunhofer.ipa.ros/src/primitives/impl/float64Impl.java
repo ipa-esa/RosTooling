@@ -16,22 +16,22 @@ import primitives.float64;
  */
 public class float64Impl extends AbstractTypeImpl implements float64 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected float64Impl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.FLOAT64;
-    }
+		return PrimitivesPackage.Literals.FLOAT64;
+	}
 
 } //float64Impl

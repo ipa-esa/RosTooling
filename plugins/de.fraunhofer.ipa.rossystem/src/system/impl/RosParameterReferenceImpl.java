@@ -29,131 +29,131 @@ import system.RossystemPackage;
  */
 public class RosParameterReferenceImpl extends InterfaceReferenceImpl implements RosParameterReference {
     /**
-     * The cached value of the '{@link #getFrom() <em>From</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getFrom() <em>From</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getFrom()
-     * @generated
-     * @ordered
-     */
+	 * @see #getFrom()
+	 * @generated
+	 * @ordered
+	 */
     protected Parameter from;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RosParameterReferenceImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RossystemPackage.Literals.ROS_PARAMETER_REFERENCE;
-    }
+		return RossystemPackage.Literals.ROS_PARAMETER_REFERENCE;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Parameter getFrom() {
-        if (from != null && from.eIsProxy()) {
-            InternalEObject oldFrom = (InternalEObject)from;
-            from = (Parameter)eResolveProxy(oldFrom);
-            if (from != oldFrom) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RossystemPackage.ROS_PARAMETER_REFERENCE__FROM, oldFrom, from));
-            }
-        }
-        return from;
-    }
+		if (from != null && from.eIsProxy()) {
+			InternalEObject oldFrom = (InternalEObject)from;
+			from = (Parameter)eResolveProxy(oldFrom);
+			if (from != oldFrom) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RossystemPackage.ROS_PARAMETER_REFERENCE__FROM, oldFrom, from));
+			}
+		}
+		return from;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Parameter basicGetFrom() {
-        return from;
-    }
+		return from;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setFrom(Parameter newFrom) {
-        Parameter oldFrom = from;
-        from = newFrom;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.ROS_PARAMETER_REFERENCE__FROM, oldFrom, from));
-    }
+		Parameter oldFrom = from;
+		from = newFrom;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.ROS_PARAMETER_REFERENCE__FROM, oldFrom, from));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case RossystemPackage.ROS_PARAMETER_REFERENCE__FROM:
-                if (resolve) return getFrom();
-                return basicGetFrom();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_PARAMETER_REFERENCE__FROM:
+				if (resolve) return getFrom();
+				return basicGetFrom();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case RossystemPackage.ROS_PARAMETER_REFERENCE__FROM:
-                setFrom((Parameter)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_PARAMETER_REFERENCE__FROM:
+				setFrom((Parameter)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.ROS_PARAMETER_REFERENCE__FROM:
-                setFrom((Parameter)null);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_PARAMETER_REFERENCE__FROM:
+				setFrom((Parameter)null);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.ROS_PARAMETER_REFERENCE__FROM:
-                return from != null;
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_PARAMETER_REFERENCE__FROM:
+				return from != null;
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //RosParameterReferenceImpl

@@ -10,6 +10,7 @@ import de.fraunhofer.ipa.ros.services.RosGrammarAccess;
 import java.util.List;
 import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.EnumRule;
 import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.Group;
@@ -399,13 +400,18 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	/////////////////////
-	////ARTIFACT AND NODE
+	////ARTIFACT, NODE AND PLUGINS
 	/////////////////////
 	//Artifact returns Artifact:
 	//    {Artifact}
 	//        name=RosNames':'
 	//        BEGIN
 	//        (node=Node)?
+	//        ('plugins:'
+	//            BEGIN
+	//            plugins+=Plugin*
+	//            END
+	//        )?
 	//        END;
 	public RosGrammarAccess.ArtifactElements getArtifactAccess() {
 		return gaRos.getArtifactAccess();
@@ -452,7 +458,13 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//        BEGIN
 	//        parameter+=Parameter*
 	//        END
-	//    )
+	//    )|
+	//    ('pluginslots:'
+	//        BEGIN
+	//        pluginSlots+=PluginSlot*
+	//        END
+	//    )|
+	//    (extensions+=ExtensionBlock)
 	//    )*
 	//    ;
 	public RosGrammarAccess.NodeElements getNodeAccess() {
@@ -461,6 +473,144 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	public ParserRule getNodeRule() {
 		return getNodeAccess().getRule();
+	}
+	
+	//enum PluginLoader returns PluginLoader:
+	//    PLUGINLIB = 'pluginlib' |
+	//    EXTERNAL = 'external'
+	//;
+	public RosGrammarAccess.PluginLoaderElements getPluginLoaderAccess() {
+		return gaRos.getPluginLoaderAccess();
+	}
+	
+	public EnumRule getPluginLoaderRule() {
+		return getPluginLoaderAccess().getRule();
+	}
+	
+	//Plugin returns Plugin:
+	//    {Plugin}
+	//    name=RosNames':'
+	//    BEGIN
+	//    (
+	//    ('implements:' implements=EString)|
+	//    ('loader:' loader=PluginLoader)|
+	//    ('publishers:'
+	//        BEGIN
+	//        publisher+=Publisher*
+	//        END
+	//    )|
+	//    ('subscribers:'
+	//        BEGIN
+	//        subscriber+=Subscriber*
+	//        END
+	//    )|
+	//    ('serviceservers:'
+	//        BEGIN
+	//        serviceserver+=ServiceServer*
+	//        END
+	//    )|
+	//    ('serviceclients:'
+	//        BEGIN
+	//        serviceclient+=ServiceClient*
+	//        END
+	//    )|
+	//    ('actionservers:'
+	//        BEGIN
+	//        actionserver+=ActionServer*
+	//        END
+	//    )|
+	//    ('actionclients:'
+	//        BEGIN
+	//        actionclient+=ActionClient*
+	//        END
+	//    )|
+	//    ('parameters:'
+	//        BEGIN
+	//        parameter+=Parameter*
+	//        END
+	//    )|
+	//    (extensions+=ExtensionBlock)
+	//    )*
+	//    END;
+	public RosGrammarAccess.PluginElements getPluginAccess() {
+		return gaRos.getPluginAccess();
+	}
+	
+	public ParserRule getPluginRule() {
+		return getPluginAccess().getRule();
+	}
+	
+	//PluginSlot returns PluginSlot:
+	//    {PluginSlot}
+	//    name=EString':'
+	//    (
+	//    (BEGIN
+	//        (('base:' base=EString) &
+	//         ('parameter:' parameter=EString) &
+	//         ('default:' defaultPlugin=EString)?)
+	//    END) |
+	//    ('{'
+	//        'base:' base=EString
+	//        ','? 'parameter:' parameter=EString
+	//        (','? 'default:' defaultPlugin=EString)?
+	//    '}')
+	//    );
+	public RosGrammarAccess.PluginSlotElements getPluginSlotAccess() {
+		return gaRos.getPluginSlotAccess();
+	}
+	
+	public ParserRule getPluginSlotRule() {
+		return getPluginSlotAccess().getRule();
+	}
+	
+	//@Override
+	//EString returns ecore::EString:
+	//    STRING | ID | 'pluginlib' | 'external';
+	public RosGrammarAccess.EStringElements getEStringAccess() {
+		return gaRos.getEStringAccess();
+	}
+	
+	public ParserRule getEStringRule() {
+		return getEStringAccess().getRule();
+	}
+	
+	//@Override
+	//RosNames returns ecore::EString:
+	//    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external';
+	public RosGrammarAccess.RosNamesElements getRosNamesAccess() {
+		return gaRos.getRosNamesAccess();
+	}
+	
+	public ParserRule getRosNamesRule() {
+		return getRosNamesAccess().getRule();
+	}
+	
+	//@Override
+	//ExtensionKey returns ecore::EString:
+	//    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' |
+	//    'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
+	//    'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
+	public RosGrammarAccess.ExtensionKeyElements getExtensionKeyAccess() {
+		return gaRos.getExtensionKeyAccess();
+	}
+	
+	public ParserRule getExtensionKeyRule() {
+		return getExtensionKeyAccess().getRule();
+	}
+	
+	//@Override
+	//ExtensionColonKey returns ecore::EString:
+	//    'ns:' | 'type:' | 'value:' | 'default:' |
+	//    'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
+	//    'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
+	//    'actionservers:' | 'actionclients:' | 'parameters:' |
+	//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:';
+	public RosGrammarAccess.ExtensionColonKeyElements getExtensionColonKeyAccess() {
+		return gaRos.getExtensionColonKeyAccess();
+	}
+	
+	public ParserRule getExtensionColonKeyRule() {
+		return getExtensionColonKeyAccess().getRule();
 	}
 	
 	/////////////////////
@@ -1527,30 +1677,6 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return gaBasics.getSL_COMMENTRule();
 	}
 	
-	/////////////////////
-	//// CONVENTIONS AND NAMES
-	/////////////////////
-	//EString returns ecore::EString:
-	//    STRING | ID;
-	public BasicsGrammarAccess.EStringElements getEStringAccess() {
-		return gaBasics.getEStringAccess();
-	}
-	
-	public ParserRule getEStringRule() {
-		return getEStringAccess().getRule();
-	}
-	
-	//RosNames returns ecore::EString:
-	//    ROS_CONVENTION_A | ID | 'node'
-	//;
-	public BasicsGrammarAccess.RosNamesElements getRosNamesAccess() {
-		return gaBasics.getRosNamesAccess();
-	}
-	
-	public ParserRule getRosNamesRule() {
-		return getRosNamesAccess().getRule();
-	}
-	
 	//terminal ROS_CONVENTION_A:
 	//    ( ('/' ID ) | ( ID '/' ) )* ;
 	public TerminalRule getROS_CONVENTION_ARule() {
@@ -1561,6 +1687,126 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    ( ('/' STRING ) | ( STRING '/' ) | ('~' STRING ) )* ;
 	public TerminalRule getROS_CONVENTION_PARAMRule() {
 		return gaBasics.getROS_CONVENTION_PARAMRule();
+	}
+	
+	/////////////////////
+	//// EXTENSION BLOCKS
+	/////////////////////
+	//ExtensionBlock returns ExtensionBlock:
+	//    {ExtensionBlock}
+	//    '@' name=ExtensionBlockName ':'
+	//    (
+	//        (BEGIN entries+=ExtensionEntry+ END) |
+	//        ('{' (entries+=ExtensionEntry (','? entries+=ExtensionEntry)*)? '}')
+	//    )?;
+	public BasicsGrammarAccess.ExtensionBlockElements getExtensionBlockAccess() {
+		return gaBasics.getExtensionBlockAccess();
+	}
+	
+	public ParserRule getExtensionBlockRule() {
+		return getExtensionBlockAccess().getRule();
+	}
+	
+	//ExtensionBlockName returns ecore::EString:
+	//    ID ('.' ID)*;
+	public BasicsGrammarAccess.ExtensionBlockNameElements getExtensionBlockNameAccess() {
+		return gaBasics.getExtensionBlockNameAccess();
+	}
+	
+	public ParserRule getExtensionBlockNameRule() {
+		return getExtensionBlockNameAccess().getRule();
+	}
+	
+	//ExtensionEntry returns ExtensionEntry:
+	//    {ExtensionEntry}
+	//    (key=ExtensionKey ':' | key=ExtensionColonKey)
+	//    value=ExtensionValue;
+	public BasicsGrammarAccess.ExtensionEntryElements getExtensionEntryAccess() {
+		return gaBasics.getExtensionEntryAccess();
+	}
+	
+	public ParserRule getExtensionEntryRule() {
+		return getExtensionEntryAccess().getRule();
+	}
+	
+	//ExtensionValue returns ExtensionValue:
+	//    ExtensionListValue |
+	//    ExtensionBraceMapValue |
+	//    ExtensionIndentedMapValue |
+	//    ExtensionRefValue |
+	//    ExtensionScalarValue;
+	public BasicsGrammarAccess.ExtensionValueElements getExtensionValueAccess() {
+		return gaBasics.getExtensionValueAccess();
+	}
+	
+	public ParserRule getExtensionValueRule() {
+		return getExtensionValueAccess().getRule();
+	}
+	
+	//ExtensionListValue returns ExtensionListValue:
+	//    {ExtensionListValue}
+	//    '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']';
+	public BasicsGrammarAccess.ExtensionListValueElements getExtensionListValueAccess() {
+		return gaBasics.getExtensionListValueAccess();
+	}
+	
+	public ParserRule getExtensionListValueRule() {
+		return getExtensionListValueAccess().getRule();
+	}
+	
+	//ExtensionBraceMapValue returns ExtensionMapValue:
+	//    {ExtensionMapValue}
+	//    '{' (entries+=ExtensionEntry (','? entries+=ExtensionEntry)*)? '}';
+	public BasicsGrammarAccess.ExtensionBraceMapValueElements getExtensionBraceMapValueAccess() {
+		return gaBasics.getExtensionBraceMapValueAccess();
+	}
+	
+	public ParserRule getExtensionBraceMapValueRule() {
+		return getExtensionBraceMapValueAccess().getRule();
+	}
+	
+	//ExtensionIndentedMapValue returns ExtensionMapValue:
+	//    {ExtensionMapValue}
+	//    BEGIN entries+=ExtensionEntry+ END;
+	public BasicsGrammarAccess.ExtensionIndentedMapValueElements getExtensionIndentedMapValueAccess() {
+		return gaBasics.getExtensionIndentedMapValueAccess();
+	}
+	
+	public ParserRule getExtensionIndentedMapValueRule() {
+		return getExtensionIndentedMapValueAccess().getRule();
+	}
+	
+	//ExtensionRefValue returns ExtensionRefValue:
+	//    {ExtensionRefValue}
+	//    refKind=('pub->' | 'sub->' | 'ss->' | 'sc->' | 'as->' | 'ac->' | 'param->')
+	//    target=[ecore::EObject|EString];
+	public BasicsGrammarAccess.ExtensionRefValueElements getExtensionRefValueAccess() {
+		return gaBasics.getExtensionRefValueAccess();
+	}
+	
+	public ParserRule getExtensionRefValueRule() {
+		return getExtensionRefValueAccess().getRule();
+	}
+	
+	//ExtensionScalarValue returns ExtensionScalarValue:
+	//    {ExtensionScalarValue}
+	//    value=ExtensionScalarLiteral;
+	public BasicsGrammarAccess.ExtensionScalarValueElements getExtensionScalarValueAccess() {
+		return gaBasics.getExtensionScalarValueAccess();
+	}
+	
+	public ParserRule getExtensionScalarValueRule() {
+		return getExtensionScalarValueAccess().getRule();
+	}
+	
+	//ExtensionScalarLiteral returns ecore::EString:
+	//    BOOLEAN | DOUBLE | DECINT | INT | ExtensionKey;
+	public BasicsGrammarAccess.ExtensionScalarLiteralElements getExtensionScalarLiteralAccess() {
+		return gaBasics.getExtensionScalarLiteralAccess();
+	}
+	
+	public ParserRule getExtensionScalarLiteralRule() {
+		return getExtensionScalarLiteralAccess().getRule();
 	}
 	
 	//terminal ID: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;

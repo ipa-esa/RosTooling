@@ -12,6 +12,7 @@ import de.fraunhofer.ipa.ros2.distro.Ros2Distros
 import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target
 import ros.Node
 import ros.Package
+import ros.PluginLoader
 
 /**
  * Main code generator for ROS 2 package models (.ros2).
@@ -75,7 +76,14 @@ class Ros2Generator extends AbstractGenerator {
                 }
             }
 
-            if (!nodesToGenerate.empty) {
+            val allPlugins = getAllPlugins(pkg)
+            val pluginlibPlugins = allPlugins.filter[loader == PluginLoader.PLUGINLIB].toList
+            val generatePlugins = !allPlugins.empty && (targetNodes === null || targetNodes.empty ||
+                pkg.artifact.exists[art | art.plugins.exists[pl |
+                    targetNodes.contains(art.name) || targetNodes.contains(pl.name) || targetNodes.contains(pluginClassName(pl))
+                ]])
+
+            if (!nodesToGenerate.empty || generatePlugins) {
                 val lang = if (languageChoice === null || languageChoice.empty) "cpp" else languageChoice.toLowerCase()
                 val genCpp = "cpp".equals(lang) || "both".equals(lang)
                 val genPy = "python".equals(lang) || "both".equals(lang)
@@ -178,6 +186,37 @@ class Ros2Generator extends AbstractGenerator {
                     }
                 }
 
+                // 2b. Generate C++ pluginlib Artifacts (external plugins intentionally emit no class/interface code)
+                if (generatePlugins && !pluginlibPlugins.empty) {
+                    for (art : pkg.artifact) {
+                        for (pl : art.plugins.filter[loader == PluginLoader.PLUGINLIB]) {
+                            val matchTarget = targetNodes === null || targetNodes.empty ||
+                                targetNodes.contains(art.name) ||
+                                targetNodes.contains(pl.name) ||
+                                targetNodes.contains(pluginClassName(pl))
+                            if (matchTarget) {
+                                val snakePlugin = pluginSnakeName(pl)
+                                val wrapperPath = pkgName + "/include/" + pkgName + "/" + snakePlugin + "_plugin_wrapper.hpp"
+                                val userPath = pkgName + "/include/" + pkgName + "/" + snakePlugin + "_plugin.hpp"
+                                val cppPath = pkgName + "/src/" + snakePlugin + "_plugin.cpp"
+
+                                fsa.generateFile(wrapperPath, compilePluginWrapperHpp(pkg, art, pl))
+                                fsa.generateFile(cppPath, compilePluginCpp(pkg, art, pl))
+
+                                val userHeaderExists = existingList.exists[
+                                    it == userPath ||
+                                    (it.startsWith(pkgName + "/") && it.endsWith("/" + snakePlugin + "_plugin.hpp")) ||
+                                    (it.startsWith("src-gen/" + pkgName + "/") && it.endsWith("/" + snakePlugin + "_plugin.hpp"))
+                                ]
+                                if (!userHeaderExists) {
+                                    fsa.generateFile(userPath, compilePluginUserHpp(pkg, art, pl))
+                                }
+                            }
+                        }
+                    }
+                    fsa.generateFile(pkgName + "/plugins.xml", compilePluginsXml(pkg))
+                }
+
                 // 3. Generate Python Artifacts
                 if (genPy) {
                     // __init__.py
@@ -231,8 +270,8 @@ class Ros2Generator extends AbstractGenerator {
                     compilePackageXml(pkg, cppNodes, pythonNodes)
                 )
 
-                // If C++ is involved (pure C++ or hybrid), generate CMakeLists.txt
-                if (!cppNodes.empty) {
+                // If C++ is involved (pure C++, plugins, or hybrid), generate CMakeLists.txt
+                if (!cppNodes.empty || !allPlugins.empty) {
                     fsa.generateFile(
                         pkgName + "/CMakeLists.txt",
                         compileCMakeLists(pkg, cppNodes, pythonNodes, target)

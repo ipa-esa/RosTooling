@@ -2,7 +2,7 @@
  */
 package system;
 
-import org.eclipse.emf.ecore.EObject;
+import ros.Extensible;
 
 /**
  * <!-- begin-user-doc -->
@@ -14,5 +14,5 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface Component extends EObject {
+public interface Component extends Extensible {
 } // Component

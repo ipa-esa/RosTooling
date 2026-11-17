@@ -12,18 +12,15 @@ import ros.Node
 class RosSP extends AbstractDeclarativeScopeProvider {
 
     override getScope(EObject context, EReference reference) {
+        if (reference == RosPackage.Literals.EXTENSION_REF_VALUE__TARGET) {
+            return ExtensionScopingHelper.scopeForExtensionRef(context, reference, null)
+        }
         if (context instanceof SpecBase) {
             if (reference == RosPackage.Literals.SPEC_BASE) {
                 val candidates = EcoreUtil2.getAllContentsOfType(context.package, SpecBase);
                 return Scopes.scopeFor(candidates)
             }
         }
-//        if (context instanceof Node) {
-//            if (reference == RosPackage.Literals.NODE) {
-//                val candidates = EcoreUtil2.getAllContentsOfType(context, Node);
-//                return Scopes.scopeFor(candidates)
-//            }
-//        }
         return super.getScope(context, reference);
     }
 

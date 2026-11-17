@@ -65,7 +65,13 @@ Node returns Node:
         BEGIN
         parameter+=Parameter*
         END
-    )
+    )|
+    ('pluginslots:'
+        BEGIN
+        pluginSlots+=PluginSlot*
+        END
+    )|
+    (extensions+=ExtensionBlock)
     )*
     ;
 
@@ -102,82 +108,149 @@ QualityOfService returns QualityOfService:
 Publisher returns Publisher:
     {Publisher}
         name=EString':'
-        BEGIN
+        (
+        (BEGIN
             'type:' message=[TopicSpec|EString]
             ('ns:' namespace=Namespace)?
             ('active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
             ('qos:' qos=QualityOfService)?
-        END
+        END) |
+        ('{'
+            'type:' message=[TopicSpec|EString]
+            (','? 'ns:' namespace=Namespace)?
+            (','? 'active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
+            (','? 'qos:' qos=QualityOfService)?
+        '}')
+        )
     ;
 
 @Override
 Subscriber returns Subscriber:
     {Subscriber}
         name=EString':'
-        BEGIN
+        (
+        (BEGIN
             'type:' message=[TopicSpec|EString]
             ('ns:' namespace=Namespace)?
             ('active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
             ('qos:' qos=QualityOfService)?
-        END
+        END) |
+        ('{'
+            'type:' message=[TopicSpec|EString]
+            (','? 'ns:' namespace=Namespace)?
+            (','? 'active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
+            (','? 'qos:' qos=QualityOfService)?
+        '}')
+        )
     ;
 
 @Override
 ServiceServer returns ServiceServer:
     {ServiceServer}
         name=EString':'
-        BEGIN
+        (
+        (BEGIN
             'type:' service=[ServiceSpec|EString]
             ('ns:' namespace=Namespace)?
             ('active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
             ('qos:' qos=QualityOfService)?
-        END
+        END) |
+        ('{'
+            'type:' service=[ServiceSpec|EString]
+            (','? 'ns:' namespace=Namespace)?
+            (','? 'active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
+            (','? 'qos:' qos=QualityOfService)?
+        '}')
+        )
     ;
 
 @Override
 ServiceClient returns ServiceClient:
     {ServiceClient}
         name=EString':'
-        BEGIN
+        (
+        (BEGIN
             'type:' service=[ServiceSpec|EString]
             ('ns:' namespace=Namespace)?
             ('active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
             ('qos:' qos=QualityOfService)?
-        END
+        END) |
+        ('{'
+            'type:' service=[ServiceSpec|EString]
+            (','? 'ns:' namespace=Namespace)?
+            (','? 'active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
+            (','? 'qos:' qos=QualityOfService)?
+        '}')
+        )
     ;
 
 @Override
 ActionServer returns ActionServer:
     {ActionServer}
         name=EString':'
-        BEGIN
+        (
+        (BEGIN
             'type:' action=[ActionSpec|EString]
             ('ns:' namespace=Namespace)?
             ('active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
             ('qos:' qos=QualityOfService)?
-        END
+        END) |
+        ('{'
+            'type:' action=[ActionSpec|EString]
+            (','? 'ns:' namespace=Namespace)?
+            (','? 'active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
+            (','? 'qos:' qos=QualityOfService)?
+        '}')
+        )
     ;
 
 @Override
 ActionClient returns ActionClient:
     {ActionClient}
         name=EString':'
-        BEGIN
+        (
+        (BEGIN
             'type:' action=[ActionSpec|EString]
             ('ns:' namespace=Namespace)?
             ('active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
             ('qos:' qos=QualityOfService)?
-        END
+        END) |
+        ('{'
+            'type:' action=[ActionSpec|EString]
+            (','? 'ns:' namespace=Namespace)?
+            (','? 'active_in:' '[' activeStates+=LifecycleState (',' activeStates+=LifecycleState)* ']')?
+            (','? 'qos:' qos=QualityOfService)?
+        '}')
+        )
     ;
 
 @Override
 Parameter returns Parameter:
     {Parameter}
         name=EString':'
-        BEGIN
+        (
+        (BEGIN
         'type:' type=ParameterType
         ('ns:' namespace=Namespace)?
         ('value:' value=ParameterValue)?
         ('qos:' qos=QualityOfService)?
-        END
+        END) |
+        ('{'
+        'type:' type=ParameterType
+        (','? 'ns:' namespace=Namespace)?
+        (','? 'value:' value=ParameterValue)?
+        (','? 'qos:' qos=QualityOfService)?
+        '}')
+        )
         ;
+
+@Override
+ExtensionColonKey returns ecore::EString:
+    'ns:' | 'type:' | 'value:' | 'default:' |
+    'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
+    'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
+    'actionservers:' | 'actionclients:' | 'parameters:' |
+    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' |
+    'artifacts:' | 'lifecycle:' | 'profile:' | 'history:' | 'depth:' |
+    'reliability:' | 'durability:' | 'lease_duration:' | 'liveliness:' |
+    'lifespan:' | 'deadline:' | 'active_in:' | 'qos:';

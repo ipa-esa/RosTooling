@@ -7,7 +7,10 @@ import com.google.inject.Binder
 import de.fraunhofer.ipa.ros.generator.CICustomOutputProvider
 import org.eclipse.xtext.generator.IOutputConfigurationProvider
 import org.eclipse.xtext.scoping.IScopeProvider
+import de.fraunhofer.ipa.ros.linking.RosLinkingDiagnosticMessageProvider
 import de.fraunhofer.ipa.ros.scoping.RosSP
+import org.eclipse.xtext.conversion.IValueConverterService
+import org.eclipse.xtext.linking.ILinkingDiagnosticMessageProvider
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 
 /**
@@ -26,6 +29,14 @@ class RosRuntimeModule extends AbstractRosRuntimeModule {
 
     override Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
         return RosQNP
+    }
+
+    override Class<? extends IValueConverterService> bindIValueConverterService() {
+        return RosBasicsValueConverterService
+    }
+
+    def Class<? extends ILinkingDiagnosticMessageProvider> bindILinkingDiagnosticMessageProvider() {
+        return RosLinkingDiagnosticMessageProvider
     }
 
 }

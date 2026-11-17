@@ -18,22 +18,22 @@ import system.RossystemPackage;
  */
 public class InterfaceReferenceImpl extends MinimalEObjectImpl.Container implements InterfaceReference {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected InterfaceReferenceImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RossystemPackage.Literals.INTERFACE_REFERENCE;
-    }
+		return RossystemPackage.Literals.INTERFACE_REFERENCE;
+	}
 
 } //InterfaceReferenceImpl

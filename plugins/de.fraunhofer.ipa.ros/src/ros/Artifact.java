@@ -2,6 +2,7 @@
  */
 package ros;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -15,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link ros.Artifact#getName <em>Name</em>}</li>
  *   <li>{@link ros.Artifact#getNode <em>Node</em>}</li>
+ *   <li>{@link ros.Artifact#getPlugins <em>Plugins</em>}</li>
  * </ul>
  *
  * @see ros.RosPackage#getArtifact()
@@ -65,5 +67,17 @@ public interface Artifact extends EObject {
 	 * @generated
 	 */
 	void setNode(Node value);
+
+	/**
+	 * Returns the value of the '<em><b>Plugins</b></em>' containment reference list.
+	 * The list contents are of type {@link ros.Plugin}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Plugins</em>' containment reference list.
+	 * @see ros.RosPackage#getArtifact_Plugins()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Plugin> getPlugins();
 
 } // Artifact

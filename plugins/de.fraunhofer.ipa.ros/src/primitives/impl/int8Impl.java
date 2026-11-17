@@ -16,22 +16,22 @@ import primitives.int8;
  */
 public class int8Impl extends AbstractTypeImpl implements int8 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int8Impl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.INT8;
-    }
+		return PrimitivesPackage.Literals.INT8;
+	}
 
 } //int8Impl

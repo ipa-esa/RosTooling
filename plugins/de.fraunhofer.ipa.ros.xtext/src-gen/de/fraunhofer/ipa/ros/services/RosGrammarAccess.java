@@ -10,6 +10,8 @@ import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Alternatives;
 import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.CrossReference;
+import org.eclipse.xtext.EnumLiteralDeclaration;
+import org.eclipse.xtext.EnumRule;
 import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.Group;
@@ -17,6 +19,7 @@ import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ParserRule;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.TerminalRule;
+import org.eclipse.xtext.UnorderedGroup;
 import org.eclipse.xtext.common.services.TerminalsGrammarAccess;
 import org.eclipse.xtext.service.AbstractElementFinder;
 import org.eclipse.xtext.service.GrammarProvider;
@@ -647,16 +650,27 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final RuleCall cBEGINTerminalRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
 		private final Assignment cNodeAssignment_4 = (Assignment)cGroup.eContents().get(4);
 		private final RuleCall cNodeNodeParserRuleCall_4_0 = (RuleCall)cNodeAssignment_4.eContents().get(0);
-		private final RuleCall cENDTerminalRuleCall_5 = (RuleCall)cGroup.eContents().get(5);
+		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
+		private final Keyword cPluginsKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_5_1 = (RuleCall)cGroup_5.eContents().get(1);
+		private final Assignment cPluginsAssignment_5_2 = (Assignment)cGroup_5.eContents().get(2);
+		private final RuleCall cPluginsPluginParserRuleCall_5_2_0 = (RuleCall)cPluginsAssignment_5_2.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_5_3 = (RuleCall)cGroup_5.eContents().get(3);
+		private final RuleCall cENDTerminalRuleCall_6 = (RuleCall)cGroup.eContents().get(6);
 		
 		/////////////////////
-		////ARTIFACT AND NODE
+		////ARTIFACT, NODE AND PLUGINS
 		/////////////////////
 		//Artifact returns Artifact:
 		//    {Artifact}
 		//        name=RosNames':'
 		//        BEGIN
 		//        (node=Node)?
+		//        ('plugins:'
+		//            BEGIN
+		//            plugins+=Plugin*
+		//            END
+		//        )?
 		//        END;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -664,6 +678,11 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//    name=RosNames':'
 		//    BEGIN
 		//    (node=Node)?
+		//    ('plugins:'
+		//        BEGIN
+		//        plugins+=Plugin*
+		//        END
+		//    )?
 		//    END
 		public Group getGroup() { return cGroup; }
 		
@@ -688,8 +707,30 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//Node
 		public RuleCall getNodeNodeParserRuleCall_4_0() { return cNodeNodeParserRuleCall_4_0; }
 		
+		//('plugins:'
+		//    BEGIN
+		//    plugins+=Plugin*
+		//    END
+		//)?
+		public Group getGroup_5() { return cGroup_5; }
+		
+		//'plugins:'
+		public Keyword getPluginsKeyword_5_0() { return cPluginsKeyword_5_0; }
+		
+		//BEGIN
+		public RuleCall getBEGINTerminalRuleCall_5_1() { return cBEGINTerminalRuleCall_5_1; }
+		
+		//plugins+=Plugin*
+		public Assignment getPluginsAssignment_5_2() { return cPluginsAssignment_5_2; }
+		
+		//Plugin
+		public RuleCall getPluginsPluginParserRuleCall_5_2_0() { return cPluginsPluginParserRuleCall_5_2_0; }
+		
 		//END
-		public RuleCall getENDTerminalRuleCall_5() { return cENDTerminalRuleCall_5; }
+		public RuleCall getENDTerminalRuleCall_5_3() { return cENDTerminalRuleCall_5_3; }
+		
+		//END
+		public RuleCall getENDTerminalRuleCall_6() { return cENDTerminalRuleCall_6; }
 	}
 	public class NodeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.Node");
@@ -740,6 +781,14 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		private final Assignment cParameterAssignment_2_6_2 = (Assignment)cGroup_2_6.eContents().get(2);
 		private final RuleCall cParameterParameterParserRuleCall_2_6_2_0 = (RuleCall)cParameterAssignment_2_6_2.eContents().get(0);
 		private final RuleCall cENDTerminalRuleCall_2_6_3 = (RuleCall)cGroup_2_6.eContents().get(3);
+		private final Group cGroup_2_7 = (Group)cAlternatives_2.eContents().get(7);
+		private final Keyword cPluginslotsKeyword_2_7_0 = (Keyword)cGroup_2_7.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_2_7_1 = (RuleCall)cGroup_2_7.eContents().get(1);
+		private final Assignment cPluginSlotsAssignment_2_7_2 = (Assignment)cGroup_2_7.eContents().get(2);
+		private final RuleCall cPluginSlotsPluginSlotParserRuleCall_2_7_2_0 = (RuleCall)cPluginSlotsAssignment_2_7_2.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_2_7_3 = (RuleCall)cGroup_2_7.eContents().get(3);
+		private final Assignment cExtensionsAssignment_2_8 = (Assignment)cAlternatives_2.eContents().get(8);
+		private final RuleCall cExtensionsExtensionBlockParserRuleCall_2_8_0 = (RuleCall)cExtensionsAssignment_2_8.eContents().get(0);
 		
 		//Node returns Node:
 		//    'node:' name=RosNames
@@ -778,7 +827,13 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//        BEGIN
 		//        parameter+=Parameter*
 		//        END
-		//    )
+		//    )|
+		//    ('pluginslots:'
+		//        BEGIN
+		//        pluginSlots+=PluginSlot*
+		//        END
+		//    )|
+		//    (extensions+=ExtensionBlock)
 		//    )*
 		//    ;
 		@Override public ParserRule getRule() { return rule; }
@@ -819,7 +874,13 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//    BEGIN
 		//    parameter+=Parameter*
 		//    END
-		//)
+		//)|
+		//('pluginslots:'
+		//    BEGIN
+		//    pluginSlots+=PluginSlot*
+		//    END
+		//)|
+		//(extensions+=ExtensionBlock)
 		//)*
 		public Group getGroup() { return cGroup; }
 		
@@ -867,7 +928,13 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		//    BEGIN
 		//    parameter+=Parameter*
 		//    END
-		//)
+		//)|
+		//('pluginslots:'
+		//    BEGIN
+		//    pluginSlots+=PluginSlot*
+		//    END
+		//)|
+		//(extensions+=ExtensionBlock)
 		//)*
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 		
@@ -1024,6 +1091,948 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		
 		//END
 		public RuleCall getENDTerminalRuleCall_2_6_3() { return cENDTerminalRuleCall_2_6_3; }
+		
+		//('pluginslots:'
+		//    BEGIN
+		//    pluginSlots+=PluginSlot*
+		//    END
+		//)
+		public Group getGroup_2_7() { return cGroup_2_7; }
+		
+		//'pluginslots:'
+		public Keyword getPluginslotsKeyword_2_7_0() { return cPluginslotsKeyword_2_7_0; }
+		
+		//BEGIN
+		public RuleCall getBEGINTerminalRuleCall_2_7_1() { return cBEGINTerminalRuleCall_2_7_1; }
+		
+		//pluginSlots+=PluginSlot*
+		public Assignment getPluginSlotsAssignment_2_7_2() { return cPluginSlotsAssignment_2_7_2; }
+		
+		//PluginSlot
+		public RuleCall getPluginSlotsPluginSlotParserRuleCall_2_7_2_0() { return cPluginSlotsPluginSlotParserRuleCall_2_7_2_0; }
+		
+		//END
+		public RuleCall getENDTerminalRuleCall_2_7_3() { return cENDTerminalRuleCall_2_7_3; }
+		
+		//(extensions+=ExtensionBlock)
+		public Assignment getExtensionsAssignment_2_8() { return cExtensionsAssignment_2_8; }
+		
+		//ExtensionBlock
+		public RuleCall getExtensionsExtensionBlockParserRuleCall_2_8_0() { return cExtensionsExtensionBlockParserRuleCall_2_8_0; }
+	}
+	public class PluginElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.Plugin");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cPluginAction_0 = (Action)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cNameRosNamesParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final Keyword cColonKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final RuleCall cBEGINTerminalRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
+		private final Alternatives cAlternatives_4 = (Alternatives)cGroup.eContents().get(4);
+		private final Group cGroup_4_0 = (Group)cAlternatives_4.eContents().get(0);
+		private final Keyword cImplementsKeyword_4_0_0 = (Keyword)cGroup_4_0.eContents().get(0);
+		private final Assignment cImplementsAssignment_4_0_1 = (Assignment)cGroup_4_0.eContents().get(1);
+		private final RuleCall cImplementsEStringParserRuleCall_4_0_1_0 = (RuleCall)cImplementsAssignment_4_0_1.eContents().get(0);
+		private final Group cGroup_4_1 = (Group)cAlternatives_4.eContents().get(1);
+		private final Keyword cLoaderKeyword_4_1_0 = (Keyword)cGroup_4_1.eContents().get(0);
+		private final Assignment cLoaderAssignment_4_1_1 = (Assignment)cGroup_4_1.eContents().get(1);
+		private final RuleCall cLoaderPluginLoaderEnumRuleCall_4_1_1_0 = (RuleCall)cLoaderAssignment_4_1_1.eContents().get(0);
+		private final Group cGroup_4_2 = (Group)cAlternatives_4.eContents().get(2);
+		private final Keyword cPublishersKeyword_4_2_0 = (Keyword)cGroup_4_2.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_4_2_1 = (RuleCall)cGroup_4_2.eContents().get(1);
+		private final Assignment cPublisherAssignment_4_2_2 = (Assignment)cGroup_4_2.eContents().get(2);
+		private final RuleCall cPublisherPublisherParserRuleCall_4_2_2_0 = (RuleCall)cPublisherAssignment_4_2_2.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_4_2_3 = (RuleCall)cGroup_4_2.eContents().get(3);
+		private final Group cGroup_4_3 = (Group)cAlternatives_4.eContents().get(3);
+		private final Keyword cSubscribersKeyword_4_3_0 = (Keyword)cGroup_4_3.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_4_3_1 = (RuleCall)cGroup_4_3.eContents().get(1);
+		private final Assignment cSubscriberAssignment_4_3_2 = (Assignment)cGroup_4_3.eContents().get(2);
+		private final RuleCall cSubscriberSubscriberParserRuleCall_4_3_2_0 = (RuleCall)cSubscriberAssignment_4_3_2.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_4_3_3 = (RuleCall)cGroup_4_3.eContents().get(3);
+		private final Group cGroup_4_4 = (Group)cAlternatives_4.eContents().get(4);
+		private final Keyword cServiceserversKeyword_4_4_0 = (Keyword)cGroup_4_4.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_4_4_1 = (RuleCall)cGroup_4_4.eContents().get(1);
+		private final Assignment cServiceserverAssignment_4_4_2 = (Assignment)cGroup_4_4.eContents().get(2);
+		private final RuleCall cServiceserverServiceServerParserRuleCall_4_4_2_0 = (RuleCall)cServiceserverAssignment_4_4_2.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_4_4_3 = (RuleCall)cGroup_4_4.eContents().get(3);
+		private final Group cGroup_4_5 = (Group)cAlternatives_4.eContents().get(5);
+		private final Keyword cServiceclientsKeyword_4_5_0 = (Keyword)cGroup_4_5.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_4_5_1 = (RuleCall)cGroup_4_5.eContents().get(1);
+		private final Assignment cServiceclientAssignment_4_5_2 = (Assignment)cGroup_4_5.eContents().get(2);
+		private final RuleCall cServiceclientServiceClientParserRuleCall_4_5_2_0 = (RuleCall)cServiceclientAssignment_4_5_2.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_4_5_3 = (RuleCall)cGroup_4_5.eContents().get(3);
+		private final Group cGroup_4_6 = (Group)cAlternatives_4.eContents().get(6);
+		private final Keyword cActionserversKeyword_4_6_0 = (Keyword)cGroup_4_6.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_4_6_1 = (RuleCall)cGroup_4_6.eContents().get(1);
+		private final Assignment cActionserverAssignment_4_6_2 = (Assignment)cGroup_4_6.eContents().get(2);
+		private final RuleCall cActionserverActionServerParserRuleCall_4_6_2_0 = (RuleCall)cActionserverAssignment_4_6_2.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_4_6_3 = (RuleCall)cGroup_4_6.eContents().get(3);
+		private final Group cGroup_4_7 = (Group)cAlternatives_4.eContents().get(7);
+		private final Keyword cActionclientsKeyword_4_7_0 = (Keyword)cGroup_4_7.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_4_7_1 = (RuleCall)cGroup_4_7.eContents().get(1);
+		private final Assignment cActionclientAssignment_4_7_2 = (Assignment)cGroup_4_7.eContents().get(2);
+		private final RuleCall cActionclientActionClientParserRuleCall_4_7_2_0 = (RuleCall)cActionclientAssignment_4_7_2.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_4_7_3 = (RuleCall)cGroup_4_7.eContents().get(3);
+		private final Group cGroup_4_8 = (Group)cAlternatives_4.eContents().get(8);
+		private final Keyword cParametersKeyword_4_8_0 = (Keyword)cGroup_4_8.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_4_8_1 = (RuleCall)cGroup_4_8.eContents().get(1);
+		private final Assignment cParameterAssignment_4_8_2 = (Assignment)cGroup_4_8.eContents().get(2);
+		private final RuleCall cParameterParameterParserRuleCall_4_8_2_0 = (RuleCall)cParameterAssignment_4_8_2.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_4_8_3 = (RuleCall)cGroup_4_8.eContents().get(3);
+		private final Assignment cExtensionsAssignment_4_9 = (Assignment)cAlternatives_4.eContents().get(9);
+		private final RuleCall cExtensionsExtensionBlockParserRuleCall_4_9_0 = (RuleCall)cExtensionsAssignment_4_9.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_5 = (RuleCall)cGroup.eContents().get(5);
+		
+		//Plugin returns Plugin:
+		//    {Plugin}
+		//    name=RosNames':'
+		//    BEGIN
+		//    (
+		//    ('implements:' implements=EString)|
+		//    ('loader:' loader=PluginLoader)|
+		//    ('publishers:'
+		//        BEGIN
+		//        publisher+=Publisher*
+		//        END
+		//    )|
+		//    ('subscribers:'
+		//        BEGIN
+		//        subscriber+=Subscriber*
+		//        END
+		//    )|
+		//    ('serviceservers:'
+		//        BEGIN
+		//        serviceserver+=ServiceServer*
+		//        END
+		//    )|
+		//    ('serviceclients:'
+		//        BEGIN
+		//        serviceclient+=ServiceClient*
+		//        END
+		//    )|
+		//    ('actionservers:'
+		//        BEGIN
+		//        actionserver+=ActionServer*
+		//        END
+		//    )|
+		//    ('actionclients:'
+		//        BEGIN
+		//        actionclient+=ActionClient*
+		//        END
+		//    )|
+		//    ('parameters:'
+		//        BEGIN
+		//        parameter+=Parameter*
+		//        END
+		//    )|
+		//    (extensions+=ExtensionBlock)
+		//    )*
+		//    END;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{Plugin}
+		//name=RosNames':'
+		//BEGIN
+		//(
+		//('implements:' implements=EString)|
+		//('loader:' loader=PluginLoader)|
+		//('publishers:'
+		//    BEGIN
+		//    publisher+=Publisher*
+		//    END
+		//)|
+		//('subscribers:'
+		//    BEGIN
+		//    subscriber+=Subscriber*
+		//    END
+		//)|
+		//('serviceservers:'
+		//    BEGIN
+		//    serviceserver+=ServiceServer*
+		//    END
+		//)|
+		//('serviceclients:'
+		//    BEGIN
+		//    serviceclient+=ServiceClient*
+		//    END
+		//)|
+		//('actionservers:'
+		//    BEGIN
+		//    actionserver+=ActionServer*
+		//    END
+		//)|
+		//('actionclients:'
+		//    BEGIN
+		//    actionclient+=ActionClient*
+		//    END
+		//)|
+		//('parameters:'
+		//    BEGIN
+		//    parameter+=Parameter*
+		//    END
+		//)|
+		//(extensions+=ExtensionBlock)
+		//)*
+		//END
+		public Group getGroup() { return cGroup; }
+		
+		//{Plugin}
+		public Action getPluginAction_0() { return cPluginAction_0; }
+		
+		//name=RosNames
+		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		
+		//RosNames
+		public RuleCall getNameRosNamesParserRuleCall_1_0() { return cNameRosNamesParserRuleCall_1_0; }
+		
+		//':'
+		public Keyword getColonKeyword_2() { return cColonKeyword_2; }
+		
+		//BEGIN
+		public RuleCall getBEGINTerminalRuleCall_3() { return cBEGINTerminalRuleCall_3; }
+		
+		//(
+		//('implements:' implements=EString)|
+		//('loader:' loader=PluginLoader)|
+		//('publishers:'
+		//    BEGIN
+		//    publisher+=Publisher*
+		//    END
+		//)|
+		//('subscribers:'
+		//    BEGIN
+		//    subscriber+=Subscriber*
+		//    END
+		//)|
+		//('serviceservers:'
+		//    BEGIN
+		//    serviceserver+=ServiceServer*
+		//    END
+		//)|
+		//('serviceclients:'
+		//    BEGIN
+		//    serviceclient+=ServiceClient*
+		//    END
+		//)|
+		//('actionservers:'
+		//    BEGIN
+		//    actionserver+=ActionServer*
+		//    END
+		//)|
+		//('actionclients:'
+		//    BEGIN
+		//    actionclient+=ActionClient*
+		//    END
+		//)|
+		//('parameters:'
+		//    BEGIN
+		//    parameter+=Parameter*
+		//    END
+		//)|
+		//(extensions+=ExtensionBlock)
+		//)*
+		public Alternatives getAlternatives_4() { return cAlternatives_4; }
+		
+		//('implements:' implements=EString)
+		public Group getGroup_4_0() { return cGroup_4_0; }
+		
+		//'implements:'
+		public Keyword getImplementsKeyword_4_0_0() { return cImplementsKeyword_4_0_0; }
+		
+		//implements=EString
+		public Assignment getImplementsAssignment_4_0_1() { return cImplementsAssignment_4_0_1; }
+		
+		//EString
+		public RuleCall getImplementsEStringParserRuleCall_4_0_1_0() { return cImplementsEStringParserRuleCall_4_0_1_0; }
+		
+		//('loader:' loader=PluginLoader)
+		public Group getGroup_4_1() { return cGroup_4_1; }
+		
+		//'loader:'
+		public Keyword getLoaderKeyword_4_1_0() { return cLoaderKeyword_4_1_0; }
+		
+		//loader=PluginLoader
+		public Assignment getLoaderAssignment_4_1_1() { return cLoaderAssignment_4_1_1; }
+		
+		//PluginLoader
+		public RuleCall getLoaderPluginLoaderEnumRuleCall_4_1_1_0() { return cLoaderPluginLoaderEnumRuleCall_4_1_1_0; }
+		
+		//('publishers:'
+		//    BEGIN
+		//    publisher+=Publisher*
+		//    END
+		//)
+		public Group getGroup_4_2() { return cGroup_4_2; }
+		
+		//'publishers:'
+		public Keyword getPublishersKeyword_4_2_0() { return cPublishersKeyword_4_2_0; }
+		
+		//BEGIN
+		public RuleCall getBEGINTerminalRuleCall_4_2_1() { return cBEGINTerminalRuleCall_4_2_1; }
+		
+		//publisher+=Publisher*
+		public Assignment getPublisherAssignment_4_2_2() { return cPublisherAssignment_4_2_2; }
+		
+		//Publisher
+		public RuleCall getPublisherPublisherParserRuleCall_4_2_2_0() { return cPublisherPublisherParserRuleCall_4_2_2_0; }
+		
+		//END
+		public RuleCall getENDTerminalRuleCall_4_2_3() { return cENDTerminalRuleCall_4_2_3; }
+		
+		//('subscribers:'
+		//    BEGIN
+		//    subscriber+=Subscriber*
+		//    END
+		//)
+		public Group getGroup_4_3() { return cGroup_4_3; }
+		
+		//'subscribers:'
+		public Keyword getSubscribersKeyword_4_3_0() { return cSubscribersKeyword_4_3_0; }
+		
+		//BEGIN
+		public RuleCall getBEGINTerminalRuleCall_4_3_1() { return cBEGINTerminalRuleCall_4_3_1; }
+		
+		//subscriber+=Subscriber*
+		public Assignment getSubscriberAssignment_4_3_2() { return cSubscriberAssignment_4_3_2; }
+		
+		//Subscriber
+		public RuleCall getSubscriberSubscriberParserRuleCall_4_3_2_0() { return cSubscriberSubscriberParserRuleCall_4_3_2_0; }
+		
+		//END
+		public RuleCall getENDTerminalRuleCall_4_3_3() { return cENDTerminalRuleCall_4_3_3; }
+		
+		//('serviceservers:'
+		//    BEGIN
+		//    serviceserver+=ServiceServer*
+		//    END
+		//)
+		public Group getGroup_4_4() { return cGroup_4_4; }
+		
+		//'serviceservers:'
+		public Keyword getServiceserversKeyword_4_4_0() { return cServiceserversKeyword_4_4_0; }
+		
+		//BEGIN
+		public RuleCall getBEGINTerminalRuleCall_4_4_1() { return cBEGINTerminalRuleCall_4_4_1; }
+		
+		//serviceserver+=ServiceServer*
+		public Assignment getServiceserverAssignment_4_4_2() { return cServiceserverAssignment_4_4_2; }
+		
+		//ServiceServer
+		public RuleCall getServiceserverServiceServerParserRuleCall_4_4_2_0() { return cServiceserverServiceServerParserRuleCall_4_4_2_0; }
+		
+		//END
+		public RuleCall getENDTerminalRuleCall_4_4_3() { return cENDTerminalRuleCall_4_4_3; }
+		
+		//('serviceclients:'
+		//    BEGIN
+		//    serviceclient+=ServiceClient*
+		//    END
+		//)
+		public Group getGroup_4_5() { return cGroup_4_5; }
+		
+		//'serviceclients:'
+		public Keyword getServiceclientsKeyword_4_5_0() { return cServiceclientsKeyword_4_5_0; }
+		
+		//BEGIN
+		public RuleCall getBEGINTerminalRuleCall_4_5_1() { return cBEGINTerminalRuleCall_4_5_1; }
+		
+		//serviceclient+=ServiceClient*
+		public Assignment getServiceclientAssignment_4_5_2() { return cServiceclientAssignment_4_5_2; }
+		
+		//ServiceClient
+		public RuleCall getServiceclientServiceClientParserRuleCall_4_5_2_0() { return cServiceclientServiceClientParserRuleCall_4_5_2_0; }
+		
+		//END
+		public RuleCall getENDTerminalRuleCall_4_5_3() { return cENDTerminalRuleCall_4_5_3; }
+		
+		//('actionservers:'
+		//    BEGIN
+		//    actionserver+=ActionServer*
+		//    END
+		//)
+		public Group getGroup_4_6() { return cGroup_4_6; }
+		
+		//'actionservers:'
+		public Keyword getActionserversKeyword_4_6_0() { return cActionserversKeyword_4_6_0; }
+		
+		//BEGIN
+		public RuleCall getBEGINTerminalRuleCall_4_6_1() { return cBEGINTerminalRuleCall_4_6_1; }
+		
+		//actionserver+=ActionServer*
+		public Assignment getActionserverAssignment_4_6_2() { return cActionserverAssignment_4_6_2; }
+		
+		//ActionServer
+		public RuleCall getActionserverActionServerParserRuleCall_4_6_2_0() { return cActionserverActionServerParserRuleCall_4_6_2_0; }
+		
+		//END
+		public RuleCall getENDTerminalRuleCall_4_6_3() { return cENDTerminalRuleCall_4_6_3; }
+		
+		//('actionclients:'
+		//    BEGIN
+		//    actionclient+=ActionClient*
+		//    END
+		//)
+		public Group getGroup_4_7() { return cGroup_4_7; }
+		
+		//'actionclients:'
+		public Keyword getActionclientsKeyword_4_7_0() { return cActionclientsKeyword_4_7_0; }
+		
+		//BEGIN
+		public RuleCall getBEGINTerminalRuleCall_4_7_1() { return cBEGINTerminalRuleCall_4_7_1; }
+		
+		//actionclient+=ActionClient*
+		public Assignment getActionclientAssignment_4_7_2() { return cActionclientAssignment_4_7_2; }
+		
+		//ActionClient
+		public RuleCall getActionclientActionClientParserRuleCall_4_7_2_0() { return cActionclientActionClientParserRuleCall_4_7_2_0; }
+		
+		//END
+		public RuleCall getENDTerminalRuleCall_4_7_3() { return cENDTerminalRuleCall_4_7_3; }
+		
+		//('parameters:'
+		//    BEGIN
+		//    parameter+=Parameter*
+		//    END
+		//)
+		public Group getGroup_4_8() { return cGroup_4_8; }
+		
+		//'parameters:'
+		public Keyword getParametersKeyword_4_8_0() { return cParametersKeyword_4_8_0; }
+		
+		//BEGIN
+		public RuleCall getBEGINTerminalRuleCall_4_8_1() { return cBEGINTerminalRuleCall_4_8_1; }
+		
+		//parameter+=Parameter*
+		public Assignment getParameterAssignment_4_8_2() { return cParameterAssignment_4_8_2; }
+		
+		//Parameter
+		public RuleCall getParameterParameterParserRuleCall_4_8_2_0() { return cParameterParameterParserRuleCall_4_8_2_0; }
+		
+		//END
+		public RuleCall getENDTerminalRuleCall_4_8_3() { return cENDTerminalRuleCall_4_8_3; }
+		
+		//(extensions+=ExtensionBlock)
+		public Assignment getExtensionsAssignment_4_9() { return cExtensionsAssignment_4_9; }
+		
+		//ExtensionBlock
+		public RuleCall getExtensionsExtensionBlockParserRuleCall_4_9_0() { return cExtensionsExtensionBlockParserRuleCall_4_9_0; }
+		
+		//END
+		public RuleCall getENDTerminalRuleCall_5() { return cENDTerminalRuleCall_5; }
+	}
+	public class PluginSlotElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.PluginSlot");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cPluginSlotAction_0 = (Action)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cNameEStringParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final Keyword cColonKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Alternatives cAlternatives_3 = (Alternatives)cGroup.eContents().get(3);
+		private final Group cGroup_3_0 = (Group)cAlternatives_3.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_3_0_0 = (RuleCall)cGroup_3_0.eContents().get(0);
+		private final UnorderedGroup cUnorderedGroup_3_0_1 = (UnorderedGroup)cGroup_3_0.eContents().get(1);
+		private final Group cGroup_3_0_1_0 = (Group)cUnorderedGroup_3_0_1.eContents().get(0);
+		private final Keyword cBaseKeyword_3_0_1_0_0 = (Keyword)cGroup_3_0_1_0.eContents().get(0);
+		private final Assignment cBaseAssignment_3_0_1_0_1 = (Assignment)cGroup_3_0_1_0.eContents().get(1);
+		private final RuleCall cBaseEStringParserRuleCall_3_0_1_0_1_0 = (RuleCall)cBaseAssignment_3_0_1_0_1.eContents().get(0);
+		private final Group cGroup_3_0_1_1 = (Group)cUnorderedGroup_3_0_1.eContents().get(1);
+		private final Keyword cParameterKeyword_3_0_1_1_0 = (Keyword)cGroup_3_0_1_1.eContents().get(0);
+		private final Assignment cParameterAssignment_3_0_1_1_1 = (Assignment)cGroup_3_0_1_1.eContents().get(1);
+		private final RuleCall cParameterEStringParserRuleCall_3_0_1_1_1_0 = (RuleCall)cParameterAssignment_3_0_1_1_1.eContents().get(0);
+		private final Group cGroup_3_0_1_2 = (Group)cUnorderedGroup_3_0_1.eContents().get(2);
+		private final Keyword cDefaultKeyword_3_0_1_2_0 = (Keyword)cGroup_3_0_1_2.eContents().get(0);
+		private final Assignment cDefaultPluginAssignment_3_0_1_2_1 = (Assignment)cGroup_3_0_1_2.eContents().get(1);
+		private final RuleCall cDefaultPluginEStringParserRuleCall_3_0_1_2_1_0 = (RuleCall)cDefaultPluginAssignment_3_0_1_2_1.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_3_0_2 = (RuleCall)cGroup_3_0.eContents().get(2);
+		private final Group cGroup_3_1 = (Group)cAlternatives_3.eContents().get(1);
+		private final Keyword cLeftCurlyBracketKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
+		private final Keyword cBaseKeyword_3_1_1 = (Keyword)cGroup_3_1.eContents().get(1);
+		private final Assignment cBaseAssignment_3_1_2 = (Assignment)cGroup_3_1.eContents().get(2);
+		private final RuleCall cBaseEStringParserRuleCall_3_1_2_0 = (RuleCall)cBaseAssignment_3_1_2.eContents().get(0);
+		private final Keyword cCommaKeyword_3_1_3 = (Keyword)cGroup_3_1.eContents().get(3);
+		private final Keyword cParameterKeyword_3_1_4 = (Keyword)cGroup_3_1.eContents().get(4);
+		private final Assignment cParameterAssignment_3_1_5 = (Assignment)cGroup_3_1.eContents().get(5);
+		private final RuleCall cParameterEStringParserRuleCall_3_1_5_0 = (RuleCall)cParameterAssignment_3_1_5.eContents().get(0);
+		private final Group cGroup_3_1_6 = (Group)cGroup_3_1.eContents().get(6);
+		private final Keyword cCommaKeyword_3_1_6_0 = (Keyword)cGroup_3_1_6.eContents().get(0);
+		private final Keyword cDefaultKeyword_3_1_6_1 = (Keyword)cGroup_3_1_6.eContents().get(1);
+		private final Assignment cDefaultPluginAssignment_3_1_6_2 = (Assignment)cGroup_3_1_6.eContents().get(2);
+		private final RuleCall cDefaultPluginEStringParserRuleCall_3_1_6_2_0 = (RuleCall)cDefaultPluginAssignment_3_1_6_2.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_3_1_7 = (Keyword)cGroup_3_1.eContents().get(7);
+		
+		//PluginSlot returns PluginSlot:
+		//    {PluginSlot}
+		//    name=EString':'
+		//    (
+		//    (BEGIN
+		//        (('base:' base=EString) &
+		//         ('parameter:' parameter=EString) &
+		//         ('default:' defaultPlugin=EString)?)
+		//    END) |
+		//    ('{'
+		//        'base:' base=EString
+		//        ','? 'parameter:' parameter=EString
+		//        (','? 'default:' defaultPlugin=EString)?
+		//    '}')
+		//    );
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{PluginSlot}
+		//name=EString':'
+		//(
+		//(BEGIN
+		//    (('base:' base=EString) &
+		//     ('parameter:' parameter=EString) &
+		//     ('default:' defaultPlugin=EString)?)
+		//END) |
+		//('{'
+		//    'base:' base=EString
+		//    ','? 'parameter:' parameter=EString
+		//    (','? 'default:' defaultPlugin=EString)?
+		//'}')
+		//)
+		public Group getGroup() { return cGroup; }
+		
+		//{PluginSlot}
+		public Action getPluginSlotAction_0() { return cPluginSlotAction_0; }
+		
+		//name=EString
+		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		
+		//EString
+		public RuleCall getNameEStringParserRuleCall_1_0() { return cNameEStringParserRuleCall_1_0; }
+		
+		//':'
+		public Keyword getColonKeyword_2() { return cColonKeyword_2; }
+		
+		//(
+		//(BEGIN
+		//    (('base:' base=EString) &
+		//     ('parameter:' parameter=EString) &
+		//     ('default:' defaultPlugin=EString)?)
+		//END) |
+		//('{'
+		//    'base:' base=EString
+		//    ','? 'parameter:' parameter=EString
+		//    (','? 'default:' defaultPlugin=EString)?
+		//'}')
+		//)
+		public Alternatives getAlternatives_3() { return cAlternatives_3; }
+		
+		//(BEGIN
+		//    (('base:' base=EString) &
+		//     ('parameter:' parameter=EString) &
+		//     ('default:' defaultPlugin=EString)?)
+		//END)
+		public Group getGroup_3_0() { return cGroup_3_0; }
+		
+		//BEGIN
+		public RuleCall getBEGINTerminalRuleCall_3_0_0() { return cBEGINTerminalRuleCall_3_0_0; }
+		
+		//(('base:' base=EString) &
+		// ('parameter:' parameter=EString) &
+		// ('default:' defaultPlugin=EString)?)
+		public UnorderedGroup getUnorderedGroup_3_0_1() { return cUnorderedGroup_3_0_1; }
+		
+		//('base:' base=EString)
+		public Group getGroup_3_0_1_0() { return cGroup_3_0_1_0; }
+		
+		//'base:'
+		public Keyword getBaseKeyword_3_0_1_0_0() { return cBaseKeyword_3_0_1_0_0; }
+		
+		//base=EString
+		public Assignment getBaseAssignment_3_0_1_0_1() { return cBaseAssignment_3_0_1_0_1; }
+		
+		//EString
+		public RuleCall getBaseEStringParserRuleCall_3_0_1_0_1_0() { return cBaseEStringParserRuleCall_3_0_1_0_1_0; }
+		
+		//('parameter:' parameter=EString)
+		public Group getGroup_3_0_1_1() { return cGroup_3_0_1_1; }
+		
+		//'parameter:'
+		public Keyword getParameterKeyword_3_0_1_1_0() { return cParameterKeyword_3_0_1_1_0; }
+		
+		//parameter=EString
+		public Assignment getParameterAssignment_3_0_1_1_1() { return cParameterAssignment_3_0_1_1_1; }
+		
+		//EString
+		public RuleCall getParameterEStringParserRuleCall_3_0_1_1_1_0() { return cParameterEStringParserRuleCall_3_0_1_1_1_0; }
+		
+		//('default:' defaultPlugin=EString)?
+		public Group getGroup_3_0_1_2() { return cGroup_3_0_1_2; }
+		
+		//'default:'
+		public Keyword getDefaultKeyword_3_0_1_2_0() { return cDefaultKeyword_3_0_1_2_0; }
+		
+		//defaultPlugin=EString
+		public Assignment getDefaultPluginAssignment_3_0_1_2_1() { return cDefaultPluginAssignment_3_0_1_2_1; }
+		
+		//EString
+		public RuleCall getDefaultPluginEStringParserRuleCall_3_0_1_2_1_0() { return cDefaultPluginEStringParserRuleCall_3_0_1_2_1_0; }
+		
+		//END
+		public RuleCall getENDTerminalRuleCall_3_0_2() { return cENDTerminalRuleCall_3_0_2; }
+		
+		//('{'
+		//    'base:' base=EString
+		//    ','? 'parameter:' parameter=EString
+		//    (','? 'default:' defaultPlugin=EString)?
+		//'}')
+		public Group getGroup_3_1() { return cGroup_3_1; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_3_1_0() { return cLeftCurlyBracketKeyword_3_1_0; }
+		
+		//'base:'
+		public Keyword getBaseKeyword_3_1_1() { return cBaseKeyword_3_1_1; }
+		
+		//base=EString
+		public Assignment getBaseAssignment_3_1_2() { return cBaseAssignment_3_1_2; }
+		
+		//EString
+		public RuleCall getBaseEStringParserRuleCall_3_1_2_0() { return cBaseEStringParserRuleCall_3_1_2_0; }
+		
+		//','?
+		public Keyword getCommaKeyword_3_1_3() { return cCommaKeyword_3_1_3; }
+		
+		//'parameter:'
+		public Keyword getParameterKeyword_3_1_4() { return cParameterKeyword_3_1_4; }
+		
+		//parameter=EString
+		public Assignment getParameterAssignment_3_1_5() { return cParameterAssignment_3_1_5; }
+		
+		//EString
+		public RuleCall getParameterEStringParserRuleCall_3_1_5_0() { return cParameterEStringParserRuleCall_3_1_5_0; }
+		
+		//(','? 'default:' defaultPlugin=EString)?
+		public Group getGroup_3_1_6() { return cGroup_3_1_6; }
+		
+		//','?
+		public Keyword getCommaKeyword_3_1_6_0() { return cCommaKeyword_3_1_6_0; }
+		
+		//'default:'
+		public Keyword getDefaultKeyword_3_1_6_1() { return cDefaultKeyword_3_1_6_1; }
+		
+		//defaultPlugin=EString
+		public Assignment getDefaultPluginAssignment_3_1_6_2() { return cDefaultPluginAssignment_3_1_6_2; }
+		
+		//EString
+		public RuleCall getDefaultPluginEStringParserRuleCall_3_1_6_2_0() { return cDefaultPluginEStringParserRuleCall_3_1_6_2_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_3_1_7() { return cRightCurlyBracketKeyword_3_1_7; }
+	}
+	public class EStringElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.EString");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cSTRINGTerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cIDTerminalRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final Keyword cPluginlibKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword cExternalKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		
+		//@Override
+		//EString returns ecore::EString:
+		//    STRING | ID | 'pluginlib' | 'external';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//STRING | ID | 'pluginlib' | 'external'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//STRING
+		public RuleCall getSTRINGTerminalRuleCall_0() { return cSTRINGTerminalRuleCall_0; }
+		
+		//ID
+		public RuleCall getIDTerminalRuleCall_1() { return cIDTerminalRuleCall_1; }
+		
+		//'pluginlib'
+		public Keyword getPluginlibKeyword_2() { return cPluginlibKeyword_2; }
+		
+		//'external'
+		public Keyword getExternalKeyword_3() { return cExternalKeyword_3; }
+	}
+	public class RosNamesElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.RosNames");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cROS_CONVENTION_ATerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cIDTerminalRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final Keyword cNodeKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword cPluginlibKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Keyword cExternalKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
+		
+		//@Override
+		//RosNames returns ecore::EString:
+		//    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//ROS_CONVENTION_A
+		public RuleCall getROS_CONVENTION_ATerminalRuleCall_0() { return cROS_CONVENTION_ATerminalRuleCall_0; }
+		
+		//ID
+		public RuleCall getIDTerminalRuleCall_1() { return cIDTerminalRuleCall_1; }
+		
+		//'node'
+		public Keyword getNodeKeyword_2() { return cNodeKeyword_2; }
+		
+		//'pluginlib'
+		public Keyword getPluginlibKeyword_3() { return cPluginlibKeyword_3; }
+		
+		//'external'
+		public Keyword getExternalKeyword_4() { return cExternalKeyword_4; }
+	}
+	public class ExtensionKeyElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.ExtensionKey");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cIDTerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cSTRINGTerminalRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cKEYWORDParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final Keyword cNodeKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Keyword cPluginlibKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
+		private final Keyword cExternalKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		private final Keyword cStringKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
+		private final Keyword cIntegerKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
+		private final Keyword cDoubleKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
+		private final Keyword cBooleanKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
+		private final Keyword cBase64Keyword_10 = (Keyword)cAlternatives.eContents().get(10);
+		private final Keyword cArrayKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
+		private final Keyword cListKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
+		private final Keyword cStructKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
+		private final Keyword cDateKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
+		private final Keyword cAnyKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
+		private final Keyword cBoolKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
+		private final Keyword cInt8Keyword_17 = (Keyword)cAlternatives.eContents().get(17);
+		private final Keyword cUint8Keyword_18 = (Keyword)cAlternatives.eContents().get(18);
+		private final Keyword cInt16Keyword_19 = (Keyword)cAlternatives.eContents().get(19);
+		private final Keyword cUint16Keyword_20 = (Keyword)cAlternatives.eContents().get(20);
+		private final Keyword cInt32Keyword_21 = (Keyword)cAlternatives.eContents().get(21);
+		private final Keyword cUint32Keyword_22 = (Keyword)cAlternatives.eContents().get(22);
+		private final Keyword cInt64Keyword_23 = (Keyword)cAlternatives.eContents().get(23);
+		private final Keyword cUint64Keyword_24 = (Keyword)cAlternatives.eContents().get(24);
+		private final Keyword cFloat32Keyword_25 = (Keyword)cAlternatives.eContents().get(25);
+		private final Keyword cFloat64Keyword_26 = (Keyword)cAlternatives.eContents().get(26);
+		private final Keyword cStringKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
+		private final Keyword cCharKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
+		private final Keyword cByteKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
+		private final Keyword cHeaderKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
+		
+		//@Override
+		//ExtensionKey returns ecore::EString:
+		//    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' |
+		//    'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
+		//    'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' |
+		//'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
+		//'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//ID
+		public RuleCall getIDTerminalRuleCall_0() { return cIDTerminalRuleCall_0; }
+		
+		//STRING
+		public RuleCall getSTRINGTerminalRuleCall_1() { return cSTRINGTerminalRuleCall_1; }
+		
+		//KEYWORD
+		public RuleCall getKEYWORDParserRuleCall_2() { return cKEYWORDParserRuleCall_2; }
+		
+		//'node'
+		public Keyword getNodeKeyword_3() { return cNodeKeyword_3; }
+		
+		//'pluginlib'
+		public Keyword getPluginlibKeyword_4() { return cPluginlibKeyword_4; }
+		
+		//'external'
+		public Keyword getExternalKeyword_5() { return cExternalKeyword_5; }
+		
+		//'String'
+		public Keyword getStringKeyword_6() { return cStringKeyword_6; }
+		
+		//'Integer'
+		public Keyword getIntegerKeyword_7() { return cIntegerKeyword_7; }
+		
+		//'Double'
+		public Keyword getDoubleKeyword_8() { return cDoubleKeyword_8; }
+		
+		//'Boolean'
+		public Keyword getBooleanKeyword_9() { return cBooleanKeyword_9; }
+		
+		//'Base64'
+		public Keyword getBase64Keyword_10() { return cBase64Keyword_10; }
+		
+		//'Array'
+		public Keyword getArrayKeyword_11() { return cArrayKeyword_11; }
+		
+		//'List'
+		public Keyword getListKeyword_12() { return cListKeyword_12; }
+		
+		//'Struct'
+		public Keyword getStructKeyword_13() { return cStructKeyword_13; }
+		
+		//'Date'
+		public Keyword getDateKeyword_14() { return cDateKeyword_14; }
+		
+		//'Any'
+		public Keyword getAnyKeyword_15() { return cAnyKeyword_15; }
+		
+		//'bool'
+		public Keyword getBoolKeyword_16() { return cBoolKeyword_16; }
+		
+		//'int8'
+		public Keyword getInt8Keyword_17() { return cInt8Keyword_17; }
+		
+		//'uint8'
+		public Keyword getUint8Keyword_18() { return cUint8Keyword_18; }
+		
+		//'int16'
+		public Keyword getInt16Keyword_19() { return cInt16Keyword_19; }
+		
+		//'uint16'
+		public Keyword getUint16Keyword_20() { return cUint16Keyword_20; }
+		
+		//'int32'
+		public Keyword getInt32Keyword_21() { return cInt32Keyword_21; }
+		
+		//'uint32'
+		public Keyword getUint32Keyword_22() { return cUint32Keyword_22; }
+		
+		//'int64'
+		public Keyword getInt64Keyword_23() { return cInt64Keyword_23; }
+		
+		//'uint64'
+		public Keyword getUint64Keyword_24() { return cUint64Keyword_24; }
+		
+		//'float32'
+		public Keyword getFloat32Keyword_25() { return cFloat32Keyword_25; }
+		
+		//'float64'
+		public Keyword getFloat64Keyword_26() { return cFloat64Keyword_26; }
+		
+		//'string'
+		public Keyword getStringKeyword_27() { return cStringKeyword_27; }
+		
+		//'char'
+		public Keyword getCharKeyword_28() { return cCharKeyword_28; }
+		
+		//'byte'
+		public Keyword getByteKeyword_29() { return cByteKeyword_29; }
+		
+		//'Header'
+		public Keyword getHeaderKeyword_30() { return cHeaderKeyword_30; }
+	}
+	public class ExtensionColonKeyElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.ExtensionColonKey");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Keyword cNsKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
+		private final Keyword cTypeKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword cValueKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword cDefaultKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Keyword cFromGitRepoKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
+		private final Keyword cDependenciesKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		private final Keyword cMsgsKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
+		private final Keyword cSrvsKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
+		private final Keyword cActionsKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
+		private final Keyword cNodeKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
+		private final Keyword cPublishersKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
+		private final Keyword cSubscribersKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
+		private final Keyword cServiceserversKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
+		private final Keyword cServiceclientsKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
+		private final Keyword cActionserversKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
+		private final Keyword cActionclientsKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
+		private final Keyword cParametersKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
+		private final Keyword cPluginsKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
+		private final Keyword cImplementsKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
+		private final Keyword cLoaderKeyword_19 = (Keyword)cAlternatives.eContents().get(19);
+		private final Keyword cPluginslotsKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
+		private final Keyword cBaseKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
+		private final Keyword cParameterKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
+		
+		//@Override
+		//ExtensionColonKey returns ecore::EString:
+		//    'ns:' | 'type:' | 'value:' | 'default:' |
+		//    'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
+		//    'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
+		//    'actionservers:' | 'actionclients:' | 'parameters:' |
+		//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'ns:' | 'type:' | 'value:' | 'default:' |
+		//'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
+		//'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
+		//'actionservers:' | 'actionclients:' | 'parameters:' |
+		//'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//'ns:'
+		public Keyword getNsKeyword_0() { return cNsKeyword_0; }
+		
+		//'type:'
+		public Keyword getTypeKeyword_1() { return cTypeKeyword_1; }
+		
+		//'value:'
+		public Keyword getValueKeyword_2() { return cValueKeyword_2; }
+		
+		//'default:'
+		public Keyword getDefaultKeyword_3() { return cDefaultKeyword_3; }
+		
+		//'fromGitRepo:'
+		public Keyword getFromGitRepoKeyword_4() { return cFromGitRepoKeyword_4; }
+		
+		//'dependencies:'
+		public Keyword getDependenciesKeyword_5() { return cDependenciesKeyword_5; }
+		
+		//'msgs:'
+		public Keyword getMsgsKeyword_6() { return cMsgsKeyword_6; }
+		
+		//'srvs:'
+		public Keyword getSrvsKeyword_7() { return cSrvsKeyword_7; }
+		
+		//'actions:'
+		public Keyword getActionsKeyword_8() { return cActionsKeyword_8; }
+		
+		//'node:'
+		public Keyword getNodeKeyword_9() { return cNodeKeyword_9; }
+		
+		//'publishers:'
+		public Keyword getPublishersKeyword_10() { return cPublishersKeyword_10; }
+		
+		//'subscribers:'
+		public Keyword getSubscribersKeyword_11() { return cSubscribersKeyword_11; }
+		
+		//'serviceservers:'
+		public Keyword getServiceserversKeyword_12() { return cServiceserversKeyword_12; }
+		
+		//'serviceclients:'
+		public Keyword getServiceclientsKeyword_13() { return cServiceclientsKeyword_13; }
+		
+		//'actionservers:'
+		public Keyword getActionserversKeyword_14() { return cActionserversKeyword_14; }
+		
+		//'actionclients:'
+		public Keyword getActionclientsKeyword_15() { return cActionclientsKeyword_15; }
+		
+		//'parameters:'
+		public Keyword getParametersKeyword_16() { return cParametersKeyword_16; }
+		
+		//'plugins:'
+		public Keyword getPluginsKeyword_17() { return cPluginsKeyword_17; }
+		
+		//'implements:'
+		public Keyword getImplementsKeyword_18() { return cImplementsKeyword_18; }
+		
+		//'loader:'
+		public Keyword getLoaderKeyword_19() { return cLoaderKeyword_19; }
+		
+		//'pluginslots:'
+		public Keyword getPluginslotsKeyword_20() { return cPluginslotsKeyword_20; }
+		
+		//'base:'
+		public Keyword getBaseKeyword_21() { return cBaseKeyword_21; }
+		
+		//'parameter:'
+		public Keyword getParameterKeyword_22() { return cParameterKeyword_22; }
 	}
 	public class PublisherElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.Publisher");
@@ -1569,6 +2578,36 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		public RuleCall getNameEStringParserRuleCall_2_0() { return cNameEStringParserRuleCall_2_0; }
 	}
 	
+	public class PluginLoaderElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
+		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Ros.PluginLoader");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final EnumLiteralDeclaration cPLUGINLIBEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
+		private final Keyword cPLUGINLIBPluginlibKeyword_0_0 = (Keyword)cPLUGINLIBEnumLiteralDeclaration_0.eContents().get(0);
+		private final EnumLiteralDeclaration cEXTERNALEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
+		private final Keyword cEXTERNALExternalKeyword_1_0 = (Keyword)cEXTERNALEnumLiteralDeclaration_1.eContents().get(0);
+		
+		//enum PluginLoader returns PluginLoader:
+		//    PLUGINLIB = 'pluginlib' |
+		//    EXTERNAL = 'external'
+		//;
+		public EnumRule getRule() { return rule; }
+		
+		//PLUGINLIB = 'pluginlib' |
+		//EXTERNAL = 'external'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//PLUGINLIB = 'pluginlib'
+		public EnumLiteralDeclaration getPLUGINLIBEnumLiteralDeclaration_0() { return cPLUGINLIBEnumLiteralDeclaration_0; }
+		
+		//'pluginlib'
+		public Keyword getPLUGINLIBPluginlibKeyword_0_0() { return cPLUGINLIBPluginlibKeyword_0_0; }
+		
+		//EXTERNAL = 'external'
+		public EnumLiteralDeclaration getEXTERNALEnumLiteralDeclaration_1() { return cEXTERNALEnumLiteralDeclaration_1; }
+		
+		//'external'
+		public Keyword getEXTERNALExternalKeyword_1_0() { return cEXTERNALExternalKeyword_1_0; }
+	}
 	
 	private final PackageSetElements pPackageSet;
 	private final PackageElements pPackage;
@@ -1579,6 +2618,13 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	private final MessageDefinitionElements pMessageDefinition;
 	private final ArtifactElements pArtifact;
 	private final NodeElements pNode;
+	private final PluginLoaderElements ePluginLoader;
+	private final PluginElements pPlugin;
+	private final PluginSlotElements pPluginSlot;
+	private final EStringElements pEString;
+	private final RosNamesElements pRosNames;
+	private final ExtensionKeyElements pExtensionKey;
+	private final ExtensionColonKeyElements pExtensionColonKey;
 	private final PublisherElements pPublisher;
 	private final SubscriberElements pSubscriber;
 	private final ServiceServerElements pServiceServer;
@@ -1611,6 +2657,13 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		this.pMessageDefinition = new MessageDefinitionElements();
 		this.pArtifact = new ArtifactElements();
 		this.pNode = new NodeElements();
+		this.ePluginLoader = new PluginLoaderElements();
+		this.pPlugin = new PluginElements();
+		this.pPluginSlot = new PluginSlotElements();
+		this.pEString = new EStringElements();
+		this.pRosNames = new RosNamesElements();
+		this.pExtensionKey = new ExtensionKeyElements();
+		this.pExtensionColonKey = new ExtensionColonKeyElements();
 		this.pPublisher = new PublisherElements();
 		this.pSubscriber = new SubscriberElements();
 		this.pServiceServer = new ServiceServerElements();
@@ -1799,13 +2852,18 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	}
 	
 	/////////////////////
-	////ARTIFACT AND NODE
+	////ARTIFACT, NODE AND PLUGINS
 	/////////////////////
 	//Artifact returns Artifact:
 	//    {Artifact}
 	//        name=RosNames':'
 	//        BEGIN
 	//        (node=Node)?
+	//        ('plugins:'
+	//            BEGIN
+	//            plugins+=Plugin*
+	//            END
+	//        )?
 	//        END;
 	public ArtifactElements getArtifactAccess() {
 		return pArtifact;
@@ -1852,7 +2910,13 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	//        BEGIN
 	//        parameter+=Parameter*
 	//        END
-	//    )
+	//    )|
+	//    ('pluginslots:'
+	//        BEGIN
+	//        pluginSlots+=PluginSlot*
+	//        END
+	//    )|
+	//    (extensions+=ExtensionBlock)
 	//    )*
 	//    ;
 	public NodeElements getNodeAccess() {
@@ -1861,6 +2925,144 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	
 	public ParserRule getNodeRule() {
 		return getNodeAccess().getRule();
+	}
+	
+	//enum PluginLoader returns PluginLoader:
+	//    PLUGINLIB = 'pluginlib' |
+	//    EXTERNAL = 'external'
+	//;
+	public PluginLoaderElements getPluginLoaderAccess() {
+		return ePluginLoader;
+	}
+	
+	public EnumRule getPluginLoaderRule() {
+		return getPluginLoaderAccess().getRule();
+	}
+	
+	//Plugin returns Plugin:
+	//    {Plugin}
+	//    name=RosNames':'
+	//    BEGIN
+	//    (
+	//    ('implements:' implements=EString)|
+	//    ('loader:' loader=PluginLoader)|
+	//    ('publishers:'
+	//        BEGIN
+	//        publisher+=Publisher*
+	//        END
+	//    )|
+	//    ('subscribers:'
+	//        BEGIN
+	//        subscriber+=Subscriber*
+	//        END
+	//    )|
+	//    ('serviceservers:'
+	//        BEGIN
+	//        serviceserver+=ServiceServer*
+	//        END
+	//    )|
+	//    ('serviceclients:'
+	//        BEGIN
+	//        serviceclient+=ServiceClient*
+	//        END
+	//    )|
+	//    ('actionservers:'
+	//        BEGIN
+	//        actionserver+=ActionServer*
+	//        END
+	//    )|
+	//    ('actionclients:'
+	//        BEGIN
+	//        actionclient+=ActionClient*
+	//        END
+	//    )|
+	//    ('parameters:'
+	//        BEGIN
+	//        parameter+=Parameter*
+	//        END
+	//    )|
+	//    (extensions+=ExtensionBlock)
+	//    )*
+	//    END;
+	public PluginElements getPluginAccess() {
+		return pPlugin;
+	}
+	
+	public ParserRule getPluginRule() {
+		return getPluginAccess().getRule();
+	}
+	
+	//PluginSlot returns PluginSlot:
+	//    {PluginSlot}
+	//    name=EString':'
+	//    (
+	//    (BEGIN
+	//        (('base:' base=EString) &
+	//         ('parameter:' parameter=EString) &
+	//         ('default:' defaultPlugin=EString)?)
+	//    END) |
+	//    ('{'
+	//        'base:' base=EString
+	//        ','? 'parameter:' parameter=EString
+	//        (','? 'default:' defaultPlugin=EString)?
+	//    '}')
+	//    );
+	public PluginSlotElements getPluginSlotAccess() {
+		return pPluginSlot;
+	}
+	
+	public ParserRule getPluginSlotRule() {
+		return getPluginSlotAccess().getRule();
+	}
+	
+	//@Override
+	//EString returns ecore::EString:
+	//    STRING | ID | 'pluginlib' | 'external';
+	public EStringElements getEStringAccess() {
+		return pEString;
+	}
+	
+	public ParserRule getEStringRule() {
+		return getEStringAccess().getRule();
+	}
+	
+	//@Override
+	//RosNames returns ecore::EString:
+	//    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external';
+	public RosNamesElements getRosNamesAccess() {
+		return pRosNames;
+	}
+	
+	public ParserRule getRosNamesRule() {
+		return getRosNamesAccess().getRule();
+	}
+	
+	//@Override
+	//ExtensionKey returns ecore::EString:
+	//    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' |
+	//    'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
+	//    'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
+	public ExtensionKeyElements getExtensionKeyAccess() {
+		return pExtensionKey;
+	}
+	
+	public ParserRule getExtensionKeyRule() {
+		return getExtensionKeyAccess().getRule();
+	}
+	
+	//@Override
+	//ExtensionColonKey returns ecore::EString:
+	//    'ns:' | 'type:' | 'value:' | 'default:' |
+	//    'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
+	//    'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
+	//    'actionservers:' | 'actionclients:' | 'parameters:' |
+	//    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:';
+	public ExtensionColonKeyElements getExtensionColonKeyAccess() {
+		return pExtensionColonKey;
+	}
+	
+	public ParserRule getExtensionColonKeyRule() {
+		return getExtensionColonKeyAccess().getRule();
 	}
 	
 	/////////////////////
@@ -2927,30 +4129,6 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		return gaBasics.getSL_COMMENTRule();
 	}
 	
-	/////////////////////
-	//// CONVENTIONS AND NAMES
-	/////////////////////
-	//EString returns ecore::EString:
-	//    STRING | ID;
-	public BasicsGrammarAccess.EStringElements getEStringAccess() {
-		return gaBasics.getEStringAccess();
-	}
-	
-	public ParserRule getEStringRule() {
-		return getEStringAccess().getRule();
-	}
-	
-	//RosNames returns ecore::EString:
-	//    ROS_CONVENTION_A | ID | 'node'
-	//;
-	public BasicsGrammarAccess.RosNamesElements getRosNamesAccess() {
-		return gaBasics.getRosNamesAccess();
-	}
-	
-	public ParserRule getRosNamesRule() {
-		return getRosNamesAccess().getRule();
-	}
-	
 	//terminal ROS_CONVENTION_A:
 	//    ( ('/' ID ) | ( ID '/' ) )* ;
 	public TerminalRule getROS_CONVENTION_ARule() {
@@ -2961,6 +4139,126 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 	//    ( ('/' STRING ) | ( STRING '/' ) | ('~' STRING ) )* ;
 	public TerminalRule getROS_CONVENTION_PARAMRule() {
 		return gaBasics.getROS_CONVENTION_PARAMRule();
+	}
+	
+	/////////////////////
+	//// EXTENSION BLOCKS
+	/////////////////////
+	//ExtensionBlock returns ExtensionBlock:
+	//    {ExtensionBlock}
+	//    '@' name=ExtensionBlockName ':'
+	//    (
+	//        (BEGIN entries+=ExtensionEntry+ END) |
+	//        ('{' (entries+=ExtensionEntry (','? entries+=ExtensionEntry)*)? '}')
+	//    )?;
+	public BasicsGrammarAccess.ExtensionBlockElements getExtensionBlockAccess() {
+		return gaBasics.getExtensionBlockAccess();
+	}
+	
+	public ParserRule getExtensionBlockRule() {
+		return getExtensionBlockAccess().getRule();
+	}
+	
+	//ExtensionBlockName returns ecore::EString:
+	//    ID ('.' ID)*;
+	public BasicsGrammarAccess.ExtensionBlockNameElements getExtensionBlockNameAccess() {
+		return gaBasics.getExtensionBlockNameAccess();
+	}
+	
+	public ParserRule getExtensionBlockNameRule() {
+		return getExtensionBlockNameAccess().getRule();
+	}
+	
+	//ExtensionEntry returns ExtensionEntry:
+	//    {ExtensionEntry}
+	//    (key=ExtensionKey ':' | key=ExtensionColonKey)
+	//    value=ExtensionValue;
+	public BasicsGrammarAccess.ExtensionEntryElements getExtensionEntryAccess() {
+		return gaBasics.getExtensionEntryAccess();
+	}
+	
+	public ParserRule getExtensionEntryRule() {
+		return getExtensionEntryAccess().getRule();
+	}
+	
+	//ExtensionValue returns ExtensionValue:
+	//    ExtensionListValue |
+	//    ExtensionBraceMapValue |
+	//    ExtensionIndentedMapValue |
+	//    ExtensionRefValue |
+	//    ExtensionScalarValue;
+	public BasicsGrammarAccess.ExtensionValueElements getExtensionValueAccess() {
+		return gaBasics.getExtensionValueAccess();
+	}
+	
+	public ParserRule getExtensionValueRule() {
+		return getExtensionValueAccess().getRule();
+	}
+	
+	//ExtensionListValue returns ExtensionListValue:
+	//    {ExtensionListValue}
+	//    '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']';
+	public BasicsGrammarAccess.ExtensionListValueElements getExtensionListValueAccess() {
+		return gaBasics.getExtensionListValueAccess();
+	}
+	
+	public ParserRule getExtensionListValueRule() {
+		return getExtensionListValueAccess().getRule();
+	}
+	
+	//ExtensionBraceMapValue returns ExtensionMapValue:
+	//    {ExtensionMapValue}
+	//    '{' (entries+=ExtensionEntry (','? entries+=ExtensionEntry)*)? '}';
+	public BasicsGrammarAccess.ExtensionBraceMapValueElements getExtensionBraceMapValueAccess() {
+		return gaBasics.getExtensionBraceMapValueAccess();
+	}
+	
+	public ParserRule getExtensionBraceMapValueRule() {
+		return getExtensionBraceMapValueAccess().getRule();
+	}
+	
+	//ExtensionIndentedMapValue returns ExtensionMapValue:
+	//    {ExtensionMapValue}
+	//    BEGIN entries+=ExtensionEntry+ END;
+	public BasicsGrammarAccess.ExtensionIndentedMapValueElements getExtensionIndentedMapValueAccess() {
+		return gaBasics.getExtensionIndentedMapValueAccess();
+	}
+	
+	public ParserRule getExtensionIndentedMapValueRule() {
+		return getExtensionIndentedMapValueAccess().getRule();
+	}
+	
+	//ExtensionRefValue returns ExtensionRefValue:
+	//    {ExtensionRefValue}
+	//    refKind=('pub->' | 'sub->' | 'ss->' | 'sc->' | 'as->' | 'ac->' | 'param->')
+	//    target=[ecore::EObject|EString];
+	public BasicsGrammarAccess.ExtensionRefValueElements getExtensionRefValueAccess() {
+		return gaBasics.getExtensionRefValueAccess();
+	}
+	
+	public ParserRule getExtensionRefValueRule() {
+		return getExtensionRefValueAccess().getRule();
+	}
+	
+	//ExtensionScalarValue returns ExtensionScalarValue:
+	//    {ExtensionScalarValue}
+	//    value=ExtensionScalarLiteral;
+	public BasicsGrammarAccess.ExtensionScalarValueElements getExtensionScalarValueAccess() {
+		return gaBasics.getExtensionScalarValueAccess();
+	}
+	
+	public ParserRule getExtensionScalarValueRule() {
+		return getExtensionScalarValueAccess().getRule();
+	}
+	
+	//ExtensionScalarLiteral returns ecore::EString:
+	//    BOOLEAN | DOUBLE | DECINT | INT | ExtensionKey;
+	public BasicsGrammarAccess.ExtensionScalarLiteralElements getExtensionScalarLiteralAccess() {
+		return gaBasics.getExtensionScalarLiteralAccess();
+	}
+	
+	public ParserRule getExtensionScalarLiteralRule() {
+		return getExtensionScalarLiteralAccess().getRule();
 	}
 	
 	//terminal ID: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;

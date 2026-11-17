@@ -45,6 +45,8 @@ Duration : 'duration';
 
 Feedback : 'feedback';
 
+Plugins : 'plugins:';
+
 String_2 : 'string[]';
 
 Threads : 'threads:';
@@ -70,6 +72,8 @@ Int32_1 : 'int32[]';
 Int64_1 : 'int64[]';
 
 Message : 'message';
+
+Param : 'param->';
 
 Service : 'service';
 
@@ -169,11 +173,19 @@ Comma : ',';
 
 HyphenMinus : '-';
 
+FullStop : '.';
+
 Colon : ':';
+
+CommercialAt : '@';
 
 LeftSquareBracket : '[';
 
 RightSquareBracket : ']';
+
+LeftCurlyBracket : '{';
+
+RightCurlyBracket : '}';
 
 fragment RULE_DIGIT : '0'..'9';
 
@@ -211,7 +223,7 @@ RULE_ROS_CONVENTION_PARAM : ('/' RULE_STRING|RULE_STRING '/'|'~' RULE_STRING)*;
 
 RULE_ID : '^'? ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
-fragment RULE_INT : ('0'..'9')+;
+RULE_INT : ('0'..'9')+;
 
 RULE_STRING : ('"' ('\\' .|~(('\\'|'"')))* '"'|'\'' ('\\' .|~(('\\'|'\'')))* '\'');
 

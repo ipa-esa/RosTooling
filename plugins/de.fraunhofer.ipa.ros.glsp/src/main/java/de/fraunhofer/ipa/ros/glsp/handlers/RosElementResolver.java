@@ -2,6 +2,7 @@ package de.fraunhofer.ipa.ros.glsp.handlers;
 
 import de.fraunhofer.ipa.ros.glsp.RosModelTypes;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -12,10 +13,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import ros.ActionClient;
 import ros.ActionServer;
 import ros.Artifact;
+import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.Node;
 import ros.Package;
 import ros.Parameter;
+import ros.Plugin;
 import ros.Publisher;
 import ros.ServiceClient;
 import ros.ServiceServer;
@@ -180,6 +183,23 @@ public final class RosElementResolver {
                         }
                     }
                 }
+                for (Plugin pl : art.getPlugins()) {
+                    if (idOrName.equals(pl.getName())) {
+                        return Optional.of(pl);
+                    }
+                    if (tail != null && (head.equals(art.getName()) || head.equals(pl.getName()))) {
+                        for (ros.InterfaceType iface : RosPackageSetEditor.allInterfaces(pl)) {
+                            if (tail.equals(iface.getName())) {
+                                return Optional.of(iface);
+                            }
+                        }
+                        for (ros.Parameter p : pl.getParameter()) {
+                            if (tail.equals(p.getName())) {
+                                return Optional.of(p);
+                            }
+                        }
+                    }
+                }
             }
             for (ros.SpecBase spec : pkg.getSpec()) {
                 if (idOrName.equals(spec.getName())
@@ -250,6 +270,41 @@ public final class RosElementResolver {
                             || clean.equals(artName + "::" + node.getName())
                             || clean.equals(node.getName())) {
                         return Optional.of(node);
+                    }
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Resolves a catalog/workspace {@link Plugin} from a qualified name ("pkg.plugin" or "plugin").
+     */
+    public static Optional<Plugin> resolveOriginPlugin(final ResourceSet resourceSet, final String pluginSpec) {
+        if (resourceSet == null || pluginSpec == null || pluginSpec.isBlank()) {
+            return Optional.empty();
+        }
+        String clean = pluginSpec.trim().replace("\"", "");
+        for (Resource res : resourceSet.getResources()) {
+            TreeIterator<EObject> it = res.getAllContents();
+            while (it.hasNext()) {
+                EObject obj = it.next();
+                if (obj instanceof Plugin pl && pl.getName() != null) {
+                    String artName = (pl.eContainer() instanceof Artifact art) ? art.getName() : "";
+                    String pkgName = (pl.eContainer() != null && pl.eContainer().eContainer() instanceof Package pkg)
+                            ? pkg.getName()
+                            : "";
+                    String fullQualified = (!pkgName.isEmpty() && !artName.isEmpty())
+                            ? pkgName + "." + artName + "." + pl.getName()
+                            : "";
+                    String shortQualified = (!pkgName.isEmpty())
+                            ? pkgName + "." + pl.getName()
+                            : "";
+                    if (clean.equals(fullQualified)
+                            || clean.equals(shortQualified)
+                            || clean.equals(artName + "::" + pl.getName())
+                            || clean.equals(pl.getName())) {
+                        return Optional.of(pl);
                     }
                 }
             }
@@ -474,85 +529,97 @@ public final class RosElementResolver {
                 return existing;
             }
         }
+        List<InterfaceHolder> holders = new ArrayList<>();
         Node origin = rn.getFrom();
-        if (origin == null || origin.eIsProxy()) {
-            return null;
+        if (origin != null && !origin.eIsProxy()) {
+            holders.add(origin);
         }
-        if (kindHint == null || "pub".equals(kindHint) || RosModelTypes.PORT_PUB.equals(kindHint)) {
-            for (Publisher pub : origin.getPublisher()) {
-                if (originName.equals(pub.getName())) {
-                    RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
-                    ri.setName(exposedName);
-                    RosPublisherReference ref = RossystemFactory.eINSTANCE.createRosPublisherReference();
-                    ref.setFrom(pub);
-                    ri.setReference(ref);
-                    rn.getRosinterfaces().add(ri);
-                    return ri;
-                }
+        for (Plugin pl : rn.getPlugins()) {
+            Plugin resolved = pl;
+            if (resolved != null && resolved.eIsProxy()) {
+                resolved = (Plugin) EcoreUtil.resolve(resolved, rn);
+            }
+            if (resolved != null && !resolved.eIsProxy()) {
+                holders.add(resolved);
             }
         }
-        if (kindHint == null || "sub".equals(kindHint) || RosModelTypes.PORT_SUB.equals(kindHint)) {
-            for (Subscriber sub : origin.getSubscriber()) {
-                if (originName.equals(sub.getName())) {
-                    RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
-                    ri.setName(exposedName);
-                    RosSubscriberReference ref = RossystemFactory.eINSTANCE.createRosSubscriberReference();
-                    ref.setFrom(sub);
-                    ri.setReference(ref);
-                    rn.getRosinterfaces().add(ri);
-                    return ri;
+        for (InterfaceHolder holder : holders) {
+            if (kindHint == null || "pub".equals(kindHint) || RosModelTypes.PORT_PUB.equals(kindHint)) {
+                for (Publisher pub : holder.getPublisher()) {
+                    if (originName.equals(pub.getName())) {
+                        RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
+                        ri.setName(exposedName);
+                        RosPublisherReference ref = RossystemFactory.eINSTANCE.createRosPublisherReference();
+                        ref.setFrom(pub);
+                        ri.setReference(ref);
+                        rn.getRosinterfaces().add(ri);
+                        return ri;
+                    }
                 }
             }
-        }
-        if (kindHint == null || "ss".equals(kindHint) || RosModelTypes.PORT_SS.equals(kindHint)) {
-            for (ServiceServer ss : origin.getServiceserver()) {
-                if (originName.equals(ss.getName())) {
-                    RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
-                    ri.setName(exposedName);
-                    RosServiceServerReference ref = RossystemFactory.eINSTANCE.createRosServiceServerReference();
-                    ref.setFrom(ss);
-                    ri.setReference(ref);
-                    rn.getRosinterfaces().add(ri);
-                    return ri;
+            if (kindHint == null || "sub".equals(kindHint) || RosModelTypes.PORT_SUB.equals(kindHint)) {
+                for (Subscriber sub : holder.getSubscriber()) {
+                    if (originName.equals(sub.getName())) {
+                        RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
+                        ri.setName(exposedName);
+                        RosSubscriberReference ref = RossystemFactory.eINSTANCE.createRosSubscriberReference();
+                        ref.setFrom(sub);
+                        ri.setReference(ref);
+                        rn.getRosinterfaces().add(ri);
+                        return ri;
+                    }
                 }
             }
-        }
-        if (kindHint == null || "sc".equals(kindHint) || RosModelTypes.PORT_SC.equals(kindHint)) {
-            for (ServiceClient sc : origin.getServiceclient()) {
-                if (originName.equals(sc.getName())) {
-                    RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
-                    ri.setName(exposedName);
-                    RosServiceClientReference ref = RossystemFactory.eINSTANCE.createRosServiceClientReference();
-                    ref.setFrom(sc);
-                    ri.setReference(ref);
-                    rn.getRosinterfaces().add(ri);
-                    return ri;
+            if (kindHint == null || "ss".equals(kindHint) || RosModelTypes.PORT_SS.equals(kindHint)) {
+                for (ServiceServer ss : holder.getServiceserver()) {
+                    if (originName.equals(ss.getName())) {
+                        RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
+                        ri.setName(exposedName);
+                        RosServiceServerReference ref = RossystemFactory.eINSTANCE.createRosServiceServerReference();
+                        ref.setFrom(ss);
+                        ri.setReference(ref);
+                        rn.getRosinterfaces().add(ri);
+                        return ri;
+                    }
                 }
             }
-        }
-        if (kindHint == null || "as".equals(kindHint) || RosModelTypes.PORT_AS.equals(kindHint)) {
-            for (ActionServer as : origin.getActionserver()) {
-                if (originName.equals(as.getName())) {
-                    RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
-                    ri.setName(exposedName);
-                    RosActionServerReference ref = RossystemFactory.eINSTANCE.createRosActionServerReference();
-                    ref.setFrom(as);
-                    ri.setReference(ref);
-                    rn.getRosinterfaces().add(ri);
-                    return ri;
+            if (kindHint == null || "sc".equals(kindHint) || RosModelTypes.PORT_SC.equals(kindHint)) {
+                for (ServiceClient sc : holder.getServiceclient()) {
+                    if (originName.equals(sc.getName())) {
+                        RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
+                        ri.setName(exposedName);
+                        RosServiceClientReference ref = RossystemFactory.eINSTANCE.createRosServiceClientReference();
+                        ref.setFrom(sc);
+                        ri.setReference(ref);
+                        rn.getRosinterfaces().add(ri);
+                        return ri;
+                    }
                 }
             }
-        }
-        if (kindHint == null || "ac".equals(kindHint) || RosModelTypes.PORT_AC.equals(kindHint)) {
-            for (ActionClient ac : origin.getActionclient()) {
-                if (originName.equals(ac.getName())) {
-                    RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
-                    ri.setName(exposedName);
-                    RosActionClientReference ref = RossystemFactory.eINSTANCE.createRosActionClientReference();
-                    ref.setFrom(ac);
-                    ri.setReference(ref);
-                    rn.getRosinterfaces().add(ri);
-                    return ri;
+            if (kindHint == null || "as".equals(kindHint) || RosModelTypes.PORT_AS.equals(kindHint)) {
+                for (ActionServer as : holder.getActionserver()) {
+                    if (originName.equals(as.getName())) {
+                        RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
+                        ri.setName(exposedName);
+                        RosActionServerReference ref = RossystemFactory.eINSTANCE.createRosActionServerReference();
+                        ref.setFrom(as);
+                        ri.setReference(ref);
+                        rn.getRosinterfaces().add(ri);
+                        return ri;
+                    }
+                }
+            }
+            if (kindHint == null || "ac".equals(kindHint) || RosModelTypes.PORT_AC.equals(kindHint)) {
+                for (ActionClient ac : holder.getActionclient()) {
+                    if (originName.equals(ac.getName())) {
+                        RosInterface ri = RossystemFactory.eINSTANCE.createRosInterface();
+                        ri.setName(exposedName);
+                        RosActionClientReference ref = RossystemFactory.eINSTANCE.createRosActionClientReference();
+                        ref.setFrom(ac);
+                        ri.setReference(ref);
+                        rn.getRosinterfaces().add(ri);
+                        return ri;
+                    }
                 }
             }
         }
@@ -664,12 +731,27 @@ public final class RosElementResolver {
     }
 
     public static Optional<Parameter> findOriginParameter(final RosNode rn, final String paramName) {
-        if (rn == null || paramName == null || rn.getFrom() == null || rn.getFrom().eIsProxy()) {
+        if (rn == null || paramName == null) {
             return Optional.empty();
         }
-        for (Parameter p : rn.getFrom().getParameter()) {
-            if (paramName.equals(p.getName())) {
-                return Optional.of(p);
+        if (rn.getFrom() != null && !rn.getFrom().eIsProxy()) {
+            for (Parameter p : rn.getFrom().getParameter()) {
+                if (paramName.equals(p.getName())) {
+                    return Optional.of(p);
+                }
+            }
+        }
+        for (Plugin pl : rn.getPlugins()) {
+            Plugin resolved = pl;
+            if (resolved != null && resolved.eIsProxy()) {
+                resolved = (Plugin) EcoreUtil.resolve(resolved, rn);
+            }
+            if (resolved != null && !resolved.eIsProxy()) {
+                for (Parameter p : resolved.getParameter()) {
+                    if (paramName.equals(p.getName())) {
+                        return Optional.of(p);
+                    }
+                }
             }
         }
         return Optional.empty();

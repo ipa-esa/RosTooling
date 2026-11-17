@@ -16,22 +16,22 @@ import primitives.char0;
  */
 public class char0Impl extends AbstractTypeImpl implements char0 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected char0Impl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.CHAR0;
-    }
+		return PrimitivesPackage.Literals.CHAR0;
+	}
 
 } //char0Impl

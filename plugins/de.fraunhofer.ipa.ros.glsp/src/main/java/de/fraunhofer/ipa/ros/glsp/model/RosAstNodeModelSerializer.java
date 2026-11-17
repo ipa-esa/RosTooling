@@ -20,6 +20,7 @@ import org.eclipse.xtext.resource.XtextResource;
 import ros.ActionClient;
 import ros.ActionServer;
 import ros.Artifact;
+import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.Node;
 import ros.Package;
@@ -33,6 +34,7 @@ import ros.ParameterString;
 import ros.ParameterStruct;
 import ros.ParameterStructMember;
 import ros.ParameterValue;
+import ros.Plugin;
 import ros.Publisher;
 import ros.RosPackage;
 import ros.ServiceClient;
@@ -395,6 +397,32 @@ public final class RosAstNodeModelSerializer {
                 if (!fromNodes.isEmpty()) {
                     int lineEnd = findLineEndOffsetWithoutNewline(text, lastNonHiddenOffset(fromNodes.get(0)));
                     edits.add(new SpanEdit(lineEnd, 0, "\n      namespace: \"" + rosNode.getNamespace() + "\""));
+                }
+            }
+        }
+        if (!rosNode.getPlugins().isEmpty()) {
+            List<String> refs = new ArrayList<>();
+            for (Plugin pl : rosNode.getPlugins()) {
+                String ref = formatPluginCrossRef(pl);
+                if (!ref.isEmpty()) {
+                    refs.add("\"" + ref + "\"");
+                }
+            }
+            if (!refs.isEmpty()) {
+                List<INode> plNodes = NodeModelUtils.findNodesForFeature(rosNode, RossystemPackage.Literals.ROS_NODE__PLUGINS);
+                String listText = "[" + String.join(", ", refs) + "]";
+                if (!plNodes.isEmpty()) {
+                    int s0 = firstNonHiddenOffset(plNodes.get(0));
+                    int s1 = lastNonHiddenOffset(plNodes.get(plNodes.size() - 1));
+                    int bracketStart = text.lastIndexOf('[', s0);
+                    int bracketEnd = text.indexOf(']', s1);
+                    if (bracketStart >= 0 && bracketEnd >= bracketStart
+                            && !text.substring(bracketStart, bracketEnd + 1).equals(listText)) {
+                        edits.add(new SpanEdit(bracketStart, bracketEnd + 1 - bracketStart, listText));
+                    }
+                } else {
+                    int anchor = findAfterFromOrNamespaceOffset(rosNode, nodeComp, text);
+                    edits.add(new SpanEdit(anchor, 0, "\n      plugins: " + listText));
                 }
             }
         }
@@ -884,6 +912,18 @@ public final class RosAstNodeModelSerializer {
         if (rn.getNamespace() != null && !rn.getNamespace().isEmpty()) {
             sb.append(indent).append("  namespace: \"").append(rn.getNamespace()).append("\"\n");
         }
+        if (!rn.getPlugins().isEmpty()) {
+            List<String> pluginRefs = new ArrayList<>();
+            for (Plugin pl : rn.getPlugins()) {
+                String ref = formatPluginCrossRef(pl);
+                if (!ref.isEmpty()) {
+                    pluginRefs.add("\"" + ref + "\"");
+                }
+            }
+            if (!pluginRefs.isEmpty()) {
+                sb.append(indent).append("  plugins: [").append(String.join(", ", pluginRefs)).append("]\n");
+            }
+        }
         // Interfaces from the text or used by a connection; not ones synthesized by linking/validation.
         Set<RosInterface> connected = connectedInterfaces(rn);
         List<RosInterface> interfaces = new ArrayList<>();
@@ -972,11 +1012,21 @@ public final class RosAstNodeModelSerializer {
         return "";
     }
 
+    public static String formatPluginCrossRef(final Plugin pl) {
+        if (pl == null || pl.eIsProxy() || pl.getName() == null) {
+            return "";
+        }
+        if (pl.eContainer() instanceof Artifact art && art.eContainer() instanceof Package pkg) {
+            return pkg.getName() + "." + pl.getName();
+        }
+        return pl.getName();
+    }
+
     public static String formatInterfaceTargetCrossRef(final InterfaceType ifType) {
         if (ifType == null || ifType.eIsProxy()) {
             return "";
         }
-        if (ifType.eContainer() instanceof Node node && node.eContainer() instanceof Artifact art) {
+        if (ifType.eContainer() instanceof InterfaceHolder holder && holder.eContainer() instanceof Artifact art) {
             return art.getName() + "::" + ifType.getName();
         }
         return ifType.getName();

@@ -16,22 +16,22 @@ import primitives.time;
  */
 public class timeImpl extends AbstractTypeImpl implements time {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected timeImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.TIME;
-    }
+		return PrimitivesPackage.Literals.TIME;
+	}
 
 } //timeImpl

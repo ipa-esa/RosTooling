@@ -29,131 +29,131 @@ import system.RossystemPackage;
  */
 public class RosActionClientReferenceImpl extends InterfaceReferenceImpl implements RosActionClientReference {
     /**
-     * The cached value of the '{@link #getFrom() <em>From</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getFrom() <em>From</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getFrom()
-     * @generated
-     * @ordered
-     */
+	 * @see #getFrom()
+	 * @generated
+	 * @ordered
+	 */
     protected ActionClient from;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RosActionClientReferenceImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RossystemPackage.Literals.ROS_ACTION_CLIENT_REFERENCE;
-    }
+		return RossystemPackage.Literals.ROS_ACTION_CLIENT_REFERENCE;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public ActionClient getFrom() {
-        if (from != null && from.eIsProxy()) {
-            InternalEObject oldFrom = (InternalEObject)from;
-            from = (ActionClient)eResolveProxy(oldFrom);
-            if (from != oldFrom) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM, oldFrom, from));
-            }
-        }
-        return from;
-    }
+		if (from != null && from.eIsProxy()) {
+			InternalEObject oldFrom = (InternalEObject)from;
+			from = (ActionClient)eResolveProxy(oldFrom);
+			if (from != oldFrom) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM, oldFrom, from));
+			}
+		}
+		return from;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ActionClient basicGetFrom() {
-        return from;
-    }
+		return from;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setFrom(ActionClient newFrom) {
-        ActionClient oldFrom = from;
-        from = newFrom;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM, oldFrom, from));
-    }
+		ActionClient oldFrom = from;
+		from = newFrom;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM, oldFrom, from));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM:
-                if (resolve) return getFrom();
-                return basicGetFrom();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM:
+				if (resolve) return getFrom();
+				return basicGetFrom();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM:
-                setFrom((ActionClient)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM:
+				setFrom((ActionClient)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM:
-                setFrom((ActionClient)null);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM:
+				setFrom((ActionClient)null);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM:
-                return from != null;
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_ACTION_CLIENT_REFERENCE__FROM:
+				return from != null;
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //RosActionClientReferenceImpl

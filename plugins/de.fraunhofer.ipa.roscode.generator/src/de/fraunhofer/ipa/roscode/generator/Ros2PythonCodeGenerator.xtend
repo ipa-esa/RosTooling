@@ -56,7 +56,7 @@ def compile_package_xml(Package pkg)'''
 <package format="3">
  <name>«pkg.name»</name>
  <version>0.0.0</version>
- <description>This package contains the implementation of the node «pkg.artifact.get(0).node.name»</description>
+ <description>This package contains the implementation of the node «pkg.artifact.map[node].filterNull.head?.name ?: pkg.name»</description>
   <maintainer email="your@email.com">Name</maintainer>
   <author email="your@email.com">Name</author>
   <license>Apache 2.0</license>
@@ -171,11 +171,13 @@ if __name__ == '__main__':
     set=new HashSet<String>()
     PkgsList = new ArrayList()
     for (art:pkg.artifact){
-        node=art.node
-        for (pub:node.publisher){ if (pub.message.package !== null) set.add(pub.message.package.name)}
-        for (sub:node.subscriber){ if (sub.message.package !== null)  set.add(sub.message.package.name)}
-        for (srvserver:node.serviceserver){if (srvserver.service.package !== null) set.add(srvserver.service.package.name)}
-        for (srvclient:node.serviceclient){if (srvclient.service.package !== null) set.add(srvclient.service.package.name)}
+        if (art.node !== null) {
+            node=art.node
+            for (pub:node.publisher){ if (pub.message.package !== null) set.add(pub.message.package.name)}
+            for (sub:node.subscriber){ if (sub.message.package !== null)  set.add(sub.message.package.name)}
+            for (srvserver:node.serviceserver){if (srvserver.service.package !== null) set.add(srvserver.service.package.name)}
+            for (srvclient:node.serviceclient){if (srvclient.service.package !== null) set.add(srvclient.service.package.name)}
+        }
     }
     PkgsList.addAll(set)
     return PkgsList

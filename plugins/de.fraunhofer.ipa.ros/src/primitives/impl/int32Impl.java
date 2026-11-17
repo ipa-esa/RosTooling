@@ -16,22 +16,22 @@ import primitives.int32;
  */
 public class int32Impl extends AbstractTypeImpl implements int32 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int32Impl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.INT32;
-    }
+		return PrimitivesPackage.Literals.INT32;
+	}
 
 } //int32Impl

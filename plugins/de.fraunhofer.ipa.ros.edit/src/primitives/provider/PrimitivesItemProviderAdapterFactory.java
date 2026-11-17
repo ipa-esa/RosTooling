@@ -33,828 +33,874 @@ import primitives.util.PrimitivesAdapterFactory;
  */
 public class PrimitivesItemProviderAdapterFactory extends PrimitivesAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier {
     /**
-     * This keeps track of the root adapter factory that delegates to this adapter factory.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the root adapter factory that delegates to this adapter factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ComposedAdapterFactory parentAdapterFactory;
 
     /**
-     * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
-     * <!-- begin-user-doc -->
+	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
     /**
-     * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
-     * <!-- begin-user-doc -->
+	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected Collection<Object> supportedTypes = new ArrayList<Object>();
 
     /**
-     * This constructs an instance.
-     * <!-- begin-user-doc -->
+	 * This constructs an instance.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public PrimitivesItemProviderAdapterFactory() {
-        supportedTypes.add(IEditingDomainItemProvider.class);
-        supportedTypes.add(IStructuredItemContentProvider.class);
-        supportedTypes.add(ITreeItemContentProvider.class);
-        supportedTypes.add(IItemLabelProvider.class);
-        supportedTypes.add(IItemPropertySource.class);
-    }
+		supportedTypes.add(IEditingDomainItemProvider.class);
+		supportedTypes.add(IStructuredItemContentProvider.class);
+		supportedTypes.add(ITreeItemContentProvider.class);
+		supportedTypes.add(IItemLabelProvider.class);
+		supportedTypes.add(IItemPropertySource.class);
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.MessagePart} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.MessagePart} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected MessagePartItemProvider messagePartItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.MessagePart}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.MessagePart}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createMessagePartAdapter() {
-        if (messagePartItemProvider == null) {
-            messagePartItemProvider = new MessagePartItemProvider(this);
-        }
+		if (messagePartItemProvider == null) {
+			messagePartItemProvider = new MessagePartItemProvider(this);
+		}
 
-        return messagePartItemProvider;
-    }
+		return messagePartItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.bool} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.bool} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected boolItemProvider boolItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.bool}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.bool}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createboolAdapter() {
-        if (boolItemProvider == null) {
-            boolItemProvider = new boolItemProvider(this);
-        }
+		if (boolItemProvider == null) {
+			boolItemProvider = new boolItemProvider(this);
+		}
 
-        return boolItemProvider;
-    }
+		return boolItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.int8} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.int8} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int8ItemProvider int8ItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.int8}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.int8}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createint8Adapter() {
-        if (int8ItemProvider == null) {
-            int8ItemProvider = new int8ItemProvider(this);
-        }
+		if (int8ItemProvider == null) {
+			int8ItemProvider = new int8ItemProvider(this);
+		}
 
-        return int8ItemProvider;
-    }
+		return int8ItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.uint8} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.uint8} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint8ItemProvider uint8ItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.uint8}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.uint8}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createuint8Adapter() {
-        if (uint8ItemProvider == null) {
-            uint8ItemProvider = new uint8ItemProvider(this);
-        }
+		if (uint8ItemProvider == null) {
+			uint8ItemProvider = new uint8ItemProvider(this);
+		}
 
-        return uint8ItemProvider;
-    }
+		return uint8ItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.int16} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.int16} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int16ItemProvider int16ItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.int16}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.int16}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createint16Adapter() {
-        if (int16ItemProvider == null) {
-            int16ItemProvider = new int16ItemProvider(this);
-        }
+		if (int16ItemProvider == null) {
+			int16ItemProvider = new int16ItemProvider(this);
+		}
 
-        return int16ItemProvider;
-    }
+		return int16ItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.uint16} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.uint16} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint16ItemProvider uint16ItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.uint16}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.uint16}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createuint16Adapter() {
-        if (uint16ItemProvider == null) {
-            uint16ItemProvider = new uint16ItemProvider(this);
-        }
+		if (uint16ItemProvider == null) {
+			uint16ItemProvider = new uint16ItemProvider(this);
+		}
 
-        return uint16ItemProvider;
-    }
+		return uint16ItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.int32} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.int32} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int32ItemProvider int32ItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.int32}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.int32}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createint32Adapter() {
-        if (int32ItemProvider == null) {
-            int32ItemProvider = new int32ItemProvider(this);
-        }
+		if (int32ItemProvider == null) {
+			int32ItemProvider = new int32ItemProvider(this);
+		}
 
-        return int32ItemProvider;
-    }
+		return int32ItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.uint32} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.uint32} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint32ItemProvider uint32ItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.uint32}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.uint32}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createuint32Adapter() {
-        if (uint32ItemProvider == null) {
-            uint32ItemProvider = new uint32ItemProvider(this);
-        }
+		if (uint32ItemProvider == null) {
+			uint32ItemProvider = new uint32ItemProvider(this);
+		}
 
-        return uint32ItemProvider;
-    }
+		return uint32ItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.int64} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.int64} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int64ItemProvider int64ItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.int64}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.int64}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createint64Adapter() {
-        if (int64ItemProvider == null) {
-            int64ItemProvider = new int64ItemProvider(this);
-        }
+		if (int64ItemProvider == null) {
+			int64ItemProvider = new int64ItemProvider(this);
+		}
 
-        return int64ItemProvider;
-    }
+		return int64ItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.uint64} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.uint64} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint64ItemProvider uint64ItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.uint64}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.uint64}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createuint64Adapter() {
-        if (uint64ItemProvider == null) {
-            uint64ItemProvider = new uint64ItemProvider(this);
-        }
+		if (uint64ItemProvider == null) {
+			uint64ItemProvider = new uint64ItemProvider(this);
+		}
 
-        return uint64ItemProvider;
-    }
+		return uint64ItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.float32} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.float32} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected float32ItemProvider float32ItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.float32}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.float32}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createfloat32Adapter() {
-        if (float32ItemProvider == null) {
-            float32ItemProvider = new float32ItemProvider(this);
-        }
+		if (float32ItemProvider == null) {
+			float32ItemProvider = new float32ItemProvider(this);
+		}
 
-        return float32ItemProvider;
-    }
+		return float32ItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.float64} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.float64} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected float64ItemProvider float64ItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.float64}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.float64}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createfloat64Adapter() {
-        if (float64ItemProvider == null) {
-            float64ItemProvider = new float64ItemProvider(this);
-        }
+		if (float64ItemProvider == null) {
+			float64ItemProvider = new float64ItemProvider(this);
+		}
 
-        return float64ItemProvider;
-    }
+		return float64ItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.string} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.string} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected stringItemProvider stringItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.string}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.string}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createstringAdapter() {
-        if (stringItemProvider == null) {
-            stringItemProvider = new stringItemProvider(this);
-        }
+		if (stringItemProvider == null) {
+			stringItemProvider = new stringItemProvider(this);
+		}
 
-        return stringItemProvider;
-    }
+		return stringItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.time} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.time} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected timeItemProvider timeItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.time}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.time}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createtimeAdapter() {
-        if (timeItemProvider == null) {
-            timeItemProvider = new timeItemProvider(this);
-        }
+		if (timeItemProvider == null) {
+			timeItemProvider = new timeItemProvider(this);
+		}
 
-        return timeItemProvider;
-    }
+		return timeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.duration} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.duration} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected durationItemProvider durationItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.duration}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.duration}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createdurationAdapter() {
-        if (durationItemProvider == null) {
-            durationItemProvider = new durationItemProvider(this);
-        }
+		if (durationItemProvider == null) {
+			durationItemProvider = new durationItemProvider(this);
+		}
 
-        return durationItemProvider;
-    }
+		return durationItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.boolArray} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.boolArray} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected boolArrayItemProvider boolArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.boolArray}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.boolArray}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createboolArrayAdapter() {
-        if (boolArrayItemProvider == null) {
-            boolArrayItemProvider = new boolArrayItemProvider(this);
-        }
+		if (boolArrayItemProvider == null) {
+			boolArrayItemProvider = new boolArrayItemProvider(this);
+		}
 
-        return boolArrayItemProvider;
-    }
+		return boolArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.int8Array} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.int8Array} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int8ArrayItemProvider int8ArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.int8Array}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.int8Array}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createint8ArrayAdapter() {
-        if (int8ArrayItemProvider == null) {
-            int8ArrayItemProvider = new int8ArrayItemProvider(this);
-        }
+		if (int8ArrayItemProvider == null) {
+			int8ArrayItemProvider = new int8ArrayItemProvider(this);
+		}
 
-        return int8ArrayItemProvider;
-    }
+		return int8ArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.uint8Array} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.uint8Array} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint8ArrayItemProvider uint8ArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.uint8Array}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.uint8Array}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createuint8ArrayAdapter() {
-        if (uint8ArrayItemProvider == null) {
-            uint8ArrayItemProvider = new uint8ArrayItemProvider(this);
-        }
+		if (uint8ArrayItemProvider == null) {
+			uint8ArrayItemProvider = new uint8ArrayItemProvider(this);
+		}
 
-        return uint8ArrayItemProvider;
-    }
+		return uint8ArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.int16Array} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.int16Array} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int16ArrayItemProvider int16ArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.int16Array}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.int16Array}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createint16ArrayAdapter() {
-        if (int16ArrayItemProvider == null) {
-            int16ArrayItemProvider = new int16ArrayItemProvider(this);
-        }
+		if (int16ArrayItemProvider == null) {
+			int16ArrayItemProvider = new int16ArrayItemProvider(this);
+		}
 
-        return int16ArrayItemProvider;
-    }
+		return int16ArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.uint16Array} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.uint16Array} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint16ArrayItemProvider uint16ArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.uint16Array}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.uint16Array}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createuint16ArrayAdapter() {
-        if (uint16ArrayItemProvider == null) {
-            uint16ArrayItemProvider = new uint16ArrayItemProvider(this);
-        }
+		if (uint16ArrayItemProvider == null) {
+			uint16ArrayItemProvider = new uint16ArrayItemProvider(this);
+		}
 
-        return uint16ArrayItemProvider;
-    }
+		return uint16ArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.int32Array} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.int32Array} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int32ArrayItemProvider int32ArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.int32Array}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.int32Array}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createint32ArrayAdapter() {
-        if (int32ArrayItemProvider == null) {
-            int32ArrayItemProvider = new int32ArrayItemProvider(this);
-        }
+		if (int32ArrayItemProvider == null) {
+			int32ArrayItemProvider = new int32ArrayItemProvider(this);
+		}
 
-        return int32ArrayItemProvider;
-    }
+		return int32ArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.uint32Array} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.uint32Array} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint32ArrayItemProvider uint32ArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.uint32Array}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.uint32Array}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createuint32ArrayAdapter() {
-        if (uint32ArrayItemProvider == null) {
-            uint32ArrayItemProvider = new uint32ArrayItemProvider(this);
-        }
+		if (uint32ArrayItemProvider == null) {
+			uint32ArrayItemProvider = new uint32ArrayItemProvider(this);
+		}
 
-        return uint32ArrayItemProvider;
-    }
+		return uint32ArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.int64Array} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.int64Array} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int64ArrayItemProvider int64ArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.int64Array}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.int64Array}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createint64ArrayAdapter() {
-        if (int64ArrayItemProvider == null) {
-            int64ArrayItemProvider = new int64ArrayItemProvider(this);
-        }
+		if (int64ArrayItemProvider == null) {
+			int64ArrayItemProvider = new int64ArrayItemProvider(this);
+		}
 
-        return int64ArrayItemProvider;
-    }
+		return int64ArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.uint64Array} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.uint64Array} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint64ArrayItemProvider uint64ArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.uint64Array}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.uint64Array}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createuint64ArrayAdapter() {
-        if (uint64ArrayItemProvider == null) {
-            uint64ArrayItemProvider = new uint64ArrayItemProvider(this);
-        }
+		if (uint64ArrayItemProvider == null) {
+			uint64ArrayItemProvider = new uint64ArrayItemProvider(this);
+		}
 
-        return uint64ArrayItemProvider;
-    }
+		return uint64ArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.float32Array} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.float32Array} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected float32ArrayItemProvider float32ArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.float32Array}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.float32Array}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createfloat32ArrayAdapter() {
-        if (float32ArrayItemProvider == null) {
-            float32ArrayItemProvider = new float32ArrayItemProvider(this);
-        }
+		if (float32ArrayItemProvider == null) {
+			float32ArrayItemProvider = new float32ArrayItemProvider(this);
+		}
 
-        return float32ArrayItemProvider;
-    }
+		return float32ArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.float64Array} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.float64Array} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected float64ArrayItemProvider float64ArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.float64Array}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.float64Array}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createfloat64ArrayAdapter() {
-        if (float64ArrayItemProvider == null) {
-            float64ArrayItemProvider = new float64ArrayItemProvider(this);
-        }
+		if (float64ArrayItemProvider == null) {
+			float64ArrayItemProvider = new float64ArrayItemProvider(this);
+		}
 
-        return float64ArrayItemProvider;
-    }
+		return float64ArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.stringArray} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.stringArray} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected stringArrayItemProvider stringArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.stringArray}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.stringArray}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createstringArrayAdapter() {
-        if (stringArrayItemProvider == null) {
-            stringArrayItemProvider = new stringArrayItemProvider(this);
-        }
+		if (stringArrayItemProvider == null) {
+			stringArrayItemProvider = new stringArrayItemProvider(this);
+		}
 
-        return stringArrayItemProvider;
-    }
+		return stringArrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.Header} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.Header} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected HeaderItemProvider headerItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.Header}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.Header}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createHeaderAdapter() {
-        if (headerItemProvider == null) {
-            headerItemProvider = new HeaderItemProvider(this);
-        }
+		if (headerItemProvider == null) {
+			headerItemProvider = new HeaderItemProvider(this);
+		}
 
-        return headerItemProvider;
-    }
+		return headerItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.Byte} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.Byte} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ByteItemProvider byteItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.Byte}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.Byte}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createByteAdapter() {
-        if (byteItemProvider == null) {
-            byteItemProvider = new ByteItemProvider(this);
-        }
+		if (byteItemProvider == null) {
+			byteItemProvider = new ByteItemProvider(this);
+		}
 
-        return byteItemProvider;
-    }
+		return byteItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link primitives.ByteArray} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.ByteArray} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ByteArrayItemProvider byteArrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link primitives.ByteArray}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link primitives.ByteArray}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createByteArrayAdapter() {
-        if (byteArrayItemProvider == null) {
-            byteArrayItemProvider = new ByteArrayItemProvider(this);
-        }
+		if (byteArrayItemProvider == null) {
+			byteArrayItemProvider = new ByteArrayItemProvider(this);
+		}
 
-        return byteArrayItemProvider;
-    }
+		return byteArrayItemProvider;
+	}
 
     /**
-     * This returns the root adapter factory that contains this factory.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link primitives.char0} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected char0ItemProvider char0ItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link primitives.char0}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createchar0Adapter() {
+		if (char0ItemProvider == null) {
+			char0ItemProvider = new char0ItemProvider(this);
+		}
+
+		return char0ItemProvider;
+	}
+
+				/**
+	 * This keeps track of the one adapter used for all {@link primitives.charArray} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected charArrayItemProvider charArrayItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link primitives.charArray}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createcharArrayAdapter() {
+		if (charArrayItemProvider == null) {
+			charArrayItemProvider = new charArrayItemProvider(this);
+		}
+
+		return charArrayItemProvider;
+	}
+
+				/**
+	 * This returns the root adapter factory that contains this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public ComposeableAdapterFactory getRootAdapterFactory() {
-        return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
-    }
+		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
+	}
 
     /**
-     * This sets the composed adapter factory that contains this factory.
-     * <!-- begin-user-doc -->
+	 * This sets the composed adapter factory that contains this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
-        this.parentAdapterFactory = parentAdapterFactory;
-    }
+		this.parentAdapterFactory = parentAdapterFactory;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean isFactoryForType(Object type) {
-        return supportedTypes.contains(type) || super.isFactoryForType(type);
-    }
+		return supportedTypes.contains(type) || super.isFactoryForType(type);
+	}
 
     /**
-     * This implementation substitutes the factory itself as the key for the adapter.
-     * <!-- begin-user-doc -->
+	 * This implementation substitutes the factory itself as the key for the adapter.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter adapt(Notifier notifier, Object type) {
-        return super.adapt(notifier, this);
-    }
+		return super.adapt(notifier, this);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object adapt(Object object, Object type) {
-        if (isFactoryForType(type)) {
-            Object adapter = super.adapt(object, type);
-            if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
-                return adapter;
-            }
-        }
+		if (isFactoryForType(type)) {
+			Object adapter = super.adapt(object, type);
+			if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
+				return adapter;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
     /**
-     * This adds a listener.
-     * <!-- begin-user-doc -->
+	 * This adds a listener.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void addListener(INotifyChangedListener notifyChangedListener) {
-        changeNotifier.addListener(notifyChangedListener);
-    }
+		changeNotifier.addListener(notifyChangedListener);
+	}
 
     /**
-     * This removes a listener.
-     * <!-- begin-user-doc -->
+	 * This removes a listener.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void removeListener(INotifyChangedListener notifyChangedListener) {
-        changeNotifier.removeListener(notifyChangedListener);
-    }
+		changeNotifier.removeListener(notifyChangedListener);
+	}
 
     /**
-     * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
-     * <!-- begin-user-doc -->
+	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void fireNotifyChanged(Notification notification) {
-        changeNotifier.fireNotifyChanged(notification);
+		changeNotifier.fireNotifyChanged(notification);
 
-        if (parentAdapterFactory != null) {
-            parentAdapterFactory.fireNotifyChanged(notification);
-        }
-    }
+		if (parentAdapterFactory != null) {
+			parentAdapterFactory.fireNotifyChanged(notification);
+		}
+	}
 
 }

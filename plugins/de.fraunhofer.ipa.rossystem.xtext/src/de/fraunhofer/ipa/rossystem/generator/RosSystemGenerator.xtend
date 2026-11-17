@@ -9,6 +9,7 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import system.System
 import com.google.inject.Inject
+import de.fraunhofer.ipa.rossystem.scoping.RosSystemScopeProvider
 import java.util.List
 import java.util.ArrayList
 import system.RosNode
@@ -73,13 +74,19 @@ class RosSystemGenerator extends AbstractGenerator {
             )
 
             if (system.fromFile.isNullOrEmpty) {
+                for (component : system.components) {
+                    if (component instanceof RosNode && (component as RosNode).rosinterfaces.empty) {
+                        RosSystemScopeProvider.ensureDefaultInterfacesSynthesized(component as RosNode, system)
+                    }
+                }
                 fsa.generateFile(
                     pkgName + "/launch/" + system.getName() + ".launch.py",
                     compile_toROS2launch(system).toString().replace("\t","  ")
                 )
                 for (component: system.components){
                     if(component.eClass.name == "RosNode"){
-                        if(!(component as RosNode).rosparameters.nullOrEmpty){
+                        val rnode = component as RosNode
+                        if(!rnode.rosparameters.nullOrEmpty || (hasAutoSlotParameters(rnode) && generate_yaml(rnode))){
                             yaml_gen = true
                             if ((component as RosNode).namespace !== null){
                                 fsa.generateFile(

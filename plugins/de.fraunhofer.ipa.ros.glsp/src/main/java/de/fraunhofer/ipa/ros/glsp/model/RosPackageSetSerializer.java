@@ -21,6 +21,7 @@ import primitives.MessagePart;
 import primitives.PrimitivesPackage;
 import ros.ActionSpec;
 import ros.Artifact;
+import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.LifecycleState;
 import ros.MessageDefinition;
@@ -28,6 +29,9 @@ import ros.Node;
 import ros.Package;
 import ros.PackageSet;
 import ros.Parameter;
+import ros.Plugin;
+import ros.PluginLoader;
+import ros.PluginSlot;
 import ros.QualityOfService;
 import ros.RosPackage;
 import ros.ServiceSpec;
@@ -247,35 +251,101 @@ final class RosPackageSetSerializer {
         RosAstNodeModelSerializer.checkFeatureTokenEdit(art, RosPackage.Literals.ARTIFACT__NAME, art.getName(), false, text, edits);
         Node node = art.getNode();
         ICompositeNode nodeComp = node == null ? null : NodeModelUtils.findActualNodeFor(node);
-        if (nodeComp == null) {
-            return;
-        }
-        RosAstNodeModelSerializer.checkFeatureTokenEdit(node, RosPackage.Literals.NODE__NAME, node.getName(), false, text, edits);
-        int nodeCol = column(RosAstNodeModelSerializer.firstNonHiddenOffset(nodeComp));
-        int nameLineEnd = featureLineEnd(node, RosPackage.Literals.NODE__NAME, nodeComp);
+        if (node != null && nodeComp != null) {
+            RosAstNodeModelSerializer.checkFeatureTokenEdit(node, RosPackage.Literals.INTERFACE_HOLDER__NAME, node.getName(), false, text, edits);
+            int nodeCol = column(RosAstNodeModelSerializer.firstNonHiddenOffset(nodeComp));
+            int nameLineEnd = featureLineEnd(node, RosPackage.Literals.INTERFACE_HOLDER__NAME, nodeComp);
 
-        if (state.isDirty(node, "isLifecycle")) {
-            List<INode> lcNodes = NodeModelUtils.findNodesForFeature(node, RosPackage.Literals.NODE__IS_LIFECYCLE);
-            if (!lcNodes.isEmpty()) {
-                if (!node.isIsLifecycle()) {
-                    ILeafNode kw = findOwnKeywordLeaf(node, nodeComp, "lifecycle:", Integer.MAX_VALUE);
-                    if (kw != null) {
-                        addLineDeletion(lineStart(kw.getOffset()), lineEndInclusive(kw.getEndOffset()));
+            if (state.isDirty(node, "isLifecycle")) {
+                List<INode> lcNodes = NodeModelUtils.findNodesForFeature(node, RosPackage.Literals.NODE__IS_LIFECYCLE);
+                if (!lcNodes.isEmpty()) {
+                    if (!node.isIsLifecycle()) {
+                        ILeafNode kw = findOwnKeywordLeaf(node, nodeComp, "lifecycle:", Integer.MAX_VALUE);
+                        if (kw != null) {
+                            addLineDeletion(lineStart(kw.getOffset()), lineEndInclusive(kw.getEndOffset()));
+                        }
+                    } else {
+                        RosAstNodeModelSerializer.checkFeatureRawSpanEdit(
+                                node, RosPackage.Literals.NODE__IS_LIFECYCLE, "true", text, edits);
                     }
-                } else {
-                    RosAstNodeModelSerializer.checkFeatureRawSpanEdit(
-                            node, RosPackage.Literals.NODE__IS_LIFECYCLE, "true", text, edits);
+                } else if (node.isIsLifecycle()) {
+                    edits.add(new SpanEdit(nameLineEnd, 0, "\n" + spaces(nodeCol) + "lifecycle: true"));
                 }
-            } else if (node.isIsLifecycle()) {
-                edits.add(new SpanEdit(nameLineEnd, 0, "\n" + spaces(nodeCol) + "lifecycle: true"));
+            }
+
+            List<EObject> liveItems = new ArrayList<>(RosPackageSetEditor.allInterfaces(node));
+            liveItems.addAll(node.getParameter());
+            liveItems.addAll(node.getPluginSlots());
+            int nodeEnd = lastLiveChildEnd(liveItems, nameLineEnd);
+            visitHolderSections(node, nodeComp, nodeCol, nodeEnd);
+
+            List<PluginSlot> freshSlots = new ArrayList<>();
+            ICompositeNode lastSlotComp = null;
+            for (PluginSlot slot : node.getPluginSlots()) {
+                ICompositeNode sComp = NodeModelUtils.findActualNodeFor(slot);
+                if (sComp == null) {
+                    freshSlots.add(slot);
+                } else {
+                    lastSlotComp = sComp;
+                }
+            }
+            if (!freshSlots.isEmpty()) {
+                insertSectionElements(node, nodeComp, "pluginslots:", lastSlotComp, nodeCol, nodeEnd, indent -> {
+                    StringBuilder sb = new StringBuilder();
+                    for (PluginSlot s : freshSlots) {
+                        sb.append(renderPluginSlot(s, indent));
+                    }
+                    return sb.toString();
+                });
             }
         }
 
-        List<EObject> liveItems = new ArrayList<>(RosPackageSetEditor.allInterfaces(node));
-        liveItems.addAll(node.getParameter());
-        int nodeEnd = lastLiveChildEnd(liveItems, nameLineEnd);
+        ICompositeNode artComp = NodeModelUtils.findActualNodeFor(art);
+        if (artComp != null) {
+            int artCol = column(RosAstNodeModelSerializer.firstNonHiddenOffset(artComp));
+            int artHeaderEnd = featureLineEnd(art, RosPackage.Literals.ARTIFACT__NAME, artComp);
+            List<EObject> artLive = new ArrayList<>(art.getPlugins());
+            if (node != null) {
+                artLive.add(node);
+            }
+            int artEnd = lastLiveChildEnd(artLive, artHeaderEnd);
+            List<Plugin> freshPlugins = new ArrayList<>();
+            ICompositeNode lastPluginComp = null;
+            for (Plugin pl : art.getPlugins()) {
+                ICompositeNode plComp = NodeModelUtils.findActualNodeFor(pl);
+                if (plComp == null) {
+                    freshPlugins.add(pl);
+                } else {
+                    lastPluginComp = plComp;
+                    RosAstNodeModelSerializer.checkFeatureTokenEdit(
+                            pl, RosPackage.Literals.INTERFACE_HOLDER__NAME, pl.getName(), false, text, edits);
+                    int plCol = column(RosAstNodeModelSerializer.firstNonHiddenOffset(plComp)) + 2;
+                    int plHeaderEnd = featureLineEnd(pl, RosPackage.Literals.INTERFACE_HOLDER__NAME, plComp);
+                    List<EObject> plLive = new ArrayList<>(RosPackageSetEditor.allInterfaces(pl));
+                    plLive.addAll(pl.getParameter());
+                    int plEnd = lastLiveChildEnd(plLive, plHeaderEnd);
+                    visitHolderSections(pl, plComp, plCol, plEnd);
+                }
+            }
+            if (!freshPlugins.isEmpty()) {
+                insertSectionElements(art, artComp, "plugins:", lastPluginComp, artCol + 2, artEnd, indent -> {
+                    StringBuilder sb = new StringBuilder();
+                    for (Plugin pl : freshPlugins) {
+                        sb.append(renderPlugin(pl, indent));
+                    }
+                    return sb.toString();
+                });
+            }
+        }
+    }
+
+    private void visitHolderSections(
+            final InterfaceHolder holder,
+            final ICompositeNode holderComp,
+            final int holderCol,
+            final int holderEnd) {
         for (String section : NODE_SECTIONS) {
-            List<InterfaceType> items = itemsOfSection(node, section);
+            List<InterfaceType> items = itemsOfSection(holder, section);
             List<InterfaceType> fresh = new ArrayList<>();
             ICompositeNode lastExisting = null;
             for (InterfaceType item : items) {
@@ -292,7 +362,7 @@ final class RosPackageSetSerializer {
                 }
             }
             if (!fresh.isEmpty()) {
-                insertSectionElements(node, nodeComp, section, lastExisting, nodeCol, nodeEnd, indent -> {
+                insertSectionElements(holder, holderComp, section, lastExisting, holderCol, holderEnd, indent -> {
                     StringBuilder sb = new StringBuilder();
                     for (InterfaceType i : fresh) {
                         sb.append(i instanceof Parameter p ? renderParameter(p, indent) : renderInterface(i, indent));
@@ -303,7 +373,7 @@ final class RosPackageSetSerializer {
         }
     }
 
-    private static List<InterfaceType> itemsOfSection(final Node node, final String section) {
+    private static List<InterfaceType> itemsOfSection(final InterfaceHolder node, final String section) {
         List<InterfaceType> out = new ArrayList<>();
         switch (section) {
             case "publishers:": out.addAll(node.getPublisher()); break;
@@ -702,17 +772,63 @@ final class RosPackageSetSerializer {
     private String renderArtifact(final Artifact art, final String indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(indent).append(art.getName()).append(":\n");
-        Node node = art.getNode();
-        if (node == null) {
-            return sb.toString();
-        }
         String inner = indent + "  ";
-        sb.append(inner).append("node: ").append(node.getName()).append('\n');
-        if (node.isIsLifecycle()) {
-            sb.append(inner).append("lifecycle: true\n");
+        Node node = art.getNode();
+        if (node != null) {
+            sb.append(inner).append("node: ").append(node.getName()).append('\n');
+            if (node.isIsLifecycle()) {
+                sb.append(inner).append("lifecycle: true\n");
+            }
+            for (String section : NODE_SECTIONS) {
+                List<InterfaceType> items = itemsOfSection(node, section);
+                if (items.isEmpty()) {
+                    continue;
+                }
+                sb.append(inner).append(section).append('\n');
+                for (InterfaceType i : items) {
+                    sb.append(i instanceof Parameter p ? renderParameter(p, inner + "  ") : renderInterface(i, inner + "  "));
+                }
+            }
+            if (!node.getPluginSlots().isEmpty()) {
+                sb.append(inner).append("pluginslots:\n");
+                for (PluginSlot slot : node.getPluginSlots()) {
+                    sb.append(renderPluginSlot(slot, inner + "  "));
+                }
+            }
+        }
+        if (!art.getPlugins().isEmpty()) {
+            sb.append(inner).append("plugins:\n");
+            for (Plugin plugin : art.getPlugins()) {
+                sb.append(renderPlugin(plugin, inner + "  "));
+            }
+        }
+        return sb.toString();
+    }
+
+    private String renderPluginSlot(final PluginSlot slot, final String indent) {
+        StringBuilder sb = new StringBuilder();
+        String inner = indent + "  ";
+        sb.append(indent).append(slot.getName()).append(":\n");
+        sb.append(inner).append("base: ").append(RosDslText.quote(slot.getBase())).append('\n');
+        sb.append(inner).append("parameter: ").append(slot.getParameter()).append('\n');
+        if (slot.getDefaultPlugin() != null && !slot.getDefaultPlugin().isBlank()) {
+            sb.append(inner).append("default: ").append(RosDslText.quote(slot.getDefaultPlugin())).append('\n');
+        }
+        return sb.toString();
+    }
+
+    private String renderPlugin(final Plugin plugin, final String indent) {
+        StringBuilder sb = new StringBuilder();
+        String inner = indent + "  ";
+        sb.append(indent).append(plugin.getName()).append(":\n");
+        if (plugin.getImplements() != null && !plugin.getImplements().isBlank()) {
+            sb.append(inner).append("implements: ").append(RosDslText.quote(plugin.getImplements())).append('\n');
+        }
+        if (plugin.getLoader() == PluginLoader.EXTERNAL) {
+            sb.append(inner).append("loader: external\n");
         }
         for (String section : NODE_SECTIONS) {
-            List<InterfaceType> items = itemsOfSection(node, section);
+            List<InterfaceType> items = itemsOfSection(plugin, section);
             if (items.isEmpty()) {
                 continue;
             }

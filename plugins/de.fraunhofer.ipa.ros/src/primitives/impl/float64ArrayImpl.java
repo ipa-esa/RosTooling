@@ -16,22 +16,22 @@ import primitives.float64Array;
  */
 public class float64ArrayImpl extends AbstractTypeImpl implements float64Array {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected float64ArrayImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.FLOAT64_ARRAY;
-    }
+		return PrimitivesPackage.Literals.FLOAT64_ARRAY;
+	}
 
 } //float64ArrayImpl

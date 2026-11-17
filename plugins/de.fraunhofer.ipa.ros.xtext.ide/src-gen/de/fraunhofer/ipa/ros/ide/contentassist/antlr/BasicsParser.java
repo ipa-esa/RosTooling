@@ -42,6 +42,13 @@ public class BasicsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getKEYWORDAccess().getAlternatives(), "rule__KEYWORD__Alternatives");
 			builder.put(grammarAccess.getEStringAccess().getAlternatives(), "rule__EString__Alternatives");
 			builder.put(grammarAccess.getRosNamesAccess().getAlternatives(), "rule__RosNames__Alternatives");
+			builder.put(grammarAccess.getExtensionBlockAccess().getAlternatives_4(), "rule__ExtensionBlock__Alternatives_4");
+			builder.put(grammarAccess.getExtensionEntryAccess().getAlternatives_1(), "rule__ExtensionEntry__Alternatives_1");
+			builder.put(grammarAccess.getExtensionKeyAccess().getAlternatives(), "rule__ExtensionKey__Alternatives");
+			builder.put(grammarAccess.getExtensionColonKeyAccess().getAlternatives(), "rule__ExtensionColonKey__Alternatives");
+			builder.put(grammarAccess.getExtensionValueAccess().getAlternatives(), "rule__ExtensionValue__Alternatives");
+			builder.put(grammarAccess.getExtensionRefValueAccess().getRefKindAlternatives_1_0(), "rule__ExtensionRefValue__RefKindAlternatives_1_0");
+			builder.put(grammarAccess.getExtensionScalarLiteralAccess().getAlternatives(), "rule__ExtensionScalarLiteral__Alternatives");
 			builder.put(grammarAccess.getGlobalNamespaceAccess().getGroup(), "rule__GlobalNamespace__Group__0");
 			builder.put(grammarAccess.getGlobalNamespaceAccess().getGroup_2(), "rule__GlobalNamespace__Group_2__0");
 			builder.put(grammarAccess.getGlobalNamespaceAccess().getGroup_2_2(), "rule__GlobalNamespace__Group_2_2__0");
@@ -115,6 +122,24 @@ public class BasicsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getCharArrayAccess().getGroup(), "rule__CharArray__Group__0");
 			builder.put(grammarAccess.getHeaderAccess().getGroup(), "rule__Header__Group__0");
 			builder.put(grammarAccess.getArraySpecRefAccess().getGroup(), "rule__ArraySpecRef__Group__0");
+			builder.put(grammarAccess.getExtensionBlockAccess().getGroup(), "rule__ExtensionBlock__Group__0");
+			builder.put(grammarAccess.getExtensionBlockAccess().getGroup_4_0(), "rule__ExtensionBlock__Group_4_0__0");
+			builder.put(grammarAccess.getExtensionBlockAccess().getGroup_4_1(), "rule__ExtensionBlock__Group_4_1__0");
+			builder.put(grammarAccess.getExtensionBlockAccess().getGroup_4_1_1(), "rule__ExtensionBlock__Group_4_1_1__0");
+			builder.put(grammarAccess.getExtensionBlockAccess().getGroup_4_1_1_1(), "rule__ExtensionBlock__Group_4_1_1_1__0");
+			builder.put(grammarAccess.getExtensionBlockNameAccess().getGroup(), "rule__ExtensionBlockName__Group__0");
+			builder.put(grammarAccess.getExtensionBlockNameAccess().getGroup_1(), "rule__ExtensionBlockName__Group_1__0");
+			builder.put(grammarAccess.getExtensionEntryAccess().getGroup(), "rule__ExtensionEntry__Group__0");
+			builder.put(grammarAccess.getExtensionEntryAccess().getGroup_1_0(), "rule__ExtensionEntry__Group_1_0__0");
+			builder.put(grammarAccess.getExtensionListValueAccess().getGroup(), "rule__ExtensionListValue__Group__0");
+			builder.put(grammarAccess.getExtensionListValueAccess().getGroup_2(), "rule__ExtensionListValue__Group_2__0");
+			builder.put(grammarAccess.getExtensionListValueAccess().getGroup_2_1(), "rule__ExtensionListValue__Group_2_1__0");
+			builder.put(grammarAccess.getExtensionBraceMapValueAccess().getGroup(), "rule__ExtensionBraceMapValue__Group__0");
+			builder.put(grammarAccess.getExtensionBraceMapValueAccess().getGroup_2(), "rule__ExtensionBraceMapValue__Group_2__0");
+			builder.put(grammarAccess.getExtensionBraceMapValueAccess().getGroup_2_1(), "rule__ExtensionBraceMapValue__Group_2_1__0");
+			builder.put(grammarAccess.getExtensionIndentedMapValueAccess().getGroup(), "rule__ExtensionIndentedMapValue__Group__0");
+			builder.put(grammarAccess.getExtensionRefValueAccess().getGroup(), "rule__ExtensionRefValue__Group__0");
+			builder.put(grammarAccess.getExtensionScalarValueAccess().getGroup(), "rule__ExtensionScalarValue__Group__0");
 			builder.put(grammarAccess.getGlobalNamespaceAccess().getPartsAssignment_2_1(), "rule__GlobalNamespace__PartsAssignment_2_1");
 			builder.put(grammarAccess.getGlobalNamespaceAccess().getPartsAssignment_2_2_1(), "rule__GlobalNamespace__PartsAssignment_2_2_1");
 			builder.put(grammarAccess.getRelativeNamespace_ImplAccess().getPartsAssignment_2_1(), "rule__RelativeNamespace_Impl__PartsAssignment_2_1");
@@ -156,6 +181,21 @@ public class BasicsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getMessagePartAccess().getDataAssignment_1(), "rule__MessagePart__DataAssignment_1");
 			builder.put(grammarAccess.getSpecBaseRefAccess().getReferenceAssignment(), "rule__SpecBaseRef__ReferenceAssignment");
 			builder.put(grammarAccess.getArraySpecRefAccess().getReferenceAssignment_0(), "rule__ArraySpecRef__ReferenceAssignment_0");
+			builder.put(grammarAccess.getExtensionBlockAccess().getNameAssignment_2(), "rule__ExtensionBlock__NameAssignment_2");
+			builder.put(grammarAccess.getExtensionBlockAccess().getEntriesAssignment_4_0_1(), "rule__ExtensionBlock__EntriesAssignment_4_0_1");
+			builder.put(grammarAccess.getExtensionBlockAccess().getEntriesAssignment_4_1_1_0(), "rule__ExtensionBlock__EntriesAssignment_4_1_1_0");
+			builder.put(grammarAccess.getExtensionBlockAccess().getEntriesAssignment_4_1_1_1_1(), "rule__ExtensionBlock__EntriesAssignment_4_1_1_1_1");
+			builder.put(grammarAccess.getExtensionEntryAccess().getKeyAssignment_1_0_0(), "rule__ExtensionEntry__KeyAssignment_1_0_0");
+			builder.put(grammarAccess.getExtensionEntryAccess().getKeyAssignment_1_1(), "rule__ExtensionEntry__KeyAssignment_1_1");
+			builder.put(grammarAccess.getExtensionEntryAccess().getValueAssignment_2(), "rule__ExtensionEntry__ValueAssignment_2");
+			builder.put(grammarAccess.getExtensionListValueAccess().getItemsAssignment_2_0(), "rule__ExtensionListValue__ItemsAssignment_2_0");
+			builder.put(grammarAccess.getExtensionListValueAccess().getItemsAssignment_2_1_1(), "rule__ExtensionListValue__ItemsAssignment_2_1_1");
+			builder.put(grammarAccess.getExtensionBraceMapValueAccess().getEntriesAssignment_2_0(), "rule__ExtensionBraceMapValue__EntriesAssignment_2_0");
+			builder.put(grammarAccess.getExtensionBraceMapValueAccess().getEntriesAssignment_2_1_1(), "rule__ExtensionBraceMapValue__EntriesAssignment_2_1_1");
+			builder.put(grammarAccess.getExtensionIndentedMapValueAccess().getEntriesAssignment_2(), "rule__ExtensionIndentedMapValue__EntriesAssignment_2");
+			builder.put(grammarAccess.getExtensionRefValueAccess().getRefKindAssignment_1(), "rule__ExtensionRefValue__RefKindAssignment_1");
+			builder.put(grammarAccess.getExtensionRefValueAccess().getTargetAssignment_2(), "rule__ExtensionRefValue__TargetAssignment_2");
+			builder.put(grammarAccess.getExtensionScalarValueAccess().getValueAssignment_1(), "rule__ExtensionScalarValue__ValueAssignment_1");
 		}
 	}
 	

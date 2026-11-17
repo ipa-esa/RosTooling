@@ -16,22 +16,22 @@ import primitives.PrimitivesPackage;
  */
 public class ByteArrayImpl extends AbstractTypeImpl implements ByteArray {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ByteArrayImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.BYTE_ARRAY;
-    }
+		return PrimitivesPackage.Literals.BYTE_ARRAY;
+	}
 
 } //ByteArrayImpl

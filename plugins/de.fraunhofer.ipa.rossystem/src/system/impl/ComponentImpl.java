@@ -3,9 +3,7 @@
 package system.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
+import ros.impl.ExtensibleImpl;
 import system.Component;
 import system.RossystemPackage;
 
@@ -16,24 +14,24 @@ import system.RossystemPackage;
  *
  * @generated
  */
-public abstract class ComponentImpl extends MinimalEObjectImpl.Container implements Component {
+public abstract class ComponentImpl extends ExtensibleImpl implements Component {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ComponentImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RossystemPackage.Literals.COMPONENT;
-    }
+		return RossystemPackage.Literals.COMPONENT;
+	}
 
 } //ComponentImpl

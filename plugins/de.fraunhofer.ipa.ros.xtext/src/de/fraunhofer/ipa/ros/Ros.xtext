@@ -109,13 +109,18 @@ MessageDefinition returns MessageDefinition:
         MessagePart+=MessagePart*;
 
 ///////////////////
-//ARTIFACT AND NODE
+//ARTIFACT, NODE AND PLUGINS
 ///////////////////
 Artifact returns Artifact:
     {Artifact}
         name=RosNames':'
         BEGIN
         (node=Node)?
+        ('plugins:'
+            BEGIN
+            plugins+=Plugin*
+            END
+        )?
         END;
 
 Node returns Node:
@@ -155,9 +160,104 @@ Node returns Node:
         BEGIN
         parameter+=Parameter*
         END
-    )
+    )|
+    ('pluginslots:'
+        BEGIN
+        pluginSlots+=PluginSlot*
+        END
+    )|
+    (extensions+=ExtensionBlock)
     )*
     ;
+
+enum PluginLoader returns PluginLoader:
+    PLUGINLIB = 'pluginlib' |
+    EXTERNAL = 'external'
+;
+
+Plugin returns Plugin:
+    {Plugin}
+    name=RosNames':'
+    BEGIN
+    (
+    ('implements:' implements=EString)|
+    ('loader:' loader=PluginLoader)|
+    ('publishers:'
+        BEGIN
+        publisher+=Publisher*
+        END
+    )|
+    ('subscribers:'
+        BEGIN
+        subscriber+=Subscriber*
+        END
+    )|
+    ('serviceservers:'
+        BEGIN
+        serviceserver+=ServiceServer*
+        END
+    )|
+    ('serviceclients:'
+        BEGIN
+        serviceclient+=ServiceClient*
+        END
+    )|
+    ('actionservers:'
+        BEGIN
+        actionserver+=ActionServer*
+        END
+    )|
+    ('actionclients:'
+        BEGIN
+        actionclient+=ActionClient*
+        END
+    )|
+    ('parameters:'
+        BEGIN
+        parameter+=Parameter*
+        END
+    )|
+    (extensions+=ExtensionBlock)
+    )*
+    END;
+
+PluginSlot returns PluginSlot:
+    {PluginSlot}
+    name=EString':'
+    (
+    (BEGIN
+        (('base:' base=EString) &
+         ('parameter:' parameter=EString) &
+         ('default:' defaultPlugin=EString)?)
+    END) |
+    ('{'
+        'base:' base=EString
+        ','? 'parameter:' parameter=EString
+        (','? 'default:' defaultPlugin=EString)?
+    '}')
+    );
+
+@Override
+EString returns ecore::EString:
+    STRING | ID | 'pluginlib' | 'external';
+
+@Override
+RosNames returns ecore::EString:
+    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external';
+
+@Override
+ExtensionKey returns ecore::EString:
+    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' |
+    'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
+    'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
+
+@Override
+ExtensionColonKey returns ecore::EString:
+    'ns:' | 'type:' | 'value:' | 'default:' |
+    'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
+    'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
+    'actionservers:' | 'actionclients:' | 'parameters:' |
+    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:';
 
 ///////////////////
 //INTERFACES

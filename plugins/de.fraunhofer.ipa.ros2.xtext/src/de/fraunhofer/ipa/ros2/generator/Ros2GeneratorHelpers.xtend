@@ -1,8 +1,11 @@
 package de.fraunhofer.ipa.ros2.generator
 
 import ros.Artifact
+import ros.InterfaceHolder
 import ros.Node
 import ros.Package
+import ros.Plugin
+import ros.PluginLoader
 import ros.Publisher
 import ros.Subscriber
 import ros.ServiceServer
@@ -91,14 +94,66 @@ class Ros2GeneratorHelpers {
         return result.toString()
     }
 
-    def String getArtifactName(Node node) {
-        if (node !== null && node.eContainer instanceof Artifact) {
-            val art = node.eContainer as Artifact
+    def String getArtifactName(InterfaceHolder holder) {
+        if (holder !== null && holder.eContainer instanceof Artifact) {
+            val art = holder.eContainer as Artifact
             if (art.name !== null && !art.name.trim.empty) {
                 return art.name.trim
             }
         }
-        return if (node !== null && node.name !== null) node.name else "node"
+        return if (holder !== null && holder.name !== null) holder.name else "node"
+    }
+
+    def String pluginClassName(Plugin plugin) {
+        return toCamelCase(plugin?.name)
+    }
+
+    def String pluginSnakeName(Plugin plugin) {
+        return toSnakeCase(plugin?.name)
+    }
+
+    def String pluginLibraryTargetName(Artifact art) {
+        if (art === null) return "plugins"
+        return if (art.node === null) art.name else art.name + "_plugins"
+    }
+
+    def String basePackageName(String implementsFqn) {
+        if (implementsFqn === null || !implementsFqn.contains("::")) return ""
+        return implementsFqn.substring(0, implementsFqn.indexOf("::")).trim
+    }
+
+    def String baseClassIncludePath(String implementsFqn) {
+        if (implementsFqn === null || !implementsFqn.contains("::")) return ""
+        val parts = implementsFqn.split("::")
+        val pathParts = new ArrayList<String>()
+        for (var i = 0; i < parts.length; i++) {
+            val seg = parts.get(i).trim
+            if (!seg.empty) {
+                if (i == parts.length - 1) {
+                    pathParts.add(toSnakeCase(seg) + ".hpp")
+                } else {
+                    pathParts.add(seg)
+                }
+            }
+        }
+        return pathParts.join("/")
+    }
+
+    def List<Plugin> getAllPlugins(Package pkg) {
+        val result = new ArrayList<Plugin>()
+        if (pkg === null) return result
+        for (art : pkg.artifact) {
+            result.addAll(art.plugins)
+        }
+        return result
+    }
+
+    def List<Plugin> getPluginlibPlugins(Package pkg) {
+        return getAllPlugins(pkg).filter[loader == PluginLoader.PLUGINLIB].toList
+    }
+
+    def List<Plugin> getExternalPlugins(Package pkg) {
+        return getAllPlugins(pkg).filter[loader == PluginLoader.EXTERNAL].toList
     }
 
     def String getSpecPackage(TopicSpec spec) {
@@ -382,7 +437,7 @@ class Ros2GeneratorHelpers {
         return "QoSProfile(depth=" + depth + ", reliability=" + reliability + ", durability=" + durability + ")"
     }
 
-    def Set<String> getDependencies(Node node) {
+    def Set<String> getDependencies(InterfaceHolder node) {
         val set = new HashSet<String>()
         if (node === null) return set
         for (pub : node.publisher) {
@@ -406,21 +461,22 @@ class Ros2GeneratorHelpers {
         return set
     }
 
-    def boolean hasActions(Node node) {
-        return (node.actionserver !== null && !node.actionserver.empty) || 
-               (node.actionclient !== null && !node.actionclient.empty)
+    def boolean hasActions(InterfaceHolder node) {
+        return node !== null && (
+               (node.actionserver !== null && !node.actionserver.empty) ||
+               (node.actionclient !== null && !node.actionclient.empty))
     }
 
-    def boolean hasActionServer(Node node) {
-        return node.actionserver !== null && !node.actionserver.empty
+    def boolean hasActionServer(InterfaceHolder node) {
+        return node !== null && node.actionserver !== null && !node.actionserver.empty
     }
 
-    def boolean hasActionClient(Node node) {
-        return node.actionclient !== null && !node.actionclient.empty
+    def boolean hasActionClient(InterfaceHolder node) {
+        return node !== null && node.actionclient !== null && !node.actionclient.empty
     }
 
-    def boolean hasServiceClients(Node node) {
-        return node.serviceclient !== null && !node.serviceclient.empty
+    def boolean hasServiceClients(InterfaceHolder node) {
+        return node !== null && node.serviceclient !== null && !node.serviceclient.empty
     }
     
     def ParameterValue getEffectiveParameterValue(Parameter param) {

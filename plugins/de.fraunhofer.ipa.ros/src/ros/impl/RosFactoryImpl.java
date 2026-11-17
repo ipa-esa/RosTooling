@@ -18,6 +18,12 @@ import ros.AmentPackage;
 import ros.ArrayTopicSpecMsgRef;
 import ros.Artifact;
 import ros.CatkinPackage;
+import ros.ExtensionBlock;
+import ros.ExtensionEntry;
+import ros.ExtensionListValue;
+import ros.ExtensionMapValue;
+import ros.ExtensionRefValue;
+import ros.ExtensionScalarValue;
 import ros.ExternalDependency;
 import ros.GlobalNamespace;
 import ros.InterfaceType;
@@ -48,6 +54,9 @@ import ros.ParameterStruct;
 import ros.ParameterStructMember;
 import ros.ParameterStructType;
 import ros.ParameterStructTypeMember;
+import ros.Plugin;
+import ros.PluginLoader;
+import ros.PluginSlot;
 import ros.PrivateNamespace;
 import ros.Publisher;
 import ros.QualityOfService;
@@ -105,7 +114,15 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
+			case RosPackage.EXTENSION_BLOCK: return createExtensionBlock();
+			case RosPackage.EXTENSION_ENTRY: return createExtensionEntry();
+			case RosPackage.EXTENSION_SCALAR_VALUE: return createExtensionScalarValue();
+			case RosPackage.EXTENSION_LIST_VALUE: return createExtensionListValue();
+			case RosPackage.EXTENSION_MAP_VALUE: return createExtensionMapValue();
+			case RosPackage.EXTENSION_REF_VALUE: return createExtensionRefValue();
 			case RosPackage.NODE: return createNode();
+			case RosPackage.PLUGIN: return createPlugin();
+			case RosPackage.PLUGIN_SLOT: return createPluginSlot();
 			case RosPackage.PACKAGE: return createPackage();
 			case RosPackage.SERVICE_SPEC: return createServiceSpec();
 			case RosPackage.SERVICE_SERVER: return createServiceServer();
@@ -167,6 +184,8 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 		switch (eDataType.getClassifierID()) {
 			case RosPackage.LIFECYCLE_STATE:
 				return createLifecycleStateFromString(eDataType, initialValue);
+			case RosPackage.PLUGIN_LOADER:
+				return createPluginLoaderFromString(eDataType, initialValue);
 			case RosPackage.GRAPH_NAME:
 				return createGraphNameFromString(eDataType, initialValue);
 			default:
@@ -184,6 +203,8 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 		switch (eDataType.getClassifierID()) {
 			case RosPackage.LIFECYCLE_STATE:
 				return convertLifecycleStateToString(eDataType, instanceValue);
+			case RosPackage.PLUGIN_LOADER:
+				return convertPluginLoaderToString(eDataType, instanceValue);
 			case RosPackage.GRAPH_NAME:
 				return convertGraphNameToString(eDataType, instanceValue);
 			default:
@@ -197,9 +218,97 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 	 * @generated
 	 */
 	@Override
+	public ExtensionBlock createExtensionBlock() {
+		ExtensionBlockImpl extensionBlock = new ExtensionBlockImpl();
+		return extensionBlock;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ExtensionEntry createExtensionEntry() {
+		ExtensionEntryImpl extensionEntry = new ExtensionEntryImpl();
+		return extensionEntry;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ExtensionScalarValue createExtensionScalarValue() {
+		ExtensionScalarValueImpl extensionScalarValue = new ExtensionScalarValueImpl();
+		return extensionScalarValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ExtensionListValue createExtensionListValue() {
+		ExtensionListValueImpl extensionListValue = new ExtensionListValueImpl();
+		return extensionListValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ExtensionMapValue createExtensionMapValue() {
+		ExtensionMapValueImpl extensionMapValue = new ExtensionMapValueImpl();
+		return extensionMapValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ExtensionRefValue createExtensionRefValue() {
+		ExtensionRefValueImpl extensionRefValue = new ExtensionRefValueImpl();
+		return extensionRefValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Node createNode() {
 		NodeImpl node = new NodeImpl();
 		return node;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Plugin createPlugin() {
+		PluginImpl plugin = new PluginImpl();
+		return plugin;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public PluginSlot createPluginSlot() {
+		PluginSlotImpl pluginSlot = new PluginSlotImpl();
+		return pluginSlot;
 	}
 
 	/**
@@ -725,6 +834,26 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 	 * @generated
 	 */
 	public String convertLifecycleStateToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PluginLoader createPluginLoaderFromString(EDataType eDataType, String initialValue) {
+		PluginLoader result = PluginLoader.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertPluginLoaderToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

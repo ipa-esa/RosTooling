@@ -1,5 +1,8 @@
 package de.fraunhofer.ipa.ros.glsp.handlers;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import de.fraunhofer.ipa.ros.glsp.model.RosDslText;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import primitives.MessagePart;
 import primitives.PrimitivesFactory;
 import ros.ActionSpec;
 import ros.Artifact;
+import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.LifecycleState;
 import ros.MessageDefinition;
@@ -25,6 +29,9 @@ import ros.Package;
 import ros.Parameter;
 import ros.ParameterType;
 import ros.ParameterValue;
+import ros.Plugin;
+import ros.PluginLoader;
+import ros.PluginSlot;
 import ros.QualityOfService;
 import ros.RosFactory;
 import ros.ServiceSpec;
@@ -69,20 +76,29 @@ public final class RosPackageSetEditor {
             final String val,
             final String valType) {
         if (target instanceof Package pkg) {
-            return applyPackage(state, pkg, prop, key, val);
+            return applyPackage(state, pkg, prop, key, val, valType);
         }
         if (target instanceof Artifact art) {
             if (is(prop, "name", "artifactName")) {
                 art.setName(val);
                 return true;
             }
+            if (is(prop, "addPlugin")) {
+                return applyAddPlugin(art, key, val, valType);
+            }
             if (art.getNode() != null) {
                 return applyNode(state, art.getNode(), prop, key, val, valType);
+            }
+            if (!art.getPlugins().isEmpty()) {
+                return applyPlugin(state, art.getPlugins().get(0), prop, key, val, valType);
             }
             return false;
         }
         if (target instanceof Node node) {
             return applyNode(state, node, prop, key, val, valType);
+        }
+        if (target instanceof Plugin pl) {
+            return applyPlugin(state, pl, prop, key, val, valType);
         }
         if (target instanceof Parameter param) {
             return applyParameter(state, param, prop, val, valType);
@@ -102,7 +118,7 @@ public final class RosPackageSetEditor {
     // ---------------------------------------------------------------------------------------
 
     private static boolean applyPackage(
-            final RosModelState state, final Package pkg, final String prop, final String key, final String val) {
+            final RosModelState state, final Package pkg, final String prop, final String key, final String val, final String valType) {
         if (is(prop, "name", "packageName")) {
             pkg.setName(val);
             state.markDirty(pkg, "name");
@@ -113,10 +129,27 @@ public final class RosPackageSetEditor {
             String artName = nonBlank(key, uniqueName(namesOf(pkg.getArtifact()), "node"));
             Artifact art = RosFactory.eINSTANCE.createArtifact();
             art.setName(artName);
-            Node node = RosFactory.eINSTANCE.createNode();
-            node.setName(nonBlank(val, artName));
-            art.setNode(node);
+            if (!"library".equalsIgnoreCase(valType)) {
+                Node node = RosFactory.eINSTANCE.createNode();
+                node.setName(nonBlank(val, artName));
+                art.setNode(node);
+            }
             pkg.getArtifact().add(art);
+        } else if (is(prop, "addPlugin")) {
+            String artName = nonBlank(key, "plugin_lib");
+            String plName = nonBlank(key, "Plugin");
+            if (key != null && key.contains("::")) {
+                int idx = key.indexOf("::");
+                artName = key.substring(0, idx).trim();
+                plName = key.substring(idx + 2).trim();
+            }
+            Artifact art = findArtifact(state, pkg, artName);
+            if (art == null) {
+                art = RosFactory.eINSTANCE.createArtifact();
+                art.setName(artName);
+                pkg.getArtifact().add(art);
+            }
+            applyAddPlugin(art, plName, val, valType);
         } else if (is(prop, "duplicateArtifact")) {
             Artifact source = findArtifact(state, pkg, key);
             if (source == null) {
@@ -156,9 +189,7 @@ public final class RosPackageSetEditor {
             final String key,
             final String val,
             final String valType) {
-        if (is(prop, "name", "nodeName")) {
-            node.setName(val);
-        } else if (is(prop, "isLifecycle", "lifecycle")) {
+        if (is(prop, "isLifecycle", "lifecycle")) {
             boolean lc = Boolean.parseBoolean(val == null ? "" : val.trim());
             node.setIsLifecycle(lc);
             state.markDirty(node, "isLifecycle");
@@ -170,6 +201,93 @@ public final class RosPackageSetEditor {
                     }
                 }
             }
+            return true;
+        }
+        if (is(prop, "addPluginSlot")) {
+            PluginSlot slot = RosFactory.eINSTANCE.createPluginSlot();
+            slot.setName(nonBlank(key, uniqueName(namesOfSlots(node), "slot")));
+            String base = nonBlank(val, "");
+            String param = nonBlank(valType, "");
+            String def = "";
+            if (val != null && val.trim().startsWith("{")) {
+                try {
+                    JsonObject obj = JsonParser.parseString(val).getAsJsonObject();
+                    base = jsonStr(obj, "base", base);
+                    param = jsonStr(obj, "parameter", param);
+                    def = jsonStr(obj, "default", def);
+                } catch (Exception ignored) {
+                    // Fall back to literal values
+                }
+            }
+            slot.setBase(base);
+            slot.setParameter(param);
+            if (!blank(def)) {
+                slot.setDefaultPlugin(def);
+            }
+            node.getPluginSlots().add(slot);
+            state.markDirty(node, "pluginSlots");
+            return true;
+        }
+        return applyHolder(state, node, prop, key, val, valType);
+    }
+
+    private static boolean applyPlugin(
+            final RosModelState state,
+            final Plugin plugin,
+            final String prop,
+            final String key,
+            final String val,
+            final String valType) {
+        if (is(prop, "implements")) {
+            plugin.setImplements(val == null ? null : val.trim());
+            return true;
+        }
+        if (is(prop, "loader")) {
+            plugin.setLoader("external".equalsIgnoreCase(val) ? PluginLoader.EXTERNAL : PluginLoader.PLUGINLIB);
+            return true;
+        }
+        return applyHolder(state, plugin, prop, key, val, valType);
+    }
+
+    private static boolean applyAddPlugin(
+            final Artifact art,
+            final String key,
+            final String val,
+            final String valType) {
+        Plugin pl = RosFactory.eINSTANCE.createPlugin();
+        List<String> existing = new ArrayList<>();
+        for (Plugin p : art.getPlugins()) {
+            existing.add(p.getName());
+        }
+        pl.setName(nonBlank(key, uniqueName(existing, "Plugin")));
+        String impl = val != null ? val.trim() : "";
+        String loaderStr = valType != null ? valType.trim() : "pluginlib";
+        if (val != null && val.trim().startsWith("{")) {
+            try {
+                JsonObject obj = JsonParser.parseString(val).getAsJsonObject();
+                impl = jsonStr(obj, "implements", impl);
+                loaderStr = jsonStr(obj, "loader", loaderStr);
+            } catch (Exception ignored) {
+                // Fall back to literal values
+            }
+        }
+        if (!impl.isEmpty()) {
+            pl.setImplements(impl);
+        }
+        pl.setLoader("external".equalsIgnoreCase(loaderStr) ? PluginLoader.EXTERNAL : PluginLoader.PLUGINLIB);
+        art.getPlugins().add(pl);
+        return true;
+    }
+
+    private static boolean applyHolder(
+            final RosModelState state,
+            final InterfaceHolder node,
+            final String prop,
+            final String key,
+            final String val,
+            final String valType) {
+        if (is(prop, "name", "nodeName", "pluginName")) {
+            node.setName(val);
         } else if (is(prop, "addInterface")) {
             InterfaceType iface = RosDslText.createInterface(valType);
             if (iface == null) {
@@ -479,26 +597,29 @@ public final class RosPackageSetEditor {
     }
 
     @SuppressWarnings("unchecked")
-    public static EList<InterfaceType> listFor(final Node node, final EObject iface) {
+    public static EList<InterfaceType> listFor(final InterfaceHolder holder, final EObject iface) {
         EStructuralFeature f;
-        if (iface instanceof ros.Publisher) f = ros.RosPackage.Literals.NODE__PUBLISHER;
-        else if (iface instanceof ros.Subscriber) f = ros.RosPackage.Literals.NODE__SUBSCRIBER;
-        else if (iface instanceof ros.ServiceServer) f = ros.RosPackage.Literals.NODE__SERVICESERVER;
-        else if (iface instanceof ros.ServiceClient) f = ros.RosPackage.Literals.NODE__SERVICECLIENT;
-        else if (iface instanceof ros.ActionServer) f = ros.RosPackage.Literals.NODE__ACTIONSERVER;
-        else if (iface instanceof ros.ActionClient) f = ros.RosPackage.Literals.NODE__ACTIONCLIENT;
-        else f = ros.RosPackage.Literals.NODE__PARAMETER;
-        return (EList<InterfaceType>) node.eGet(f);
+        if (iface instanceof ros.Publisher) f = ros.RosPackage.Literals.INTERFACE_HOLDER__PUBLISHER;
+        else if (iface instanceof ros.Subscriber) f = ros.RosPackage.Literals.INTERFACE_HOLDER__SUBSCRIBER;
+        else if (iface instanceof ros.ServiceServer) f = ros.RosPackage.Literals.INTERFACE_HOLDER__SERVICESERVER;
+        else if (iface instanceof ros.ServiceClient) f = ros.RosPackage.Literals.INTERFACE_HOLDER__SERVICECLIENT;
+        else if (iface instanceof ros.ActionServer) f = ros.RosPackage.Literals.INTERFACE_HOLDER__ACTIONSERVER;
+        else if (iface instanceof ros.ActionClient) f = ros.RosPackage.Literals.INTERFACE_HOLDER__ACTIONCLIENT;
+        else f = ros.RosPackage.Literals.INTERFACE_HOLDER__PARAMETER;
+        return (EList<InterfaceType>) holder.eGet(f);
     }
 
-    public static List<InterfaceType> allInterfaces(final Node node) {
+    public static List<InterfaceType> allInterfaces(final InterfaceHolder holder) {
         List<InterfaceType> all = new ArrayList<>();
-        all.addAll(node.getPublisher());
-        all.addAll(node.getSubscriber());
-        all.addAll(node.getServiceserver());
-        all.addAll(node.getServiceclient());
-        all.addAll(node.getActionserver());
-        all.addAll(node.getActionclient());
+        if (holder == null) {
+            return all;
+        }
+        all.addAll(holder.getPublisher());
+        all.addAll(holder.getSubscriber());
+        all.addAll(holder.getServiceserver());
+        all.addAll(holder.getServiceclient());
+        all.addAll(holder.getActionserver());
+        all.addAll(holder.getActionclient());
         return all;
     }
 
@@ -553,12 +674,25 @@ public final class RosPackageSetEditor {
         return names;
     }
 
-    private static List<String> namesOfParams(final Node node) {
+    private static List<String> namesOfParams(final InterfaceHolder node) {
         List<String> names = new ArrayList<>();
         for (Parameter p : node.getParameter()) {
             names.add(p.getName());
         }
         return names;
+    }
+
+    private static List<String> namesOfSlots(final Node node) {
+        List<String> names = new ArrayList<>();
+        for (PluginSlot s : node.getPluginSlots()) {
+            names.add(s.getName());
+        }
+        return names;
+    }
+
+    private static String jsonStr(final JsonObject obj, final String field, final String fallback) {
+        JsonElement el = obj.get(field);
+        return (el != null && el.isJsonPrimitive()) ? el.getAsString() : fallback;
     }
 
     private static String uniqueName(final List<String> existing, final String prefix) {

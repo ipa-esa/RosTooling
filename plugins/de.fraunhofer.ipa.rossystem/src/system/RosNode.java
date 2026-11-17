@@ -5,6 +5,7 @@ package system;
 import org.eclipse.emf.common.util.EList;
 
 import ros.Node;
+import ros.Plugin;
 
 /**
  * <!-- begin-user-doc -->
@@ -20,6 +21,7 @@ import ros.Node;
  *   <li>{@link system.RosNode#getFrom <em>From</em>}</li>
  *   <li>{@link system.RosNode#getRosinterfaces <em>Rosinterfaces</em>}</li>
  *   <li>{@link system.RosNode#getRosparameters <em>Rosparameters</em>}</li>
+ *   <li>{@link system.RosNode#getPlugins <em>Plugins</em>}</li>
  * </ul>
  *
  * @see system.RossystemPackage#getRosNode()
@@ -28,93 +30,105 @@ import ros.Node;
  */
 public interface RosNode extends Component {
     /**
-     * Returns the value of the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Name</em>' attribute.
-     * @see #setName(String)
-     * @see system.RossystemPackage#getRosNode_Name()
-     * @model required="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see system.RossystemPackage#getRosNode_Name()
+	 * @model required="true"
+	 * @generated
+	 */
     String getName();
 
     /**
-     * Sets the value of the '{@link system.RosNode#getName <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link system.RosNode#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Name</em>' attribute.
-     * @see #getName()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
+	 * @generated
+	 */
     void setName(String value);
 
     /**
-     * Returns the value of the '<em><b>Namespace</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Namespace</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Namespace</em>' attribute.
-     * @see #setNamespace(String)
-     * @see system.RossystemPackage#getRosNode_Namespace()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Namespace</em>' attribute.
+	 * @see #setNamespace(String)
+	 * @see system.RossystemPackage#getRosNode_Namespace()
+	 * @model
+	 * @generated
+	 */
     String getNamespace();
 
                 /**
-     * Sets the value of the '{@link system.RosNode#getNamespace <em>Namespace</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link system.RosNode#getNamespace <em>Namespace</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Namespace</em>' attribute.
-     * @see #getNamespace()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Namespace</em>' attribute.
+	 * @see #getNamespace()
+	 * @generated
+	 */
     void setNamespace(String value);
 
                 /**
-     * Returns the value of the '<em><b>From</b></em>' reference.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>From</b></em>' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the value of the '<em>From</em>' reference.
-     * @see #setFrom(Node)
-     * @see system.RossystemPackage#getRosNode_From()
-     * @model required="true"
-     * @generated
-     */
+	 * @return the value of the '<em>From</em>' reference.
+	 * @see #setFrom(Node)
+	 * @see system.RossystemPackage#getRosNode_From()
+	 * @model required="true"
+	 * @generated
+	 */
     Node getFrom();
 
     /**
-     * Sets the value of the '{@link system.RosNode#getFrom <em>From</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link system.RosNode#getFrom <em>From</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>From</em>' reference.
-     * @see #getFrom()
-     * @generated
-     */
+	 * @param value the new value of the '<em>From</em>' reference.
+	 * @see #getFrom()
+	 * @generated
+	 */
     void setFrom(Node value);
 
     /**
-     * Returns the value of the '<em><b>Rosinterfaces</b></em>' containment reference list.
-     * The list contents are of type {@link system.RosInterface}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Rosinterfaces</b></em>' containment reference list.
+	 * The list contents are of type {@link system.RosInterface}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Rosinterfaces</em>' containment reference list.
-     * @see system.RossystemPackage#getRosNode_Rosinterfaces()
-     * @model containment="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Rosinterfaces</em>' containment reference list.
+	 * @see system.RossystemPackage#getRosNode_Rosinterfaces()
+	 * @model containment="true"
+	 * @generated
+	 */
     EList<RosInterface> getRosinterfaces();
 
     /**
-     * Returns the value of the '<em><b>Rosparameters</b></em>' containment reference list.
-     * The list contents are of type {@link system.RosParameter}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Rosparameters</b></em>' containment reference list.
+	 * The list contents are of type {@link system.RosParameter}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Rosparameters</em>' containment reference list.
-     * @see system.RossystemPackage#getRosNode_Rosparameters()
-     * @model containment="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Rosparameters</em>' containment reference list.
+	 * @see system.RossystemPackage#getRosNode_Rosparameters()
+	 * @model containment="true"
+	 * @generated
+	 */
     EList<RosParameter> getRosparameters();
+
+				/**
+	 * Returns the value of the '<em><b>Plugins</b></em>' reference list.
+	 * The list contents are of type {@link ros.Plugin}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Plugins</em>' reference list.
+	 * @see system.RossystemPackage#getRosNode_Plugins()
+	 * @model
+	 * @generated
+	 */
+	EList<Plugin> getPlugins();
 
 } // RosNode

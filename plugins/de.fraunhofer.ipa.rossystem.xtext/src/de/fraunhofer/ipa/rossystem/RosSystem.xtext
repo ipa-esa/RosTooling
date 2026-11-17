@@ -40,7 +40,8 @@ RosSystem returns System:
             BEGIN
             connections+=Connection*
             END
-        )
+        ) |
+        (extensions+=ExtensionBlock)
         )*
     END;
 
@@ -63,6 +64,7 @@ RosNode returns RosNode:
     BEGIN
     'from:'from=[ros::Node|EString]
     ('namespace:' namespace=EString)?
+    ('plugins:' '[' plugins+=[ros::Plugin|EString] (',' plugins+=[ros::Plugin|EString])* ']')?
     ('interfaces:'
         BEGIN
             rosinterfaces+=RosInterface*
@@ -71,11 +73,13 @@ RosNode returns RosNode:
         BEGIN
             rosparameters+=RosParameter*
         END)?
+    (extensions+=ExtensionBlock)*
     END
 ;
 
 RosInterface returns RosInterface:
     '-'name=EString':' (reference=InterfaceReference)
+    (BEGIN extensions+=ExtensionBlock+ END)?
 ;
 
 InterfaceReference returns InterfaceReference:
@@ -143,6 +147,12 @@ RosServiceConnection returns RosServiceConnection:
 RosActionConnection returns RosActionConnection:
     '-''['from=[ros::ActionServer|EString]','to=[ros::ActionClient|EString]']'
 ;
+
+@Override
+ExtensionColonKey returns ecore::EString:
+    'ns:' | 'type:' | 'value:' | 'default:' |
+    'fromFile:' | 'subSystems:' | 'processes:' | 'nodes:' | 'parameters:' |
+    'connections:' | 'threads:' | 'from:' | 'namespace:' | 'plugins:' | 'interfaces:';
 
 
 ///////////////////

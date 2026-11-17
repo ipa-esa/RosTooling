@@ -18,22 +18,22 @@ import system.RossystemPackage;
  */
 public abstract class ConnectionImpl extends MinimalEObjectImpl.Container implements Connection {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ConnectionImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RossystemPackage.Literals.CONNECTION;
-    }
+		return RossystemPackage.Literals.CONNECTION;
+	}
 
 } //ConnectionImpl

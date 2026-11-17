@@ -3,9 +3,20 @@
  */
 package de.fraunhofer.ipa.ros
 
+import de.fraunhofer.ipa.ros.linking.RosLinkingDiagnosticMessageProvider
+import org.eclipse.xtext.conversion.IValueConverterService
+import org.eclipse.xtext.linking.ILinkingDiagnosticMessageProvider
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 class BasicsRuntimeModule extends AbstractBasicsRuntimeModule {
+
+    override Class<? extends IValueConverterService> bindIValueConverterService() {
+        return RosBasicsValueConverterService
+    }
+
+    def Class<? extends ILinkingDiagnosticMessageProvider> bindILinkingDiagnosticMessageProvider() {
+        return RosLinkingDiagnosticMessageProvider
+    }
 }

@@ -16,22 +16,22 @@ import primitives.PrimitivesPackage;
  */
 public class HeaderImpl extends AbstractTypeImpl implements Header {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected HeaderImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.HEADER;
-    }
+		return PrimitivesPackage.Literals.HEADER;
+	}
 
 } //HeaderImpl

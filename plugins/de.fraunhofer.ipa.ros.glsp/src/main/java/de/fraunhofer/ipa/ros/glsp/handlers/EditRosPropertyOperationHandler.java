@@ -22,6 +22,7 @@ import ros.ParameterIntegerType;
 import ros.ParameterString;
 import ros.ParameterType;
 import ros.ParameterValue;
+import ros.Plugin;
 import ros.RosFactory;
 import system.RosInterface;
 import system.RosNode;
@@ -174,6 +175,26 @@ public class EditRosPropertyOperationHandler extends EMFOperationHandler<EditRos
             RosElementResolver.resolveOriginNode(
                     rosModelState.getSemanticResource().getResourceSet(), val)
                     .ifPresent(rn::setFrom);
+        } else if ("plugins".equalsIgnoreCase(prop) && rosModelState.getSemanticResource() != null) {
+            var rs = rosModelState.getSemanticResource().getResourceSet();
+            rn.getPlugins().clear();
+            for (String rawRef : val.split(",")) {
+                String trimmed = rawRef.trim();
+                if (!trimmed.isEmpty()) {
+                    RosElementResolver.resolveOriginPlugin(rs, trimmed)
+                            .filter(pl -> !rn.getPlugins().contains(pl))
+                            .ifPresent(rn.getPlugins()::add);
+                }
+            }
+            rosModelState.markDirty(rn, "plugins");
+        } else if ("addPlugin".equalsIgnoreCase(prop) && rosModelState.getSemanticResource() != null) {
+            RosElementResolver.resolveOriginPlugin(
+                    rosModelState.getSemanticResource().getResourceSet(), val)
+                    .filter(pl -> !rn.getPlugins().contains(pl))
+                    .ifPresent(pl -> {
+                        rn.getPlugins().add(pl);
+                        rosModelState.markDirty(rn, "plugins");
+                    });
         } else if ("parameter".equalsIgnoreCase(prop) && key != null && !key.isEmpty()) {
             RosParameter targetParam = null;
             for (RosParameter existing : rn.getRosparameters()) {

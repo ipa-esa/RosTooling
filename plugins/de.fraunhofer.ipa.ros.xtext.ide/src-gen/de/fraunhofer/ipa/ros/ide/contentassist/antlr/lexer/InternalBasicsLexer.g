@@ -55,6 +55,8 @@ Int64_1 : 'int64[]';
 
 Message : 'message';
 
+Param : 'param->';
+
 Service : 'service';
 
 Uint8_1 : 'uint8[]';
@@ -99,6 +101,10 @@ Int32 : 'int32';
 
 Int64 : 'int64';
 
+Pub : 'pub->';
+
+Sub : 'sub->';
+
 Type_1 : 'type:';
 
 Uint8 : 'uint8';
@@ -108,6 +114,10 @@ Value : 'value';
 Date : 'Date';
 
 List : 'List';
+
+Ac : 'ac->';
+
+As : 'as->';
 
 Bool : 'bool';
 
@@ -123,6 +133,10 @@ Name : 'name';
 
 Node : 'node';
 
+Sc : 'sc->';
+
+Ss : 'ss->';
+
 Time : 'time';
 
 Type : 'type';
@@ -135,11 +149,19 @@ LeftSquareBracketRightSquareBracket : '[]';
 
 Comma : ',';
 
+FullStop : '.';
+
 Colon : ':';
+
+CommercialAt : '@';
 
 LeftSquareBracket : '[';
 
 RightSquareBracket : ']';
+
+LeftCurlyBracket : '{';
+
+RightCurlyBracket : '}';
 
 fragment RULE_DIGIT : '0'..'9';
 
@@ -177,7 +199,7 @@ RULE_ROS_CONVENTION_PARAM : ('/' RULE_STRING|RULE_STRING '/'|'~' RULE_STRING)*;
 
 RULE_ID : '^'? ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
-fragment RULE_INT : ('0'..'9')+;
+RULE_INT : ('0'..'9')+;
 
 RULE_STRING : ('"' ('\\' .|~(('\\'|'"')))* '"'|'\'' ('\\' .|~(('\\'|'\'')))* '\'');
 

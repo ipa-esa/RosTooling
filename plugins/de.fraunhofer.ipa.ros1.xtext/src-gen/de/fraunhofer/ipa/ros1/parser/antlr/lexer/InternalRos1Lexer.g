@@ -33,7 +33,11 @@ ParameterAny : 'ParameterAny';
 
 FromGitRepo : 'fromGitRepo:';
 
+Pluginslots : 'pluginslots:';
+
 Subscribers : 'subscribers:';
+
+Implements : 'implements:';
 
 Parameters : 'parameters:';
 
@@ -41,11 +45,15 @@ Publishers : 'publishers:';
 
 Artifacts : 'artifacts:';
 
+Parameter : 'parameter:';
+
 GraphName : 'GraphName';
 
 Float32_1 : 'float32[]';
 
 Float64_1 : 'float64[]';
+
+Pluginlib : 'pluginlib';
 
 Actions : 'actions:';
 
@@ -53,7 +61,11 @@ Default : 'default:';
 
 Duration : 'duration';
 
+External : 'external';
+
 Feedback : 'feedback';
+
+Plugins : 'plugins:';
 
 Response : 'response';
 
@@ -79,7 +91,11 @@ Int32_1 : 'int32[]';
 
 Int64_1 : 'int64[]';
 
+Loader : 'loader:';
+
 Message : 'message';
+
+Param : 'param->';
 
 Request : 'request';
 
@@ -121,6 +137,8 @@ Value_1 : 'value:';
 
 Array : 'Array';
 
+Base : 'base:';
+
 Int16 : 'int16';
 
 Int32 : 'int32';
@@ -131,7 +149,11 @@ Msgs : 'msgs:';
 
 Node_1 : 'node:';
 
+Pub : 'pub->';
+
 Srvs : 'srvs:';
+
+Sub : 'sub->';
 
 Type_1 : 'type:';
 
@@ -142,6 +164,10 @@ Value : 'value';
 Date : 'Date';
 
 List : 'List';
+
+Ac : 'ac->';
+
+As : 'as->';
 
 Bool : 'bool';
 
@@ -157,6 +183,10 @@ Name : 'name';
 
 Node : 'node';
 
+Sc : 'sc->';
+
+Ss : 'ss->';
+
 Time : 'time';
 
 Type : 'type';
@@ -169,11 +199,19 @@ LeftSquareBracketRightSquareBracket : '[]';
 
 Comma : ',';
 
+FullStop : '.';
+
 Colon : ':';
+
+CommercialAt : '@';
 
 LeftSquareBracket : '[';
 
 RightSquareBracket : ']';
+
+LeftCurlyBracket : '{';
+
+RightCurlyBracket : '}';
 
 fragment RULE_DIGIT : '0'..'9';
 
@@ -211,7 +249,7 @@ RULE_ROS_CONVENTION_PARAM : ('/' RULE_STRING|RULE_STRING '/'|'~' RULE_STRING)*;
 
 RULE_ID : '^'? ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
-fragment RULE_INT : ('0'..'9')+;
+RULE_INT : ('0'..'9')+;
 
 RULE_STRING : ('"' ('\\' .|~(('\\'|'"')))* '"'|'\'' ('\\' .|~(('\\'|'\'')))* '\'');
 
