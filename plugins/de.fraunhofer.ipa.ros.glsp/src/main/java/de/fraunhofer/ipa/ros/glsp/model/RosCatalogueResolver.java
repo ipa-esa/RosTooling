@@ -8,6 +8,7 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -49,8 +50,8 @@ public final class RosCatalogueResolver {
     private static final int MAX_ROUNDS = 8;
     private static final Pattern CUSTOM_PATH = Pattern.compile("\"path\"\\s*:\\s*\"([^\"]+)\"");
 
-    /** File -> declared package/system name, keyed with the file's mtime. */
-    private static final Map<Path, Map.Entry<Long, String>> DECLARED = new ConcurrentHashMap<>();
+    /** File -> declared package/system names, keyed with the file's mtime. */
+    private static final Map<Path, Map.Entry<Long, Set<String>>> DECLARED = new ConcurrentHashMap<>();
 
     private RosCatalogueResolver() {}
 
@@ -213,8 +214,7 @@ public final class RosCatalogueResolver {
                         return n.endsWith(".ros") || n.endsWith(".ros2") || n.endsWith(".rossystem");
                     })
                     .forEach(p -> {
-                        String name = declaredName(p);
-                        if (!name.isEmpty()) {
+                        for (String name : declaredNames(p)) {
                             byName.computeIfAbsent(name, k -> new ArrayList<>()).add(p);
                         }
                     });
@@ -225,29 +225,75 @@ public final class RosCatalogueResolver {
         return byName;
     }
 
-    /** The model's root name: the first non-comment line's token before ':'. Cached per mtime. */
-    private static String declaredName(final Path file) {
+    /**
+     * Declared root names in a model file, cached per mtime. A {@code .ros} PackageSet may
+     * declare multiple packages at the root indentation level (e.g. {@code common_msgs.ros}
+     * declares {@code actionlib_msgs}, {@code geometry_msgs}, {@code sensor_msgs}, ...); single-root
+     * models ({@code .ros2}, {@code .rossystem}) declare one root entry.
+     */
+    public static Set<String> declaredNames(final Path file) {
         long mtime = file.toFile().lastModified();
-        Map.Entry<Long, String> cached = DECLARED.get(file);
+        Map.Entry<Long, Set<String>> cached = DECLARED.get(file);
         if (cached != null && cached.getKey() == mtime) {
             return cached.getValue();
         }
-        String name = "";
+        boolean packageSet = file.getFileName().toString().endsWith(".ros");
+        Set<String> names = new LinkedHashSet<>();
+        int rootIndent = -1;
         try (BufferedReader r = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
             String line;
             while ((line = r.readLine()) != null) {
-                String t = line.trim();
-                if (t.isEmpty() || t.startsWith("#")) {
+                String t = stripComment(line).trim();
+                if (t.isEmpty()) {
+                    continue;
+                }
+                int indent = leadingWhitespace(line);
+                if (rootIndent < 0) {
+                    rootIndent = indent;
+                } else if (!packageSet || indent != rootIndent) {
                     continue;
                 }
                 int colon = t.indexOf(':');
-                name = (colon > 0 ? t.substring(0, colon) : t).replace("\"", "").replace("'", "").trim();
-                break;
+                if (colon <= 0 && !names.isEmpty()) {
+                    continue;
+                }
+                String name = (colon > 0 ? t.substring(0, colon) : t).replace("\"", "").replace("'", "").trim();
+                if (!name.isEmpty()) {
+                    names.add(name);
+                }
+                if (!packageSet) {
+                    break;
+                }
             }
         } catch (IOException | RuntimeException e) {
-            name = "";
+            names.clear();
         }
-        DECLARED.put(file, Map.entry(mtime, name));
-        return name;
+        Set<String> result = Collections.unmodifiableSet(names);
+        DECLARED.put(file, Map.entry(mtime, result));
+        return result;
+    }
+
+    private static int leadingWhitespace(final String line) {
+        int i = 0;
+        while (i < line.length() && Character.isWhitespace(line.charAt(i))) {
+            i++;
+        }
+        return i;
+    }
+
+    private static String stripComment(final String line) {
+        boolean inSingle = false;
+        boolean inDouble = false;
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == '\'' && !inDouble) {
+                inSingle = !inSingle;
+            } else if (c == '"' && !inSingle) {
+                inDouble = !inDouble;
+            } else if (c == '#' && !inSingle && !inDouble) {
+                return line.substring(0, i);
+            }
+        }
+        return line;
     }
 }
