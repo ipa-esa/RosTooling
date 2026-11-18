@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.6.0] - 2026-11-18
 
 ### Added
+- **Scoped Plugin File Read Extension Point (`GenerationContext.readOwnedFile`)**:
+  - Added `GenerationContext.readOwnedFile(String)` returning `Optional<String>` for plugin-owned files inside `config/<plugin-folder>/`, `launch/<plugin-folder>/`, or `plugins/<plugin-folder>/` present in `existingFiles()`, resolved safely against the optional client-supplied `outputRoot` (package output folder for `.ros2`, system `src-gen` output folder for `.rossystem`), with `..`/absolute/symlink escape rejection and empty return on missing root or unreadable files.
 - **Plugin Notice Extension Point (`GenerationContext.addNotice`)**:
   - Added `GenerationContext.addNotice(String)` and `GenerationContext.notices()` so active plugins can emit non-blocking, plugin-ID-prefixed informational notices alongside package and system generation results without altering core outputs when no plugins are active.
 - **Generic Plugin SPI (`de.fraunhofer.ipa.ros.plugin.spi`)**:

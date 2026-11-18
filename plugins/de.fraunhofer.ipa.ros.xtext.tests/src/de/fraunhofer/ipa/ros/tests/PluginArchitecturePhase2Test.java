@@ -44,12 +44,14 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -1857,6 +1859,176 @@ public class PluginArchitecturePhase2Test {
             assertEquals(List.of("[de.example.notifier] SystemLeaf: review launch wiring"), sysCmdOut.get("notices"));
         } finally {
             try (var walk = Files.walk(tempDir)) {
+                walk.sorted(java.util.Comparator.reverseOrder()).forEach(p -> {
+                    try { Files.deleteIfExists(p); } catch (Exception ignored) {}
+                });
+            }
+        }
+    }
+
+    @Test
+    public void readOwnedFileEnforcesNamespacedOwnershipExistingFilesAndOutputRootSafety() throws Exception {
+        Path tempRoot = Files.createTempDirectory("rostooling-readowned-");
+        Path pkgRoot = tempRoot.resolve("src-gen").resolve("read_pkg");
+        Path sysRoot = tempRoot.resolve("sys-gen");
+        Path outsideSecret = tempRoot.resolve("outside_secret.txt");
+        Path unreadableFile = null;
+        try {
+            Files.writeString(outsideSecret, "TOP_SECRET\n", StandardCharsets.UTF_8);
+
+            // Seed package-level owned file + unreadable file + symlink escaping pkgRoot
+            String pf = GenerationContext.sanitizePluginFolder("de.example.reader");
+            Path ownedPkgFile = pkgRoot.resolve("plugins").resolve(pf).resolve("state.txt");
+            Files.createDirectories(ownedPkgFile.getParent());
+            Files.writeString(ownedPkgFile, "prev_state=v1\n", StandardCharsets.UTF_8);
+
+            unreadableFile = pkgRoot.resolve("plugins").resolve(pf).resolve("locked.txt");
+            Files.writeString(unreadableFile, "locked_data\n", StandardCharsets.UTF_8);
+            try {
+                Files.setPosixFilePermissions(unreadableFile, PosixFilePermissions.fromString("---------"));
+            } catch (UnsupportedOperationException ignored) {
+                unreadableFile = null;
+            }
+            Path dirAsFile = pkgRoot.resolve("plugins").resolve(pf).resolve("subdir");
+            Files.createDirectories(dirAsFile);
+
+            Path symlinkEscape = pkgRoot.resolve("plugins").resolve(pf).resolve("escape.txt");
+            Files.createSymbolicLink(symlinkEscape, outsideSecret);
+
+            // Seed system-level owned file under sysRoot/bad_sys/config/<pf>/prev.yaml
+            Path ownedSysFile = sysRoot.resolve("bad_sys").resolve("config").resolve(pf).resolve("prev.yaml");
+            Files.createDirectories(ownedSysFile.getParent());
+            Files.writeString(ownedSysFile, "mode: previous\n", StandardCharsets.UTF_8);
+
+            XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
+            String pkgModel = """
+                    read_pkg:
+                      artifacts:
+                        base_art:
+                          node: base_node
+                    """;
+            Resource pkgRes = loadFromString(rs, "inmemory:/read_pkg.ros2", pkgModel);
+            EcoreUtil.resolveAll(rs);
+
+            final List<String> existingPkg = List.of(
+                    "read_pkg/plugins/" + pf + "/state.txt",
+                    "read_pkg/plugins/" + pf + "/locked.txt",
+                    "read_pkg/plugins/" + pf + "/subdir",
+                    "read_pkg/plugins/" + pf + "/escape.txt",
+                    "read_pkg/CMakeLists.txt",
+                    "read_pkg/plugins/de_example_other/other.txt",
+                    "read_pkg/src/custom.cpp");
+
+            final Map<String, Optional<String>> pkgReads = new LinkedHashMap<>();
+            PluginRegistry.INSTANCE.clearRegistered();
+            PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+                @Override public String id() { return "de.example.reader"; }
+                @Override public List<BlockDescriptor> blocks() { return List.of(); }
+                @Override public void validate(final ValidationContext context) {}
+
+                @Override
+                public void generatePackage(final PackageGenerationContext context) {
+                    pkgReads.put("owned", context.readOwnedFile("plugins/" + pf + "/state.txt"));
+                    pkgReads.put("absent_in_existing", context.readOwnedFile("plugins/" + pf + "/missing_in_list.txt"));
+                    pkgReads.put("dir_as_file", context.readOwnedFile("plugins/" + pf + "/subdir"));
+                    if (Files.exists(pkgRoot.resolve("plugins/" + pf + "/locked.txt"))
+                            && !Files.isReadable(pkgRoot.resolve("plugins/" + pf + "/locked.txt"))) {
+                        pkgReads.put("unreadable", context.readOwnedFile("plugins/" + pf + "/locked.txt"));
+                    }
+                    context.addNotice("state=" + pkgReads.get("owned").orElse("none"));
+                }
+
+                @Override
+                public void generateSystem(final SystemGenerationContext context) {
+                    Optional<String> prev = context.readOwnedFile("config/" + pf + "/prev.yaml");
+                    context.addNotice("sys_prev=" + prev.orElse("none").trim());
+                }
+            });
+
+            Ros2Generator pkgGen = ros2Injector.getInstance(Ros2Generator.class);
+            // 1. With outputRoot supplied -> owned path reads cleanly, non-existing/unreadable return empty without error
+            InMemoryFileSystemAccess fsaWithRoot = new InMemoryFileSystemAccess();
+            Ros2Generator.PluginGenerationOutcome outWithRoot = pkgGen.generateTargetedWithPlugins(
+                    pkgRes, fsaWithRoot, null, "cpp", "jazzy", existingPkg, pkgRoot);
+            assertTrue("Expected zero errors on valid/empty reads: " + outWithRoot.errors, outWithRoot.errors.isEmpty());
+            assertEquals(Optional.of("prev_state=v1\n"), pkgReads.get("owned"));
+            assertEquals(Optional.empty(), pkgReads.get("absent_in_existing"));
+            assertEquals(Optional.empty(), pkgReads.get("dir_as_file"));
+            if (pkgReads.containsKey("unreadable")) {
+                assertEquals(Optional.empty(), pkgReads.get("unreadable"));
+            }
+            assertEquals(List.of("[de.example.reader] state=prev_state=v1"), outWithRoot.notices);
+
+            // 2. Without outputRoot (null) -> readOwnedFile returns empty without blocking output
+            pkgReads.clear();
+            InMemoryFileSystemAccess fsaNoRoot = new InMemoryFileSystemAccess();
+            Ros2Generator.PluginGenerationOutcome outNoRoot = pkgGen.generateTargetedWithPlugins(
+                    pkgRes, fsaNoRoot, null, "cpp", "jazzy", existingPkg);
+            assertTrue("No outputRoot must not fail: " + outNoRoot.errors, outNoRoot.errors.isEmpty());
+            assertEquals(Optional.empty(), pkgReads.get("owned"));
+            assertFalse(fsaNoRoot.getTextFiles().isEmpty());
+
+            // 3. System generation with outputRoot + RosPluginCommandSupport.generatePluginOutputs
+            Resource sysRes = loadSimpleSystemFixture();
+            RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
+            InMemoryFileSystemAccess sysFsa = new InMemoryFileSystemAccess();
+            RosSystemGenerator.SystemGenerationOutcome sysOut = sysGen.generateSystemWithPlugins(
+                    sysRes, sysFsa, List.of("bad_sys/config/" + pf + "/prev.yaml"), "jazzy", sysRoot);
+            assertTrue("System readOwnedFile errors: " + sysOut.errors, sysOut.errors.isEmpty());
+            assertEquals(List.of("[de.example.reader] sys_prev=mode: previous"), sysOut.notices);
+
+            Path pkgModelFile = tempRoot.resolve("read_pkg.ros2");
+            Files.writeString(pkgModelFile, pkgModel, StandardCharsets.UTF_8);
+            var rspReg = ros2IdeInjector.getInstance(IResourceServiceProvider.Registry.class);
+            Map<String, Object> cmdOut = RosPluginCommandSupport.generatePluginOutputs(
+                    Map.of("fileUri", pkgModelFile.toUri().toString(),
+                            "modelPath", pkgModelFile.toString(),
+                            "language", "cpp",
+                            "distro", "jazzy",
+                            "existingFiles", existingPkg,
+                            "outputRoot", pkgRoot.toString()),
+                    null,
+                    rspReg,
+                    CancelIndicator.NullImpl);
+            assertEquals("cmdOut=" + cmdOut, Boolean.TRUE, cmdOut.get("success"));
+            assertEquals(List.of("[de.example.reader] state=prev_state=v1"), cmdOut.get("notices"));
+
+            // 4. Reject disallowed paths, recording errors and returning empty:
+            //    core-owned, non-namespaced, foreign plugin folder, .., absolute path, symlink escape
+            List<String> disallowedPaths = List.of(
+                    "CMakeLists.txt",
+                    "src/custom.cpp",
+                    "plugins/de_example_other/other.txt",
+                    "plugins/" + pf + "/../../outside_secret.txt",
+                    "/etc/passwd",
+                    "plugins/" + pf + "/escape.txt");
+            for (String badPath : disallowedPaths) {
+                PluginRegistry.INSTANCE.clearRegistered();
+                final Optional<?>[] observed = new Optional<?>[1];
+                PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+                    @Override public String id() { return "de.example.reader"; }
+                    @Override public List<BlockDescriptor> blocks() { return List.of(); }
+                    @Override public void validate(final ValidationContext context) {}
+                    @Override public void generatePackage(final PackageGenerationContext context) {
+                        observed[0] = context.readOwnedFile(badPath);
+                    }
+                });
+                InMemoryFileSystemAccess badFsa = new InMemoryFileSystemAccess();
+                Ros2Generator.PluginGenerationOutcome badOut = pkgGen.generateTargetedWithPlugins(
+                        pkgRes, badFsa, null, "cpp", "jazzy", existingPkg, pkgRoot);
+                assertEquals("Disallowed path must return empty: " + badPath, Optional.empty(), observed[0]);
+                assertFalse("Disallowed readOwnedFile path must record an error: " + badPath, badOut.errors.isEmpty());
+                assertTrue("Error must name plugin for path '" + badPath + "': " + badOut.errors,
+                        badOut.errors.stream().anyMatch(e -> e.contains("de.example.reader")));
+            }
+        } finally {
+            if (unreadableFile != null && Files.exists(unreadableFile)) {
+                try {
+                    Files.setPosixFilePermissions(unreadableFile, PosixFilePermissions.fromString("rw-r--r--"));
+                } catch (Exception ignored) {
+                }
+            }
+            try (var walk = Files.walk(tempRoot)) {
                 walk.sorted(java.util.Comparator.reverseOrder()).forEach(p -> {
                     try { Files.deleteIfExists(p); } catch (Exception ignored) {}
                 });

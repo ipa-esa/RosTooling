@@ -2,6 +2,7 @@ package de.fraunhofer.ipa.rossystem.ide; // Or your specific package
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -109,6 +110,15 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
                     return Map.of("error", e.getMessage());
                 }
 
+                Path outputRoot = null;
+                if (params.getArguments().size() > 3 && params.getArguments().get(3) != null) {
+                    String rawRoot = parseStringArg(params.getArguments().get(3));
+                    if (!rawRoot.isBlank()) {
+                        outputRoot = Path.of(rawRoot.trim());
+                    }
+                }
+                final Path finalOutputRoot = outputRoot;
+
                 PluginRegistry.INSTANCE.ensureLoadedFromEnvironment();
 
                 forceLog("Requesting workspace-aware document from LSP ...");
@@ -144,7 +154,7 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
 						context1.setCancelIndicator(CancelIndicator.NullImpl);
 						if (generator instanceof RosSystemGenerator sysGen) {
 							RosSystemGenerator.SystemGenerationOutcome outcome =
-								sysGen.generateSystemWithPlugins(resource, fsa, finalExistingFiles, finalDistro);
+								sysGen.generateSystemWithPlugins(resource, fsa, finalExistingFiles, finalDistro, finalOutputRoot);
 							if (!outcome.errors.isEmpty()) {
 								String errMsg = String.join("; ", outcome.errors);
 								forceLog("PLUGIN ERROR: " + errMsg);

@@ -1,6 +1,7 @@
 package de.fraunhofer.ipa.ros.plugin.spi;
 
 import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -102,11 +103,52 @@ public final class SystemGenerationContext extends GenerationContext {
             final Map<String, LaunchInclude> sharedLaunchIncludes,
             final List<String> errors,
             final PluginRegistry registry) {
+        this(
+                pluginId,
+                systemName,
+                systemModel,
+                fromFileSystem,
+                rosNodes,
+                rosNodeTypes,
+                resolvedNodes,
+                resolvedPackages,
+                declaredSystemLaunchArgs,
+                resource,
+                ros2Distro,
+                null,
+                existingFiles,
+                coreOwnedPaths,
+                allPluginOwnedFiles,
+                sharedLaunchIncludes,
+                errors,
+                registry);
+    }
+
+    public SystemGenerationContext(
+            final String pluginId,
+            final String systemName,
+            final Extensible systemModel,
+            final boolean fromFileSystem,
+            final List<Extensible> rosNodes,
+            final Map<Extensible, ros.Node> rosNodeTypes,
+            final List<ros.Node> resolvedNodes,
+            final List<ros.Package> resolvedPackages,
+            final Set<String> declaredSystemLaunchArgs,
+            final Resource resource,
+            final Ros2Distro ros2Distro,
+            final Path outputRoot,
+            final List<String> existingFiles,
+            final Set<String> coreOwnedPaths,
+            final Map<String, String> allPluginOwnedFiles,
+            final Map<String, LaunchInclude> sharedLaunchIncludes,
+            final List<String> errors,
+            final PluginRegistry registry) {
         super(
                 pluginId,
                 systemName,
                 resource,
                 ros2Distro,
+                outputRoot,
                 existingFiles,
                 coreOwnedPaths,
                 allPluginOwnedFiles,
@@ -318,7 +360,15 @@ public final class SystemGenerationContext extends GenerationContext {
     }
 
     @Override
+    protected String resolveOutputRootRelativePath(final String normalizedPath, final String subPath) {
+        return normalizedPath;
+    }
+
+    @Override
     protected boolean validatePluginRelativePath(final String subPath, final String operation) {
+        if ("delete".equals(operation) || "read".equals(operation)) {
+            return true;
+        }
         String pf = pluginFolder();
         if (!isNamespacedPluginFolderSubPath(subPath)) {
             recordError("Plugin '" + pluginId() + "' cannot " + operation + " '" + outputRootName() + "/" + subPath

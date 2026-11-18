@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.generator;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -32,5 +33,16 @@ public interface IPluginAwareGenerator {
             List<String> targetNodes,
             String languageChoice,
             String targetDistro,
-            List<String> existingFiles);
+            List<String> existingFiles,
+            Path outputRoot);
+
+    default Outcome generateWithPlugins(
+            Resource resource,
+            IFileSystemAccess2 fsa,
+            List<String> targetNodes,
+            String languageChoice,
+            String targetDistro,
+            List<String> existingFiles) {
+        return generateWithPlugins(resource, fsa, targetNodes, languageChoice, targetDistro, existingFiles, null);
+    }
 }

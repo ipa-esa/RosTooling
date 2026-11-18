@@ -1,6 +1,11 @@
 package de.fraunhofer.ipa.ros.plugin.spi;
 
 import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -8,6 +13,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -38,6 +44,7 @@ public abstract sealed class GenerationContext permits PackageGenerationContext,
     private final String outputRootName;
     private final Resource resource;
     private final Ros2Distro ros2Distro;
+    private final Path outputRoot;
     private final List<String> existingFiles;
     private final Set<String> coreOwnedPaths;
     private final Map<String, String> allPluginOwnedFiles;
@@ -57,6 +64,30 @@ public abstract sealed class GenerationContext permits PackageGenerationContext,
             final Map<String, String> allPluginOwnedFiles,
             final List<String> errors,
             final PluginRegistry registry) {
+        this(
+                pluginId,
+                outputRootName,
+                resource,
+                ros2Distro,
+                null,
+                existingFiles,
+                coreOwnedPaths,
+                allPluginOwnedFiles,
+                errors,
+                registry);
+    }
+
+    protected GenerationContext(
+            final String pluginId,
+            final String outputRootName,
+            final Resource resource,
+            final Ros2Distro ros2Distro,
+            final Path outputRoot,
+            final List<String> existingFiles,
+            final Set<String> coreOwnedPaths,
+            final Map<String, String> allPluginOwnedFiles,
+            final List<String> errors,
+            final PluginRegistry registry) {
         this.pluginId = Objects.requireNonNull(pluginId, "pluginId");
         this.pluginFolder = sanitizePluginFolder(pluginId);
         if (outputRootName == null || outputRootName.isBlank()) {
@@ -65,6 +96,7 @@ public abstract sealed class GenerationContext permits PackageGenerationContext,
         this.outputRootName = outputRootName.toLowerCase();
         this.resource = resource;
         this.ros2Distro = Objects.requireNonNull(ros2Distro, "ros2Distro");
+        this.outputRoot = outputRoot;
         this.existingFiles = existingFiles == null ? List.of() : Collections.unmodifiableList(existingFiles);
         this.coreOwnedPaths = coreOwnedPaths == null
                 ? Set.of()
@@ -231,23 +263,105 @@ public abstract sealed class GenerationContext permits PackageGenerationContext,
      * point in core.
      */
     public final void deleteStaleFile(final String relativePath) {
-        String normalized = normalizeAndValidatePath(relativePath, "delete");
+        String normalized = validateNamespacedPluginSubPath(relativePath, "delete");
         if (normalized == null) {
             return;
         }
+        pluginDeletedFiles.add(normalized);
+    }
+
+    /**
+     * Reads a previously generated file owned by this plugin inside one of its namespaced output
+     * folders ({@code config/<plugin-folder>/}, {@code launch/<plugin-folder>/}, or
+     * {@code plugins/<plugin-folder>/}), resolved safely against the client-supplied
+     * {@code outputRoot}. Records an error (same validation as {@link #deleteStaleFile}) for
+     * core-owned, non-namespaced, foreign-plugin, or escaping paths, and returns empty if the
+     * path is absent from {@link #existingFiles()}, no {@code outputRoot} was supplied, or the
+     * file cannot be read.
+     */
+    public final Optional<String> readOwnedFile(final String relativePath) {
+        String normalized = validateNamespacedPluginSubPath(relativePath, "read");
+        if (normalized == null) {
+            return Optional.empty();
+        }
+        if (!fileExists(normalized)) {
+            return Optional.empty();
+        }
+        if (outputRoot == null) {
+            return Optional.empty();
+        }
+        String subPath = normalized.substring((outputRootName + "/").length());
+        String diskRel = resolveOutputRootRelativePath(normalized, subPath);
+        try {
+            if (!Files.exists(outputRoot)) {
+                return Optional.empty();
+            }
+            Path realRoot = outputRoot.toAbsolutePath().normalize().toRealPath();
+            Path candidate = realRoot.resolve(diskRel).normalize();
+            if (!candidate.startsWith(realRoot)) {
+                recordError("Plugin '" + pluginId + "' cannot read '" + normalized
+                        + "': resolved path escapes output root");
+                return Optional.empty();
+            }
+            Path relCheck = realRoot;
+            for (Path part : Path.of(diskRel)) {
+                relCheck = relCheck.resolve(part);
+                if (Files.isSymbolicLink(relCheck)) {
+                    Path linkTarget = Files.readSymbolicLink(relCheck);
+                    Path resolvedLink = linkTarget.isAbsolute()
+                            ? linkTarget.normalize()
+                            : relCheck.getParent().resolve(linkTarget).normalize();
+                    if (!resolvedLink.startsWith(realRoot)) {
+                        recordError("Plugin '" + pluginId + "' cannot read '" + normalized
+                                + "': resolved path escapes output root via symlink");
+                        return Optional.empty();
+                    }
+                }
+            }
+            if (!Files.exists(candidate)) {
+                return Optional.empty();
+            }
+            Path realFile = candidate.toRealPath();
+            if (!realFile.startsWith(realRoot)) {
+                recordError("Plugin '" + pluginId + "' cannot read '" + normalized
+                        + "': resolved path escapes output root via symlink");
+                return Optional.empty();
+            }
+            if (!Files.isRegularFile(realFile)) {
+                return Optional.empty();
+            }
+            return Optional.of(Files.readString(realFile, StandardCharsets.UTF_8));
+        } catch (InvalidPathException e) {
+            recordError("Plugin '" + pluginId + "' attempted invalid path during read: '" + relativePath + "'");
+            return Optional.empty();
+        } catch (IOException e) {
+            return Optional.empty();
+        }
+    }
+
+    protected String resolveOutputRootRelativePath(final String normalizedPath, final String subPath) {
+        return subPath;
+    }
+
+    private String validateNamespacedPluginSubPath(final String relativePath, final String operation) {
+        String normalized = normalizeAndValidatePath(relativePath, operation);
+        if (normalized == null) {
+            return null;
+        }
         String subPath = normalized.substring((outputRootName + "/").length());
         if (!isNamespacedPluginFolderSubPath(subPath)) {
-            recordError("Plugin '" + pluginId + "' cannot delete '" + normalized
-                    + "': deleteStaleFile is restricted to config/" + pluginFolder
+            String opLabel = "read".equals(operation) ? "readOwnedFile" : "deleteStaleFile";
+            recordError("Plugin '" + pluginId + "' cannot " + operation + " '" + normalized
+                    + "': " + opLabel + " is restricted to config/" + pluginFolder
                     + "/, launch/" + pluginFolder + "/, or plugins/" + pluginFolder + "/");
-            return;
+            return null;
         }
         String owner = allPluginOwnedFiles.get(normalized);
         if (owner != null && !owner.equals(pluginId)) {
-            recordError("Plugin '" + pluginId + "' cannot delete file owned by '" + owner + "': '" + normalized + "'");
-            return;
+            recordError("Plugin '" + pluginId + "' cannot " + operation + " file owned by '" + owner + "': '" + normalized + "'");
+            return null;
         }
-        pluginDeletedFiles.add(normalized);
+        return normalized;
     }
 
     public final boolean fileExists(final String relativePath) {

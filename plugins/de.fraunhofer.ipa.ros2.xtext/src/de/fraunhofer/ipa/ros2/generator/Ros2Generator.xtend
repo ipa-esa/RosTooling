@@ -7,6 +7,7 @@ import de.fraunhofer.ipa.ros.plugin.spi.PackageGenerationContext
 import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry
 import de.fraunhofer.ipa.ros2.distro.Ros2Distros
 import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target
+import java.nio.file.Path
 import java.util.ArrayList
 import java.util.IdentityHashMap
 import java.util.LinkedHashMap
@@ -46,9 +47,10 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
         List<String> targetNodes,
         String languageChoice,
         String targetDistro,
-        List<String> existingFiles)
+        List<String> existingFiles,
+        Path outputRoot)
     {
-        return generateTargetedWithPlugins(resource, fsa, targetNodes, languageChoice, targetDistro, existingFiles)
+        return generateTargetedWithPlugins(resource, fsa, targetNodes, languageChoice, targetDistro, existingFiles, outputRoot)
     }
 
     override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
@@ -85,6 +87,18 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
         String languageChoice,
         String targetDistro,
         List<String> existingFiles)
+    {
+        return generateTargetedWithPlugins(resource, fsa, targetNodes, languageChoice, targetDistro, existingFiles, null)
+    }
+
+    def PluginGenerationOutcome generateTargetedWithPlugins(
+        Resource resource,
+        IFileSystemAccess2 fsa,
+        List<String> targetNodes,
+        String languageChoice,
+        String targetDistro,
+        List<String> existingFiles,
+        Path outputRoot)
     {
         val target = Ros2Target.resolve(targetDistro)
         val outcome = new PluginGenerationOutcome()
@@ -328,6 +342,7 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
                             pkg,
                             resource,
                             target.distro,
+                            outputRoot,
                             existingList,
                             coreOwnedPaths,
                             allPluginOwnedFiles,

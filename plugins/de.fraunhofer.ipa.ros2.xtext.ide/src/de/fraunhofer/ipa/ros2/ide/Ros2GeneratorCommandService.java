@@ -2,6 +2,7 @@ package de.fraunhofer.ipa.ros2.ide;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -160,10 +161,20 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                 existingFiles = parseStringList(args.get(4));
             }
 
+            // Optional 6th arg: Client-supplied package output root (for readOwnedFile)
+            Path outputRoot = null;
+            if (args.size() > 5 && args.get(5) != null) {
+                String rawRoot = parseStringArg(args.get(5));
+                if (!rawRoot.isBlank()) {
+                    outputRoot = Path.of(rawRoot.trim());
+                }
+            }
+
             final List<String> finalTargetNodes = targetNodes;
             final String finalLanguage = language;
             final String finalDistro = resolvedDistro.name();
             final List<String> finalExistingFiles = existingFiles;
+            final Path finalOutputRoot = outputRoot;
 
             CompletableFuture<Map<String, Object>> futureResult = access.doRead(fileUriStr, (context) -> {
                 try {
@@ -206,7 +217,8 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                             finalTargetNodes,
                             finalLanguage,
                             finalDistro,
-                            finalExistingFiles
+                            finalExistingFiles,
+                            finalOutputRoot
                         );
                         if (!outcome.errors.isEmpty()) {
                             String errMsg = String.join("; ", outcome.errors);

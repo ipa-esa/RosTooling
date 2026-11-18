@@ -6,6 +6,7 @@ import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry
 import de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext
 import de.fraunhofer.ipa.ros2.distro.Ros2Distros
 import de.fraunhofer.ipa.rossystem.scoping.RosSystemScopeProvider
+import java.nio.file.Path
 import java.util.ArrayList
 import java.util.LinkedHashMap
 import java.util.LinkedHashSet
@@ -58,9 +59,10 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
         List<String> targetNodes,
         String languageChoice,
         String targetDistro,
-        List<String> existingFiles)
+        List<String> existingFiles,
+        Path outputRoot)
     {
-        return generateSystemWithPlugins(resource, fsa, existingFiles, targetDistro)
+        return generateSystemWithPlugins(resource, fsa, existingFiles, targetDistro, outputRoot)
     }
 
     def void generateSystemTargeted(Resource resource, IFileSystemAccess2 fsa, List<String> existingFiles) {
@@ -72,6 +74,16 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
         IFileSystemAccess2 fsa,
         List<String> existingFiles,
         String targetDistro)
+    {
+        return generateSystemWithPlugins(resource, fsa, existingFiles, targetDistro, null)
+    }
+
+    def SystemGenerationOutcome generateSystemWithPlugins(
+        Resource resource,
+        IFileSystemAccess2 fsa,
+        List<String> existingFiles,
+        String targetDistro,
+        Path outputRoot)
     {
         val distro = Ros2Distros.resolve(targetDistro)
         val outcome = new SystemGenerationOutcome()
@@ -204,6 +216,7 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                         declaredSystemLaunchArgs,
                         resource,
                         distro,
+                        outputRoot,
                         existingList,
                         coreOwnedPaths,
                         allPluginOwnedFiles,

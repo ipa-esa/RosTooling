@@ -1,6 +1,7 @@
 package de.fraunhofer.ipa.ros.plugin.spi;
 
 import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +33,40 @@ public final class PackageGenerationContext extends GenerationContext {
             final PackageBuild packageBuild,
             final List<String> errors,
             final PluginRegistry registry) {
+        this(
+                pluginId,
+                packageModel,
+                resource,
+                ros2Distro,
+                null,
+                existingFiles,
+                coreOwnedPaths,
+                allPluginOwnedFiles,
+                externalRegistrations,
+                packageBuild,
+                errors,
+                registry);
+    }
+
+    public PackageGenerationContext(
+            final String pluginId,
+            final ros.Package packageModel,
+            final Resource resource,
+            final Ros2Distro ros2Distro,
+            final Path outputRoot,
+            final List<String> existingFiles,
+            final Set<String> coreOwnedPaths,
+            final Map<String, String> allPluginOwnedFiles,
+            final Map<Plugin, String> externalRegistrations,
+            final PackageBuild packageBuild,
+            final List<String> errors,
+            final PluginRegistry registry) {
         super(
                 pluginId,
                 Objects.requireNonNull(packageModel, "packageModel").getName(),
                 resource,
                 ros2Distro,
+                outputRoot,
                 existingFiles,
                 coreOwnedPaths,
                 allPluginOwnedFiles,

@@ -356,6 +356,13 @@ public final class RosPluginCommandSupport {
         String language = firstNonBlank(stringField(req, "language"), "both");
         String distroArg = firstNonBlank(stringField(req, "distro"), Ros2Distros.AUTO);
         List<String> existingFiles = stringListField(req, "existingFiles");
+        String outputRootStr = stringField(req, "outputRoot");
+        final Path outputRoot;
+        try {
+            outputRoot = (outputRootStr != null && !outputRootStr.isBlank()) ? Path.of(outputRootStr.trim()) : null;
+        } catch (Exception e) {
+            return Map.of("error", "Invalid outputRoot path: " + e.getMessage());
+        }
 
         final Ros2Distro resolvedDistro;
         try {
@@ -393,7 +400,7 @@ public final class RosPluginCommandSupport {
 
             InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
             IPluginAwareGenerator.Outcome outcome = pluginGen.generateWithPlugins(
-                    res, fsa, targetNodes, language, resolvedDistro.name(), existingFiles);
+                    res, fsa, targetNodes, language, resolvedDistro.name(), existingFiles, outputRoot);
 
             boolean hasErrors = !outcome.errors.isEmpty();
             Map<String, String> allFiles = hasErrors
