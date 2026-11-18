@@ -482,7 +482,9 @@ public final class RosAstNodeModelSerializer {
             } else {
                 lastExistingParamComp = paramComp;
                 checkFeatureTokenEdit(rp, RossystemPackage.Literals.ROS_PARAMETER__NAME, rp.getName(), false, text, edits);
-                if (rp.getValue() != null) {
+                if (rp.getValue() instanceof ParameterString ps) {
+                    checkStringLiteralEdit(rp, RossystemPackage.Literals.ROS_PARAMETER__VALUE, ps.getValue(), text, edits);
+                } else if (rp.getValue() != null) {
                     String formattedVal = formatDslParameterValue(rp.getValue());
                     checkFeatureRawSpanEdit(rp, RossystemPackage.Literals.ROS_PARAMETER__VALUE, formattedVal, text, edits);
                 }
@@ -864,6 +866,74 @@ public final class RosAstNodeModelSerializer {
         }
     }
 
+    /**
+     * Rewrites the string literal of {@code feature} only when its value changed. The existing
+     * literal is compared by its decoded value, not its text, so a single-quoted or escaped literal
+     * the user wrote is left byte-identical; a changed literal keeps its quote character.
+     */
+    static void checkStringLiteralEdit(
+            final EObject holder,
+            final EStructuralFeature feature,
+            final String newValue,
+            final String text,
+            final List<SpanEdit> edits) {
+        List<INode> nodes = NodeModelUtils.findNodesForFeature(holder, feature);
+        if (nodes.isEmpty()) {
+            return;
+        }
+        INode fNode = nodes.get(0);
+        int start = firstNonHiddenOffset(fNode);
+        int end = lastNonHiddenOffset(fNode);
+        if (start < 0 || end < start || end > text.length()) {
+            return;
+        }
+        String value = newValue != null ? newValue : "";
+        String currentRaw = text.substring(start, end);
+        char q = currentRaw.length() >= 2 && currentRaw.charAt(0) == '\''
+                && currentRaw.charAt(currentRaw.length() - 1) == '\'' ? '\'' : '"';
+        if (value.equals(decodeDslString(currentRaw))) {
+            return;
+        }
+        edits.add(new SpanEdit(start, end - start, quoteDslString(value, q)));
+    }
+
+    /**
+     * {@code value} as an Xtext {@code STRING} literal delimited by {@code quote} ({@code "} or
+     * {@code '}): backslash, the delimiter and control characters are escaped; the other quote
+     * character is kept as is, so {@code $(command 'xacro ...')} stays readable.
+     */
+    public static String quoteDslString(final String value, final char quote) {
+        String v = value != null ? value : "";
+        StringBuilder sb = new StringBuilder(v.length() + 2).append(quote);
+        for (int i = 0; i < v.length(); i++) {
+            char c = v.charAt(i);
+            switch (c) {
+                case '\\' -> sb.append("\\\\");
+                case '\n' -> sb.append("\\n");
+                case '\r' -> sb.append("\\r");
+                case '\t' -> sb.append("\\t");
+                case '\b' -> sb.append("\\b");
+                case '\f' -> sb.append("\\f");
+                default -> {
+                    if (c == quote) {
+                        sb.append('\\');
+                    }
+                    sb.append(c);
+                }
+            }
+        }
+        return sb.append(quote).toString();
+    }
+
+    /** Value of a DSL string token: a quoted {@code STRING} literal is unescaped, anything else (ID) is taken as is. */
+    static String decodeDslString(final String raw) {
+        if (raw.length() >= 2 && (raw.charAt(0) == '"' || raw.charAt(0) == '\'')
+                && raw.charAt(raw.length() - 1) == raw.charAt(0)) {
+            return org.eclipse.xtext.util.Strings.convertFromJavaString(raw.substring(1, raw.length() - 1), true);
+        }
+        return raw;
+    }
+
     private static TextChange commitNewModelText(
             final RosModelState modelState, final XtextResource res, final String created) throws IOException {
         res.reparse(created);
@@ -1095,7 +1165,7 @@ public final class RosAstNodeModelSerializer {
             return "\"\"";
         }
         if (val instanceof ParameterString ps) {
-            return "\"" + (ps.getValue() != null ? ps.getValue() : "") + "\"";
+            return quoteDslString(ps.getValue(), '"');
         } else if (val instanceof ParameterInteger pi) {
             return String.valueOf(pi.getValue());
         } else if (val instanceof ParameterDouble pd) {

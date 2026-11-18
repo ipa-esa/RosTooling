@@ -1,0 +1,28 @@
+subst_system:
+  parameters:
+    arg:
+      type: String
+      value: "true"
+  nodes:
+    inline_node:
+      from: "subst_pkg.describer"
+      parameters:
+        - robot_description: "describer::robot_description"
+          value: "$(command 'xacro $(find-pkg-share some_pkg)/urdf/x.urdf.xacro arg:=$(var arg)')"
+        - config_file: "describer::config_file"
+          value: "$(find-pkg-share some_pkg)/config/x.yaml"
+    yaml_node:
+      from: "subst_pkg.describer"
+      parameters:
+        - robot_description: "describer::robot_description"
+          value: "$(command 'xacro $(find-pkg-share some_pkg)/urdf/x.urdf.xacro arg:=$(var arg)')"
+        - config_file: "describer::config_file"
+          value: "$(find-pkg-share some_pkg)/config/x.yaml"
+        - rate_hz: "describer::rate_hz"
+          value: 20.0
+        - max_count: "describer::max_count"
+          value: 7
+        - enabled: "describer::enabled"
+          value: false
+        - frame_id: "describer::frame_id"
+          value: "map"
