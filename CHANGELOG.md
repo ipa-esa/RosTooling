@@ -5,6 +5,30 @@ All notable changes to the **RosTooling** model and generator plugins will be do
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.0] - 2026-11-18
+
+### Added
+- **Generic Plugin SPI (`de.fraunhofer.ipa.ros.plugin.spi`)**:
+  - Added `RosToolingPlugin`, `PluginRegistry` (passive JAR `ServiceLoader` and OSGi service discovery enabled only via configuration, dependency ordering, version range `CORE_VERSION = "3.6.0"`), sealed `GenerationContext`, `PackageGenerationContext`, `SystemGenerationContext`, and `PackageBuild`.
+  - Supported both package-level (`generatePackage`) and system-level (`generateSystem`) generation phases backed by validated and XML/CMake-escaped structured `PackageBuild` contributions (`depend`, `find_package`, targets, `install`, `ament_add_gtest`, XML exports), plus external plugin registration claims (`claimExternalPluginRegistration`).
+  - Added typed Ecore schema mapping, structured hover documentation, content assist, and type/instance block merging (`ExtensionBlockMerger`) for plugin blocks.
+- **`@` Extension Blocks & LSP/GLSP Commands**:
+  - Added generic `@<name>:` extension block syntax across `.ros`, `.ros2`, and `.rossystem` at `System`, `RosNode`, `Node`, `Plugin`, and `RosInterface` hook locations, resolving references to sibling interfaces and parameters (`pub->`, `sub->`, etc.).
+  - Unknown `@` extension blocks degrade gracefully with validation warnings only so models remain portable when plugins are absent.
+  - Added LSP commands (`rostooling.listPluginTools`, `rostooling.getExtensionBlock`, `rostooling.setExtensionBlock`, `rostooling.executePluginTool`, `rostooling.generatePluginOutputs`) exposing schema-derived typed tool metadata (`setToolName`) and generic block authoring.
+  - Added GLSP `@` block editing, `PluginSlot.valueFormat` (`class` | `library`), and launch substitution parameter test coverage (`LaunchSubstitutionGenerationTest`).
+- **Scoped Plugin Launch Includes & Namespaced System Folders**:
+  - Added `SystemGenerationContext.addLaunchInclude(...)` rendering each plugin launch include inside its own isolated `GroupAction(actions=[IncludeLaunchDescription(...)], scoped=True)` with validated `LITERAL`, `SYSTEM_LAUNCH_ARG`, and `SUBSTITUTION` arguments.
+  - Added namespaced plugin output folders (`config/<plugin-folder>/`, `launch/<plugin-folder>/`, `plugins/<plugin-folder>/`) and automatic recursive `data_files` installation in generated `setup.py` for pure-Python system packages (with a warning when a user-owned `setup.py` is preserved untouched).
+
+### Changed
+- **Ownership & Domain Logic Shield Enforcement**:
+  - Reserved all core-owned and protected user logic paths in `coreOwnedPaths()` (paths only, never contents) across package and system generation, separated core in-memory deletions from `pluginDeletedFiles`, and restricted `GenerationContext.deleteStaleFile` at both package and system level strictly to `config/<plugin-folder>/`, `launch/<plugin-folder>/`, and `plugins/<plugin-folder>/`.
+
+### Fixed
+- **GLSP String Parameter Escaping**:
+  - Escaped string parameter values per the Xtext `STRING` terminal in `RosAstNodeModelSerializer` while keeping unchanged literals byte-identical.
+
 ## [3.5.0] - 2026-11-16
 
 ### Added
