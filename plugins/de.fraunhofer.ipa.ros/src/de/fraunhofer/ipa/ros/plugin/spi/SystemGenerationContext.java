@@ -320,13 +320,7 @@ public final class SystemGenerationContext extends GenerationContext {
     @Override
     protected boolean validatePluginRelativePath(final String subPath, final String operation) {
         String pf = pluginFolder();
-        String configPrefix = "config/" + pf + "/";
-        String launchPrefix = "launch/" + pf + "/";
-        String pluginsPrefix = "plugins/" + pf + "/";
-        boolean allowedPrefix = (subPath.startsWith(configPrefix) && subPath.length() > configPrefix.length())
-                || (subPath.startsWith(launchPrefix) && subPath.length() > launchPrefix.length())
-                || (subPath.startsWith(pluginsPrefix) && subPath.length() > pluginsPrefix.length());
-        if (!allowedPrefix || !PackageBuild.isValidRelativeBuildPath(subPath)) {
+        if (!isNamespacedPluginFolderSubPath(subPath)) {
             recordError("Plugin '" + pluginId() + "' cannot " + operation + " '" + outputRootName() + "/" + subPath
                     + "': system-level plugins may only write under config/" + pf + "/, launch/" + pf
                     + "/, or plugins/" + pf + "/");

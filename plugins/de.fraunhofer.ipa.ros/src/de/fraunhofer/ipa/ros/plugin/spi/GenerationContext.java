@@ -204,12 +204,40 @@ public abstract sealed class GenerationContext permits PackageGenerationContext,
     }
 
     /**
-     * Marks a stale plugin-generated file for deletion. Refuses to delete core-owned files, files
-     * outside the plugin's allowed folders, or files owned by another plugin.
+     * Checks whether a package/system-relative subpath resides directly inside one of this plugin's
+     * namespaced output folders ({@code config/<plugin-folder>/}, {@code launch/<plugin-folder>/},
+     * or {@code plugins/<plugin-folder>/}) and is a valid relative build path.
+     */
+    protected final boolean isNamespacedPluginFolderSubPath(final String subPath) {
+        if (subPath == null || !PackageBuild.isValidRelativeBuildPath(subPath)) {
+            return false;
+        }
+        String configPrefix = "config/" + pluginFolder + "/";
+        String launchPrefix = "launch/" + pluginFolder + "/";
+        String pluginsPrefix = "plugins/" + pluginFolder + "/";
+        return (subPath.startsWith(configPrefix) && subPath.length() > configPrefix.length())
+                || (subPath.startsWith(launchPrefix) && subPath.length() > launchPrefix.length())
+                || (subPath.startsWith(pluginsPrefix) && subPath.length() > pluginsPrefix.length());
+    }
+
+    /**
+     * Marks a stale plugin-generated file for deletion. Both package-level and system-level
+     * plugins may only delete under {@code config/<plugin-folder>/},
+     * {@code launch/<plugin-folder>/}, and {@code plugins/<plugin-folder>/}; any other path
+     * records an error naming the plugin and path and deletes nothing. If a later phase needs to
+     * prune generated sources outside those folders, that must be requested as a generic extension
+     * point in core.
      */
     public final void deleteStaleFile(final String relativePath) {
         String normalized = normalizeAndValidatePath(relativePath, "delete");
         if (normalized == null) {
+            return;
+        }
+        String subPath = normalized.substring((outputRootName + "/").length());
+        if (!isNamespacedPluginFolderSubPath(subPath)) {
+            recordError("Plugin '" + pluginId + "' cannot delete '" + normalized
+                    + "': deleteStaleFile is restricted to config/" + pluginFolder
+                    + "/, launch/" + pluginFolder + "/, or plugins/" + pluginFolder + "/");
             return;
         }
         String owner = allPluginOwnedFiles.get(normalized);

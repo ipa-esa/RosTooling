@@ -347,7 +347,7 @@ public class PluginArchitecturePhase2Test {
                 context.writeOnce("include/" + context.packageModel().getName().toLowerCase() + "/audit_user.hpp",
                         "// user owned once\n");
                 context.writeFile("config/audit.yaml", "mode: strict\n");
-                context.deleteStaleFile("config/stale_audit.yaml");
+                context.deleteStaleFile("config/" + context.pluginFolder() + "/stale_audit.yaml");
             }
 
             @Override
@@ -492,7 +492,7 @@ public class PluginArchitecturePhase2Test {
         assertTrue(fsa.getTextFiles().containsKey("DEFAULT_OUTPUTvalid_audit/src/audit_hooks.cpp"));
         assertFalse("writeOnce must respect existing file via Domain Logic Shield",
                 fsa.getTextFiles().containsKey("DEFAULT_OUTPUTvalid_audit/include/valid_audit/audit_user.hpp"));
-        assertTrue(outcome.pluginDeletedFiles.contains("valid_audit/config/stale_audit.yaml"));
+        assertTrue(outcome.pluginDeletedFiles.contains("valid_audit/config/de_example_audit/stale_audit.yaml"));
 
         // 6. Test LSP command handlers (Ros2GeneratorCommandService & RosPluginCommandSupport)
         Ros2GeneratorCommandService cmdService = ros2IdeInjector.getInstance(Ros2GeneratorCommandService.class);
@@ -1579,6 +1579,159 @@ public class PluginArchitecturePhase2Test {
                 });
             }
         }
+    }
+
+    @Test
+    public void setExtensionBlockWithoutModelTextProducesByteIdenticalOutput() throws Exception {
+        EClass schema = createAuditSchema(null);
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.audit"; }
+            @Override public List<BlockDescriptor> blocks() {
+                return List.of(new BlockDescriptor(
+                        "audit",
+                        schema,
+                        EnumSet.of(HookLocation.NODE),
+                        Map.of(),
+                        "Audit block"));
+            }
+            @Override public void validate(final ValidationContext context) {}
+        });
+
+        String initialText = """
+                byte_pkg:
+                  artifacts:
+                    b:
+                      node: n
+                """;
+        Path tempDir = Files.createTempDirectory("rostooling-setblock-");
+        try {
+            Path pkgFile = tempDir.resolve("byte_pkg.ros2");
+            Files.writeString(pkgFile, initialText, StandardCharsets.UTF_8);
+            String fileUri = pkgFile.toUri().toString();
+            var rspReg = ros2IdeInjector.getInstance(IResourceServiceProvider.Registry.class);
+            Map<String, Object> entries = Map.of("channel", "fast", "rate_hz", 50);
+
+            Map<String, Object> withText = RosPluginCommandSupport.setExtensionBlock(
+                    Map.of("fileUri", fileUri,
+                            "modelPath", pkgFile.toString(),
+                            "modelText", initialText,
+                            "blockName", "audit",
+                            "targetKind", "Node",
+                            "targetName", "n",
+                            "entries", entries),
+                    null,
+                    rspReg);
+            Map<String, Object> withoutText = RosPluginCommandSupport.setExtensionBlock(
+                    Map.of("fileUri", fileUri,
+                            "modelPath", pkgFile.toString(),
+                            "blockName", "audit",
+                            "targetKind", "Node",
+                            "targetName", "n",
+                            "entries", entries),
+                    null,
+                    rspReg);
+
+            assertEquals(Boolean.TRUE, withText.get("success"));
+            assertEquals(Boolean.TRUE, withoutText.get("success"));
+            assertEquals("spliced updatedText without modelText must be byte-identical",
+                    withText.get("updatedText"), withoutText.get("updatedText"));
+
+            // Also verify updating an existing @audit block without modelText is byte-identical
+            String existingBlockText = String.valueOf(withText.get("updatedText"));
+            Files.writeString(pkgFile, existingBlockText, StandardCharsets.UTF_8);
+            Map<String, Object> updateEntries = Map.of("channel", "slow", "rate_hz", 10);
+            Map<String, Object> updateWithText = RosPluginCommandSupport.setExtensionBlock(
+                    Map.of("fileUri", fileUri,
+                            "modelPath", pkgFile.toString(),
+                            "modelText", existingBlockText,
+                            "blockName", "audit",
+                            "targetKind", "Node",
+                            "targetName", "n",
+                            "entries", updateEntries),
+                    null,
+                    rspReg);
+            Map<String, Object> updateWithoutText = RosPluginCommandSupport.setExtensionBlock(
+                    Map.of("fileUri", fileUri,
+                            "modelPath", pkgFile.toString(),
+                            "blockName", "audit",
+                            "targetKind", "Node",
+                            "targetName", "n",
+                            "entries", updateEntries),
+                    null,
+                    rspReg);
+            assertEquals(Boolean.TRUE, updateWithText.get("success"));
+            assertEquals(Boolean.TRUE, updateWithoutText.get("success"));
+            assertEquals(updateWithText.get("updatedText"), updateWithoutText.get("updatedText"));
+        } finally {
+            try (var walk = Files.walk(tempDir)) {
+                walk.sorted(java.util.Comparator.reverseOrder()).forEach(p -> {
+                    try { Files.deleteIfExists(p); } catch (Exception ignored) {}
+                });
+            }
+        }
+    }
+
+    @Test
+    public void deleteStaleFileRejectsPathsOutsideNamespacedPluginFolders() throws Exception {
+        XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
+        Resource res = loadFromString(rs, "inmemory:/del_pkg.ros2", """
+                del_pkg:
+                  artifacts:
+                    base_art:
+                      node: base_node
+                """);
+        EcoreUtil.resolveAll(rs);
+
+        Ros2Generator pkgGen = ros2Injector.getInstance(Ros2Generator.class);
+        for (String disallowed : List.of("src/helpers.cpp", "config/other.yaml")) {
+            PluginRegistry.INSTANCE.clearRegistered();
+            PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+                @Override public String id() { return "de.example.bad_deleter"; }
+                @Override public List<BlockDescriptor> blocks() { return List.of(); }
+                @Override public void validate(final ValidationContext context) {}
+                @Override public void generatePackage(final PackageGenerationContext context) {
+                    context.writeFile("plugins/" + context.pluginFolder() + "/keep.txt", "should be withheld\n");
+                    context.deleteStaleFile(disallowed);
+                }
+            });
+
+            InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
+            String fsaKey = "DEFAULT_OUTPUTdel_pkg/" + disallowed;
+            fsa.generateFile("del_pkg/" + disallowed, "USER_CONTENT_MUST_SURVIVE\n");
+
+            Ros2Generator.PluginGenerationOutcome out = pkgGen.generateTargetedWithPlugins(
+                    res, fsa, null, "cpp", "jazzy", List.of("del_pkg/" + disallowed));
+            assertFalse("Disallowed deleteStaleFile path must fail: " + disallowed, out.errors.isEmpty());
+            assertTrue("Error must name plugin and path (" + disallowed + "): " + out.errors,
+                    out.errors.stream().anyMatch(e ->
+                            e.contains("de.example.bad_deleter") && e.contains("del_pkg/" + disallowed)));
+            assertTrue("Nothing may be added to pluginDeletedFiles: " + out.pluginDeletedFiles,
+                    out.pluginDeletedFiles.isEmpty());
+            assertTrue("Plugin files must be withheld on deleteStaleFile error", out.pluginFiles.isEmpty());
+            assertEquals("Pre-existing user file must remain untouched",
+                    "USER_CONTENT_MUST_SURVIVE\n",
+                    fsa.getTextFiles().get(fsaKey).toString());
+        }
+
+        // System level also rejects deleteStaleFile outside config/<pf>/, launch/<pf>/, plugins/<pf>/
+        Resource sysRes = loadSimpleSystemFixture();
+        RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
+        PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.bad_sys_deleter"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generateSystem(final SystemGenerationContext context) {
+                context.deleteStaleFile("config/other.yaml");
+            }
+        });
+        InMemoryFileSystemAccess sysFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome sysOut =
+                sysGen.generateSystemWithPlugins(sysRes, sysFsa, List.of("bad_sys/config/other.yaml"), "jazzy");
+        assertTrue("System deleteStaleFile error must name plugin and path: " + sysOut.errors,
+                sysOut.errors.stream().anyMatch(e ->
+                        e.contains("de.example.bad_sys_deleter") && e.contains("bad_sys/config/other.yaml")));
+        assertTrue(sysOut.pluginDeletedFiles.isEmpty());
     }
 
     private static String resolveBundleOrClassLocation(final Class<?> clazz) throws Exception {

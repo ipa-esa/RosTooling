@@ -428,15 +428,9 @@ public final class RosPluginCommandSupport {
             final ILanguageServerAccess access,
             final IResourceServiceProvider.Registry rspRegistry,
             final Function<Resource, Map<String, Object>> fn) {
-        if (fileUri != null && !fileUri.isBlank() && access != null) {
+        if (fileUri != null && !fileUri.isBlank() && access != null && (modelText == null || modelText.isBlank())) {
             try {
-                Map<String, Object> readResult = access.doRead(fileUri, (context) -> {
-                    Resource res = context != null ? context.getResource() : null;
-                    return res != null ? fn.apply(res) : null;
-                }).get();
-                if (readResult != null) {
-                    return readResult;
-                }
+                return access.doRead(fileUri, (context) -> fn.apply(context.getResource())).get();
             } catch (Exception e) {
                 return Map.of("success", false, "error", "Failed to read resource '" + fileUri + "': " + e.getMessage());
             }
