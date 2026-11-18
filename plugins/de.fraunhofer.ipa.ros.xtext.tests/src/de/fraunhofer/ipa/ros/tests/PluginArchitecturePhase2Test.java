@@ -2036,6 +2036,274 @@ public class PluginArchitecturePhase2Test {
         }
     }
 
+    @Test
+    public void passiveDiscoveryReadsMetadataWithoutClassloadingAndEnforcesBounds() throws Exception {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        assertNotNull("JDK compiler must be available for JAR metadata test", compiler);
+
+        Path tempRoot = Files.createTempDirectory("rostooling-passive-discovery-");
+        String initProp = "rostooling.test.passive.initialized." + System.nanoTime();
+        System.clearProperty(initProp);
+        try {
+            // 1. JAR with full META-INF/rostooling-plugin.properties + documentation + static init probe
+            Path validJar = buildTestPluginJar(
+                    compiler,
+                    tempRoot,
+                    "valid",
+                    "de.example.passive",
+                    "PassiveProbePlugin",
+                    "1.2.3",
+                    "[3.6.0,4.0.0)",
+                    """
+                    static { System.setProperty("%s", "static-init"); }
+                    @Override public String version() { return "1.2.3"; }
+                    @Override public String documentationMarkdown() { return "# Active Doc\\n\\nFrom active plugin"; }
+                    """.formatted(initProp),
+                    Map.of(
+                            "META-INF/rostooling-plugin.properties",
+                            "id=de.example.passive\nversion=1.2.3\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary=Passive discovery summary\ndocumentation=META-INF/docs/guide.md\n",
+                            "META-INF/docs/guide.md",
+                            "# Passive Guide\n\nInactive doc body\n"));
+
+            // Disable all plugins: passive discovery must still list validJar without loading any class
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(validJar), Set.of());
+            assertEquals("Disabled JAR static initializer must NOT run during passive discovery",
+                    null, System.getProperty(initProp));
+            assertTrue(PluginRegistry.INSTANCE.activePlugins().isEmpty());
+            assertTrue(PluginRegistry.INSTANCE.activeTools().isEmpty());
+
+            List<PluginRegistry.DiscoveredPlugin> discovered = PluginRegistry.INSTANCE.discoveredPlugins();
+            assertEquals(1, discovered.size());
+            PluginRegistry.DiscoveredPlugin entry = discovered.get(0);
+            assertEquals("de.example.passive", entry.id());
+            assertEquals("1.2.3", entry.version());
+            assertEquals("Passive discovery summary", entry.summary());
+            assertEquals("[3.6.0,4.0.0)", entry.supportedCoreVersionRange());
+            assertTrue(entry.compatible());
+            assertFalse(entry.enabled());
+            assertFalse(entry.active());
+            assertEquals(validJar.toAbsolutePath().normalize().toString(), entry.sourceJarPath());
+            assertEquals("", entry.loadError());
+
+            // Command service: listDiscoveredPlugins + getPluginDocumentation (inactive still must NOT classload)
+            Ros2GeneratorCommandService cmdService = ros2IdeInjector.getInstance(Ros2GeneratorCommandService.class);
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> listed = (List<Map<String, Object>>) cmdService.execute(
+                    new ExecuteCommandParams("rostooling.listDiscoveredPlugins", List.of()),
+                    null, CancelIndicator.NullImpl);
+            assertEquals(1, listed.size());
+            assertEquals("de.example.passive", listed.get(0).get("id"));
+            assertEquals(Boolean.FALSE, listed.get(0).get("active"));
+
+            @SuppressWarnings("unchecked")
+            Map<String, Object> inactiveDoc = (Map<String, Object>) cmdService.execute(
+                    new ExecuteCommandParams("rostooling.getPluginDocumentation", List.of("de.example.passive")),
+                    null, CancelIndicator.NullImpl);
+            assertEquals("de.example.passive", inactiveDoc.get("id"));
+            assertEquals("# Passive Guide\n\nInactive doc body\n", inactiveDoc.get("documentationMarkdown"));
+            assertEquals("Reading inactive documentation must NOT classload plugin",
+                    null, System.getProperty(initProp));
+
+            // Unknown id returns empty documentation
+            @SuppressWarnings("unchecked")
+            Map<String, Object> unknownDoc = (Map<String, Object>) cmdService.execute(
+                    new ExecuteCommandParams("rostooling.getPluginDocumentation", List.of("de.example.missing")),
+                    null, CancelIndicator.NullImpl);
+            assertEquals("", unknownDoc.get("documentationMarkdown"));
+
+            // Now enable validJar: class loads, active=true, doc comes from plugin.documentationMarkdown()
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(validJar), Set.of("de.example.passive"));
+            assertEquals("static-init", System.getProperty(initProp));
+            assertEquals(1, PluginRegistry.INSTANCE.activePlugins().size());
+            PluginRegistry.DiscoveredPlugin activeEntry = PluginRegistry.INSTANCE.discoveredPlugins().get(0);
+            assertTrue(activeEntry.enabled());
+            assertTrue(activeEntry.active());
+            @SuppressWarnings("unchecked")
+            Map<String, Object> activeDoc = (Map<String, Object>) cmdService.execute(
+                    new ExecuteCommandParams("rostooling.getPluginDocumentation",
+                            List.of(Map.of("id", "de.example.passive"))),
+                    null, CancelIndicator.NullImpl);
+            assertEquals("# Active Doc\n\nFrom active plugin", activeDoc.get("documentationMarkdown"));
+
+            // Register programmatic plugin: must appear in listDiscoveredPlugins with empty sourceJarPath
+            PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+                @Override public String id() { return "de.example.programmatic_doc"; }
+                @Override public String version() { return "2.0.0"; }
+                @Override public String documentationMarkdown() { return "# Prog\n\nProgrammatic doc"; }
+                @Override public List<BlockDescriptor> blocks() { return List.of(); }
+                @Override public void validate(ValidationContext context) {}
+            });
+            List<Map<String, Object>> withProg = RosPluginCommandSupport.listDiscoveredPlugins();
+            Map<String, Object> progEntry = withProg.stream()
+                    .filter(m -> "de.example.programmatic_doc".equals(m.get("id")))
+                    .findFirst().orElseThrow();
+            assertEquals("", progEntry.get("sourceJarPath"));
+            assertEquals(Boolean.TRUE, progEntry.get("active"));
+            assertEquals("Programmatic doc", progEntry.get("summary"));
+            assertEquals("# Prog\n\nProgrammatic doc",
+                    RosPluginCommandSupport.getPluginDocumentation("de.example.programmatic_doc").get("documentationMarkdown"));
+            PluginRegistry.INSTANCE.clearRegistered();
+
+            // 2. Incompatible version range -> compatible=false, remains inactive even when enabled
+            Path incompatJar = buildTestPluginJar(
+                    compiler, tempRoot, "incompat", "de.example.incompat", "IncompatPlugin",
+                    "1.0.0", "[99.0.0,100.0.0)", "",
+                    Map.of("META-INF/rostooling-plugin.properties",
+                            "id=de.example.incompat\nversion=1.0.0\nsupportedCoreVersionRange=[99.0.0,100.0.0)\nsummary=Future plugin\n"));
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(incompatJar), Set.of("de.example.incompat"));
+            assertTrue(PluginRegistry.INSTANCE.activePlugins().isEmpty());
+            PluginRegistry.DiscoveredPlugin incompatDiscovered = PluginRegistry.INSTANCE.discoveredPlugins().get(0);
+            assertEquals("de.example.incompat", incompatDiscovered.id());
+            assertFalse(incompatDiscovered.compatible());
+            assertFalse(incompatDiscovered.active());
+
+            // 3. JAR without metadata -> id="", specific loadError; still works when explicitly enabled by ID
+            Path noMetaJar = buildTestPluginJar(
+                    compiler, tempRoot, "nometa", "de.example.nometa", "NoMetaPlugin",
+                    "1.0.0", "[3.6.0,4.0.0)", "", Map.of());
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(noMetaJar), Set.of());
+            PluginRegistry.DiscoveredPlugin noMetaDisc = PluginRegistry.INSTANCE.discoveredPlugins().get(0);
+            assertEquals("", noMetaDisc.id());
+            assertEquals("no plugin metadata; enable by id in settings", noMetaDisc.loadError());
+            assertFalse(noMetaDisc.active());
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(noMetaJar), Set.of("de.example.nometa"));
+            assertEquals(1, PluginRegistry.INSTANCE.activePlugins().size());
+            assertEquals("de.example.nometa", PluginRegistry.INSTANCE.activePlugins().get(0).id());
+
+            // 4. ID mismatch & version mismatch between metadata and plugin class -> loadError, stays inactive
+            Path idMismatchJar = buildTestPluginJar(
+                    compiler, tempRoot, "idmismatch", "de.example.realid", "IdMismatchPlugin",
+                    "1.0.0", "[3.6.0,4.0.0)", "",
+                    Map.of("META-INF/rostooling-plugin.properties",
+                            "id=de.example.claimedid\nversion=1.0.0\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary=Mismatch\n"));
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(idMismatchJar), Set.of("de.example.claimedid", "de.example.realid"));
+            assertTrue("ID mismatch plugin must stay inactive", PluginRegistry.INSTANCE.activePlugins().isEmpty());
+            assertTrue("Expected mismatch loadError, got: " + PluginRegistry.INSTANCE.discoveredPlugins().get(0).loadError(),
+                    PluginRegistry.INSTANCE.discoveredPlugins().get(0).loadError().contains("mismatch"));
+
+            Path verMismatchJar = buildTestPluginJar(
+                    compiler, tempRoot, "vermismatch", "de.example.vermis", "VerMismatchPlugin",
+                    "1.0.0", "[3.6.0,4.0.0)",
+                    "@Override public String version() { return \"2.0.0\"; }",
+                    Map.of("META-INF/rostooling-plugin.properties",
+                            "id=de.example.vermis\nversion=1.0.0\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary=Ver mismatch\n"));
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(verMismatchJar), Set.of("de.example.vermis"));
+            assertTrue("Version mismatch plugin must stay inactive", PluginRegistry.INSTANCE.activePlugins().isEmpty());
+            assertTrue("Expected mismatch loadError, got: " + PluginRegistry.INSTANCE.discoveredPlugins().get(0).loadError(),
+                    PluginRegistry.INSTANCE.discoveredPlugins().get(0).loadError().contains("mismatch"));
+
+            // 5. Missing required key -> loadError
+            Path missingKeyJar = tempRoot.resolve("missing-key.jar");
+            try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(missingKeyJar))) {
+                jos.putNextEntry(new JarEntry("META-INF/rostooling-plugin.properties"));
+                jos.write("id=de.example.nokey\nversion=1.0.0\n".getBytes(StandardCharsets.UTF_8));
+                jos.closeEntry();
+            }
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(missingKeyJar), Set.of());
+            assertFalse(PluginRegistry.INSTANCE.discoveredPlugins().get(0).loadError().isBlank());
+
+            // 6. Oversized metadata (>16 KB) & oversized documentation (>256 KB) -> loadError without hanging
+            String bigMeta = "id=de.example.big\nversion=1.0.0\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary="
+                    + "x".repeat(20_000) + "\n";
+            Path bigMetaJar = tempRoot.resolve("big-meta.jar");
+            try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(bigMetaJar))) {
+                jos.putNextEntry(new JarEntry("META-INF/rostooling-plugin.properties"));
+                jos.write(bigMeta.getBytes(StandardCharsets.UTF_8));
+                jos.closeEntry();
+            }
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(bigMetaJar), Set.of());
+            PluginRegistry.DiscoveredPlugin bigMetaDisc = PluginRegistry.INSTANCE.discoveredPlugins().get(0);
+            assertFalse(bigMetaDisc.loadError().isBlank());
+            assertTrue(bigMetaDisc.loadError().contains("exceeds"));
+
+            Path bigDocJar = tempRoot.resolve("big-doc.jar");
+            try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(bigDocJar))) {
+                jos.putNextEntry(new JarEntry("META-INF/rostooling-plugin.properties"));
+                jos.write(("id=de.example.bigdoc\nversion=1.0.0\nsupportedCoreVersionRange=[3.6.0,4.0.0)\n"
+                        + "summary=Big doc plugin\ndocumentation=META-INF/big.md\n").getBytes(StandardCharsets.UTF_8));
+                jos.closeEntry();
+                jos.putNextEntry(new JarEntry("META-INF/big.md"));
+                jos.write(("a".repeat(300_000)).getBytes(StandardCharsets.UTF_8));
+                jos.closeEntry();
+            }
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(bigDocJar), Set.of());
+            PluginRegistry.DiscoveredPlugin bigDocDisc = PluginRegistry.INSTANCE.discoveredPlugins().get(0);
+            assertTrue(bigDocDisc.loadError().contains("exceeds"));
+            assertEquals("", PluginRegistry.INSTANCE.documentationMarkdownFor("de.example.bigdoc"));
+        } finally {
+            System.clearProperty(initProp);
+            PluginRegistry.INSTANCE.clearRegistered();
+            try (var walk = Files.walk(tempRoot)) {
+                walk.sorted(java.util.Comparator.reverseOrder()).forEach(p -> {
+                    try { Files.deleteIfExists(p); } catch (Exception ignored) {}
+                });
+            }
+        }
+    }
+
+    private static Path buildTestPluginJar(
+            final JavaCompiler compiler,
+            final Path tempRoot,
+            final String tag,
+            final String pluginId,
+            final String className,
+            final String pluginVersion,
+            final String coreRange,
+            final String extraMembers,
+            final Map<String, String> extraResources) throws Exception {
+        Path work = tempRoot.resolve("build-" + tag);
+        Path srcDir = work.resolve("src");
+        Path clsDir = work.resolve("cls");
+        Files.createDirectories(clsDir);
+        String pkg = "de.example." + tag;
+        Path srcFile = srcDir.resolve(pkg.replace('.', '/') + "/" + className + ".java");
+        Files.createDirectories(srcFile.getParent());
+        Files.writeString(srcFile, """
+                package %s;
+                import de.fraunhofer.ipa.ros.plugin.spi.*;
+                import java.util.List;
+                public final class %s implements RosToolingPlugin {
+                    %s
+                    @Override public String id() { return "%s"; }
+                    @Override public String supportedCoreVersionRange() { return "%s"; }
+                    @Override public List<BlockDescriptor> blocks() { return List.of(); }
+                    @Override public void validate(ValidationContext context) {}
+                }
+                """.formatted(pkg, className, extraMembers, pluginId, coreRange), StandardCharsets.UTF_8);
+
+        Set<String> cpEntries = new LinkedHashSet<>();
+        for (Class<?> c : List.of(RosToolingPlugin.class, EObject.class, ros.Package.class, Ros2Distro.class)) {
+            String cp = resolveBundleOrClassLocation(c);
+            if (cp != null && !cp.isBlank()) {
+                cpEntries.add(cp);
+            }
+        }
+        int rc = compiler.run(null, null, null,
+                "-cp", String.join(File.pathSeparator, cpEntries),
+                "-d", clsDir.toString(),
+                srcFile.toString());
+        assertEquals("Compile " + className + " failed", 0, rc);
+
+        Path jarPath = tempRoot.resolve(tag + "-" + pluginVersion + ".jar");
+        try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(jarPath))) {
+            String classRel = pkg.replace('.', '/') + "/" + className + ".class";
+            jos.putNextEntry(new JarEntry(classRel));
+            jos.write(Files.readAllBytes(clsDir.resolve(classRel)));
+            jos.closeEntry();
+
+            jos.putNextEntry(new JarEntry("META-INF/services/de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin"));
+            jos.write((pkg + "." + className + "\n").getBytes(StandardCharsets.UTF_8));
+            jos.closeEntry();
+
+            for (Map.Entry<String, String> res : extraResources.entrySet()) {
+                jos.putNextEntry(new JarEntry(res.getKey()));
+                jos.write(res.getValue().getBytes(StandardCharsets.UTF_8));
+                jos.closeEntry();
+            }
+        }
+        return jarPath;
+    }
+
     private static String resolveBundleOrClassLocation(final Class<?> clazz) throws Exception {
         Bundle b = FrameworkUtil.getBundle(clazz);
         if (b != null) {

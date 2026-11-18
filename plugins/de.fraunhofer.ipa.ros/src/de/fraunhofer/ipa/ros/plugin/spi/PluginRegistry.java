@@ -1,12 +1,17 @@
 package de.fraunhofer.ipa.ros.plugin.spi;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.CodeSource;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,15 +23,19 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
 /**
  * Discovers, validates, topologically orders, and serves active {@link RosToolingPlugin}s.
  *
- * <p>Implements Rule 4: discovery stays passive until a plugin ID is explicitly enabled via
- * configuration or programmatic registration.
+ * <p>Implements Rule 4: passive listing reads only {@value #METADATA_ENTRY} from JARs without loading
+ * plugin classes, and plugins activate only when explicitly enabled via configuration or programmatic
+ * registration.
  */
 public final class PluginRegistry {
 
@@ -35,19 +44,52 @@ public final class PluginRegistry {
     public static final String ENV_PLUGINS_DIR = "ROS_PLUGINS_DIR";
     public static final String PROP_PLUGINS_ENABLED = "ros.plugins.enabled";
     public static final String ENV_PLUGINS_ENABLED = "ROS_PLUGINS_ENABLED";
+    public static final String METADATA_ENTRY = "META-INF/rostooling-plugin.properties";
+    public static final int MAX_METADATA_BYTES = 16 * 1024;
+    public static final int MAX_DOCUMENTATION_BYTES = 256 * 1024;
 
     public static final PluginRegistry INSTANCE = new PluginRegistry();
 
     public record RegisteredBlock(RosToolingPlugin plugin, BlockDescriptor descriptor) {
     }
 
+    public record DiscoveredPlugin(
+            String id,
+            String version,
+            String summary,
+            String supportedCoreVersionRange,
+            boolean compatible,
+            boolean enabled,
+            boolean active,
+            String sourceJarPath,
+            String loadError) {
+    }
+
+    private record JarScanResult(
+            Path jarPath,
+            boolean hasMetadataFile,
+            String id,
+            String version,
+            String summary,
+            String supportedCoreVersionRange,
+            boolean compatible,
+            String cachedDocMarkdown,
+            String loadError) {
+    }
+
     private final Map<String, RosToolingPlugin> programmaticPlugins = new LinkedHashMap<>();
     private final Map<String, RosToolingPlugin> jarPlugins = new LinkedHashMap<>();
+    private final Map<String, Path> activePluginJarPaths = new LinkedHashMap<>();
+    private final List<JarScanResult> lastJarScans = new ArrayList<>();
+    private final Map<Path, String> jarActivationErrors = new LinkedHashMap<>();
+    private final Map<String, String> inactiveDocumentationById = new LinkedHashMap<>();
+    private Set<String> lastEnabledIds = Set.of();
     private final List<URLClassLoader> activeClassLoaders = new ArrayList<>();
     private final List<String> loadErrors = new ArrayList<>();
     private boolean initializedFromEnv = false;
 
     private List<RosToolingPlugin> orderedPlugins = List.of();
+    private List<DiscoveredPlugin> discoveredPlugins = List.of();
     private Map<String, RegisteredBlock> unqualifiedBlocks = Map.of();
     private Map<String, RegisteredBlock> qualifiedBlocks = Map.of();
     private Set<String> collidingBlockNames = Set.of();
@@ -66,8 +108,10 @@ public final class PluginRegistry {
         Set<String> enabled = parseIdSet(firstNonBlank(
                 System.getProperty(PROP_PLUGINS_ENABLED),
                 System.getenv(ENV_PLUGINS_ENABLED)));
-        if (!enabled.isEmpty()) {
+        if (!dirs.isEmpty() || !enabled.isEmpty()) {
             loadFromPathsInternal(dirs, enabled);
+        } else {
+            rebuildState();
         }
     }
 
@@ -79,36 +123,46 @@ public final class PluginRegistry {
     private void loadFromPathsInternal(final List<Path> pluginPaths, final Set<String> enabledIds) {
         closeJarClassLoaders();
         jarPlugins.clear();
+        activePluginJarPaths.clear();
+        lastJarScans.clear();
+        jarActivationErrors.clear();
+        inactiveDocumentationById.clear();
         loadErrors.clear();
 
-        if (enabledIds == null || enabledIds.isEmpty()) {
+        Set<String> enabledSet = enabledIds == null ? Set.of() : Set.copyOf(enabledIds);
+        lastEnabledIds = enabledSet;
+
+        List<Path> jarPaths = collectJarPaths(pluginPaths);
+        Map<Path, JarScanResult> scanByJar = new LinkedHashMap<>();
+        Map<String, List<JarScanResult>> scansById = new LinkedHashMap<>();
+        for (Path jar : jarPaths) {
+            JarScanResult scan = scanJarMetadata(jar);
+            lastJarScans.add(scan);
+            scanByJar.put(jar, scan);
+            if (!scan.id().isBlank()) {
+                scansById.computeIfAbsent(scan.id(), ignored -> new ArrayList<>()).add(scan);
+                if (!scan.cachedDocMarkdown().isEmpty()) {
+                    inactiveDocumentationById.putIfAbsent(scan.id(), scan.cachedDocMarkdown());
+                }
+            }
+            if (scan.hasMetadataFile() && !scan.loadError().isEmpty()) {
+                loadErrors.add("Plugin JAR '" + jar + "': " + scan.loadError());
+            }
+        }
+
+        if (enabledSet.isEmpty()) {
             rebuildState();
             return;
         }
 
         List<URL> jarUrls = new ArrayList<>();
-        if (pluginPaths != null) {
-            for (Path p : pluginPaths) {
-                if (p == null || !Files.exists(p)) {
-                    continue;
-                }
-                if (Files.isRegularFile(p) && p.toString().endsWith(".jar")) {
-                    addJarUrl(p, jarUrls);
-                } else if (Files.isDirectory(p)) {
-                    try (Stream<Path> walk = Files.list(p)) {
-                        walk.filter(f -> Files.isRegularFile(f) && f.toString().endsWith(".jar"))
-                                .sorted()
-                                .forEach(f -> addJarUrl(f, jarUrls));
-                    } catch (IOException e) {
-                        loadErrors.add("Failed to scan plugin directory '" + p + "': " + e.getMessage());
-                    }
-                }
-            }
+        for (Path jar : jarPaths) {
+            addJarUrl(jar, jarUrls);
         }
 
         Map<String, RosToolingPlugin> discovered = new LinkedHashMap<>();
-        // Also scan current context classloader and OSGi services, activating ONLY enabledIds.
-        scanServiceLoader(PluginRegistry.class.getClassLoader(), discovered);
+        Map<String, Path> providerJarById = new LinkedHashMap<>();
+        scanServiceLoader(PluginRegistry.class.getClassLoader(), discovered, providerJarById);
         scanOsgiServices(discovered);
 
         if (!jarUrls.isEmpty()) {
@@ -116,40 +170,235 @@ public final class PluginRegistry {
                     jarUrls.toArray(new URL[0]),
                     PluginRegistry.class.getClassLoader());
             activeClassLoaders.add(cl);
-            scanServiceLoader(cl, discovered);
+            scanServiceLoader(cl, discovered, providerJarById);
         }
 
-        for (String id : enabledIds) {
+        for (String id : enabledSet) {
             if (programmaticPlugins.containsKey(id)) {
                 continue;
             }
             RosToolingPlugin plugin = discovered.get(id);
+            Path sourceJar = plugin != null ? providerJarById.get(id) : null;
             if (plugin == null) {
-                loadErrors.add("Enabled plugin '" + id + "' was not found in configured plugin paths");
+                List<JarScanResult> matchingScans = scansById.getOrDefault(id, List.of());
+                if (!matchingScans.isEmpty()) {
+                    JarScanResult scan = matchingScans.get(0);
+                    String mismatch = !scan.loadError().isEmpty()
+                            ? scan.loadError()
+                            : "Enabled plugin '" + id + "' was not matched by ServiceLoader provider in '"
+                                    + scan.jarPath() + "'";
+                    jarActivationErrors.put(scan.jarPath(), mismatch);
+                    loadErrors.add(mismatch);
+                } else {
+                    loadErrors.add("Enabled plugin '" + id + "' was not found in configured plugin paths");
+                }
                 continue;
             }
+            if (sourceJar != null) {
+                JarScanResult jarMeta = scanByJar.get(sourceJar);
+                if (jarMeta != null && jarMeta.hasMetadataFile()) {
+                    if (!jarMeta.loadError().isEmpty()) {
+                        String err = "Cannot activate '" + id + "' from '" + sourceJar + "': " + jarMeta.loadError();
+                        jarActivationErrors.put(sourceJar, jarMeta.loadError());
+                        loadErrors.add(err);
+                        continue;
+                    }
+                    String actualId = safeString(plugin.id());
+                    String actualVersion = safeString(plugin.version());
+                    if (!actualId.equals(jarMeta.id()) || !actualVersion.equals(jarMeta.version())) {
+                        String err = "Plugin metadata mismatch in '" + sourceJar + "': metadata declares id='"
+                                + jarMeta.id() + "', version='" + jarMeta.version()
+                                + "' but class returned id='" + actualId + "', version='" + actualVersion + "'";
+                        jarActivationErrors.put(sourceJar, err);
+                        loadErrors.add(err);
+                        continue;
+                    }
+                }
+            }
             if (!isVersionCompatible(CORE_VERSION, plugin.supportedCoreVersionRange())) {
-                loadErrors.add("Plugin '" + id + "' requires core version "
-                        + plugin.supportedCoreVersionRange() + " (current core is " + CORE_VERSION + ")");
+                String err = "Plugin '" + id + "' requires core version "
+                        + plugin.supportedCoreVersionRange() + " (current core is " + CORE_VERSION + ")";
+                loadErrors.add(err);
+                if (sourceJar != null) {
+                    jarActivationErrors.put(sourceJar, err);
+                }
                 continue;
             }
             jarPlugins.put(id, plugin);
+            if (sourceJar != null) {
+                activePluginJarPaths.put(id, sourceJar);
+            }
         }
 
         rebuildState();
     }
 
-    private void scanServiceLoader(final ClassLoader cl, final Map<String, RosToolingPlugin> out) {
+    private List<Path> collectJarPaths(final List<Path> pluginPaths) {
+        Set<Path> unique = new LinkedHashSet<>();
+        if (pluginPaths == null) {
+            return List.of();
+        }
+        for (Path p : pluginPaths) {
+            if (p == null || !Files.exists(p)) {
+                continue;
+            }
+            Path normalized = p.toAbsolutePath().normalize();
+            if (Files.isRegularFile(normalized) && normalized.toString().endsWith(".jar")) {
+                unique.add(normalized);
+            } else if (Files.isDirectory(normalized)) {
+                try (Stream<Path> walk = Files.list(normalized)) {
+                    walk.filter(f -> Files.isRegularFile(f) && f.toString().endsWith(".jar"))
+                            .map(f -> f.toAbsolutePath().normalize())
+                            .sorted()
+                            .forEach(unique::add);
+                } catch (IOException e) {
+                    loadErrors.add("Failed to scan plugin directory '" + p + "': " + e.getMessage());
+                }
+            }
+        }
+        return new ArrayList<>(unique);
+    }
+
+    private JarScanResult scanJarMetadata(final Path jar) {
+        try (JarFile jf = new JarFile(jar.toFile())) {
+            JarEntry metaEntry = jf.getJarEntry(METADATA_ENTRY);
+            if (metaEntry == null) {
+                return new JarScanResult(
+                        jar, false, "", "", "", "", false, "",
+                        "no plugin metadata; enable by id in settings");
+            }
+            byte[] metaBytes;
+            try {
+                metaBytes = readBoundedEntry(jf, metaEntry, MAX_METADATA_BYTES, "Plugin metadata");
+            } catch (IOException e) {
+                return new JarScanResult(jar, true, "", "", "", "", false, "", e.getMessage());
+            }
+
+            Properties props = new Properties();
+            try (StringReader reader = new StringReader(new String(metaBytes, StandardCharsets.UTF_8))) {
+                props.load(reader);
+            } catch (IOException | IllegalArgumentException e) {
+                return new JarScanResult(
+                        jar, true, "", "", "", "", false, "",
+                        "Invalid plugin metadata properties: " + e.getMessage());
+            }
+
+            String id = safeTrim(props.getProperty("id"));
+            String version = safeTrim(props.getProperty("version"));
+            String range = safeTrim(props.getProperty("supportedCoreVersionRange"));
+            String summary = safeTrim(props.getProperty("summary"));
+            String docPath = normalizeJarDocPath(props.getProperty("documentation"));
+
+            List<String> missing = new ArrayList<>();
+            if (id.isEmpty()) missing.add("id");
+            if (version.isEmpty()) missing.add("version");
+            if (range.isEmpty()) missing.add("supportedCoreVersionRange");
+            if (summary.isEmpty()) missing.add("summary");
+            if (!missing.isEmpty()) {
+                return new JarScanResult(
+                        jar, true, id, version, summary, range, false, "",
+                        "Missing required metadata key(s): " + String.join(", ", missing));
+            }
+
+            String cachedDoc = "";
+            String docError = "";
+            if (props.getProperty("documentation") != null && !props.getProperty("documentation").isBlank()) {
+                if (docPath == null) {
+                    docError = "Invalid documentation entry path '" + props.getProperty("documentation") + "'";
+                } else {
+                    JarEntry docEntry = jf.getJarEntry(docPath);
+                    if (docEntry == null) {
+                        docError = "Documentation entry '" + docPath + "' not found in JAR";
+                    } else {
+                        try {
+                            byte[] docBytes = readBoundedEntry(
+                                    jf, docEntry, MAX_DOCUMENTATION_BYTES, "Plugin documentation");
+                            cachedDoc = new String(docBytes, StandardCharsets.UTF_8);
+                        } catch (IOException e) {
+                            docError = e.getMessage();
+                        }
+                    }
+                }
+            }
+
+            boolean compatible = isVersionCompatible(CORE_VERSION, range);
+            return new JarScanResult(jar, true, id, version, summary, range, compatible, cachedDoc, docError);
+        } catch (Throwable t) {
+            return new JarScanResult(
+                    jar, true, "", "", "", "", false, "",
+                    "Failed to read plugin JAR: " + t.getMessage());
+        }
+    }
+
+    private static byte[] readBoundedEntry(
+            final JarFile jf, final JarEntry entry, final int maxBytes, final String label) throws IOException {
+        long declaredSize = entry.getSize();
+        if (declaredSize > maxBytes) {
+            throw new IOException(label + " entry exceeds " + (maxBytes / 1024) + " KB limit (" + declaredSize + " bytes)");
+        }
+        try (InputStream is = jf.getInputStream(entry)) {
+            if (is == null) {
+                throw new IOException("Unable to open " + label + " entry '" + entry.getName() + "'");
+            }
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buf = new byte[4096];
+            int total = 0;
+            int n;
+            while ((n = is.read(buf)) != -1) {
+                total += n;
+                if (total > maxBytes) {
+                    throw new IOException(label + " entry exceeds " + (maxBytes / 1024) + " KB limit");
+                }
+                out.write(buf, 0, n);
+            }
+            return out.toByteArray();
+        }
+    }
+
+    private static String normalizeJarDocPath(final String raw) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        String norm = raw.trim().replace('\\', '/');
+        while (norm.startsWith("/")) {
+            norm = norm.substring(1);
+        }
+        if (norm.isEmpty() || norm.contains("..")) {
+            return null;
+        }
+        return norm;
+    }
+
+    private void scanServiceLoader(
+            final ClassLoader cl,
+            final Map<String, RosToolingPlugin> out,
+            final Map<String, Path> providerJarOut) {
         try {
             ServiceLoader<RosToolingPlugin> loader = ServiceLoader.load(RosToolingPlugin.class, cl);
             for (RosToolingPlugin plugin : loader) {
                 if (plugin != null && plugin.id() != null && !plugin.id().isBlank()) {
                     out.putIfAbsent(plugin.id(), plugin);
+                    Path src = resolveSourceJar(plugin.getClass());
+                    if (src != null) {
+                        providerJarOut.putIfAbsent(plugin.id(), src);
+                    }
                 }
             }
         } catch (Throwable t) {
             loadErrors.add("Failed to load RosToolingPlugin providers: " + t.getMessage());
         }
+    }
+
+    private static Path resolveSourceJar(final Class<?> cls) {
+        try {
+            CodeSource cs = cls.getProtectionDomain() != null ? cls.getProtectionDomain().getCodeSource() : null;
+            URL loc = cs != null ? cs.getLocation() : null;
+            if (loc != null && "file".equalsIgnoreCase(loc.getProtocol())) {
+                return Paths.get(loc.toURI()).toAbsolutePath().normalize();
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     /**
@@ -223,6 +472,11 @@ public final class PluginRegistry {
     public synchronized void clearRegistered() {
         programmaticPlugins.clear();
         jarPlugins.clear();
+        activePluginJarPaths.clear();
+        lastJarScans.clear();
+        jarActivationErrors.clear();
+        inactiveDocumentationById.clear();
+        lastEnabledIds = Set.of();
         loadErrors.clear();
         closeJarClassLoaders();
         initializedFromEnv = false;
@@ -232,6 +486,27 @@ public final class PluginRegistry {
     public synchronized List<RosToolingPlugin> activePlugins() {
         ensureLoadedFromEnvironment();
         return orderedPlugins;
+    }
+
+    public synchronized List<DiscoveredPlugin> discoveredPlugins() {
+        ensureLoadedFromEnvironment();
+        return discoveredPlugins;
+    }
+
+    public synchronized String documentationMarkdownFor(final String pluginId) {
+        ensureLoadedFromEnvironment();
+        if (pluginId == null || pluginId.isBlank()) {
+            return "";
+        }
+        RosToolingPlugin active = pluginById(pluginId);
+        if (active != null) {
+            try {
+                return safeString(active.documentationMarkdown());
+            } catch (Throwable ignored) {
+                return "";
+            }
+        }
+        return inactiveDocumentationById.getOrDefault(pluginId, "");
     }
 
     public synchronized List<String> loadErrors() {
@@ -367,6 +642,116 @@ public final class PluginRegistry {
         this.unqualifiedBlocks = Collections.unmodifiableMap(unqualified);
         this.qualifiedBlocks = Collections.unmodifiableMap(qualified);
         this.collidingBlockNames = Collections.unmodifiableSet(collisions);
+        this.discoveredPlugins = rebuildDiscoveredPlugins(sorted);
+    }
+
+    private List<DiscoveredPlugin> rebuildDiscoveredPlugins(final List<RosToolingPlugin> activeSorted) {
+        Map<String, RosToolingPlugin> activeById = new LinkedHashMap<>();
+        for (RosToolingPlugin p : activeSorted) {
+            activeById.put(p.id(), p);
+        }
+
+        List<DiscoveredPlugin> out = new ArrayList<>();
+        Set<String> representedIds = new LinkedHashSet<>();
+
+        for (JarScanResult scan : lastJarScans) {
+            String jarStr = scan.jarPath().toString();
+            String activationErr = jarActivationErrors.getOrDefault(scan.jarPath(), "");
+            if (scan.hasMetadataFile()) {
+                String id = scan.id();
+                boolean isEnabled = !id.isEmpty() && lastEnabledIds.contains(id);
+                RosToolingPlugin active = !id.isEmpty() ? activeById.get(id) : null;
+                boolean isActive = active != null
+                        && scan.jarPath().equals(activePluginJarPaths.get(id));
+                String err = !activationErr.isEmpty() ? activationErr : scan.loadError();
+                out.add(new DiscoveredPlugin(
+                        id,
+                        scan.version(),
+                        scan.summary(),
+                        scan.supportedCoreVersionRange(),
+                        scan.compatible(),
+                        isEnabled,
+                        isActive,
+                        jarStr,
+                        err));
+                if (!id.isEmpty()) {
+                    representedIds.add(id);
+                }
+            } else {
+                RosToolingPlugin activeFromJar = null;
+                for (Map.Entry<String, Path> e : activePluginJarPaths.entrySet()) {
+                    if (scan.jarPath().equals(e.getValue())) {
+                        activeFromJar = activeById.get(e.getKey());
+                        break;
+                    }
+                }
+                if (activeFromJar != null) {
+                    representedIds.add(activeFromJar.id());
+                    out.add(new DiscoveredPlugin(
+                            activeFromJar.id(),
+                            safeString(activeFromJar.version()),
+                            firstNonHeadingLine(activeFromJar.documentationMarkdown()),
+                            safeString(activeFromJar.supportedCoreVersionRange()),
+                            true,
+                            true,
+                            true,
+                            jarStr,
+                            ""));
+                } else {
+                    out.add(new DiscoveredPlugin(
+                            "",
+                            "",
+                            "",
+                            "",
+                            false,
+                            false,
+                            false,
+                            jarStr,
+                            !activationErr.isEmpty() ? activationErr : scan.loadError()));
+                }
+            }
+        }
+
+        for (RosToolingPlugin active : activeSorted) {
+            if (representedIds.contains(active.id())) {
+                continue;
+            }
+            Path activeJar = activePluginJarPaths.get(active.id());
+            String sourceStr = activeJar != null ? activeJar.toString() : "";
+            out.add(new DiscoveredPlugin(
+                    active.id(),
+                    safeString(active.version()),
+                    firstNonHeadingLine(active.documentationMarkdown()),
+                    safeString(active.supportedCoreVersionRange()),
+                    true,
+                    true,
+                    true,
+                    sourceStr,
+                    ""));
+        }
+
+        return Collections.unmodifiableList(out);
+    }
+
+    public static String firstNonHeadingLine(final String markdown) {
+        if (markdown == null || markdown.isBlank()) {
+            return "";
+        }
+        for (String line : markdown.split("\\R")) {
+            String trimmed = line.trim();
+            if (!trimmed.isEmpty() && !trimmed.startsWith("#")) {
+                return trimmed;
+            }
+        }
+        return "";
+    }
+
+    private static String safeTrim(final String s) {
+        return s == null ? "" : s.trim();
+    }
+
+    private static String safeString(final String s) {
+        return s == null ? "" : s;
     }
 
     private List<RosToolingPlugin> topologicalSort(final Collection<RosToolingPlugin> plugins) {

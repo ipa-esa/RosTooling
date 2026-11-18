@@ -127,6 +127,43 @@ public final class RosPluginCommandSupport {
         return out;
     }
 
+    public static List<Map<String, Object>> listDiscoveredPlugins() {
+        try {
+            PluginRegistry.INSTANCE.ensureLoadedFromEnvironment();
+            List<Map<String, Object>> out = new ArrayList<>();
+            for (PluginRegistry.DiscoveredPlugin dp : PluginRegistry.INSTANCE.discoveredPlugins()) {
+                Map<String, Object> entry = new LinkedHashMap<>();
+                entry.put("id", dp.id());
+                entry.put("version", dp.version());
+                entry.put("summary", dp.summary());
+                entry.put("supportedCoreVersionRange", dp.supportedCoreVersionRange());
+                entry.put("compatible", dp.compatible());
+                entry.put("enabled", dp.enabled());
+                entry.put("active", dp.active());
+                entry.put("sourceJarPath", dp.sourceJarPath());
+                entry.put("loadError", dp.loadError());
+                out.add(entry);
+            }
+            return out;
+        } catch (Throwable ignored) {
+            return List.of();
+        }
+    }
+
+    public static Map<String, Object> getPluginDocumentation(final String pluginId) {
+        String id = pluginId == null ? "" : pluginId;
+        String md = "";
+        try {
+            md = PluginRegistry.INSTANCE.documentationMarkdownFor(id);
+        } catch (Throwable ignored) {
+            md = "";
+        }
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("id", id);
+        out.put("documentationMarkdown", md != null ? md : "");
+        return out;
+    }
+
     public static Map<String, Object> executePluginTool(
             final Map<String, Object> req,
             final ILanguageServerAccess access,

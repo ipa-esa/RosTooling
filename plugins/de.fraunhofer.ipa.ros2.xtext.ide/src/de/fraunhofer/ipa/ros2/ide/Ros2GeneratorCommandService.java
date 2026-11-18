@@ -48,6 +48,8 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
     /** Lists the supported ROS 2 distributions; the single source for MCP tools and the extension. */
     public static final String LIST_DISTROS = "ros2.listDistros";
     public static final String LIST_PLUGIN_TOOLS = "rostooling.listPluginTools";
+    public static final String LIST_DISCOVERED_PLUGINS = "rostooling.listDiscoveredPlugins";
+    public static final String GET_PLUGIN_DOCUMENTATION = "rostooling.getPluginDocumentation";
     public static final String EXECUTE_PLUGIN_TOOL = "rostooling.executePluginTool";
     public static final String GET_EXTENSION_BLOCK = "rostooling.getExtensionBlock";
     public static final String SET_EXTENSION_BLOCK = "rostooling.setExtensionBlock";
@@ -77,6 +79,8 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
             "ros2.generatePythonWrapper",
             LIST_DISTROS,
             LIST_PLUGIN_TOOLS,
+            LIST_DISCOVERED_PLUGINS,
+            GET_PLUGIN_DOCUMENTATION,
             EXECUTE_PLUGIN_TOOL,
             GET_EXTENSION_BLOCK,
             SET_EXTENSION_BLOCK,
@@ -93,6 +97,12 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
         }
         if (LIST_PLUGIN_TOOLS.equals(command)) {
             return RosPluginCommandSupport.listPluginTools();
+        }
+        if (LIST_DISCOVERED_PLUGINS.equals(command)) {
+            return RosPluginCommandSupport.listDiscoveredPlugins();
+        }
+        if (GET_PLUGIN_DOCUMENTATION.equals(command)) {
+            return RosPluginCommandSupport.getPluginDocumentation(parseIdOrReqArg(params.getArguments()));
         }
         if (EXECUTE_PLUGIN_TOOL.equals(command)) {
             Map<String, Object> req = parseReqArg(params.getArguments());
@@ -297,6 +307,19 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
             return Map.of();
         }
         return RosPluginCommandSupport.toJavaMap(args.get(0));
+    }
+
+    private String parseIdOrReqArg(List<Object> args) {
+        if (args == null || args.isEmpty()) {
+            return "";
+        }
+        Object first = args.get(0);
+        Map<String, Object> map = RosPluginCommandSupport.toJavaMap(first);
+        if (!map.isEmpty()) {
+            Object id = map.get("id");
+            return id == null ? "" : id.toString();
+        }
+        return parseStringArg(first);
     }
 
     private String parseStringArg(Object arg) {

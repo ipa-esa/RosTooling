@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.6.0] - 2026-11-18
 
 ### Added
+- **Passive Plugin Discovery Metadata & Read-Only Documentation Commands**:
+  - Documented `META-INF/rostooling-plugin.properties` (`id`, `version`, `supportedCoreVersionRange`, `summary`, optional `documentation` Markdown path inside the JAR) and read-only scanning via `java.util.jar.JarFile` in `PluginRegistry` (capped at 16 KB metadata / 256 KB documentation, never unpacking or instantiating disabled plugin classes), verifying `id()`/`version()` against JAR metadata upon activation.
+  - Added LSP commands `rostooling.listDiscoveredPlugins` and `rostooling.getPluginDocumentation` returning immutable discovered-plugin descriptors (including active classpath/OSGi providers) and Markdown documentation for active or inactive plugins without running plugin code.
 - **Scoped Plugin File Read Extension Point (`GenerationContext.readOwnedFile`)**:
   - Added `GenerationContext.readOwnedFile(String)` returning `Optional<String>` for plugin-owned files inside `config/<plugin-folder>/`, `launch/<plugin-folder>/`, or `plugins/<plugin-folder>/` present in `existingFiles()`, resolved safely against the optional client-supplied `outputRoot` (package output folder for `.ros2`, system `src-gen` output folder for `.rossystem`), with `..`/absolute/symlink escape rejection and empty return on missing root or unreadable files.
 - **Plugin Notice Extension Point (`GenerationContext.addNotice`)**:

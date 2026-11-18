@@ -25,6 +25,15 @@
  * <ul>
  *   <li>Discovery stays passive until enabled via {@code -Dros.plugins.enabled} /
  *       {@code ROS_PLUGINS_ENABLED} or explicit programmatic registration.</li>
+ *   <li><b>Passive JAR Metadata ({@code META-INF/rostooling-plugin.properties}):</b> External
+ *       plugin JARs should bundle {@code META-INF/rostooling-plugin.properties} with required keys
+ *       {@code id}, {@code version}, {@code supportedCoreVersionRange}, and {@code summary}, plus
+ *       an optional {@code documentation} key naming a Markdown resource path inside the JAR.
+ *       Core reads only those entries via {@link java.util.jar.JarFile} (capped at 16 KB for
+ *       properties and 256 KB for documentation, never unpacked or loaded via classloaders) so
+ *       IDEs can list plugins without running any plugin code. When an enabled plugin activates,
+ *       its {@link RosToolingPlugin#id()} and {@link RosToolingPlugin#version()} must match the
+ *       metadata file if present.</li>
  *   <li><b>Single distro source:</b> Core resolves {@link de.fraunhofer.ipa.ros2.distro.Ros2Distro}
  *       once and exposes it via {@link GenerationContext#ros2Distro()}. Plugins must never resolve a
  *       distribution independently.</li>
