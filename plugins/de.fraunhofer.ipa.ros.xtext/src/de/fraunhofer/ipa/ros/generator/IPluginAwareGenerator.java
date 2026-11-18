@@ -18,9 +18,11 @@ public interface IPluginAwareGenerator {
     class Outcome {
         public final Map<String, String> coreFiles = new LinkedHashMap<>();
         public final Map<String, String> pluginFiles = new LinkedHashMap<>();
-        public final Set<String> deletedFiles = new LinkedHashSet<>();
+        public final Set<String> coreDeletedFiles = new LinkedHashSet<>();
+        public final Set<String> pluginDeletedFiles = new LinkedHashSet<>();
         public final List<String> errors = new ArrayList<>();
         public final List<String> pluginConflictErrors = new ArrayList<>();
+        public final List<String> warnings = new ArrayList<>();
     }
 
     Outcome generateWithPlugins(

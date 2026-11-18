@@ -53,7 +53,7 @@ from launch_ros.descriptions import ComposableNode
 from launch_ros.parameter_descriptions import ParameterValue
 «IF hasSubstitutionValues(system) || hasPluginIncludeSubstitutions(pluginIncludes)»from launch.frontend.parse_substitution import parse_substitution«ENDIF»
 «IF !getSubsystems(system).empty || !pluginIncludes.empty»from ament_index_python.packages import get_package_share_directory«ENDIF»
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.actions import «IF !pluginIncludes.empty»GroupAction, «ENDIF»IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoinSubstitution, TextSubstitution
 
@@ -145,13 +145,18 @@ def generate_launch_description():
   «ENDIF»«ENDFOR»«IF !pluginIncludes.empty»
   «FOR i : 0 ..< pluginIncludes.size»
   «val inc = pluginIncludes.get(i)»
-  «pluginIncludeVarName(inc, i)»= IncludeLaunchDescription(
-    PythonLaunchDescriptionSource([get_package_share_directory('«system.getName().toLowerCase»') + '/«inc.launchFileRelativePath»'])«IF !inc.launchArguments.empty»,
-    launch_arguments={
-      «FOR arg : inc.launchArguments.entrySet SEPARATOR ','»
-      '«arg.key»': «renderPluginLaunchArg(arg.value)»
-      «ENDFOR»
-    }.items()«ENDIF»
+  «pluginIncludeVarName(inc, i)» = GroupAction(
+    actions=[
+      IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([get_package_share_directory('«system.getName().toLowerCase»') + '/«inc.launchFileRelativePath»'])«IF !inc.launchArguments.empty»,
+        launch_arguments={
+          «FOR arg : inc.launchArguments.entrySet SEPARATOR ','»
+          '«arg.key»': «renderPluginLaunchArg(arg.value)»
+          «ENDFOR»
+        }.items()«ENDIF»
+      )
+    ],
+    scoped=True
   )
   «ENDFOR»
 «ENDIF»

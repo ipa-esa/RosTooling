@@ -37,7 +37,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
-import de.fraunhofer.ipa.ros.generator.RosSiblingResourceLoader;
 import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
 import de.fraunhofer.ipa.ros2.distro.Ros2Distros;
 import de.fraunhofer.ipa.ros2.distro.UnknownDistroException;
@@ -116,7 +115,6 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
                 CompletableFuture<Map<String, Object>> futureResult = access.doRead(fileUriStr, (context) -> {
                 	try {
 						Resource resource = context.getResource();
-						RosSiblingResourceLoader.loadSiblingModelsFromDirectory(resource.getResourceSet(), resource.getURI(), null);
 						EcoreUtil.resolveAll(resource);
 						IResourceServiceProvider rsp = resourceServiceRegistry.getResourceServiceProvider(uri);
 
@@ -162,7 +160,8 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
 								"success", true,
 								"files", files,
 								"pluginFiles", outcome.pluginFiles,
-								"prunedFiles", new ArrayList<>(outcome.deletedFiles),
+								"prunedFiles", new ArrayList<>(outcome.pluginDeletedFiles),
+								"warnings", new ArrayList<>(outcome.warnings),
 								"count", files.size());
 						}
 						generator.doGenerate(resource, fsa, context1);

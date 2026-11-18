@@ -6,7 +6,6 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.fraunhofer.ipa.ros.generator.IPluginAwareGenerator;
-import de.fraunhofer.ipa.ros.generator.RosSiblingResourceLoader;
 import de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor;
 import de.fraunhofer.ipa.ros.plugin.spi.ExtensionBlockMerger;
 import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
@@ -47,10 +46,13 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.resource.impl.ChunkedResourceDescriptions;
+import org.eclipse.xtext.resource.impl.ProjectDescription;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.workspace.ProjectConfigAdapter;
 import ros.Artifact;
 import ros.Extensible;
 import ros.ExtensionBlock;
@@ -321,7 +323,7 @@ public final class RosPluginCommandSupport {
             // Re-parse and validate the updated text in an isolated ResourceSet so all diagnostics reflect the edit.
             List<String> errors = new ArrayList<>();
             List<String> warnings = new ArrayList<>();
-            validateUpdatedText(res, modelPath, updatedText, rspRegistry, errors, warnings);
+            validateUpdatedText(res, updatedText, rspRegistry, errors, warnings);
 
             Map<String, Object> result = new LinkedHashMap<>();
             result.put("success", errors.isEmpty());
@@ -404,9 +406,10 @@ public final class RosPluginCommandSupport {
             out.put("files", allFiles);
             out.put("coreFiles", hasErrors ? Map.of() : outcome.coreFiles);
             out.put("pluginFiles", hasErrors ? Map.of() : outcome.pluginFiles);
-            out.put("prunedFiles", hasErrors ? List.of() : new ArrayList<>(outcome.deletedFiles));
+            out.put("prunedFiles", hasErrors ? List.of() : new ArrayList<>(outcome.pluginDeletedFiles));
             out.put("errors", outcome.errors);
             out.put("conflictErrors", outcome.pluginConflictErrors);
+            out.put("warnings", hasErrors ? List.of() : outcome.warnings);
             out.put("distro", resolvedDistro.name());
             out.put("count", allFiles.size());
             if (hasErrors) {
@@ -425,13 +428,15 @@ public final class RosPluginCommandSupport {
             final ILanguageServerAccess access,
             final IResourceServiceProvider.Registry rspRegistry,
             final Function<Resource, Map<String, Object>> fn) {
-        if (fileUri != null && !fileUri.isBlank() && access != null && (modelText == null || modelText.isBlank())) {
+        if (fileUri != null && !fileUri.isBlank() && access != null) {
             try {
-                return access.doRead(fileUri, (context) -> {
-                    Resource res = context.getResource();
-                    RosSiblingResourceLoader.loadSiblingModelsFromDirectory(res.getResourceSet(), res.getURI(), modelPath);
-                    return fn.apply(res);
+                Map<String, Object> readResult = access.doRead(fileUri, (context) -> {
+                    Resource res = context != null ? context.getResource() : null;
+                    return res != null ? fn.apply(res) : null;
                 }).get();
+                if (readResult != null) {
+                    return readResult;
+                }
             } catch (Exception e) {
                 return Map.of("success", false, "error", "Failed to read resource '" + fileUri + "': " + e.getMessage());
             }
@@ -459,7 +464,6 @@ public final class RosPluginCommandSupport {
         }
         IResourceServiceProvider rsp = rspRegistry.getResourceServiceProvider(uri);
         XtextResourceSet rs = rsp != null ? rsp.get(XtextResourceSet.class) : new XtextResourceSet();
-        RosSiblingResourceLoader.loadSiblingModelsFromDirectory(rs, uri, modelPath);
         Resource res = rs.createResource(uri);
         String text = modelText;
         if ((text == null || text.isBlank()) && uri.isFile()) {
@@ -478,7 +482,6 @@ public final class RosPluginCommandSupport {
 
     private static void validateUpdatedText(
             final Resource originalResource,
-            final String fallbackModelPath,
             final String updatedText,
             final IResourceServiceProvider.Registry rspRegistry,
             final List<String> errors,
@@ -490,8 +493,25 @@ public final class RosPluginCommandSupport {
                 return;
             }
             XtextResourceSet checkRs = rsp.get(XtextResourceSet.class);
-            if (originalResource.getResourceSet() != null) {
-                for (Resource sibling : originalResource.getResourceSet().getResources()) {
+            ResourceSet origRs = originalResource.getResourceSet();
+            if (origRs != null) {
+                checkRs.getLoadOptions().putAll(origRs.getLoadOptions());
+                ProjectDescription origProj = ProjectDescription.findInEmfObject(origRs);
+                if (origProj != null && ProjectDescription.findInEmfObject(checkRs) == null) {
+                    ProjectDescription projCopy = new ProjectDescription();
+                    projCopy.setName(origProj.getName());
+                    projCopy.setDependencies(new ArrayList<>(origProj.getDependencies()));
+                    projCopy.attachToEmfObject(checkRs);
+                }
+                ProjectConfigAdapter origCfg = ProjectConfigAdapter.findInEmfObject(origRs);
+                if (origCfg != null && ProjectConfigAdapter.findInEmfObject(checkRs) == null) {
+                    ProjectConfigAdapter.install(checkRs, origCfg.getProjectConfig());
+                }
+                ChunkedResourceDescriptions origIndex = ChunkedResourceDescriptions.findInEmfObject(origRs);
+                if (origIndex != null && ChunkedResourceDescriptions.findInEmfObject(checkRs) == null) {
+                    origIndex.createShallowCopyWith(checkRs);
+                }
+                for (Resource sibling : new ArrayList<>(origRs.getResources())) {
                     if (sibling == originalResource || sibling.getURI() == null) {
                         continue;
                     }
@@ -502,7 +522,6 @@ public final class RosPluginCommandSupport {
                     }
                 }
             }
-            RosSiblingResourceLoader.loadSiblingModelsFromDirectory(checkRs, uri, fallbackModelPath);
             Resource updatedRes = checkRs.createResource(uri);
             updatedRes.load(new ByteArrayInputStream(updatedText.getBytes(StandardCharsets.UTF_8)), Map.of());
             EcoreUtil.resolveAll(checkRs);

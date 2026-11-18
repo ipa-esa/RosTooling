@@ -127,6 +127,7 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
             coreOwnedPaths.add(pkgName + "/config/ros1_bridges.yaml")
 
             val List<Extensible> rosNodesList = new ArrayList()
+            val Map<Extensible, Node> rosNodeTypes = new LinkedHashMap()
             val Set<Node> resolvedNodeSet = new LinkedHashSet()
             val Set<ros.Package> resolvedPkgSet = new LinkedHashSet()
 
@@ -139,6 +140,7 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                         coreOwnedPaths.add(pkgName + "/config/" + rnode.namespace + "_" + rnode.getName() + ".yaml")
                     }
                     if (rnode.from !== null && !rnode.from.eIsProxy) {
+                        rosNodeTypes.put(rnode, rnode.from)
                         resolvedNodeSet.add(rnode.from)
                         val p = enclosingPackage(rnode.from)
                         if (p !== null) {
@@ -167,12 +169,22 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                 }
             }
 
+            val Set<String> declaredSystemLaunchArgs = new LinkedHashSet()
+            if (system.parameter !== null) {
+                for (p : system.parameter) {
+                    if (p instanceof ros.Parameter && !isSubstitutionParameter(p as ros.Parameter)) {
+                        declaredSystemLaunchArgs.add((p as ros.Parameter).name)
+                    }
+                }
+            }
+            for (lp : getUniqueLaunchParameters(system)) {
+                declaredSystemLaunchArgs.add(lp.name)
+            }
+
             // Phase B: Run system-level plugins before core renders final launch/setup files.
             val List<SystemGenerationContext> sysContexts = new ArrayList()
             val List<String> sysConflictErrors = new ArrayList()
             val Map<String, SystemGenerationContext.LaunchInclude> sharedIncludes = new LinkedHashMap()
-            val Map<String, String> sharedArgOwners = new LinkedHashMap()
-            val Map<String, SystemGenerationContext.LaunchArgumentValue> sharedArgValues = new LinkedHashMap()
 
             if (!activePlugins.empty) {
                 val Map<String, String> allPluginOwnedFiles = new LinkedHashMap()
@@ -186,16 +198,16 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                         system,
                         isFromFile,
                         rosNodesList,
+                        rosNodeTypes,
                         resolvedNodesList,
                         resolvedPkgsList,
+                        declaredSystemLaunchArgs,
                         resource,
                         distro,
                         existingList,
                         coreOwnedPaths,
                         allPluginOwnedFiles,
                         sharedIncludes,
-                        sharedArgOwners,
-                        sharedArgValues,
                         sysConflictErrors,
                         PluginRegistry.INSTANCE
                     )
@@ -217,14 +229,27 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
             val Set<String> pluginInstallDirs = new LinkedHashSet()
             if (noConflicts) {
                 for (ctx : sysContexts) {
+                    val Set<String> ctxInstallFolders = new LinkedHashSet()
+                    val pf = ctx.pluginFolder
                     for (writtenPath : ctx.writtenFiles.keySet) {
                         val sub = if (writtenPath.startsWith(pkgPrefix)) writtenPath.substring(pkgPrefix.length) else writtenPath
-                        val pf = ctx.pluginFolder
                         if (sub.startsWith("config/" + pf + "/")) {
-                            pluginInstallDirs.add("config/" + pf)
+                            ctxInstallFolders.add("config/" + pf)
                         } else if (sub.startsWith("launch/" + pf + "/")) {
-                            pluginInstallDirs.add("launch/" + pf)
+                            ctxInstallFolders.add("launch/" + pf)
                         }
+                    }
+                    for (inc : effectiveIncludes) {
+                        if (inc.pluginId == ctx.pluginId) {
+                            ctxInstallFolders.add("launch/" + pf)
+                        }
+                    }
+                    pluginInstallDirs.addAll(ctxInstallFolders)
+                    if (isPurePython && hasSetupPy && !ctxInstallFolders.empty && system.fromFile.isNullOrEmpty) {
+                        outcome.warnings.add(
+                            "Plugin '" + ctx.pluginId + "' generated or included files in " + ctxInstallFolders
+                            + " for pure-Python system '" + pkgName
+                            + "', which will not be installed because user-owned '" + pkgName + "/setup.py' is preserved untouched.")
                     }
                 }
             }
@@ -350,8 +375,10 @@ install(DIRECTORY config
             if (noConflicts) {
                 for (ctx : sysContexts) {
                     for (delPath : ctx.deletedFiles) {
-                        fsa.deleteFile(delPath)
-                        outcome.deletedFiles.add(delPath)
+                        if (!coreOwnedPaths.contains(delPath)) {
+                            fsa.deleteFile(delPath)
+                            outcome.pluginDeletedFiles.add(delPath)
+                        }
                     }
                     for (entry : ctx.writtenFiles.entrySet) {
                         fsa.generateFile(entry.key, entry.value)

@@ -3,12 +3,12 @@ package de.fraunhofer.ipa.ros.plugin.spi;
 import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import ros.Extensible;
 import ros.ExtensionBlock;
@@ -62,6 +62,13 @@ public final class SystemGenerationContext extends GenerationContext {
         }
     }
 
+    public record LaunchArgument(String name, LaunchArgumentValue value) {
+        public LaunchArgument {
+            Objects.requireNonNull(name, "name");
+            Objects.requireNonNull(value, "value");
+        }
+    }
+
     public record LaunchInclude(
             String pluginId,
             String launchFileRelativePath,
@@ -70,12 +77,12 @@ public final class SystemGenerationContext extends GenerationContext {
 
     private final Extensible systemModel;
     private final List<Extensible> rosNodes;
+    private final Map<Extensible, ros.Node> rosNodeTypes;
     private final List<ros.Node> resolvedNodes;
     private final List<ros.Package> resolvedPackages;
     private final boolean fromFileSystem;
+    private final Set<String> declaredSystemLaunchArgs;
     private final Map<String, LaunchInclude> sharedLaunchIncludes;
-    private final Map<String, String> sharedLaunchArgOwners;
-    private final Map<String, LaunchArgumentValue> sharedLaunchArgValues;
 
     public SystemGenerationContext(
             final String pluginId,
@@ -83,16 +90,16 @@ public final class SystemGenerationContext extends GenerationContext {
             final Extensible systemModel,
             final boolean fromFileSystem,
             final List<Extensible> rosNodes,
+            final Map<Extensible, ros.Node> rosNodeTypes,
             final List<ros.Node> resolvedNodes,
             final List<ros.Package> resolvedPackages,
+            final Set<String> declaredSystemLaunchArgs,
             final Resource resource,
             final Ros2Distro ros2Distro,
             final List<String> existingFiles,
             final Set<String> coreOwnedPaths,
             final Map<String, String> allPluginOwnedFiles,
             final Map<String, LaunchInclude> sharedLaunchIncludes,
-            final Map<String, String> sharedLaunchArgOwners,
-            final Map<String, LaunchArgumentValue> sharedLaunchArgValues,
             final List<String> errors,
             final PluginRegistry registry) {
         super(
@@ -108,11 +115,13 @@ public final class SystemGenerationContext extends GenerationContext {
         this.systemModel = Objects.requireNonNull(systemModel, "systemModel");
         this.fromFileSystem = fromFileSystem;
         this.rosNodes = rosNodes == null ? List.of() : Collections.unmodifiableList(rosNodes);
+        this.rosNodeTypes = rosNodeTypes == null ? Map.of() : Collections.unmodifiableMap(rosNodeTypes);
         this.resolvedNodes = resolvedNodes == null ? List.of() : Collections.unmodifiableList(resolvedNodes);
         this.resolvedPackages = resolvedPackages == null ? List.of() : Collections.unmodifiableList(resolvedPackages);
+        this.declaredSystemLaunchArgs = declaredSystemLaunchArgs == null
+                ? Set.of()
+                : Collections.unmodifiableSet(new LinkedHashSet<>(declaredSystemLaunchArgs));
         this.sharedLaunchIncludes = sharedLaunchIncludes != null ? sharedLaunchIncludes : new LinkedHashMap<>();
-        this.sharedLaunchArgOwners = sharedLaunchArgOwners != null ? sharedLaunchArgOwners : new LinkedHashMap<>();
-        this.sharedLaunchArgValues = sharedLaunchArgValues != null ? sharedLaunchArgValues : new LinkedHashMap<>();
     }
 
     /**
@@ -167,11 +176,7 @@ public final class SystemGenerationContext extends GenerationContext {
         if (rosNodeInstance == null || blockName == null) {
             return null;
         }
-        Extensible typeNode = null;
-        EStructuralFeature fromFeat = rosNodeInstance.eClass().getEStructuralFeature("from");
-        if (fromFeat != null && rosNodeInstance.eGet(fromFeat) instanceof Extensible fromExt) {
-            typeNode = fromExt;
-        }
+        Extensible typeNode = rosNodeTypes.get(rosNodeInstance);
         BlockDescriptor desc = registry != null ? registry.blockDescriptor(blockName) : null;
         ExtensionBlockMerger.MergeResult mergeResult = ExtensionBlockMerger.mergeWithConflicts(
                 typeNode, rosNodeInstance, blockName, desc);
@@ -186,23 +191,45 @@ public final class SystemGenerationContext extends GenerationContext {
     }
 
     /**
+     * Unmodifiable view of the launch argument names declared by core in the generated system
+     * launch file (for use with {@link LaunchArgumentKind#SYSTEM_LAUNCH_ARG}).
+     */
+    public Set<String> declaredSystemLaunchArguments() {
+        return declaredSystemLaunchArgs;
+    }
+
+    /**
      * Registers a plugin-authored launch file inside {@code launch/<plugin-folder>/} to be
-     * included from core's generated system launch file via {@code IncludeLaunchDescription}.
+     * included from core's generated system launch file inside a scoped {@code GroupAction}.
      */
     public void addLaunchInclude(final String relativeLaunchPath) {
-        addLaunchInclude(relativeLaunchPath, Map.of());
+        addLaunchInclude(relativeLaunchPath, List.of());
     }
 
     /**
      * Registers a plugin-authored launch file inside {@code launch/<plugin-folder>/} with launch
      * arguments ({@link LaunchArgumentKind#LITERAL}, {@link LaunchArgumentKind#SYSTEM_LAUNCH_ARG},
-     * or {@link LaunchArgumentKind#SUBSTITUTION}) to be included from core's generated system launch
-     * file in plugin order. Duplicate includes or conflicting launch arguments between two plugins
-     * record an error naming both plugins.
+     * or {@link LaunchArgumentKind#SUBSTITUTION}) to be included inside its own scoped
+     * {@code GroupAction}. Duplicate include paths fail naming the offending plugin(s).
      */
     public void addLaunchInclude(
             final String relativeLaunchPath,
             final Map<String, LaunchArgumentValue> launchArguments) {
+        List<LaunchArgument> argList = launchArguments == null
+                ? List.of()
+                : launchArguments.entrySet().stream()
+                        .map(e -> new LaunchArgument(e.getKey(), e.getValue()))
+                        .toList();
+        addLaunchInclude(relativeLaunchPath, argList);
+    }
+
+    /**
+     * List-based overload of {@link #addLaunchInclude(String, Map)} that preserves argument order
+     * and detects duplicate argument names passed to the same include.
+     */
+    public void addLaunchInclude(
+            final String relativeLaunchPath,
+            final List<LaunchArgument> launchArguments) {
         if (fromFileSystem) {
             recordError("Plugin '" + pluginId() + "' cannot register launch include '" + relativeLaunchPath
                     + "' on fromFile system '" + outputRootName() + "' (core generates no launch file)");
@@ -236,11 +263,19 @@ public final class SystemGenerationContext extends GenerationContext {
 
         Map<String, LaunchArgumentValue> safeArgs = new LinkedHashMap<>();
         if (launchArguments != null) {
-            for (Map.Entry<String, LaunchArgumentValue> entry : launchArguments.entrySet()) {
-                String argName = entry.getKey();
-                LaunchArgumentValue argVal = entry.getValue();
+            for (LaunchArgument arg : launchArguments) {
+                if (arg == null) {
+                    continue;
+                }
+                String argName = arg.name();
+                LaunchArgumentValue argVal = arg.value();
                 if (!PackageBuild.isValidIdentifier(argName)) {
                     recordError("Plugin '" + pluginId() + "' provided invalid launch argument name '"
+                            + argName + "' on include '" + subPath + "'");
+                    return;
+                }
+                if (safeArgs.containsKey(argName)) {
+                    recordError("Plugin '" + pluginId() + "' passed duplicate launch argument '"
                             + argName + "' on include '" + subPath + "'");
                     return;
                 }
@@ -254,6 +289,11 @@ public final class SystemGenerationContext extends GenerationContext {
                         if (!PackageBuild.isValidIdentifier(argVal.value())) {
                             recordError("Plugin '" + pluginId() + "' provided invalid system launch argument name '"
                                     + argVal.value() + "' for argument '" + argName + "'");
+                            return;
+                        }
+                        if (!declaredSystemLaunchArgs.contains(argVal.value())) {
+                            recordError("Plugin '" + pluginId() + "' referenced undeclared system launch argument '"
+                                    + argVal.value() + "' for argument '" + argName + "' on include '" + subPath + "'");
                             return;
                         }
                     }
@@ -270,21 +310,10 @@ public final class SystemGenerationContext extends GenerationContext {
                         // Validated non-null; escaped identically to core strings during Python rendering.
                     }
                 }
-                String prevArgOwner = sharedLaunchArgOwners.get(argName);
-                LaunchArgumentValue prevArgVal = sharedLaunchArgValues.get(argName);
-                if (prevArgOwner != null && !prevArgOwner.equals(pluginId()) && !Objects.equals(prevArgVal, argVal)) {
-                    recordError("Plugin conflict between '" + prevArgOwner + "' and '" + pluginId()
-                            + "' on launch argument '" + argName + "'");
-                    return;
-                }
                 safeArgs.put(argName, argVal);
             }
         }
 
-        for (Map.Entry<String, LaunchArgumentValue> e : safeArgs.entrySet()) {
-            sharedLaunchArgOwners.putIfAbsent(e.getKey(), pluginId());
-            sharedLaunchArgValues.putIfAbsent(e.getKey(), e.getValue());
-        }
         sharedLaunchIncludes.put(subPath, new LaunchInclude(pluginId(), subPath, Collections.unmodifiableMap(safeArgs)));
     }
 

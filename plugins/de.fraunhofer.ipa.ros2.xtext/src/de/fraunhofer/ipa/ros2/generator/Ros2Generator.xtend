@@ -358,8 +358,10 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
                     if (outcome.errors.empty) {
                         for (ctx : contexts) {
                             for (delPath : ctx.deletedFiles) {
-                                fsa.deleteFile(delPath)
-                                outcome.deletedFiles.add(delPath)
+                                if (!coreOwnedPaths.contains(delPath)) {
+                                    fsa.deleteFile(delPath)
+                                    outcome.pluginDeletedFiles.add(delPath)
+                                }
                             }
                             for (entry : ctx.writtenFiles.entrySet) {
                                 fsa.generateFile(entry.key, entry.value)
@@ -415,6 +417,6 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
 
     private def void deleteCoreFile(IFileSystemAccess2 fsa, PluginGenerationOutcome outcome, String relativePath) {
         fsa.deleteFile(relativePath)
-        outcome.deletedFiles.add(relativePath)
+        outcome.coreDeletedFiles.add(relativePath)
     }
 }

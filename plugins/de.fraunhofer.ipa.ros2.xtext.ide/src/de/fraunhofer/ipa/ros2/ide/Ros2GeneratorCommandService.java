@@ -197,6 +197,7 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
 
                     PluginRegistry.INSTANCE.ensureLoadedFromEnvironment();
                     List<String> prunedFiles = List.of();
+                    List<String> warnings = List.of();
                     if (generator instanceof Ros2Generator) {
                         Ros2Generator.PluginGenerationOutcome outcome = ((Ros2Generator) generator).generateTargetedWithPlugins(
                             resource,
@@ -215,7 +216,8 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                                 "errors", outcome.errors,
                                 "conflictErrors", outcome.pluginConflictErrors);
                         }
-                        prunedFiles = new ArrayList<>(outcome.deletedFiles);
+                        prunedFiles = new ArrayList<>(outcome.pluginDeletedFiles);
+                        warnings = new ArrayList<>(outcome.warnings);
                     } else {
                         generator.doGenerate(resource, fsa, genContext);
                     }
@@ -224,7 +226,7 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                         .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
 
                     log("Successfully generated " + files.size() + " files for " + fileUriStr);
-                    return Map.of("success", true, "files", files, "prunedFiles", prunedFiles, "count", files.size(), "distro", finalDistro);
+                    return Map.of("success", true, "files", files, "prunedFiles", prunedFiles, "warnings", warnings, "count", files.size(), "distro", finalDistro);
                 } catch (Exception e) {
                     log("Generation failed: " + e.getMessage());
                     e.printStackTrace();

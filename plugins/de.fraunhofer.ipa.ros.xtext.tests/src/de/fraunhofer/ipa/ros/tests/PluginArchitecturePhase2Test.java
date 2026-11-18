@@ -492,7 +492,7 @@ public class PluginArchitecturePhase2Test {
         assertTrue(fsa.getTextFiles().containsKey("DEFAULT_OUTPUTvalid_audit/src/audit_hooks.cpp"));
         assertFalse("writeOnce must respect existing file via Domain Logic Shield",
                 fsa.getTextFiles().containsKey("DEFAULT_OUTPUTvalid_audit/include/valid_audit/audit_user.hpp"));
-        assertTrue(outcome.deletedFiles.contains("valid_audit/config/stale_audit.yaml"));
+        assertTrue(outcome.pluginDeletedFiles.contains("valid_audit/config/stale_audit.yaml"));
 
         // 6. Test LSP command handlers (Ros2GeneratorCommandService & RosPluginCommandSupport)
         Ros2GeneratorCommandService cmdService = ros2IdeInjector.getInstance(Ros2GeneratorCommandService.class);
@@ -888,11 +888,26 @@ public class PluginArchitecturePhase2Test {
             assertTrue("Attempt " + op + " error must name plugin: " + outcome.errors,
                     outcome.errors.stream().anyMatch(e -> e.contains("de.example.shield_probe")));
             assertTrue("Attempt " + op + " must withhold plugin files", outcome.pluginFiles.isEmpty());
-            for (String protectedFile : existingUserFiles) {
-                assertFalse("Attempt " + op + " must not delete protected file " + protectedFile,
-                        outcome.deletedFiles.contains(protectedFile));
-            }
+            assertTrue("Attempt " + op + " must not delete protected files", outcome.pluginDeletedFiles.isEmpty());
         }
+
+        // Also verify no plugins active + language "both" preserves edited logic files and leaves coreDeletedFiles out of pluginDeletedFiles
+        PluginRegistry.INSTANCE.clearRegistered();
+        InMemoryFileSystemAccess bothFsa = new InMemoryFileSystemAccess();
+        Ros2Generator.PluginGenerationOutcome bothOutcome =
+                gen.generateTargetedWithPlugins(res, bothFsa, List.of("shield_cpp_node", "shield_py_node"), "both", "jazzy", existingUserFiles);
+        assertTrue("No-plugin both run must have zero errors: " + bothOutcome.errors, bothOutcome.errors.isEmpty());
+        assertTrue("pluginDeletedFiles must be empty with no plugins active", bothOutcome.pluginDeletedFiles.isEmpty());
+        assertTrue("coreDeletedFiles must remain separated from pluginDeletedFiles",
+                !bothOutcome.coreDeletedFiles.isEmpty());
+        assertFalse("Skipped Algorithm.hpp must NOT be overwritten",
+                bothFsa.getTextFiles().containsKey("DEFAULT_OUTPUTshield_pkg/include/shield_pkg/ShieldCppAlgorithm.hpp"));
+        assertFalse("Skipped _logic.py must NOT be overwritten",
+                bothFsa.getTextFiles().containsKey("DEFAULT_OUTPUTshield_pkg/shield_pkg/shield_py_node_logic.py"));
+        assertTrue("Python wrapper must be present after 'both' run",
+                bothFsa.getTextFiles().containsKey("DEFAULT_OUTPUTshield_pkg/shield_pkg/shield_py_node_wrapper.py"));
+        assertTrue("Python runner must be present after 'both' run",
+                bothFsa.getTextFiles().containsKey("DEFAULT_OUTPUTshield_pkg/shield_pkg/shield_py_node_runner.py"));
 
         assertTrue("coreOwnedPaths must include skipped Algorithm.hpp",
                 observedCoreOwned.contains("shield_pkg/include/shield_pkg/ShieldCppAlgorithm.hpp"));
@@ -1074,7 +1089,9 @@ public class PluginArchitecturePhase2Test {
         assertTrue("Expected zero system errors: " + cmakeOutcome.errors, cmakeOutcome.errors.isEmpty());
         String launchPy = cmakeFsa.getTextFiles()
                 .get("DEFAULT_OUTPUTsys_probe_demo/launch/sys_probe_demo.launch.py").toString();
-        assertTrue(launchPy, launchPy.contains("from launch.frontend.parse_substitution import parse_substitution"));
+        assertTrue(launchPy, launchPy.contains("from launch.actions import GroupAction, IncludeLaunchDescription, DeclareLaunchArgument"));
+        assertTrue(launchPy, launchPy.contains("GroupAction("));
+        assertTrue(launchPy, launchPy.contains("scoped=True"));
         assertTrue(launchPy, launchPy.contains("IncludeLaunchDescription("));
         assertTrue(launchPy, launchPy.contains("/launch/de_example_sys-addon/addon.launch.py"));
         assertTrue(launchPy, launchPy.contains("TextSubstitution(text=\"a'b\\\"c\")"));
@@ -1083,7 +1100,7 @@ public class PluginArchitecturePhase2Test {
         assertFalse("writeOnce must skip existing user_cfg.yaml",
                 cmakeFsa.getTextFiles().containsKey(
                         "DEFAULT_OUTPUTsys_probe_demo/config/de_example_sys-addon/user_cfg.yaml"));
-        assertTrue(cmakeOutcome.deletedFiles.contains(
+        assertTrue(cmakeOutcome.pluginDeletedFiles.contains(
                 "sys_probe_demo/config/de_example_sys-addon/obsolete.yaml"));
         String probeYaml = cmakeFsa.getTextFiles()
                 .get("DEFAULT_OUTPUTsys_probe_demo/config/de_example_sys-addon/probe.yaml").toString();
@@ -1091,7 +1108,7 @@ public class PluginArchitecturePhase2Test {
         assertTrue(probeYaml, probeYaml.contains("node_mode: override"));
         assertTrue(probeYaml, probeYaml.contains("rate: 50"));
 
-        // 2. Pure-Python bringup package (generated setup.py gets _recursive_data_files; user setup.py untouched)
+        // 2. Pure-Python bringup package (generated setup.py gets _recursive_data_files; user setup.py untouched + warning)
         InMemoryFileSystemAccess pyFsa = new InMemoryFileSystemAccess();
         RosSystemGenerator.SystemGenerationOutcome pyOutcome = sysGen.generateSystemWithPlugins(
                 sysRes,
@@ -1099,19 +1116,29 @@ public class PluginArchitecturePhase2Test {
                 List.of("sys_probe_demo/py_helper.py"),
                 "jazzy");
         assertTrue("Expected zero pure-Python system errors: " + pyOutcome.errors, pyOutcome.errors.isEmpty());
+        assertTrue("Generated setup.py must not warn about skipped install", pyOutcome.warnings.isEmpty());
         String setupPy = pyFsa.getTextFiles().get("DEFAULT_OUTPUTsys_probe_demo/setup.py").toString();
         assertTrue(setupPy, setupPy.contains("def _recursive_data_files(base_dir):"));
         assertTrue(setupPy, setupPy.contains("_recursive_data_files('config/de_example_sys-addon')"));
         assertTrue(setupPy, setupPy.contains("_recursive_data_files('launch/de_example_sys-addon')"));
 
         InMemoryFileSystemAccess userSetupFsa = new InMemoryFileSystemAccess();
-        sysGen.generateSystemWithPlugins(
+        RosSystemGenerator.SystemGenerationOutcome userSetupOut = sysGen.generateSystemWithPlugins(
                 sysRes,
                 userSetupFsa,
                 List.of("sys_probe_demo/py_helper.py", "sys_probe_demo/setup.py"),
                 "jazzy");
         assertFalse("User-owned setup.py must never be overwritten",
                 userSetupFsa.getTextFiles().containsKey("DEFAULT_OUTPUTsys_probe_demo/setup.py"));
+        assertTrue("Must warn when user-owned setup.py prevents installing plugin config/launch folders: " + userSetupOut.warnings,
+                userSetupOut.warnings.stream().anyMatch(w ->
+                        w.contains("de.example.sys-addon")
+                                && w.contains("config/de_example_sys-addon")
+                                && w.contains("launch/de_example_sys-addon")));
+        String userSetupLaunch = userSetupFsa.getTextFiles()
+                .get("DEFAULT_OUTPUTsys_probe_demo/launch/sys_probe_demo.launch.py").toString();
+        assertTrue("Launch file must still keep the plugin include when setup.py is user-owned",
+                userSetupLaunch.contains("IncludeLaunchDescription("));
     }
 
     @Test
@@ -1125,6 +1152,10 @@ public class PluginArchitecturePhase2Test {
                 """);
         Resource sysRes = loadFromString(rs, "inmemory:/bad_sys.rossystem", """
                 bad_sys:
+                  parameters:
+                    declared_ns:
+                      type: String
+                      value: "ok"
                   nodes:
                     inst:
                       from: "bad_sys_type.n_node"
@@ -1163,7 +1194,7 @@ public class PluginArchitecturePhase2Test {
             assertTrue("Plugin files must be withheld for " + badPath, out.pluginFiles.isEmpty());
         }
 
-        // Launch include conflict & ownership conflict across two plugins
+        // Two plugins passing 'ns' with different values to their own separate includes must succeed with scoped GroupActions
         PluginRegistry.INSTANCE.clearRegistered();
         PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
             @Override public String id() { return "de.example.sys_a"; }
@@ -1172,7 +1203,7 @@ public class PluginArchitecturePhase2Test {
             @Override public void generateSystem(final SystemGenerationContext context) {
                 context.writeFile("launch/" + context.pluginFolder() + "/inc.launch.py", "# a");
                 context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py",
-                        Map.of("shared_arg", SystemGenerationContext.LaunchArgumentValue.literal("one")));
+                        Map.of("ns", SystemGenerationContext.LaunchArgumentValue.literal("ns_one")));
             }
         });
         PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
@@ -1182,20 +1213,90 @@ public class PluginArchitecturePhase2Test {
             @Override public void generateSystem(final SystemGenerationContext context) {
                 context.writeFile("launch/" + context.pluginFolder() + "/inc.launch.py", "# b");
                 context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py",
-                        Map.of("shared_arg", SystemGenerationContext.LaunchArgumentValue.literal("two")));
+                        Map.of("ns", SystemGenerationContext.LaunchArgumentValue.literal("ns_two")));
             }
         });
-        InMemoryFileSystemAccess argConflictFsa = new InMemoryFileSystemAccess();
-        RosSystemGenerator.SystemGenerationOutcome argOut =
-                sysGen.generateSystemWithPlugins(sysRes, argConflictFsa, List.of(), "jazzy");
-        assertFalse("Conflicting launch arg must error", argOut.errors.isEmpty());
-        assertTrue("Launch arg conflict must name both plugins: " + argOut.errors,
-                argOut.errors.stream().anyMatch(e ->
-                        e.contains("de.example.sys_a") && e.contains("de.example.sys_b") && e.contains("shared_arg")));
-        assertTrue("Plugin files must be withheld on launch conflict", argOut.pluginFiles.isEmpty());
-        String withheldLaunch = argConflictFsa.getTextFiles()
+        InMemoryFileSystemAccess independentFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome independentOut =
+                sysGen.generateSystemWithPlugins(sysRes, independentFsa, List.of(), "jazzy");
+        assertTrue("Independent plugins passing 'ns' to own includes must succeed: " + independentOut.errors,
+                independentOut.errors.isEmpty());
+        String independentLaunch = independentFsa.getTextFiles()
                 .get("DEFAULT_OUTPUTbad_sys/launch/bad_sys.launch.py").toString();
-        assertFalse("Launch file must NOT include conflicted plugin launches:\n" + withheldLaunch,
+        assertEquals(2, countOccurrences(independentLaunch, "scoped=True"));
+        assertTrue(independentLaunch, independentLaunch.contains("ns_one"));
+        assertTrue(independentLaunch, independentLaunch.contains("ns_two"));
+
+        // Duplicate include path across two plugins whose sanitized folders collide names both plugins
+        PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.dup.inc"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generateSystem(final SystemGenerationContext context) {
+                context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py", Map.of());
+            }
+        });
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.dup_inc"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generateSystem(final SystemGenerationContext context) {
+                context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py", Map.of());
+            }
+        });
+        InMemoryFileSystemAccess dupIncFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome dupIncOut =
+                sysGen.generateSystemWithPlugins(sysRes, dupIncFsa, List.of(), "jazzy");
+        assertTrue("Duplicate launch include across plugins must name both: " + dupIncOut.errors,
+                dupIncOut.errors.stream().anyMatch(e ->
+                        e.contains("de.example.dup.inc") && e.contains("de.example.dup_inc") && e.contains("inc.launch.py")));
+        assertFalse("Conflicted launch include must not be rendered",
+                dupIncFsa.getTextFiles().get("DEFAULT_OUTPUTbad_sys/launch/bad_sys.launch.py")
+                        .toString().contains("IncludeLaunchDescription("));
+
+        // Duplicate argument name passed to the same include fails naming plugin and arg
+        PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.dup_arg"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generateSystem(final SystemGenerationContext context) {
+                context.writeFile("launch/" + context.pluginFolder() + "/inc.launch.py", "# dup arg");
+                context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py", List.of(
+                        new SystemGenerationContext.LaunchArgument("ns", SystemGenerationContext.LaunchArgumentValue.literal("a")),
+                        new SystemGenerationContext.LaunchArgument("ns", SystemGenerationContext.LaunchArgumentValue.literal("b"))));
+            }
+        });
+        InMemoryFileSystemAccess dupArgFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome dupArgOut =
+                sysGen.generateSystemWithPlugins(sysRes, dupArgFsa, List.of(), "jazzy");
+        assertTrue("Duplicate arg on same include must error: " + dupArgOut.errors,
+                dupArgOut.errors.stream().anyMatch(e -> e.contains("de.example.dup_arg") && e.contains("ns")));
+        assertTrue("Plugin files must be withheld on duplicate launch arg", dupArgOut.pluginFiles.isEmpty());
+
+        // Undeclared SYSTEM_LAUNCH_ARG fails naming plugin and undeclared argument
+        PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.bad_sys_arg"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generateSystem(final SystemGenerationContext context) {
+                context.writeFile("launch/" + context.pluginFolder() + "/inc.launch.py", "# bad sys arg");
+                context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py",
+                        Map.of("ns", SystemGenerationContext.LaunchArgumentValue.systemLaunchArgument("missing_launch_arg")));
+            }
+        });
+        InMemoryFileSystemAccess badSysArgFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome badSysArgOut =
+                sysGen.generateSystemWithPlugins(sysRes, badSysArgFsa, List.of(), "jazzy");
+        assertTrue("Undeclared SYSTEM_LAUNCH_ARG must fail naming plugin and arg: " + badSysArgOut.errors,
+                badSysArgOut.errors.stream().anyMatch(e ->
+                        e.contains("de.example.bad_sys_arg") && e.contains("missing_launch_arg")));
+        assertTrue("Plugin files must be withheld on undeclared SYSTEM_LAUNCH_ARG", badSysArgOut.pluginFiles.isEmpty());
+        String withheldLaunch = badSysArgFsa.getTextFiles()
+                .get("DEFAULT_OUTPUTbad_sys/launch/bad_sys.launch.py").toString();
+        assertFalse("Launch file must NOT include invalid plugin launches:\n" + withheldLaunch,
                 withheldLaunch.contains("IncludeLaunchDescription("));
     }
 
