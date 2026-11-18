@@ -19,27 +19,46 @@ import de.fraunhofer.ipa.ros.plugin.spi.GenerationContext;
 import de.fraunhofer.ipa.ros.plugin.spi.HookLocation;
 import de.fraunhofer.ipa.ros.plugin.spi.MergeStrategy;
 import de.fraunhofer.ipa.ros.plugin.spi.PackageBuild;
+import de.fraunhofer.ipa.ros.plugin.spi.PackageGenerationContext;
 import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
 import de.fraunhofer.ipa.ros.plugin.spi.PluginToolDescriptor;
 import de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin;
+import de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext;
 import de.fraunhofer.ipa.ros.plugin.spi.ToolResult;
 import de.fraunhofer.ipa.ros.plugin.spi.ValidationContext;
 import de.fraunhofer.ipa.ros.validation.BasicsValidator;
 import de.fraunhofer.ipa.ros2.Ros2RuntimeModule;
 import de.fraunhofer.ipa.ros2.Ros2StandaloneSetup;
+import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
+import de.fraunhofer.ipa.ros2.distro.Ros2Distros;
 import de.fraunhofer.ipa.ros2.generator.Ros2Generator;
 import de.fraunhofer.ipa.ros2.ide.Ros2GeneratorCommandService;
 import de.fraunhofer.ipa.ros2.ide.Ros2IdeSetup;
 import de.fraunhofer.ipa.ros2.ide.RosPluginCommandSupport;
 import de.fraunhofer.ipa.rossystem.RosSystemRuntimeModule;
 import de.fraunhofer.ipa.rossystem.RosSystemStandaloneSetup;
+import de.fraunhofer.ipa.rossystem.generator.RosSystemGenerator;
 import de.fraunhofer.ipa.rossystem.validation.RosSystemValidator;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceRegistration;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -301,7 +320,7 @@ public class PluginArchitecturePhase2Test {
             }
 
             @Override
-            public void generate(final GenerationContext context) {
+            public void generatePackage(final PackageGenerationContext context) {
                 PackageBuild build = context.packageBuild();
                 build.addDepend("diagnostic_updater");
                 build.addFindPackage("diagnostic_updater");
@@ -569,7 +588,7 @@ public class PluginArchitecturePhase2Test {
             @Override public String id() { return "de.example.alpha"; }
             @Override public List<BlockDescriptor> blocks() { return List.of(conflictBlock); }
             @Override public void validate(final ValidationContext context) {}
-            @Override public void generate(final GenerationContext context) {
+            @Override public void generatePackage(final PackageGenerationContext context) {
                 PackageBuild pb = context.packageBuild();
                 pb.addDepend("pkg_a");
                 pb.getOrCreateLibrary("shared_lib", true, id());
@@ -589,7 +608,7 @@ public class PluginArchitecturePhase2Test {
             @Override public String id() { return "de.example.beta"; }
             @Override public List<BlockDescriptor> blocks() { return List.of(); }
             @Override public void validate(final ValidationContext context) {}
-            @Override public void generate(final GenerationContext context) {
+            @Override public void generatePackage(final PackageGenerationContext context) {
                 PackageBuild pb = context.packageBuild();
                 pb.addDepend("pkg_a"); // overlapping dependency merges cleanly
                 pb.getOrCreateLibrary("shared_lib", false, id()); // linkage conflict!
@@ -679,7 +698,7 @@ public class PluginArchitecturePhase2Test {
             @Override public String id() { return "de.example.writer"; }
             @Override public List<BlockDescriptor> blocks() { return List.of(); }
             @Override public void validate(final ValidationContext context) {}
-            @Override public void generate(final GenerationContext context) {
+            @Override public void generatePackage(final PackageGenerationContext context) {
                 context.writeFile("src/should_not_exist.cpp", "// should be withheld\n");
             }
         });
@@ -760,7 +779,7 @@ public class PluginArchitecturePhase2Test {
                 @Override public String id() { return "de.example.inject"; }
                 @Override public List<BlockDescriptor> blocks() { return List.of(); }
                 @Override public void validate(final ValidationContext context) {}
-                @Override public void generate(final GenerationContext context) {
+                @Override public void generatePackage(final PackageGenerationContext context) {
                     attacks.get(idx).accept(context.packageBuild());
                     context.writeFile("src/plugin_out.cpp", "// should be withheld\n");
                 }
@@ -780,7 +799,7 @@ public class PluginArchitecturePhase2Test {
             @Override public String id() { return "de.example.xml_escape"; }
             @Override public List<BlockDescriptor> blocks() { return List.of(); }
             @Override public void validate(final ValidationContext context) {}
-            @Override public void generate(final GenerationContext context) {
+            @Override public void generatePackage(final PackageGenerationContext context) {
                 PackageBuild pb = context.packageBuild();
                 pb.addXmlExport(new PackageBuild.XmlExportEntry(
                         "safe_tag",
@@ -802,5 +821,629 @@ public class PluginArchitecturePhase2Test {
                 "<safe_tag expr=\"a &lt; b &amp; &quot;c&quot; &gt; &apos;d&apos;\">text &lt;tag&gt; &amp; &quot;q&quot;</safe_tag>"));
         assertTrue(cmake, cmake.contains("# Plugin Library Target: escaped_lib"));
         assertTrue(cmake, cmake.contains("# Plugin Executable Target: escaped_exec"));
+    }
+
+    @Test
+    public void coreOwnedPathsProtectSkippedUserLogicFiles() throws Exception {
+        XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
+        Resource res = loadFromString(rs, "inmemory:/shield_pkg.ros2", """
+                shield_pkg:
+                  artifacts:
+                    shield_cpp:
+                      node: shield_cpp_node
+                    shield_py:
+                      node: shield_py_node
+                    shield_plugin_art:
+                      plugins:
+                        ShieldPlugin:
+                          loader: pluginlib
+                """);
+        EcoreUtil.resolveAll(rs);
+
+        List<String> existingUserFiles = List.of(
+                "shield_pkg/include/shield_pkg/ShieldCppAlgorithm.hpp",
+                "shield_pkg/include/shield_pkg/shield_plugin_plugin.hpp",
+                "shield_pkg/shield_pkg/shield_py_node_logic.py");
+
+        List<String> observedCoreOwned = new ArrayList<>();
+        Ros2Generator gen = ros2Injector.getInstance(Ros2Generator.class);
+
+        for (int attempt = 0; attempt < 3; attempt++) {
+            final int op = attempt;
+            PluginRegistry.INSTANCE.clearRegistered();
+            PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+                @Override public String id() { return "de.example.shield_probe"; }
+                @Override public List<BlockDescriptor> blocks() { return List.of(); }
+                @Override public void validate(final ValidationContext context) {}
+                @Override public void generatePackage(final PackageGenerationContext context) {
+                    if (op == 0) {
+                        observedCoreOwned.addAll(context.coreOwnedPaths());
+                    }
+                    String langTarget = op == 2
+                            ? "shield_pkg/shield_py_node_logic.py"
+                            : "include/shield_pkg/ShieldCppAlgorithm.hpp";
+                    String pluginlibTarget = "include/shield_pkg/shield_plugin_plugin.hpp";
+                    if (op == 0) {
+                        context.writeFile(langTarget, "// overwritten\n");
+                        context.writeFile(pluginlibTarget, "// overwritten plugin\n");
+                    } else if (op == 1) {
+                        assertFalse(context.writeOnce(langTarget, "// writeOnce\n"));
+                        assertFalse(context.writeOnce(pluginlibTarget, "// writeOnce\n"));
+                    } else {
+                        context.deleteStaleFile(langTarget);
+                        context.deleteStaleFile(pluginlibTarget);
+                    }
+                }
+            });
+
+            InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
+            String lang = op == 2 ? "python" : "cpp";
+            List<String> targets = op == 2
+                    ? List.of("shield_py_node")
+                    : List.of("shield_cpp_node", "ShieldPlugin");
+            Ros2Generator.PluginGenerationOutcome outcome =
+                    gen.generateTargetedWithPlugins(res, fsa, targets, lang, "jazzy", existingUserFiles);
+
+            assertFalse("Attempt " + op + " must reject touching skipped user logic files", outcome.errors.isEmpty());
+            assertTrue("Attempt " + op + " error must name plugin: " + outcome.errors,
+                    outcome.errors.stream().anyMatch(e -> e.contains("de.example.shield_probe")));
+            assertTrue("Attempt " + op + " must withhold plugin files", outcome.pluginFiles.isEmpty());
+            for (String protectedFile : existingUserFiles) {
+                assertFalse("Attempt " + op + " must not delete protected file " + protectedFile,
+                        outcome.deletedFiles.contains(protectedFile));
+            }
+        }
+
+        assertTrue("coreOwnedPaths must include skipped Algorithm.hpp",
+                observedCoreOwned.contains("shield_pkg/include/shield_pkg/ShieldCppAlgorithm.hpp"));
+        assertTrue("coreOwnedPaths must include skipped _plugin.hpp",
+                observedCoreOwned.contains("shield_pkg/include/shield_pkg/shield_plugin_plugin.hpp"));
+        assertTrue("coreOwnedPaths must include skipped _logic.py",
+                observedCoreOwned.contains("shield_pkg/shield_pkg/shield_py_node_logic.py"));
+    }
+
+    @Test
+    public void overlappingPackageBuildEntriesMergeCleanly() throws Exception {
+        XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
+        Resource res = loadFromString(rs, "inmemory:/overlap_pkg.ros2", """
+                overlap_pkg:
+                  artifacts:
+                    base_art:
+                      node: base_node
+                """);
+        EcoreUtil.resolveAll(rs);
+
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.overlap_a"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generatePackage(final PackageGenerationContext context) {
+                PackageBuild pb = context.packageBuild();
+                pb.addDepend("std_msgs");
+                pb.addFindPackage("std_msgs");
+                PackageBuild.LibraryTarget lib = pb.getOrCreateLibrary("shared_hook", true, id());
+                pb.addLibrarySource(lib, "src/hook_a.cpp", id());
+                lib.compileDefinitions().add("SHARED_DEF=1");
+                lib.compileDefinitions().add("DEF_A=1");
+                pb.addInstallDirectory("cfg_a", "share/${PROJECT_NAME}/cfg_a", false);
+                pb.addInstallFiles(List.of("res/a.yaml"), "share/${PROJECT_NAME}/res");
+                pb.addTestTarget(new PackageBuild.TestTarget(
+                        "test_a", "gtest", List.of("test/test_a.cpp"), List.of("shared_hook"), List.of()));
+                pb.addXmlExport(new PackageBuild.XmlExportEntry("export_a", Map.of(), "first"));
+                context.writeFile("src/hook_a.cpp", "// a\n");
+            }
+        });
+
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.overlap_b"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generatePackage(final PackageGenerationContext context) {
+                PackageBuild pb = context.packageBuild();
+                pb.addDepend("std_msgs");
+                pb.addDepend("sensor_msgs");
+                pb.addFindPackage("std_msgs");
+                PackageBuild.LibraryTarget lib = pb.getOrCreateLibrary("shared_hook", true, id());
+                pb.addLibrarySource(lib, "src/hook_a.cpp", id());
+                pb.addLibrarySource(lib, "src/hook_b.cpp", id());
+                lib.compileDefinitions().add("SHARED_DEF=1");
+                lib.compileDefinitions().add("DEF_B=2");
+                pb.addInstallDirectory("cfg_b", "share/${PROJECT_NAME}/cfg_b", false);
+                pb.addInstallFiles(List.of("res/b.yaml"), "share/${PROJECT_NAME}/res");
+                pb.addTestTarget(new PackageBuild.TestTarget(
+                        "test_b", "gtest", List.of("test/test_b.cpp"), List.of("shared_hook"), List.of()));
+                pb.addXmlExport(new PackageBuild.XmlExportEntry("export_b", Map.of(), "second"));
+                context.writeFile("src/hook_b.cpp", "// b\n");
+            }
+        });
+
+        Ros2Generator gen = ros2Injector.getInstance(Ros2Generator.class);
+        InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
+        Ros2Generator.PluginGenerationOutcome outcome =
+                gen.generateTargetedWithPlugins(res, fsa, null, "cpp", "jazzy", List.of());
+
+        assertTrue("Overlapping valid PackageBuild entries must merge cleanly: " + outcome.errors,
+                outcome.errors.isEmpty());
+        String cmake = fsa.getTextFiles().get("DEFAULT_OUTPUToverlap_pkg/CMakeLists.txt").toString();
+        String pkgXml = fsa.getTextFiles().get("DEFAULT_OUTPUToverlap_pkg/package.xml").toString();
+
+        assertEquals(1, countOccurrences(pkgXml, "<depend>std_msgs</depend>"));
+        assertTrue(pkgXml, pkgXml.contains("<depend>sensor_msgs</depend>"));
+        assertEquals(1, countOccurrences(cmake, "find_package(std_msgs REQUIRED)"));
+        assertEquals(1, countOccurrences(cmake, "src/hook_a.cpp"));
+        assertTrue(cmake, cmake.contains("src/hook_b.cpp"));
+        assertEquals(1, countOccurrences(cmake, "SHARED_DEF=1"));
+        assertTrue(cmake, cmake.contains("DEF_A=1") && cmake.contains("DEF_B=2"));
+        assertTrue("installDirectories should append in plugin order",
+                cmake.indexOf("cfg_a") < cmake.indexOf("cfg_b"));
+        assertTrue("test targets should append in plugin order",
+                cmake.indexOf("test_a") < cmake.indexOf("test_b"));
+        assertTrue("xmlExports should append in plugin order",
+                pkgXml.indexOf("<export_a>") < pkgXml.indexOf("<export_b>"));
+    }
+
+    @Test
+    public void systemLevelGenerationScopedFoldersLaunchIncludesAndPurePythonSupport() throws Exception {
+        EClass sysProbeSchema = createSchemaClass("SysProbeBlock", Map.of(
+                "mode", EcorePackage.Literals.ESTRING,
+                "rate", EcorePackage.Literals.EINT));
+        sysProbeSchema.getEStructuralFeature("mode").setLowerBound(1);
+        BlockDescriptor sysProbeBlock = new BlockDescriptor(
+                "sys_probe",
+                sysProbeSchema,
+                EnumSet.of(HookLocation.SYSTEM, HookLocation.ROS_NODE, HookLocation.NODE),
+                Map.of("mode", MergeStrategy.INSTANCE_OVERRIDES_TYPE, "rate", MergeStrategy.INSTANCE_OVERRIDES_TYPE),
+                "System probe block");
+
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.sys-addon"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(sysProbeBlock); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generateSystem(final SystemGenerationContext context) {
+                assertEquals("de_example_sys-addon", context.pluginFolder());
+                assertEquals("sys_probe_demo", context.systemModel().eGet(
+                        context.systemModel().eClass().getEStructuralFeature("name")));
+                assertEquals(1, context.rosNodes().size());
+                assertEquals(1, context.resolvedNodes().size());
+                assertEquals(1, context.resolvedPackages().size());
+                assertEquals("type_pkg", context.resolvedPackages().get(0).getName());
+
+                EObject sysTyped = context.systemTypedBlock("sys_probe");
+                assertNotNull(sysTyped);
+                String sysMode = (String) sysTyped.eGet(sysProbeSchema.getEStructuralFeature("mode"));
+
+                EObject nodeTyped = context.rosNodeTypedBlock(context.rosNodes().get(0), "sys_probe");
+                assertNotNull(nodeTyped);
+                String nodeMode = (String) nodeTyped.eGet(sysProbeSchema.getEStructuralFeature("mode"));
+                int nodeRate = (Integer) nodeTyped.eGet(sysProbeSchema.getEStructuralFeature("rate"));
+                assertEquals("override", nodeMode);
+                assertEquals(50, nodeRate);
+
+                context.writeFile("config/" + context.pluginFolder() + "/probe.yaml",
+                        "sys_mode: " + sysMode + "\nnode_mode: " + nodeMode + "\nrate: " + nodeRate + "\n");
+                context.writeFile("launch/" + context.pluginFolder() + "/addon.launch.py",
+                        "# addon launch\n");
+                context.writeFile("plugins/" + context.pluginFolder() + "/notes.txt",
+                        "distro=" + context.rosDistro() + "\n");
+                context.writeOnce("config/" + context.pluginFolder() + "/user_cfg.yaml", "initial: true\n");
+                context.deleteStaleFile("config/" + context.pluginFolder() + "/obsolete.yaml");
+
+                Map<String, SystemGenerationContext.LaunchArgumentValue> args = new LinkedHashMap<>();
+                args.put("mode", SystemGenerationContext.LaunchArgumentValue.literal("a'b\"c"));
+                args.put("ns", SystemGenerationContext.LaunchArgumentValue.systemLaunchArgument("robot_ns"));
+                args.put("expr", SystemGenerationContext.LaunchArgumentValue.substitution("$(var robot_ns)/sub"));
+                context.addLaunchInclude("launch/" + context.pluginFolder() + "/addon.launch.py", args);
+            }
+        });
+
+        XtextResourceSet rs = rosSystemInjector.getInstance(XtextResourceSet.class);
+        loadFromString(rs, "inmemory:/type_pkg.ros2", """
+                type_pkg:
+                  artifacts:
+                    cam_art:
+                      node: cam_node
+                      @sys_probe:
+                        mode: "default_type"
+                        rate: 50
+                """);
+        Resource sysRes = loadFromString(rs, "inmemory:/sys_probe_demo.rossystem", """
+                sys_probe_demo:
+                  @sys_probe:
+                    mode: "active"
+                  parameters:
+                    robot_ns:
+                      type: String
+                      value: "bot1"
+                  nodes:
+                    cam_inst:
+                      from: "type_pkg.cam_node"
+                      @sys_probe:
+                        mode: "override"
+                """);
+        EcoreUtil.resolveAll(rs);
+
+        RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
+
+        // 1. Standard CMake bringup package + writeOnce shield + stale prune
+        InMemoryFileSystemAccess cmakeFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome cmakeOutcome = sysGen.generateSystemWithPlugins(
+                sysRes,
+                cmakeFsa,
+                List.of("sys_probe_demo/config/de_example_sys-addon/user_cfg.yaml"),
+                "jazzy");
+        assertTrue("Expected zero system errors: " + cmakeOutcome.errors, cmakeOutcome.errors.isEmpty());
+        String launchPy = cmakeFsa.getTextFiles()
+                .get("DEFAULT_OUTPUTsys_probe_demo/launch/sys_probe_demo.launch.py").toString();
+        assertTrue(launchPy, launchPy.contains("from launch.frontend.parse_substitution import parse_substitution"));
+        assertTrue(launchPy, launchPy.contains("IncludeLaunchDescription("));
+        assertTrue(launchPy, launchPy.contains("/launch/de_example_sys-addon/addon.launch.py"));
+        assertTrue(launchPy, launchPy.contains("TextSubstitution(text=\"a'b\\\"c\")"));
+        assertTrue(launchPy, launchPy.contains("LaunchConfiguration('robot_ns')"));
+        assertTrue(launchPy, launchPy.contains("parse_substitution(\"$(var robot_ns)/sub\")"));
+        assertFalse("writeOnce must skip existing user_cfg.yaml",
+                cmakeFsa.getTextFiles().containsKey(
+                        "DEFAULT_OUTPUTsys_probe_demo/config/de_example_sys-addon/user_cfg.yaml"));
+        assertTrue(cmakeOutcome.deletedFiles.contains(
+                "sys_probe_demo/config/de_example_sys-addon/obsolete.yaml"));
+        String probeYaml = cmakeFsa.getTextFiles()
+                .get("DEFAULT_OUTPUTsys_probe_demo/config/de_example_sys-addon/probe.yaml").toString();
+        assertTrue(probeYaml, probeYaml.contains("sys_mode: active"));
+        assertTrue(probeYaml, probeYaml.contains("node_mode: override"));
+        assertTrue(probeYaml, probeYaml.contains("rate: 50"));
+
+        // 2. Pure-Python bringup package (generated setup.py gets _recursive_data_files; user setup.py untouched)
+        InMemoryFileSystemAccess pyFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome pyOutcome = sysGen.generateSystemWithPlugins(
+                sysRes,
+                pyFsa,
+                List.of("sys_probe_demo/py_helper.py"),
+                "jazzy");
+        assertTrue("Expected zero pure-Python system errors: " + pyOutcome.errors, pyOutcome.errors.isEmpty());
+        String setupPy = pyFsa.getTextFiles().get("DEFAULT_OUTPUTsys_probe_demo/setup.py").toString();
+        assertTrue(setupPy, setupPy.contains("def _recursive_data_files(base_dir):"));
+        assertTrue(setupPy, setupPy.contains("_recursive_data_files('config/de_example_sys-addon')"));
+        assertTrue(setupPy, setupPy.contains("_recursive_data_files('launch/de_example_sys-addon')"));
+
+        InMemoryFileSystemAccess userSetupFsa = new InMemoryFileSystemAccess();
+        sysGen.generateSystemWithPlugins(
+                sysRes,
+                userSetupFsa,
+                List.of("sys_probe_demo/py_helper.py", "sys_probe_demo/setup.py"),
+                "jazzy");
+        assertFalse("User-owned setup.py must never be overwritten",
+                userSetupFsa.getTextFiles().containsKey("DEFAULT_OUTPUTsys_probe_demo/setup.py"));
+    }
+
+    @Test
+    public void systemLevelRejectsDisallowedPathsAndDetectsConflicts() throws Exception {
+        XtextResourceSet rs = rosSystemInjector.getInstance(XtextResourceSet.class);
+        loadFromString(rs, "inmemory:/bad_sys_type.ros2", """
+                bad_sys_type:
+                  artifacts:
+                    n_art:
+                      node: n_node
+                """);
+        Resource sysRes = loadFromString(rs, "inmemory:/bad_sys.rossystem", """
+                bad_sys:
+                  nodes:
+                    inst:
+                      from: "bad_sys_type.n_node"
+                """);
+        EcoreUtil.resolveAll(rs);
+        RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
+
+        List<String> forbiddenPaths = List.of(
+                "launch/other.launch.py",
+                "launch/bad_sys.launch.py",
+                "config/inst.yaml",
+                "CMakeLists.txt",
+                "package.xml",
+                "setup.py",
+                "setup.cfg",
+                "README.md",
+                "resource/bad_sys.puml",
+                "config/de_example_other/hack.yaml");
+
+        for (String badPath : forbiddenPaths) {
+            PluginRegistry.INSTANCE.clearRegistered();
+            PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+                @Override public String id() { return "de.example.bad_sys_writer"; }
+                @Override public List<BlockDescriptor> blocks() { return List.of(); }
+                @Override public void validate(final ValidationContext context) {}
+                @Override public void generateSystem(final SystemGenerationContext context) {
+                    context.writeFile(badPath, "evil");
+                }
+            });
+            InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
+            RosSystemGenerator.SystemGenerationOutcome out =
+                    sysGen.generateSystemWithPlugins(sysRes, fsa, List.of(), "jazzy");
+            assertFalse("Path must be rejected: " + badPath, out.errors.isEmpty());
+            assertTrue("Error must name plugin for " + badPath + ": " + out.errors,
+                    out.errors.stream().anyMatch(e -> e.contains("de.example.bad_sys_writer")));
+            assertTrue("Plugin files must be withheld for " + badPath, out.pluginFiles.isEmpty());
+        }
+
+        // Launch include conflict & ownership conflict across two plugins
+        PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.sys_a"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generateSystem(final SystemGenerationContext context) {
+                context.writeFile("launch/" + context.pluginFolder() + "/inc.launch.py", "# a");
+                context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py",
+                        Map.of("shared_arg", SystemGenerationContext.LaunchArgumentValue.literal("one")));
+            }
+        });
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.sys_b"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generateSystem(final SystemGenerationContext context) {
+                context.writeFile("launch/" + context.pluginFolder() + "/inc.launch.py", "# b");
+                context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py",
+                        Map.of("shared_arg", SystemGenerationContext.LaunchArgumentValue.literal("two")));
+            }
+        });
+        InMemoryFileSystemAccess argConflictFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome argOut =
+                sysGen.generateSystemWithPlugins(sysRes, argConflictFsa, List.of(), "jazzy");
+        assertFalse("Conflicting launch arg must error", argOut.errors.isEmpty());
+        assertTrue("Launch arg conflict must name both plugins: " + argOut.errors,
+                argOut.errors.stream().anyMatch(e ->
+                        e.contains("de.example.sys_a") && e.contains("de.example.sys_b") && e.contains("shared_arg")));
+        assertTrue("Plugin files must be withheld on launch conflict", argOut.pluginFiles.isEmpty());
+        String withheldLaunch = argConflictFsa.getTextFiles()
+                .get("DEFAULT_OUTPUTbad_sys/launch/bad_sys.launch.py").toString();
+        assertFalse("Launch file must NOT include conflicted plugin launches:\n" + withheldLaunch,
+                withheldLaunch.contains("IncludeLaunchDescription("));
+    }
+
+    @Test
+    public void systemLevelRunsOnFromFileSubSystemsAndAcrossAllDistros() throws Exception {
+        XtextResourceSet rs = rosSystemInjector.getInstance(XtextResourceSet.class);
+        loadFromString(rs, "inmemory:/distro_node.ros2", """
+                distro_node_pkg:
+                  artifacts:
+                    cam_art:
+                      node: cam_node
+                """);
+        Resource subRes = loadFromString(rs, "inmemory:/ur_sub.rossystem", """
+                ur_sub:
+                  fromFile: "ur_robot_driver/launch/ur_control.launch.py"
+                """);
+        Resource parentRes = loadFromString(rs, "inmemory:/parent_sys.rossystem", """
+                parent_sys:
+                  subSystems:
+                    ur_sub
+                  nodes:
+                    cam:
+                      from: "distro_node_pkg.cam_node"
+                """);
+        EcoreUtil.resolveAll(rs);
+
+        List<String> visitedSystems = new ArrayList<>();
+        List<String> pkgDistros = new ArrayList<>();
+        List<String> sysDistros = new ArrayList<>();
+
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.distro_probe"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generatePackage(final PackageGenerationContext context) {
+                Ros2Distro d = context.ros2Distro();
+                assertNotNull(d);
+                assertEquals(d.name(), context.rosDistro());
+                pkgDistros.add(d.name() + ":" + d.cxxStandard() + ":" + d.cmakeMinimumVersion());
+                context.writeFile("plugins/de.example.distro_probe/distro.txt", d.name());
+            }
+            @Override public void generateSystem(final SystemGenerationContext context) {
+                Ros2Distro d = context.ros2Distro();
+                assertNotNull(d);
+                assertEquals(d.name(), context.rosDistro());
+                String sName = String.valueOf(context.systemModel().eGet(
+                        context.systemModel().eClass().getEStructuralFeature("name")));
+                visitedSystems.add(sName);
+                sysDistros.add(d.name());
+                context.writeFile("plugins/" + context.pluginFolder() + "/sys_" + d.name() + ".txt", sName);
+                if ("ur_sub".equals(sName)) {
+                    assertTrue(context.rosNodes().isEmpty());
+                    assertTrue(context.coreOwnedPaths().contains("ur_sub/README.md"));
+                    assertTrue(context.coreOwnedPaths().contains("ur_sub/resource/ur_sub.puml"));
+                }
+            }
+        });
+
+        Ros2Generator pkgGen = ros2Injector.getInstance(Ros2Generator.class);
+        RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
+        Resource pkgRes = rs.getResource(URI.createURI("inmemory:/distro_node.ros2"), false);
+
+        for (Ros2Distro expected : Ros2Distros.all()) {
+            InMemoryFileSystemAccess pFsa = new InMemoryFileSystemAccess();
+            Ros2Generator.PluginGenerationOutcome pOut =
+                    pkgGen.generateTargetedWithPlugins(pkgRes, pFsa, null, "cpp", expected.name(), List.of());
+            assertTrue("Package errors for " + expected.name() + ": " + pOut.errors, pOut.errors.isEmpty());
+
+            InMemoryFileSystemAccess sFsa = new InMemoryFileSystemAccess();
+            RosSystemGenerator.SystemGenerationOutcome sOut =
+                    sysGen.generateSystemWithPlugins(parentRes, sFsa, List.of(), expected.name());
+            assertTrue("System errors for " + expected.name() + ": " + sOut.errors, sOut.errors.isEmpty());
+
+            InMemoryFileSystemAccess subFsa = new InMemoryFileSystemAccess();
+            RosSystemGenerator.SystemGenerationOutcome subOut =
+                    sysGen.generateSystemWithPlugins(subRes, subFsa, List.of(), expected.name());
+            assertTrue("fromFile subSystem errors for " + expected.name() + ": " + subOut.errors,
+                    subOut.errors.isEmpty());
+            assertTrue("fromFile plugin file must still be written",
+                    subOut.pluginFiles.containsKey("ur_sub/plugins/de_example_distro_probe/sys_" + expected.name() + ".txt"));
+        }
+
+        assertEquals(Ros2Distros.all().size(), pkgDistros.size());
+        assertEquals(Ros2Distros.all().size() * 2, sysDistros.size());
+        assertTrue(visitedSystems.contains("parent_sys"));
+        assertTrue(visitedSystems.contains("ur_sub"));
+        for (Ros2Distro expected : Ros2Distros.all()) {
+            assertTrue(pkgDistros.contains(
+                    expected.name() + ":" + expected.cxxStandard() + ":" + expected.cmakeMinimumVersion()));
+            assertTrue(sysDistros.contains(expected.name()));
+        }
+    }
+
+    @Test
+    public void externalCompiledPluginJarAndOsgiServiceDiscoveryRespectOptIn() throws Exception {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        assertNotNull("JDK compiler must be available for standalone JAR test", compiler);
+
+        Path tempRoot = Files.createTempDirectory("rostooling-ext-jar-");
+        try {
+            Path srcDir = tempRoot.resolve("src");
+            Path clsDir = tempRoot.resolve("cls");
+            Files.createDirectories(clsDir);
+            Path srcFile = srcDir.resolve("de/example/compiled/CompiledExtPlugin.java");
+            Files.createDirectories(srcFile.getParent());
+            Files.writeString(srcFile, """
+                    package de.example.compiled;
+                    import de.fraunhofer.ipa.ros.plugin.spi.*;
+                    import java.util.List;
+                    public final class CompiledExtPlugin implements RosToolingPlugin {
+                        @Override public String id() { return "de.example.compiled_ext"; }
+                        @Override public List<BlockDescriptor> blocks() { return List.of(); }
+                        @Override public void validate(ValidationContext context) {}
+                        @Override public void generatePackage(PackageGenerationContext context) {
+                            context.writeFile("plugins/de.example.compiled_ext/ok.txt", "jar:" + context.rosDistro());
+                        }
+                    }
+                    """, StandardCharsets.UTF_8);
+
+            String spiCp = resolveBundleOrClassLocation(RosToolingPlugin.class);
+            String ecoreCp = resolveBundleOrClassLocation(EObject.class);
+            String rosCp = resolveBundleOrClassLocation(ros.Package.class);
+            String distroCp = resolveBundleOrClassLocation(Ros2Distro.class);
+            Set<String> cpEntries = new LinkedHashSet<>();
+            for (String p : List.of(spiCp, ecoreCp, rosCp, distroCp)) {
+                if (p != null && !p.isBlank()) {
+                    cpEntries.add(p);
+                }
+            }
+            int rc = compiler.run(null, null, null,
+                    "-cp", String.join(File.pathSeparator, cpEntries),
+                    "-d", clsDir.toString(),
+                    srcFile.toString());
+            assertEquals("Compiling standalone external plugin JAR must succeed", 0, rc);
+
+            Path jarPath = tempRoot.resolve("compiled-ext-plugin.jar");
+            try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(jarPath))) {
+                JarEntry clsEntry = new JarEntry("de/example/compiled/CompiledExtPlugin.class");
+                jos.putNextEntry(clsEntry);
+                jos.write(Files.readAllBytes(clsDir.resolve("de/example/compiled/CompiledExtPlugin.class")));
+                jos.closeEntry();
+
+                JarEntry svcEntry = new JarEntry("META-INF/services/de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin");
+                jos.putNextEntry(svcEntry);
+                jos.write("de.example.compiled.CompiledExtPlugin\n".getBytes(StandardCharsets.UTF_8));
+                jos.closeEntry();
+            }
+
+            // Rule 4: passive until explicitly enabled
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(jarPath), Set.of());
+            assertTrue("Plugin must NOT activate unless explicitly enabled",
+                    PluginRegistry.INSTANCE.activePlugins().isEmpty());
+
+            PluginRegistry.INSTANCE.loadFromPaths(List.of(jarPath), Set.of("de.example.compiled_ext"));
+            assertEquals(1, PluginRegistry.INSTANCE.activePlugins().size());
+            assertEquals("de.example.compiled_ext", PluginRegistry.INSTANCE.activePlugins().get(0).id());
+
+            XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
+            Resource pkgRes = loadFromString(rs, "inmemory:/jar_pkg.ros2", """
+                    jar_pkg:
+                      artifacts:
+                        a1:
+                          node: n1
+                    """);
+            EcoreUtil.resolveAll(rs);
+            Ros2Generator gen = ros2Injector.getInstance(Ros2Generator.class);
+            InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
+            Ros2Generator.PluginGenerationOutcome out =
+                    gen.generateTargetedWithPlugins(pkgRes, fsa, null, "cpp", "jazzy", List.of());
+            assertTrue("External JAR plugin generation errors: " + out.errors, out.errors.isEmpty());
+            assertTrue(out.pluginFiles.containsKey("jar_pkg/plugins/de.example.compiled_ext/ok.txt"));
+
+            // Also verify OSGi service discovery when running inside Equinox OSGi (Tycho Eclipse runtime)
+            Bundle spiBundle = FrameworkUtil.getBundle(PluginRegistry.class);
+            BundleContext bc = spiBundle != null ? spiBundle.getBundleContext() : null;
+            if (bc != null) {
+                RosToolingPlugin osgiPlugin = new RosToolingPlugin() {
+                    @Override public String id() { return "de.example.osgi_ext"; }
+                    @Override public List<BlockDescriptor> blocks() { return List.of(); }
+                    @Override public void validate(final ValidationContext context) {}
+                };
+                ServiceRegistration<RosToolingPlugin> reg = bc.registerService(
+                        RosToolingPlugin.class, osgiPlugin, null);
+                try {
+                    PluginRegistry.INSTANCE.loadFromPaths(List.of(), Set.of("de.example.osgi_ext"));
+                    assertNotNull("OSGi-registered plugin must be discovered when enabled",
+                            PluginRegistry.INSTANCE.pluginById("de.example.osgi_ext"));
+                } finally {
+                    reg.unregister();
+                    PluginRegistry.INSTANCE.clearRegistered();
+                }
+            }
+        } finally {
+            PluginRegistry.INSTANCE.clearRegistered();
+            try (var walk = Files.walk(tempRoot)) {
+                walk.sorted(java.util.Comparator.reverseOrder()).forEach(p -> {
+                    try {
+                        Files.deleteIfExists(p);
+                    } catch (Exception ignored) {
+                    }
+                });
+            }
+        }
+    }
+
+    private static String resolveBundleOrClassLocation(final Class<?> clazz) throws Exception {
+        Bundle b = FrameworkUtil.getBundle(clazz);
+        if (b != null) {
+            String loc = b.getLocation();
+            if (loc != null && loc.startsWith("reference:")) {
+                loc = loc.substring("reference:".length());
+            }
+            if (loc != null && loc.startsWith("file:")) {
+                return Path.of(java.net.URI.create(loc)).toString();
+            }
+        }
+        var cs = clazz.getProtectionDomain() != null ? clazz.getProtectionDomain().getCodeSource() : null;
+        if (cs != null && cs.getLocation() != null) {
+            return Path.of(cs.getLocation().toURI()).toString();
+        }
+        return null;
+    }
+
+    private static EClass createSchemaClass(final String name, final Map<String, EDataType> attrs) {
+        EcoreFactory ef = EcoreFactory.eINSTANCE;
+        EPackage ePkg = ef.createEPackage();
+        ePkg.setName(name.toLowerCase());
+        ePkg.setNsPrefix(name.toLowerCase());
+        ePkg.setNsURI("http://example.org/" + name.toLowerCase());
+        EClass cls = ef.createEClass();
+        cls.setName(name);
+        for (Map.Entry<String, EDataType> entry : attrs.entrySet()) {
+            EAttribute attr = ef.createEAttribute();
+            attr.setName(entry.getKey());
+            attr.setEType(entry.getValue());
+            cls.getEStructuralFeatures().add(attr);
+        }
+        ePkg.getEClassifiers().add(cls);
+        return cls;
+    }
+
+    private static int countOccurrences(final String text, final String token) {
+        int count = 0;
+        int idx = 0;
+        while ((idx = text.indexOf(token, idx)) >= 0) {
+            count++;
+            idx += token.length();
+        }
+        return count;
     }
 }

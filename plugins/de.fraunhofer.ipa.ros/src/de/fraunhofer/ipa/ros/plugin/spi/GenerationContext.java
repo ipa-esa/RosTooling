@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.plugin.spi;
 
+import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -11,90 +12,173 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import ros.Extensible;
 import ros.ExtensionBlock;
-import ros.Plugin;
 
 /**
- * Code generation context handed to each {@link RosToolingPlugin} during Phase B of package
- * generation. Enforces single-author file ownership (Rule 3), Domain Logic Shield via
- * {@link #writeOnce(String, String)} (Rule 7), and external plugin registration ownership.
+ * Shared sealed base context handed to {@link RosToolingPlugin} generators during Phase B of
+ * package or system generation. Only core may instantiate {@link PackageGenerationContext} or
+ * {@link SystemGenerationContext}.
+ *
+ * <p><b>Single distro source:</b> Core resolves the target {@link Ros2Distro} once (from explicit
+ * arguments, settings, or {@code AUTO}) and passes it via {@link #ros2Distro()}. Plugins must use
+ * that resolved distribution metadata and never resolve a distribution independently, ensuring
+ * plugin outputs stay aligned with core outputs.
+ *
+ * <p><b>Single-author ownership (Rules 3 and 7):</b> Plugins receive {@link #coreOwnedPaths()} as
+ * relative paths only — never the contents of core-generated launch files, YAML files, or build
+ * files — and must never depend on the contents of core-generated files. Any attempt to overwrite
+ * or delete a path in {@link #coreOwnedPaths()}, a user logic file protected by the Domain Logic
+ * Shield, a path outside the plugin's allowed folder, or a path already owned by another plugin
+ * records an error naming the offending plugin(s).
  */
-public final class GenerationContext {
+public abstract sealed class GenerationContext permits PackageGenerationContext, SystemGenerationContext {
 
     private final String pluginId;
-    private final ros.Package packageModel;
+    private final String pluginFolder;
+    private final String outputRootName;
     private final Resource resource;
-    private final String rosDistro;
+    private final Ros2Distro ros2Distro;
     private final List<String> existingFiles;
-    private final Map<String, String> coreGeneratedFiles;
+    private final Set<String> coreOwnedPaths;
     private final Map<String, String> allPluginOwnedFiles;
     private final Map<String, String> pluginWrittenFiles = new LinkedHashMap<>();
     private final Set<String> pluginDeletedFiles = new LinkedHashSet<>();
-    private final Map<Plugin, String> externalRegistrations;
-    private final PackageBuild packageBuild;
-    private final List<String> errors;
-    private final PluginRegistry registry;
+    protected final List<String> errors;
+    protected final PluginRegistry registry;
 
-    public GenerationContext(
+    protected GenerationContext(
             final String pluginId,
-            final ros.Package packageModel,
+            final String outputRootName,
             final Resource resource,
-            final String rosDistro,
+            final Ros2Distro ros2Distro,
             final List<String> existingFiles,
-            final Map<String, String> coreGeneratedFiles,
+            final Set<String> coreOwnedPaths,
             final Map<String, String> allPluginOwnedFiles,
-            final Map<Plugin, String> externalRegistrations,
-            final PackageBuild packageBuild,
             final List<String> errors,
             final PluginRegistry registry) {
         this.pluginId = Objects.requireNonNull(pluginId, "pluginId");
-        this.packageModel = Objects.requireNonNull(packageModel, "packageModel");
+        this.pluginFolder = sanitizePluginFolder(pluginId);
+        if (outputRootName == null || outputRootName.isBlank()) {
+            throw new IllegalArgumentException("outputRootName must not be blank");
+        }
+        this.outputRootName = outputRootName.toLowerCase();
         this.resource = resource;
-        this.rosDistro = rosDistro != null ? rosDistro : "";
+        this.ros2Distro = Objects.requireNonNull(ros2Distro, "ros2Distro");
         this.existingFiles = existingFiles == null ? List.of() : Collections.unmodifiableList(existingFiles);
-        this.coreGeneratedFiles = coreGeneratedFiles == null
-                ? Map.of()
-                : Collections.unmodifiableMap(coreGeneratedFiles);
-        this.allPluginOwnedFiles = allPluginOwnedFiles;
-        this.externalRegistrations = externalRegistrations;
-        this.packageBuild = Objects.requireNonNull(packageBuild, "packageBuild");
+        this.coreOwnedPaths = coreOwnedPaths == null
+                ? Set.of()
+                : Collections.unmodifiableSet(new LinkedHashSet<>(coreOwnedPaths));
+        this.allPluginOwnedFiles = allPluginOwnedFiles != null ? allPluginOwnedFiles : new LinkedHashMap<>();
         this.errors = errors;
         this.registry = registry;
     }
 
-    public String pluginId() { return pluginId; }
-    public ros.Package packageModel() { return packageModel; }
-    public Resource resource() { return resource; }
-    public String rosDistro() { return rosDistro; }
-    public List<String> existingFiles() { return existingFiles; }
-    public Map<String, String> coreGeneratedFiles() { return coreGeneratedFiles; }
-    public PackageBuild packageBuild() { return packageBuild; }
+    /**
+     * Converts a plugin ID into a filesystem-safe directory segment for system-level outputs.
+     */
+    public static String sanitizePluginFolder(final String pluginId) {
+        if (pluginId == null || pluginId.isBlank()) {
+            return "plugin";
+        }
+        return pluginId.replaceAll("[^A-Za-z0-9_-]", "_");
+    }
 
-    public EObject typedBlock(final ExtensionBlock block) {
-        if (block == null) return null;
+    public final String pluginId() {
+        return pluginId;
+    }
+
+    /**
+     * Sanitized subfolder name derived from {@link #pluginId()}.
+     */
+    public final String pluginFolder() {
+        return pluginFolder;
+    }
+
+    protected final String outputRootName() {
+        return outputRootName;
+    }
+
+    public final Resource resource() {
+        return resource;
+    }
+
+    /**
+     * Resolved immutable {@link Ros2Distro} metadata (data only) chosen by core for this generation
+     * run. Plugins must use this value rather than resolving {@code $ROS_DISTRO} themselves.
+     */
+    public final Ros2Distro ros2Distro() {
+        return ros2Distro;
+    }
+
+    /**
+     * Plain lower-case distribution name (equivalent to {@code ros2Distro().name()}).
+     */
+    public final String rosDistro() {
+        return ros2Distro.name();
+    }
+
+    public final List<String> existingFiles() {
+        return existingFiles;
+    }
+
+    /**
+     * Read-only set of all relative paths reserved by core for this package or system (including
+     * protected user logic files that core preserved on disk). Contains paths only, never file
+     * contents.
+     */
+    public final Set<String> coreOwnedPaths() {
+        return coreOwnedPaths;
+    }
+
+    public final EObject typedBlock(final ExtensionBlock block) {
+        if (block == null) {
+            return null;
+        }
         BlockDescriptor desc = registry != null ? registry.blockDescriptor(block.getName()) : null;
-        if (desc == null) return null;
+        if (desc == null) {
+            return null;
+        }
         return ExtensionSchemaMapper.toTypedObject(block, desc);
     }
 
-    public ExtensionBlock mergedBlock(final Extensible typeElement, final Extensible instanceElement, final String blockName) {
+    public final EObject typedBlock(final Extensible owner, final String blockName) {
+        if (owner == null || blockName == null) {
+            return null;
+        }
+        ExtensionBlock block = ExtensionBlockMerger.findBlock(owner, blockName);
+        if (block == null) {
+            return null;
+        }
+        return typedBlock(block);
+    }
+
+    public final ExtensionBlock mergedBlock(
+            final Extensible typeElement,
+            final Extensible instanceElement,
+            final String blockName) {
         BlockDescriptor desc = registry != null ? registry.blockDescriptor(blockName) : null;
         return ExtensionBlockMerger.merge(typeElement, instanceElement, blockName, desc);
     }
 
     /**
-     * Writes (overwrites on regeneration) a file scoped under this package's generated directory.
-     * Enforces Rule 3: rejects writes outside the package directory or to files already authored
-     * by core or another plugin.
+     * Hook for subclasses to restrict allowed relative subpaths inside {@link #outputRootName()}.
      */
-    public void writeFile(final String relativePath, final String content) {
-        String normalized = normalizePackageRelativePath(relativePath);
-        if (coreGeneratedFiles.containsKey(normalized)) {
-            errors.add("Plugin '" + pluginId + "' attempted to overwrite core-authored file '" + normalized + "'");
+    protected boolean validatePluginRelativePath(final String subPath, final String operation) {
+        return true;
+    }
+
+    /**
+     * Writes (overwrites on regeneration) a file scoped under this package or system's output folder.
+     * Rejects writes to core-owned paths, protected user files, disallowed folders, or files owned
+     * by another plugin.
+     */
+    public final void writeFile(final String relativePath, final String content) {
+        String normalized = normalizeAndValidatePath(relativePath, "write");
+        if (normalized == null) {
             return;
         }
         String previousOwner = allPluginOwnedFiles.get(normalized);
         if (previousOwner != null && !previousOwner.equals(pluginId)) {
-            errors.add("Plugin conflict between '" + previousOwner + "' and '" + pluginId
+            recordError("Plugin conflict between '" + previousOwner + "' and '" + pluginId
                     + "' on generated file '" + normalized + "'");
             return;
         }
@@ -105,85 +189,107 @@ public final class GenerationContext {
 
     /**
      * Domain Logic Shield (Rule 7): writes a protected user file only if it does not already
-     * exist in {@link #existingFiles()}.
+     * exist in {@link #existingFiles()} and is not reserved in {@link #coreOwnedPaths()}.
      */
-    public boolean writeOnce(final String relativePath, final String content) {
-        String normalized = normalizePackageRelativePath(relativePath);
+    public final boolean writeOnce(final String relativePath, final String content) {
+        String normalized = normalizeAndValidatePath(relativePath, "writeOnce");
+        if (normalized == null) {
+            return false;
+        }
         if (fileExists(normalized)) {
             return false;
         }
         writeFile(normalized, content);
-        return true;
+        return pluginWrittenFiles.containsKey(normalized);
     }
 
     /**
-     * Marks a stale plugin-generated file for deletion. Refuses to delete core files or files
-     * owned by another plugin.
+     * Marks a stale plugin-generated file for deletion. Refuses to delete core-owned files, files
+     * outside the plugin's allowed folders, or files owned by another plugin.
      */
-    public void deleteStaleFile(final String relativePath) {
-        String normalized = normalizePackageRelativePath(relativePath);
-        if (coreGeneratedFiles.containsKey(normalized)) {
-            errors.add("Plugin '" + pluginId + "' cannot delete core-authored file '" + normalized + "'");
+    public final void deleteStaleFile(final String relativePath) {
+        String normalized = normalizeAndValidatePath(relativePath, "delete");
+        if (normalized == null) {
             return;
         }
         String owner = allPluginOwnedFiles.get(normalized);
         if (owner != null && !owner.equals(pluginId)) {
-            errors.add("Plugin '" + pluginId + "' cannot delete file owned by '" + owner + "': '" + normalized + "'");
+            recordError("Plugin '" + pluginId + "' cannot delete file owned by '" + owner + "': '" + normalized + "'");
             return;
         }
         pluginDeletedFiles.add(normalized);
     }
 
-    /**
-     * Claims responsibility for supplying registration code for a {@code loader: external}
-     * {@link Plugin}. Raises a conflict error naming both plugins if already claimed by another plugin.
-     */
-    public void claimExternalPluginRegistration(final Plugin plugin) {
-        if (plugin == null) return;
-        String previousOwner = externalRegistrations.get(plugin);
-        if (previousOwner != null && !previousOwner.equals(pluginId)) {
-            errors.add("Plugin conflict between '" + previousOwner + "' and '" + pluginId
-                    + "' on external registration for plugin '" + plugin.getName() + "'");
-            return;
+    public final boolean fileExists(final String relativePath) {
+        if (relativePath == null || relativePath.isBlank()) {
+            return false;
         }
-        externalRegistrations.put(plugin, pluginId);
-    }
-
-    public boolean fileExists(final String relativePath) {
-        String norm = normalizePackageRelativePath(relativePath);
-        String pkgName = packageModel.getName().toLowerCase();
-        String fileSuffix = norm.contains("/") ? norm.substring(pkgName.length()) : "/" + norm;
+        String clean = relativePath.replace('\\', '/').trim();
+        String pkgPrefix = outputRootName + "/";
+        String norm = clean.startsWith(pkgPrefix) ? clean : pkgPrefix + clean;
+        String subPath = norm.substring(pkgPrefix.length());
         for (String existing : existingFiles) {
             if (existing.equals(norm)
                     || existing.equals("src-gen/" + norm)
-                    || (existing.startsWith(pkgName + "/") && existing.endsWith(fileSuffix))
-                    || (existing.startsWith("src-gen/" + pkgName + "/") && existing.endsWith(fileSuffix))) {
+                    || existing.equals(subPath)) {
                 return true;
             }
         }
         return false;
     }
 
-    private String normalizePackageRelativePath(final String relativePath) {
-        if (relativePath == null || relativePath.isBlank()) {
-            throw new IllegalArgumentException("Output path must not be blank");
-        }
-        String clean = relativePath.replace('\\', '/').trim();
-        while (clean.startsWith("/")) {
-            clean = clean.substring(1);
-        }
-        if (clean.contains("..")) {
-            throw new IllegalArgumentException("Path traversal not allowed in plugin output: " + relativePath);
-        }
-        String pkgPrefix = packageModel.getName().toLowerCase() + "/";
-        return clean.startsWith(pkgPrefix) ? clean : pkgPrefix + clean;
-    }
-
-    public Map<String, String> writtenFiles() {
+    public final Map<String, String> writtenFiles() {
         return Collections.unmodifiableMap(pluginWrittenFiles);
     }
 
-    public Set<String> deletedFiles() {
+    public final Set<String> deletedFiles() {
         return Collections.unmodifiableSet(pluginDeletedFiles);
+    }
+
+    protected final void recordError(final String message) {
+        if (errors != null) {
+            errors.add(message);
+        }
+    }
+
+    protected final String stripOutputRootPrefix(final String relativePath) {
+        if (relativePath == null || relativePath.isBlank()) {
+            return null;
+        }
+        String clean = relativePath.replace('\\', '/').trim();
+        if (clean.startsWith("/") || clean.contains("..")) {
+            return null;
+        }
+        String pkgPrefix = outputRootName + "/";
+        return clean.startsWith(pkgPrefix) ? clean.substring(pkgPrefix.length()) : clean;
+    }
+
+    private String normalizeAndValidatePath(final String relativePath, final String operation) {
+        if (relativePath == null || relativePath.isBlank()) {
+            recordError("Plugin '" + pluginId + "' attempted to " + operation + " a blank output path");
+            return null;
+        }
+        String clean = relativePath.replace('\\', '/').trim();
+        if (clean.startsWith("/") || clean.contains("..")) {
+            recordError("Plugin '" + pluginId + "' attempted invalid path during " + operation + ": '" + relativePath + "'");
+            return null;
+        }
+        String pkgPrefix = outputRootName + "/";
+        String normalized = clean.startsWith(pkgPrefix) ? clean : pkgPrefix + clean;
+        if (coreOwnedPaths.contains(normalized)) {
+            recordError("Plugin '" + pluginId + "' attempted to "
+                    + ("delete".equals(operation) ? "delete" : "overwrite")
+                    + " core-owned file '" + normalized + "'");
+            return null;
+        }
+        String subPath = normalized.substring(pkgPrefix.length());
+        if (subPath.isBlank()) {
+            recordError("Plugin '" + pluginId + "' attempted invalid empty path during " + operation + ": '" + relativePath + "'");
+            return null;
+        }
+        if (!validatePluginRelativePath(subPath, operation)) {
+            return null;
+        }
+        return normalized;
     }
 }

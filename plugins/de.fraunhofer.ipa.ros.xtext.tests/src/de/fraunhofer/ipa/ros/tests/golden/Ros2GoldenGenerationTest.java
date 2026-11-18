@@ -78,9 +78,6 @@ public class Ros2GoldenGenerationTest {
 
             @Override
             public void validate(final de.fraunhofer.ipa.ros.plugin.spi.ValidationContext context) {}
-
-            @Override
-            public void generate(final de.fraunhofer.ipa.ros.plugin.spi.GenerationContext context) {}
         });
         try {
             compareAllDistrosAndLanguages();

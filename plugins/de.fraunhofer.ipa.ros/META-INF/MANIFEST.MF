@@ -17,5 +17,6 @@ Export-Package: de.fraunhofer.ipa.ros.plugin.spi,
  ros.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
+ de.fraunhofer.ipa.ros2.distro;visibility:=reexport,
  de.fraunhofer.ipa.ros;visibility:=reexport
 Bundle-ActivationPolicy: lazy

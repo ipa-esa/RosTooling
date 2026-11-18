@@ -1,8 +1,9 @@
 package de.fraunhofer.ipa.ros2.generator
 
 import com.google.inject.Inject
-import de.fraunhofer.ipa.ros.plugin.spi.GenerationContext
+import de.fraunhofer.ipa.ros.generator.IPluginAwareGenerator
 import de.fraunhofer.ipa.ros.plugin.spi.PackageBuild
+import de.fraunhofer.ipa.ros.plugin.spi.PackageGenerationContext
 import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry
 import de.fraunhofer.ipa.ros2.distro.Ros2Distros
 import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target
@@ -28,7 +29,7 @@ import ros.PluginLoader
  * Deterministically generates C++, Python, or Hybrid ROS 2 node wrappers, runners,
  * algorithm stubs, and build configurations, followed by active Phase B plugin generators.
  */
-class Ros2Generator extends AbstractGenerator {
+class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
 
     @Inject extension Ros2GeneratorHelpers
     @Inject extension Ros2CppWrapperCompiler
@@ -36,12 +37,18 @@ class Ros2Generator extends AbstractGenerator {
     @Inject extension Ros2PythonWrapperCompiler
     @Inject extension Ros2BuildArtifactsCompiler
 
-    static class PluginGenerationOutcome {
-        public final Map<String, String> coreFiles = new LinkedHashMap()
-        public final Map<String, String> pluginFiles = new LinkedHashMap()
-        public final Set<String> deletedFiles = new LinkedHashSet()
-        public final List<String> errors = new ArrayList()
-        public final List<String> pluginConflictErrors = new ArrayList()
+    static class PluginGenerationOutcome extends IPluginAwareGenerator.Outcome {
+    }
+
+    override IPluginAwareGenerator.Outcome generateWithPlugins(
+        Resource resource,
+        IFileSystemAccess2 fsa,
+        List<String> targetNodes,
+        String languageChoice,
+        String targetDistro,
+        List<String> existingFiles)
+    {
+        return generateTargetedWithPlugins(resource, fsa, targetNodes, languageChoice, targetDistro, existingFiles)
     }
 
     override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
@@ -269,12 +276,39 @@ class Ros2Generator extends AbstractGenerator {
                     }
                 }
 
-                // Reserve core-owned build files before Phase B runs so plugins cannot overwrite them directly.
-                val hasBaseCMake = !cppNodes.empty || !allPlugins.empty
-                coreGeneratedFiles.putIfAbsent(pkgName + "/package.xml", "")
-                if (hasBaseCMake) {
-                    coreGeneratedFiles.putIfAbsent(pkgName + "/CMakeLists.txt", "")
+                // Reserve EVERY core-owned path (whether written, deleted, or skipped because it exists on disk,
+                // including protected Algorithm.hpp / _logic.py / _plugin.hpp user logic files).
+                val Set<String> coreOwnedPaths = new LinkedHashSet<String>()
+                coreOwnedPaths.addAll(coreGeneratedFiles.keySet)
+                for (node : allPkgNodes) {
+                    val artCamel = toCamelCase(node.artifactName)
+                    val snakeNode = toSnakeCase(node.name)
+                    coreOwnedPaths.add(pkgName + "/include/" + pkgName + "/" + artCamel + "Wrapper.hpp")
+                    coreOwnedPaths.add(pkgName + "/include/" + pkgName + "/" + artCamel + "Node.hpp")
+                    coreOwnedPaths.add(pkgName + "/include/" + pkgName + "/" + artCamel + "Algorithm.hpp")
+                    coreOwnedPaths.add(pkgName + "/src/" + artCamel + "Wrapper.cpp")
+                    coreOwnedPaths.add(pkgName + "/src/" + artCamel + "Node.cpp")
+                    coreOwnedPaths.add(pkgName + "/src/" + artCamel + "Runner.cpp")
+                    coreOwnedPaths.add(pkgName + "/" + pkgName + "/__init__.py")
+                    coreOwnedPaths.add(pkgName + "/" + pkgName + "/" + snakeNode + "_wrapper.py")
+                    coreOwnedPaths.add(pkgName + "/" + pkgName + "/" + snakeNode + "_runner.py")
+                    coreOwnedPaths.add(pkgName + "/" + pkgName + "/" + snakeNode + "_logic.py")
                 }
+                for (pl : pluginlibPlugins) {
+                    val snakePlugin = pluginSnakeName(pl)
+                    coreOwnedPaths.add(pkgName + "/include/" + pkgName + "/" + snakePlugin + "_plugin_wrapper.hpp")
+                    coreOwnedPaths.add(pkgName + "/include/" + pkgName + "/" + snakePlugin + "_plugin.hpp")
+                    coreOwnedPaths.add(pkgName + "/src/" + snakePlugin + "_plugin.cpp")
+                }
+                if (!pluginlibPlugins.empty) {
+                    coreOwnedPaths.add(pkgName + "/plugins.xml")
+                }
+                coreOwnedPaths.add(pkgName + "/package.xml")
+                coreOwnedPaths.add(pkgName + "/CMakeLists.txt")
+                coreOwnedPaths.add(pkgName + "/setup.py")
+                coreOwnedPaths.add(pkgName + "/setup.cfg")
+                coreOwnedPaths.add(pkgName + "/pyproject.toml")
+                coreOwnedPaths.add(pkgName + "/resource/" + pkgName)
 
                 // 3b. Phase B: Execute active RosToolingPlugin generators and collect PackageBuild contributions
                 var PackageBuild pluginBuild = null
@@ -285,24 +319,24 @@ class Ros2Generator extends AbstractGenerator {
 
                     val Map<String, String> allPluginOwnedFiles = new LinkedHashMap()
                     val Map<Plugin, String> externalRegistrations = new IdentityHashMap()
-                    val List<GenerationContext> contexts = new ArrayList()
+                    val List<PackageGenerationContext> contexts = new ArrayList()
 
                     for (plugin : activePlugins) {
                         pluginBuild.setCurrentPluginId(plugin.id)
-                        val ctx = new GenerationContext(
+                        val ctx = new PackageGenerationContext(
                             plugin.id,
                             pkg,
                             resource,
-                            target.distro.name,
+                            target.distro,
                             existingList,
-                            coreGeneratedFiles,
+                            coreOwnedPaths,
                             allPluginOwnedFiles,
                             externalRegistrations,
                             pluginBuild,
                             outcome.pluginConflictErrors,
                             PluginRegistry.INSTANCE
                         )
-                        plugin.generate(ctx)
+                        plugin.generatePackage(ctx)
                         contexts.add(ctx)
                     }
                     pluginBuild.setCurrentPluginId("core")

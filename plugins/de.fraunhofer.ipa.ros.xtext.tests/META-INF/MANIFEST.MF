@@ -22,8 +22,11 @@ Require-Bundle: de.fraunhofer.ipa.ros.xtext,
  org.eclipse.lsp4j,
  com.google.gson,
  de.fraunhofer.ipa.rossystem;bundle-version="2.0.0",
- de.fraunhofer.ipa.rossystem.xtext;bundle-version="3.4.0"
+ de.fraunhofer.ipa.rossystem.xtext;bundle-version="3.4.0",
+ de.fraunhofer.ipa.rossystem.xtext.ide
 Import-Package: org.apache.log4j,
+ org.osgi.framework,
+ javax.tools;resolution:=optional,
  org.junit;version="4.5.0",
  org.junit.runner;version="4.5.0",
  org.junit.runner.manipulation;version="4.5.0",

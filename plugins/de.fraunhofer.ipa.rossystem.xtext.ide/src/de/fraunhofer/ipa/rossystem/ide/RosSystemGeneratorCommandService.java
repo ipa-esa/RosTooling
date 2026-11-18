@@ -37,6 +37,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
+import de.fraunhofer.ipa.ros.generator.RosSiblingResourceLoader;
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
+import de.fraunhofer.ipa.ros2.distro.Ros2Distros;
+import de.fraunhofer.ipa.ros2.distro.UnknownDistroException;
 import de.fraunhofer.ipa.rossystem.generator.RosSystemGenerator;
 
 public class RosSystemGeneratorCommandService implements IExecutableCommandService {
@@ -91,12 +95,28 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
                     existingFiles = parseStringList(params.getArguments().get(1));
                 }
                 final List<String> finalExistingFiles = existingFiles;
-                
+                String targetDistro = Ros2Distros.AUTO;
+                if (params.getArguments().size() > 2 && params.getArguments().get(2) != null) {
+                    String rawDistro = parseStringArg(params.getArguments().get(2));
+                    if (!rawDistro.isBlank()) {
+                        targetDistro = rawDistro;
+                    }
+                }
+                final String finalDistro;
+                try {
+                    finalDistro = Ros2Distros.resolve(targetDistro).name();
+                } catch (UnknownDistroException e) {
+                    return Map.of("error", e.getMessage());
+                }
+
+                PluginRegistry.INSTANCE.ensureLoadedFromEnvironment();
+
                 forceLog("Requesting workspace-aware document from LSP ...");
-                
+
                 CompletableFuture<Map<String, Object>> futureResult = access.doRead(fileUriStr, (context) -> {
                 	try {
 						Resource resource = context.getResource();
+						RosSiblingResourceLoader.loadSiblingModelsFromDirectory(resource.getResourceSet(), resource.getURI(), null);
 						EcoreUtil.resolveAll(resource);
 						IResourceServiceProvider rsp = resourceServiceRegistry.getResourceServiceProvider(uri);
 
@@ -123,15 +143,33 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
 						var fsa = new InMemoryFileSystemAccess();
 						var context1 = new GeneratorContext();
 						context1.setCancelIndicator(CancelIndicator.NullImpl);
-						if (generator instanceof RosSystemGenerator) {
-							((RosSystemGenerator) generator).generateSystemTargeted(resource, fsa, finalExistingFiles);
-						} else {
-							generator.doGenerate(resource, fsa, context1);
+						if (generator instanceof RosSystemGenerator sysGen) {
+							RosSystemGenerator.SystemGenerationOutcome outcome =
+								sysGen.generateSystemWithPlugins(resource, fsa, finalExistingFiles, finalDistro);
+							if (!outcome.errors.isEmpty()) {
+								String errMsg = String.join("; ", outcome.errors);
+								forceLog("PLUGIN ERROR: " + errMsg);
+								return Map.of(
+									"success", false,
+									"error", errMsg,
+									"errors", outcome.errors,
+									"conflictErrors", outcome.pluginConflictErrors);
+							}
+							Map<String, String> files = fsa.getAllFiles().entrySet().stream()
+								.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
+							forceLog("SUCCESS: Generated " + files.size() + " files.");
+							return Map.of(
+								"success", true,
+								"files", files,
+								"pluginFiles", outcome.pluginFiles,
+								"prunedFiles", new ArrayList<>(outcome.deletedFiles),
+								"count", files.size());
 						}
-						
+						generator.doGenerate(resource, fsa, context1);
+
 						Map<String, String> files = fsa.getAllFiles().entrySet().stream()
 		                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
-		                
+
 		                forceLog("SUCCESS: Generated " + files.size() + " files.");
 		                return Map.of("success", true, "files", files, "count", files.size());
 					} catch (Exception e) {

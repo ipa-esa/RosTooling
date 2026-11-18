@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import de.fraunhofer.ipa.ros.generator.IPluginAwareGenerator;
+import de.fraunhofer.ipa.ros.generator.RosSiblingResourceLoader;
 import de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor;
 import de.fraunhofer.ipa.ros.plugin.spi.ExtensionBlockMerger;
 import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
@@ -18,7 +20,6 @@ import de.fraunhofer.ipa.ros.plugin.spi.ValidationIssue;
 import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
 import de.fraunhofer.ipa.ros2.distro.Ros2Distros;
 import de.fraunhofer.ipa.ros2.distro.UnknownDistroException;
-import de.fraunhofer.ipa.ros2.generator.Ros2Generator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -320,7 +321,7 @@ public final class RosPluginCommandSupport {
             // Re-parse and validate the updated text in an isolated ResourceSet so all diagnostics reflect the edit.
             List<String> errors = new ArrayList<>();
             List<String> warnings = new ArrayList<>();
-            validateUpdatedText(res, updatedText, rspRegistry, errors, warnings);
+            validateUpdatedText(res, modelPath, updatedText, rspRegistry, errors, warnings);
 
             Map<String, Object> result = new LinkedHashMap<>();
             result.put("success", errors.isEmpty());
@@ -384,12 +385,12 @@ public final class RosPluginCommandSupport {
             }
 
             IGenerator2 gen = rsp.get(IGenerator2.class);
-            if (!(gen instanceof Ros2Generator ros2Gen)) {
-                return Map.of("error", "Ros2Generator is only supported for .ros2 package resources");
+            if (!(gen instanceof IPluginAwareGenerator pluginGen)) {
+                return Map.of("error", "Plugin-aware generation is only supported for .ros2 and .rossystem resources");
             }
 
             InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
-            Ros2Generator.PluginGenerationOutcome outcome = ros2Gen.generateTargetedWithPlugins(
+            IPluginAwareGenerator.Outcome outcome = pluginGen.generateWithPlugins(
                     res, fsa, targetNodes, language, resolvedDistro.name(), existingFiles);
 
             boolean hasErrors = !outcome.errors.isEmpty();
@@ -426,7 +427,11 @@ public final class RosPluginCommandSupport {
             final Function<Resource, Map<String, Object>> fn) {
         if (fileUri != null && !fileUri.isBlank() && access != null && (modelText == null || modelText.isBlank())) {
             try {
-                return access.doRead(fileUri, (context) -> fn.apply(context.getResource())).get();
+                return access.doRead(fileUri, (context) -> {
+                    Resource res = context.getResource();
+                    RosSiblingResourceLoader.loadSiblingModelsFromDirectory(res.getResourceSet(), res.getURI(), modelPath);
+                    return fn.apply(res);
+                }).get();
             } catch (Exception e) {
                 return Map.of("success", false, "error", "Failed to read resource '" + fileUri + "': " + e.getMessage());
             }
@@ -454,6 +459,7 @@ public final class RosPluginCommandSupport {
         }
         IResourceServiceProvider rsp = rspRegistry.getResourceServiceProvider(uri);
         XtextResourceSet rs = rsp != null ? rsp.get(XtextResourceSet.class) : new XtextResourceSet();
+        RosSiblingResourceLoader.loadSiblingModelsFromDirectory(rs, uri, modelPath);
         Resource res = rs.createResource(uri);
         String text = modelText;
         if ((text == null || text.isBlank()) && uri.isFile()) {
@@ -472,6 +478,7 @@ public final class RosPluginCommandSupport {
 
     private static void validateUpdatedText(
             final Resource originalResource,
+            final String fallbackModelPath,
             final String updatedText,
             final IResourceServiceProvider.Registry rspRegistry,
             final List<String> errors,
@@ -495,6 +502,7 @@ public final class RosPluginCommandSupport {
                     }
                 }
             }
+            RosSiblingResourceLoader.loadSiblingModelsFromDirectory(checkRs, uri, fallbackModelPath);
             Resource updatedRes = checkRs.createResource(uri);
             updatedRes.load(new ByteArrayInputStream(updatedText.getBytes(StandardCharsets.UTF_8)), Map.of());
             EcoreUtil.resolveAll(checkRs);

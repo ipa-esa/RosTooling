@@ -55,9 +55,18 @@ public interface RosToolingPlugin {
     void validate(ValidationContext context);
 
     /**
-     * Code and build generation hook invoked during Phase B of package generation.
+     * Code and build generation hook invoked during Phase B of {@code .ros2} package generation.
+     * Defaults to a no-op so system-only plugins do not need to override it.
      */
-    void generate(GenerationContext context);
+    default void generatePackage(final PackageGenerationContext context) {
+    }
+
+    /**
+     * Code and file generation hook invoked during Phase B of {@code .rossystem} system generation.
+     * Defaults to a no-op so package-only plugins do not need to override it.
+     */
+    default void generateSystem(final SystemGenerationContext context) {
+    }
 
     /**
      * MCP/LSP authoring tools dynamically exposed when this plugin is active.

@@ -1,7 +1,9 @@
 package de.fraunhofer.ipa.rossystem.generator
 
 import com.google.inject.Inject
+import de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext
 import java.util.ArrayList
+import java.util.List
 import org.eclipse.emf.common.util.EList
 import ros.Artifact
 import ros.Parameter
@@ -30,12 +32,16 @@ class LaunchFileCompiler_ROS2 {
     @Inject extension GeneratorHelpers
 
 
+    def compile_toROS2launch(System system) {
+        return compile_toROS2launch(system, List.of())
+    }
+
     /**
      * ROS 2 launch file of a system. launch_ros' LifecycleNode takes {@code namespace} as a
      * required keyword argument on every supported distribution, so lifecycle nodes always get
      * one ({@code ""} when the model sets none); plain Node and ComposableNode keep it optional.
      */
-    def compile_toROS2launch(System system) '''
+    def compile_toROS2launch(System system, List<SystemGenerationContext.LaunchInclude> pluginIncludes) '''
 «IF YamlFileGenerated(system)»import os«ENDIF»
 from launch import LaunchDescription
 «IF !getStandaloneRos2Nodes(system).empty || !hasComponentContainers(system)»from launch_ros.actions import Node«ENDIF»
@@ -45,8 +51,8 @@ from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 «ENDIF»
 from launch_ros.parameter_descriptions import ParameterValue
-«IF hasSubstitutionValues(system)»from launch.frontend.parse_substitution import parse_substitution«ENDIF»
-«IF !getSubsystems(system).empty»from ament_index_python.packages import get_package_share_directory«ENDIF»
+«IF hasSubstitutionValues(system) || hasPluginIncludeSubstitutions(pluginIncludes)»from launch.frontend.parse_substitution import parse_substitution«ENDIF»
+«IF !getSubsystems(system).empty || !pluginIncludes.empty»from ament_index_python.packages import get_package_share_directory«ENDIF»
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoinSubstitution, TextSubstitution
@@ -136,7 +142,19 @@ def generate_launch_description():
       '«(param as ros.Parameter).name»': LaunchConfiguration('«(param as ros.Parameter).name»'),«ENDIF»«ENDFOR»
     }.items()«ENDIF»
   )
-  «ENDIF»«ENDFOR»
+  «ENDIF»«ENDFOR»«IF !pluginIncludes.empty»
+  «FOR i : 0 ..< pluginIncludes.size»
+  «val inc = pluginIncludes.get(i)»
+  «pluginIncludeVarName(inc, i)»= IncludeLaunchDescription(
+    PythonLaunchDescriptionSource([get_package_share_directory('«system.getName().toLowerCase»') + '/«inc.launchFileRelativePath»'])«IF !inc.launchArguments.empty»,
+    launch_arguments={
+      «FOR arg : inc.launchArguments.entrySet SEPARATOR ','»
+      '«arg.key»': «renderPluginLaunchArg(arg.value)»
+      «ENDFOR»
+    }.items()«ENDIF»
+  )
+  «ENDFOR»
+«ENDIF»
 
   # *** Add actions ***
   «FOR proc:getProcessesWithRos2Nodes(system)»
@@ -150,10 +168,35 @@ def generate_launch_description():
   «ENDIF»
   «ENDFOR»«FOR subsystem:getSubsystems(system)»
   ld.add_action(include_«subsystem.name»)
-  «ENDFOR»
+  «ENDFOR»«IF !pluginIncludes.empty»«FOR i : 0 ..< pluginIncludes.size»
+  ld.add_action(«pluginIncludeVarName(pluginIncludes.get(i), i)»)
+  «ENDFOR»«ENDIF»
 
   return ld
     '''
+
+    def boolean hasPluginIncludeSubstitutions(List<SystemGenerationContext.LaunchInclude> pluginIncludes) {
+        if (pluginIncludes === null) return false
+        for (inc : pluginIncludes) {
+            for (arg : inc.launchArguments.values) {
+                if (arg.kind == SystemGenerationContext.LaunchArgumentKind.SUBSTITUTION) return true
+            }
+        }
+        return false
+    }
+
+    def String pluginIncludeVarName(SystemGenerationContext.LaunchInclude inc, int idx) {
+        val base = (inc.pluginId + "_" + inc.launchFileRelativePath).replaceAll("[^A-Za-z0-9_]", "_")
+        return "include_plugin_" + idx + "_" + base
+    }
+
+    def String renderPluginLaunchArg(SystemGenerationContext.LaunchArgumentValue arg) {
+        switch (arg.kind) {
+            case SYSTEM_LAUNCH_ARG: "LaunchConfiguration('" + escapePythonString(arg.value) + "')"
+            case SUBSTITUTION: "parse_substitution(\"" + escapePythonString(arg.value) + "\")"
+            default: "TextSubstitution(text=\"" + escapePythonString(arg.value) + "\")"
+        }
+    }
 
 
 
