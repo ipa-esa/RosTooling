@@ -92,7 +92,9 @@ public final class RosPluginCommandSupport {
             if (plugin.blocks() != null) {
                 for (BlockDescriptor desc : plugin.blocks()) {
                     if (desc != null) {
-                        blockList.add(ExtensionSchemaMapper.schemaToJsonMap(desc));
+                        Map<String, Object> bMap = new LinkedHashMap<>(ExtensionSchemaMapper.schemaToJsonMap(desc));
+                        bMap.put("setToolName", prefixedToolName(plugin.id(), "set_" + desc.name()));
+                        blockList.add(bMap);
                     }
                 }
             }
@@ -390,20 +392,23 @@ public final class RosPluginCommandSupport {
             Ros2Generator.PluginGenerationOutcome outcome = ros2Gen.generateTargetedWithPlugins(
                     res, fsa, targetNodes, language, resolvedDistro.name(), existingFiles);
 
-            Map<String, String> allFiles = fsa.getAllFiles().entrySet().stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
+            boolean hasErrors = !outcome.errors.isEmpty();
+            Map<String, String> allFiles = hasErrors
+                    ? Map.of()
+                    : fsa.getAllFiles().entrySet().stream()
+                            .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
 
             Map<String, Object> out = new LinkedHashMap<>();
-            out.put("success", outcome.errors.isEmpty());
+            out.put("success", !hasErrors);
             out.put("files", allFiles);
-            out.put("coreFiles", outcome.coreFiles);
-            out.put("pluginFiles", outcome.pluginFiles);
-            out.put("prunedFiles", new ArrayList<>(outcome.deletedFiles));
+            out.put("coreFiles", hasErrors ? Map.of() : outcome.coreFiles);
+            out.put("pluginFiles", hasErrors ? Map.of() : outcome.pluginFiles);
+            out.put("prunedFiles", hasErrors ? List.of() : new ArrayList<>(outcome.deletedFiles));
             out.put("errors", outcome.errors);
             out.put("conflictErrors", outcome.pluginConflictErrors);
             out.put("distro", resolvedDistro.name());
             out.put("count", allFiles.size());
-            if (!outcome.errors.isEmpty()) {
+            if (hasErrors) {
                 out.put("error", String.join("; ", outcome.errors));
             }
             return out;

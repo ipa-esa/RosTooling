@@ -320,12 +320,12 @@ class Ros2BuildArtifactsCompiler {
     private def String renderXmlExport(PackageBuild.XmlExportEntry exp) {
         val sb = new StringBuilder("<").append(exp.tagName)
         for (Map.Entry<String, String> a : exp.attributes.entrySet) {
-            sb.append(" ").append(a.key).append("=\"").append(a.value).append("\"")
+            sb.append(" ").append(a.key).append("=\"").append(PackageBuild.escapeXml(a.value)).append("\"")
         }
         if (exp.textContent.nullOrEmpty) {
             sb.append("/>")
         } else {
-            sb.append(">").append(exp.textContent).append("</").append(exp.tagName).append(">")
+            sb.append(">").append(PackageBuild.escapeXml(exp.textContent)).append("</").append(exp.tagName).append(">")
         }
         return sb.toString
     }
@@ -755,7 +755,7 @@ rclcpp_components_register_nodes(«current.name» "«r»")
     private def String renderExtraLibrary(PackageBuild.LibraryTarget lib, Ros2Target target) '''
 
 # -----------------------------------------------------------------------------
-# «IF !lib.bannerComment.nullOrEmpty»«lib.bannerComment»«ELSE»Plugin Library Target: «lib.name»«ENDIF»
+# Plugin Library Target: «lib.name»
 # -----------------------------------------------------------------------------
 add_library(«lib.name» «IF lib.shared»SHARED«ELSE»STATIC«ENDIF»
   «FOR src : lib.sources»
@@ -813,7 +813,7 @@ rclcpp_components_register_nodes(«lib.name» "«reg»")
     private def String renderExtraExecutable(PackageBuild.ExecutableTarget exec, Ros2Target target) '''
 
 # -----------------------------------------------------------------------------
-# «IF !exec.bannerComment.nullOrEmpty»«exec.bannerComment»«ELSE»Plugin Executable Target: «exec.name»«ENDIF»
+# Plugin Executable Target: «exec.name»
 # -----------------------------------------------------------------------------
 add_executable(«exec.name»
   «FOR src : exec.sources»

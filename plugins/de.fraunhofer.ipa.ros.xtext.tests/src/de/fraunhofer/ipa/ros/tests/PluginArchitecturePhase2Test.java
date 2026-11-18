@@ -487,6 +487,11 @@ public class PluginArchitecturePhase2Test {
                 null,
                 CancelIndicator.NullImpl);
         assertFalse(((List<?>) listResp.get("tools")).isEmpty());
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> listedPlugins = (List<Map<String, Object>>) listResp.get("plugins");
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> listedBlocks = (List<Map<String, Object>>) listedPlugins.get(0).get("blocks");
+        assertEquals("de_example_audit__set_audit", listedBlocks.get(0).get("setToolName"));
 
         @SuppressWarnings("unchecked")
         Map<String, Object> toolResp = (Map<String, Object>) RosPluginCommandSupport.executePluginTool(
@@ -637,6 +642,13 @@ public class PluginArchitecturePhase2Test {
                         e.contains("de.example.alpha") && e.contains("de.example.beta") && e.contains("ExtAlphaAndBeta")));
         assertTrue("Unclaimed external plugin must error: " + outcome.errors,
                 outcome.errors.stream().anyMatch(e -> e.contains("ExtUnclaimed")));
+        assertTrue("Plugin files must NOT be emitted when conflicts/unclaimed plugins exist: " + outcome.pluginFiles,
+                outcome.pluginFiles.isEmpty());
+        assertFalse("FSA must NOT receive plugin file on conflict",
+                fsa.getTextFiles().keySet().stream().anyMatch(k -> k.endsWith("collide.cpp")));
+        String conflictCmake = fsa.getTextFiles().get("DEFAULT_OUTPUTconflict_pkg/CMakeLists.txt").toString();
+        assertFalse("CMakeLists.txt must NOT receive conflicting plugin build targets:\n" + conflictCmake,
+                conflictCmake.contains("shared_lib"));
 
         // Also test ExtensionBlockMerger ERROR_ON_CONFLICT in .rossystem
         XtextResourceSet sysRs = rosSystemInjector.getInstance(XtextResourceSet.class);
@@ -660,5 +672,135 @@ public class PluginArchitecturePhase2Test {
         List<Issue> sysIssues = validate(rosSystemInjector, conflictSys);
         assertTrue("Expected EXTENSION_MERGE_CONFLICT error: " + sysIssues,
                 sysIssues.stream().anyMatch(i -> RosSystemValidator.EXTENSION_MERGE_CONFLICT.equals(i.getCode())));
+
+        // Also verify unclaimed external plugin suppresses plugin file emission even when a single plugin writes cleanly
+        PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.writer"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generate(final GenerationContext context) {
+                context.writeFile("src/should_not_exist.cpp", "// should be withheld\n");
+            }
+        });
+        InMemoryFileSystemAccess unclaimedFsa = new InMemoryFileSystemAccess();
+        Ros2Generator.PluginGenerationOutcome unclaimedOutcome =
+                gen.generateTargetedWithPlugins(res, unclaimedFsa, null, "cpp", "jazzy", List.of());
+        assertFalse("Expected error for unclaimed external plugin", unclaimedOutcome.errors.isEmpty());
+        assertTrue("Plugin files must be withheld on unclaimed external plugin: " + unclaimedOutcome.pluginFiles,
+                unclaimedOutcome.pluginFiles.isEmpty());
+        assertFalse(unclaimedFsa.getTextFiles().keySet().stream().anyMatch(k -> k.endsWith("should_not_exist.cpp")));
+    }
+
+    @Test
+    public void packageBuildRejectsInjectionAndEscapesXmlExports() throws Exception {
+        XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
+        Resource res = loadFromString(rs, "inmemory:/inject_pkg.ros2", """
+                inject_pkg:
+                  artifacts:
+                    base_art:
+                      node: base_node
+                """);
+        EcoreUtil.resolveAll(rs);
+
+        List<java.util.function.Consumer<PackageBuild>> attacks = List.of(
+                pb -> pb.addBuildtoolDepend("ament_cmake\nadd_custom_target(pwn)"),
+                pb -> pb.addDepend("rclcpp )"),
+                pb -> pb.addExecDepend("launch \"evil\""),
+                pb -> pb.addTestDepend("gtest;evil"),
+                pb -> pb.addFindPackage("pkg name"),
+                pb -> pb.getOrCreateLibrary("bad lib\nevil", true, "de.example.inject"),
+                pb -> {
+                    PackageBuild.LibraryTarget lib = pb.getOrCreateLibrary("safe_lib", true, "de.example.inject");
+                    pb.addLibrarySource(lib, "../escape.cpp", "de.example.inject");
+                },
+                pb -> pb.getOrCreateLibrary("safe_lib", true, "de.example.inject")
+                        .sources().add("src/a.cpp\nadd_custom_target(pwn)"),
+                pb -> pb.getOrCreateLibrary("safe_lib", true, "de.example.inject")
+                        .publicIncludeDirs().add("include)\nevil("),
+                pb -> pb.getOrCreateLibrary("safe_lib", true, "de.example.inject")
+                        .privateIncludeDirs().add("/abs/path"),
+                pb -> pb.getOrCreateLibrary("safe_lib", true, "de.example.inject")
+                        .publicLinkPackages().add("bad pkg"),
+                pb -> pb.getOrCreateLibrary("safe_lib", true, "de.example.inject")
+                        .privateLinkPackages().add("bad\npkg"),
+                pb -> pb.getOrCreateLibrary("safe_lib", true, "de.example.inject")
+                        .publicLinkLibraries().add("lib\"evil\""),
+                pb -> pb.getOrCreateLibrary("safe_lib", true, "de.example.inject")
+                        .privateLinkLibraries().add("lib)evil("),
+                pb -> pb.getOrCreateLibrary("safe_lib", true, "de.example.inject")
+                        .compileDefinitions().add("FOO=1 BAR"),
+                pb -> pb.getOrCreateLibrary("safe_lib", true, "de.example.inject")
+                        .componentRegistrations().add("ns::Cls\")\nevil("),
+                pb -> pb.getOrCreateExecutable("bad exec", "de.example.inject"),
+                pb -> pb.getOrCreateExecutable("safe_exec", "de.example.inject")
+                        .sources().add("src/main.cpp\n#evil"),
+                pb -> pb.getOrCreateExecutable("safe_exec", "de.example.inject")
+                        .linkPackages().add("pkg\nfind_package(pwn)"),
+                pb -> pb.getOrCreateExecutable("safe_exec", "de.example.inject")
+                        .publicLinkLibraries().add("lib evil"),
+                pb -> pb.getOrCreateExecutable("safe_exec", "de.example.inject")
+                        .privateLinkLibraries().add("lib)evil"),
+                pb -> pb.getOrCreateExecutable("safe_exec", "de.example.inject")
+                        .compileDefinitions().add("DEF=\"evil\""),
+                pb -> pb.addInstallDirectory("../secrets", "share/${PROJECT_NAME}", true),
+                pb -> pb.addInstallFiles(List.of("cfg/a.yaml\nevil"), "share/${PROJECT_NAME}/cfg"),
+                pb -> pb.addPythonProgram("bin/run.py", "lib/${PROJECT_NAME}", "bad rename"),
+                pb -> pb.addPluginlibExport("base pkg", "plugins.xml"),
+                pb -> pb.addTestTarget(new PackageBuild.TestTarget(
+                        "t_bad)", "gtest", List.of("test/a.cpp"), List.of(), List.of())),
+                pb -> pb.addXmlExport(new PackageBuild.XmlExportEntry("bad<tag>", Map.of("k", "v"), "")),
+                pb -> pb.addXmlExport(new PackageBuild.XmlExportEntry("good_tag", Map.of("bad attr", "v"), "")));
+
+        Ros2Generator gen = ros2Injector.getInstance(Ros2Generator.class);
+        for (int i = 0; i < attacks.size(); i++) {
+            final int idx = i;
+            PluginRegistry.INSTANCE.clearRegistered();
+            PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+                @Override public String id() { return "de.example.inject"; }
+                @Override public List<BlockDescriptor> blocks() { return List.of(); }
+                @Override public void validate(final ValidationContext context) {}
+                @Override public void generate(final GenerationContext context) {
+                    attacks.get(idx).accept(context.packageBuild());
+                    context.writeFile("src/plugin_out.cpp", "// should be withheld\n");
+                }
+            });
+            InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
+            Ros2Generator.PluginGenerationOutcome outcome =
+                    gen.generateTargetedWithPlugins(res, fsa, null, "cpp", "jazzy", List.of());
+            assertFalse("Attack #" + idx + " must fail with error", outcome.errors.isEmpty());
+            assertTrue("Attack #" + idx + " error must name the plugin: " + outcome.errors,
+                    outcome.errors.stream().anyMatch(e -> e.contains("de.example.inject")));
+            assertTrue("Attack #" + idx + " must withhold plugin files", outcome.pluginFiles.isEmpty());
+        }
+
+        // Verify valid XmlExportEntry XML-escapes attribute values & textContent and renders clean CMake target headers
+        PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.xml_escape"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generate(final GenerationContext context) {
+                PackageBuild pb = context.packageBuild();
+                pb.addXmlExport(new PackageBuild.XmlExportEntry(
+                        "safe_tag",
+                        Map.of("expr", "a < b & \"c\" > 'd'"),
+                        "text <tag> & \"q\""));
+                PackageBuild.LibraryTarget lib = pb.getOrCreateLibrary("escaped_lib", true, id());
+                lib.sources().add("src/escaped_lib.cpp");
+                PackageBuild.ExecutableTarget exec = pb.getOrCreateExecutable("escaped_exec", id());
+                exec.sources().add("src/escaped_exec.cpp");
+            }
+        });
+        InMemoryFileSystemAccess okFsa = new InMemoryFileSystemAccess();
+        Ros2Generator.PluginGenerationOutcome okOutcome =
+                gen.generateTargetedWithPlugins(res, okFsa, null, "cpp", "jazzy", List.of());
+        assertTrue("Expected zero errors: " + okOutcome.errors, okOutcome.errors.isEmpty());
+        String pkgXml = okFsa.getTextFiles().get("DEFAULT_OUTPUTinject_pkg/package.xml").toString();
+        String cmake = okFsa.getTextFiles().get("DEFAULT_OUTPUTinject_pkg/CMakeLists.txt").toString();
+        assertTrue(pkgXml, pkgXml.contains(
+                "<safe_tag expr=\"a &lt; b &amp; &quot;c&quot; &gt; &apos;d&apos;\">text &lt;tag&gt; &amp; &quot;q&quot;</safe_tag>"));
+        assertTrue(cmake, cmake.contains("# Plugin Library Target: escaped_lib"));
+        assertTrue(cmake, cmake.contains("# Plugin Executable Target: escaped_exec"));
     }
 }

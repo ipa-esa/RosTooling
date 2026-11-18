@@ -280,6 +280,7 @@ class Ros2Generator extends AbstractGenerator {
                 var PackageBuild pluginBuild = null
                 if (!activePlugins.empty) {
                     pluginBuild = new PackageBuild(pkgName)
+                    pluginBuild.setCurrentPluginId("core")
                     populateCorePackageBuild(pkg, cppNodes, pythonNodes, pluginBuild)
 
                     val Map<String, String> allPluginOwnedFiles = new LinkedHashMap()
@@ -287,6 +288,7 @@ class Ros2Generator extends AbstractGenerator {
                     val List<GenerationContext> contexts = new ArrayList()
 
                     for (plugin : activePlugins) {
+                        pluginBuild.setCurrentPluginId(plugin.id)
                         val ctx = new GenerationContext(
                             plugin.id,
                             pkg,
@@ -303,6 +305,7 @@ class Ros2Generator extends AbstractGenerator {
                         plugin.generate(ctx)
                         contexts.add(ctx)
                     }
+                    pluginBuild.setCurrentPluginId("core")
 
                     for (ep : extPlugins) {
                         val art = ep.eContainer as ros.Artifact
@@ -318,14 +321,16 @@ class Ros2Generator extends AbstractGenerator {
                     outcome.pluginConflictErrors.addAll(pluginBuild.conflictErrors)
                     outcome.errors.addAll(outcome.pluginConflictErrors)
 
-                    for (ctx : contexts) {
-                        for (delPath : ctx.deletedFiles) {
-                            fsa.deleteFile(delPath)
-                            outcome.deletedFiles.add(delPath)
-                        }
-                        for (entry : ctx.writtenFiles.entrySet) {
-                            fsa.generateFile(entry.key, entry.value)
-                            outcome.pluginFiles.put(entry.key, entry.value)
+                    if (outcome.errors.empty) {
+                        for (ctx : contexts) {
+                            for (delPath : ctx.deletedFiles) {
+                                fsa.deleteFile(delPath)
+                                outcome.deletedFiles.add(delPath)
+                            }
+                            for (entry : ctx.writtenFiles.entrySet) {
+                                fsa.generateFile(entry.key, entry.value)
+                                outcome.pluginFiles.put(entry.key, entry.value)
+                            }
                         }
                     }
                 } else if (generatePlugins && !extPlugins.empty) {
@@ -335,16 +340,17 @@ class Ros2Generator extends AbstractGenerator {
                 }
 
                 // 4. Single-author rendering of Build Files (package.xml, CMakeLists.txt, setup.py)
+                val effectiveBuild = if (outcome.errors.empty) pluginBuild else null
                 emitCoreFile(fsa, outcome, coreGeneratedFiles,
                     pkgName + "/package.xml",
-                    compilePackageXml(pkg, cppNodes, pythonNodes, pluginBuild))
+                    compilePackageXml(pkg, cppNodes, pythonNodes, effectiveBuild))
 
                 val needsCMake = !cppNodes.empty || !allPlugins.empty
-                    || (pluginBuild !== null && (!pluginBuild.libraries.empty || !pluginBuild.executables.empty))
+                    || (effectiveBuild !== null && (!effectiveBuild.libraries.empty || !effectiveBuild.executables.empty))
                 if (needsCMake) {
                     emitCoreFile(fsa, outcome, coreGeneratedFiles,
                         pkgName + "/CMakeLists.txt",
-                        compileCMakeLists(pkg, cppNodes, pythonNodes, target, pluginBuild))
+                        compileCMakeLists(pkg, cppNodes, pythonNodes, target, effectiveBuild))
                     deleteCoreFile(fsa, outcome, pkgName + "/setup.py")
                     deleteCoreFile(fsa, outcome, pkgName + "/setup.cfg")
                     deleteCoreFile(fsa, outcome, pkgName + "/pyproject.toml")
