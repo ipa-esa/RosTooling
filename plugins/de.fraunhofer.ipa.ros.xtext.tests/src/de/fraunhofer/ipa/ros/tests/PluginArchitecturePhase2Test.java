@@ -247,7 +247,7 @@ public class PluginArchitecturePhase2Test {
 
     @Test
     public void unknownExtensionBlockDegradesGracefullyAndSuppressesInnerRefErrors() throws Exception {
-        // No plugins registered: Rule 4 guarantees core parses & validates cleanly with warnings only.
+        // No plugins registered: Rule 6 guarantees core parses & validates cleanly with warnings only.
         XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
         loadFromString(rs, "inmemory:/std_msgs.ros", stdMsgsSpec());
         Resource pkgRes = loadFromString(rs, "inmemory:/unknown_ext.ros2", """
@@ -997,20 +997,37 @@ public class PluginArchitecturePhase2Test {
                 pkgXml.indexOf("<export_a>") < pkgXml.indexOf("<export_b>"));
     }
 
-    @Test
-    public void systemLevelGenerationScopedFoldersLaunchIncludesAndPurePythonSupport() throws Exception {
-        EClass sysProbeSchema = createSchemaClass("SysProbeBlock", Map.of(
-                "mode", EcorePackage.Literals.ESTRING,
-                "rate", EcorePackage.Literals.EINT));
-        sysProbeSchema.getEStructuralFeature("mode").setLowerBound(1);
-        BlockDescriptor sysProbeBlock = new BlockDescriptor(
-                "sys_probe",
-                sysProbeSchema,
-                EnumSet.of(HookLocation.SYSTEM, HookLocation.ROS_NODE, HookLocation.NODE),
-                Map.of("mode", MergeStrategy.INSTANCE_OVERRIDES_TYPE, "rate", MergeStrategy.INSTANCE_OVERRIDES_TYPE),
-                "System probe block");
+    private Resource loadSysProbeFixture(final BlockDescriptor sysProbeBlock) throws Exception {
+        XtextResourceSet rs = rosSystemInjector.getInstance(XtextResourceSet.class);
+        loadFromString(rs, "inmemory:/type_pkg.ros2", """
+                type_pkg:
+                  artifacts:
+                    cam_art:
+                      node: cam_node
+                      @sys_probe:
+                        mode: "default_type"
+                        rate: 50
+                """);
+        Resource sysRes = loadFromString(rs, "inmemory:/sys_probe_demo.rossystem", """
+                sys_probe_demo:
+                  @sys_probe:
+                    mode: "active"
+                  parameters:
+                    robot_ns:
+                      type: String
+                      value: "bot1"
+                  nodes:
+                    cam_inst:
+                      from: "type_pkg.cam_node"
+                      @sys_probe:
+                        mode: "override"
+                """);
+        EcoreUtil.resolveAll(rs);
+        return sysRes;
+    }
 
-        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+    private RosToolingPlugin createSysAddonPlugin(final EClass sysProbeSchema, final BlockDescriptor sysProbeBlock) {
+        return new RosToolingPlugin() {
             @Override public String id() { return "de.example.sys-addon"; }
             @Override public List<BlockDescriptor> blocks() { return List.of(sysProbeBlock); }
             @Override public void validate(final ValidationContext context) {}
@@ -1049,37 +1066,110 @@ public class PluginArchitecturePhase2Test {
                 args.put("expr", SystemGenerationContext.LaunchArgumentValue.substitution("$(var robot_ns)/sub"));
                 context.addLaunchInclude("launch/" + context.pluginFolder() + "/addon.launch.py", args);
             }
-        });
+        };
+    }
 
+    private Resource loadSimpleSystemFixture() throws Exception {
         XtextResourceSet rs = rosSystemInjector.getInstance(XtextResourceSet.class);
-        loadFromString(rs, "inmemory:/type_pkg.ros2", """
-                type_pkg:
+        loadFromString(rs, "inmemory:/bad_sys_type.ros2", """
+                bad_sys_type:
                   artifacts:
-                    cam_art:
-                      node: cam_node
-                      @sys_probe:
-                        mode: "default_type"
-                        rate: 50
+                    n_art:
+                      node: n_node
                 """);
-        Resource sysRes = loadFromString(rs, "inmemory:/sys_probe_demo.rossystem", """
-                sys_probe_demo:
-                  @sys_probe:
-                    mode: "active"
+        Resource sysRes = loadFromString(rs, "inmemory:/bad_sys.rossystem", """
+                bad_sys:
                   parameters:
-                    robot_ns:
+                    declared_ns:
                       type: String
-                      value: "bot1"
+                      value: "ok"
                   nodes:
-                    cam_inst:
-                      from: "type_pkg.cam_node"
-                      @sys_probe:
-                        mode: "override"
+                    inst:
+                      from: "bad_sys_type.n_node"
                 """);
         EcoreUtil.resolveAll(rs);
+        return sysRes;
+    }
 
+    @Test
+    public void systemLevelGenerationScopedFoldersAndPurePythonSupport() throws Exception {
+        EClass sysProbeSchema = createSchemaClass("SysProbeBlock", Map.of(
+                "mode", EcorePackage.Literals.ESTRING,
+                "rate", EcorePackage.Literals.EINT));
+        sysProbeSchema.getEStructuralFeature("mode").setLowerBound(1);
+        BlockDescriptor sysProbeBlock = new BlockDescriptor(
+                "sys_probe",
+                sysProbeSchema,
+                EnumSet.of(HookLocation.SYSTEM, HookLocation.ROS_NODE, HookLocation.NODE),
+                Map.of("mode", MergeStrategy.INSTANCE_OVERRIDES_TYPE, "rate", MergeStrategy.INSTANCE_OVERRIDES_TYPE),
+                "System probe block");
+
+        PluginRegistry.INSTANCE.register(createSysAddonPlugin(sysProbeSchema, sysProbeBlock));
+        Resource sysRes = loadSysProbeFixture(sysProbeBlock);
         RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
 
         // 1. Standard CMake bringup package + writeOnce shield + stale prune
+        InMemoryFileSystemAccess cmakeFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome cmakeOutcome = sysGen.generateSystemWithPlugins(
+                sysRes,
+                cmakeFsa,
+                List.of("sys_probe_demo/config/de_example_sys-addon/user_cfg.yaml"),
+                "jazzy");
+        assertTrue("Expected zero system errors: " + cmakeOutcome.errors, cmakeOutcome.errors.isEmpty());
+        assertFalse("writeOnce must skip existing user_cfg.yaml",
+                cmakeFsa.getTextFiles().containsKey(
+                        "DEFAULT_OUTPUTsys_probe_demo/config/de_example_sys-addon/user_cfg.yaml"));
+        assertTrue(cmakeOutcome.pluginDeletedFiles.contains(
+                "sys_probe_demo/config/de_example_sys-addon/obsolete.yaml"));
+        String probeYaml = cmakeFsa.getTextFiles()
+                .get("DEFAULT_OUTPUTsys_probe_demo/config/de_example_sys-addon/probe.yaml").toString();
+        assertTrue(probeYaml, probeYaml.contains("sys_mode: active"));
+        assertTrue(probeYaml, probeYaml.contains("node_mode: override"));
+        assertTrue(probeYaml, probeYaml.contains("rate: 50"));
+
+        // 2. Pure-Python bringup package: generated setup.py gets _recursive_data_files and no warning
+        InMemoryFileSystemAccess pyFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome pyOutcome = sysGen.generateSystemWithPlugins(
+                sysRes,
+                pyFsa,
+                List.of("sys_probe_demo/py_helper.py"),
+                "jazzy");
+        assertTrue("Expected zero pure-Python system errors: " + pyOutcome.errors, pyOutcome.errors.isEmpty());
+        assertTrue("Generated setup.py must not warn about skipped install", pyOutcome.warnings.isEmpty());
+        String setupPy = pyFsa.getTextFiles().get("DEFAULT_OUTPUTsys_probe_demo/setup.py").toString();
+        assertTrue(setupPy, setupPy.contains("def _recursive_data_files(base_dir):"));
+        assertTrue(setupPy, setupPy.contains("_recursive_data_files('config/de_example_sys-addon')"));
+        assertTrue(setupPy, setupPy.contains("_recursive_data_files('launch/de_example_sys-addon')"));
+    }
+
+    @Test
+    public void systemLaunchIncludeRendersScopedGroupAction() throws Exception {
+        EClass sysProbeSchema = createSchemaClass("SysProbeBlock", Map.of(
+                "mode", EcorePackage.Literals.ESTRING,
+                "rate", EcorePackage.Literals.EINT));
+        sysProbeSchema.getEStructuralFeature("mode").setLowerBound(1);
+        BlockDescriptor sysProbeBlock = new BlockDescriptor(
+                "sys_probe",
+                sysProbeSchema,
+                EnumSet.of(HookLocation.SYSTEM, HookLocation.ROS_NODE, HookLocation.NODE),
+                Map.of("mode", MergeStrategy.INSTANCE_OVERRIDES_TYPE, "rate", MergeStrategy.INSTANCE_OVERRIDES_TYPE),
+                "System probe block");
+
+        Resource sysRes = loadSysProbeFixture(sysProbeBlock);
+        RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
+
+        // Baseline without plugin includes must not import or emit GroupAction
+        InMemoryFileSystemAccess noPluginFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome noPluginOut = sysGen.generateSystemWithPlugins(
+                sysRes, noPluginFsa, List.of(), "jazzy");
+        assertTrue(noPluginOut.errors.isEmpty());
+        String baselineLaunch = noPluginFsa.getTextFiles()
+                .get("DEFAULT_OUTPUTsys_probe_demo/launch/sys_probe_demo.launch.py").toString();
+        assertFalse("Baseline launch without plugin includes must not mention GroupAction:\n" + baselineLaunch,
+                baselineLaunch.contains("GroupAction"));
+
+        // With plugin include: rendered inside GroupAction(actions=[IncludeLaunchDescription(...)], scoped=True)
+        PluginRegistry.INSTANCE.register(createSysAddonPlugin(sysProbeSchema, sysProbeBlock));
         InMemoryFileSystemAccess cmakeFsa = new InMemoryFileSystemAccess();
         RosSystemGenerator.SystemGenerationOutcome cmakeOutcome = sysGen.generateSystemWithPlugins(
                 sysRes,
@@ -1097,30 +1187,24 @@ public class PluginArchitecturePhase2Test {
         assertTrue(launchPy, launchPy.contains("TextSubstitution(text=\"a'b\\\"c\")"));
         assertTrue(launchPy, launchPy.contains("LaunchConfiguration('robot_ns')"));
         assertTrue(launchPy, launchPy.contains("parse_substitution(\"$(var robot_ns)/sub\")"));
-        assertFalse("writeOnce must skip existing user_cfg.yaml",
-                cmakeFsa.getTextFiles().containsKey(
-                        "DEFAULT_OUTPUTsys_probe_demo/config/de_example_sys-addon/user_cfg.yaml"));
-        assertTrue(cmakeOutcome.pluginDeletedFiles.contains(
-                "sys_probe_demo/config/de_example_sys-addon/obsolete.yaml"));
-        String probeYaml = cmakeFsa.getTextFiles()
-                .get("DEFAULT_OUTPUTsys_probe_demo/config/de_example_sys-addon/probe.yaml").toString();
-        assertTrue(probeYaml, probeYaml.contains("sys_mode: active"));
-        assertTrue(probeYaml, probeYaml.contains("node_mode: override"));
-        assertTrue(probeYaml, probeYaml.contains("rate: 50"));
+    }
 
-        // 2. Pure-Python bringup package (generated setup.py gets _recursive_data_files; user setup.py untouched + warning)
-        InMemoryFileSystemAccess pyFsa = new InMemoryFileSystemAccess();
-        RosSystemGenerator.SystemGenerationOutcome pyOutcome = sysGen.generateSystemWithPlugins(
-                sysRes,
-                pyFsa,
-                List.of("sys_probe_demo/py_helper.py"),
-                "jazzy");
-        assertTrue("Expected zero pure-Python system errors: " + pyOutcome.errors, pyOutcome.errors.isEmpty());
-        assertTrue("Generated setup.py must not warn about skipped install", pyOutcome.warnings.isEmpty());
-        String setupPy = pyFsa.getTextFiles().get("DEFAULT_OUTPUTsys_probe_demo/setup.py").toString();
-        assertTrue(setupPy, setupPy.contains("def _recursive_data_files(base_dir):"));
-        assertTrue(setupPy, setupPy.contains("_recursive_data_files('config/de_example_sys-addon')"));
-        assertTrue(setupPy, setupPy.contains("_recursive_data_files('launch/de_example_sys-addon')"));
+    @Test
+    public void purePythonUserOwnedSetupPyEmitsWarningAndKeepsInclude() throws Exception {
+        EClass sysProbeSchema = createSchemaClass("SysProbeBlock", Map.of(
+                "mode", EcorePackage.Literals.ESTRING,
+                "rate", EcorePackage.Literals.EINT));
+        sysProbeSchema.getEStructuralFeature("mode").setLowerBound(1);
+        BlockDescriptor sysProbeBlock = new BlockDescriptor(
+                "sys_probe",
+                sysProbeSchema,
+                EnumSet.of(HookLocation.SYSTEM, HookLocation.ROS_NODE, HookLocation.NODE),
+                Map.of("mode", MergeStrategy.INSTANCE_OVERRIDES_TYPE, "rate", MergeStrategy.INSTANCE_OVERRIDES_TYPE),
+                "System probe block");
+
+        PluginRegistry.INSTANCE.register(createSysAddonPlugin(sysProbeSchema, sysProbeBlock));
+        Resource sysRes = loadSysProbeFixture(sysProbeBlock);
+        RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
 
         InMemoryFileSystemAccess userSetupFsa = new InMemoryFileSystemAccess();
         RosSystemGenerator.SystemGenerationOutcome userSetupOut = sysGen.generateSystemWithPlugins(
@@ -1142,25 +1226,8 @@ public class PluginArchitecturePhase2Test {
     }
 
     @Test
-    public void systemLevelRejectsDisallowedPathsAndDetectsConflicts() throws Exception {
-        XtextResourceSet rs = rosSystemInjector.getInstance(XtextResourceSet.class);
-        loadFromString(rs, "inmemory:/bad_sys_type.ros2", """
-                bad_sys_type:
-                  artifacts:
-                    n_art:
-                      node: n_node
-                """);
-        Resource sysRes = loadFromString(rs, "inmemory:/bad_sys.rossystem", """
-                bad_sys:
-                  parameters:
-                    declared_ns:
-                      type: String
-                      value: "ok"
-                  nodes:
-                    inst:
-                      from: "bad_sys_type.n_node"
-                """);
-        EcoreUtil.resolveAll(rs);
+    public void systemLevelRejectsDisallowedPathsAndDuplicateIncludeAcrossPlugins() throws Exception {
+        Resource sysRes = loadSimpleSystemFixture();
         RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
 
         List<String> forbiddenPaths = List.of(
@@ -1194,8 +1261,40 @@ public class PluginArchitecturePhase2Test {
             assertTrue("Plugin files must be withheld for " + badPath, out.pluginFiles.isEmpty());
         }
 
-        // Two plugins passing 'ns' with different values to their own separate includes must succeed with scoped GroupActions
+        // Duplicate include path across two plugins whose sanitized folders collide names both plugins
         PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.dup.inc"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generateSystem(final SystemGenerationContext context) {
+                context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py", Map.of());
+            }
+        });
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.dup_inc"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+            @Override public void generateSystem(final SystemGenerationContext context) {
+                context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py", Map.of());
+            }
+        });
+        InMemoryFileSystemAccess dupIncFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome dupIncOut =
+                sysGen.generateSystemWithPlugins(sysRes, dupIncFsa, List.of(), "jazzy");
+        assertTrue("Duplicate launch include across plugins must name both: " + dupIncOut.errors,
+                dupIncOut.errors.stream().anyMatch(e ->
+                        e.contains("de.example.dup.inc") && e.contains("de.example.dup_inc") && e.contains("inc.launch.py")));
+        assertFalse("Conflicted launch include must not be rendered",
+                dupIncFsa.getTextFiles().get("DEFAULT_OUTPUTbad_sys/launch/bad_sys.launch.py")
+                        .toString().contains("IncludeLaunchDescription("));
+    }
+
+    @Test
+    public void twoPluginsCanPassNsWithDifferentValuesToOwnIncludes() throws Exception {
+        Resource sysRes = loadSimpleSystemFixture();
+        RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
+
         PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
             @Override public String id() { return "de.example.sys_a"; }
             @Override public List<BlockDescriptor> blocks() { return List.of(); }
@@ -1226,37 +1325,13 @@ public class PluginArchitecturePhase2Test {
         assertEquals(2, countOccurrences(independentLaunch, "scoped=True"));
         assertTrue(independentLaunch, independentLaunch.contains("ns_one"));
         assertTrue(independentLaunch, independentLaunch.contains("ns_two"));
+    }
 
-        // Duplicate include path across two plugins whose sanitized folders collide names both plugins
-        PluginRegistry.INSTANCE.clearRegistered();
-        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
-            @Override public String id() { return "de.example.dup.inc"; }
-            @Override public List<BlockDescriptor> blocks() { return List.of(); }
-            @Override public void validate(final ValidationContext context) {}
-            @Override public void generateSystem(final SystemGenerationContext context) {
-                context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py", Map.of());
-            }
-        });
-        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
-            @Override public String id() { return "de.example.dup_inc"; }
-            @Override public List<BlockDescriptor> blocks() { return List.of(); }
-            @Override public void validate(final ValidationContext context) {}
-            @Override public void generateSystem(final SystemGenerationContext context) {
-                context.addLaunchInclude("launch/" + context.pluginFolder() + "/inc.launch.py", Map.of());
-            }
-        });
-        InMemoryFileSystemAccess dupIncFsa = new InMemoryFileSystemAccess();
-        RosSystemGenerator.SystemGenerationOutcome dupIncOut =
-                sysGen.generateSystemWithPlugins(sysRes, dupIncFsa, List.of(), "jazzy");
-        assertTrue("Duplicate launch include across plugins must name both: " + dupIncOut.errors,
-                dupIncOut.errors.stream().anyMatch(e ->
-                        e.contains("de.example.dup.inc") && e.contains("de.example.dup_inc") && e.contains("inc.launch.py")));
-        assertFalse("Conflicted launch include must not be rendered",
-                dupIncFsa.getTextFiles().get("DEFAULT_OUTPUTbad_sys/launch/bad_sys.launch.py")
-                        .toString().contains("IncludeLaunchDescription("));
+    @Test
+    public void duplicateLaunchArgumentNameOnOneIncludeIsRejected() throws Exception {
+        Resource sysRes = loadSimpleSystemFixture();
+        RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
 
-        // Duplicate argument name passed to the same include fails naming plugin and arg
-        PluginRegistry.INSTANCE.clearRegistered();
         PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
             @Override public String id() { return "de.example.dup_arg"; }
             @Override public List<BlockDescriptor> blocks() { return List.of(); }
@@ -1274,9 +1349,13 @@ public class PluginArchitecturePhase2Test {
         assertTrue("Duplicate arg on same include must error: " + dupArgOut.errors,
                 dupArgOut.errors.stream().anyMatch(e -> e.contains("de.example.dup_arg") && e.contains("ns")));
         assertTrue("Plugin files must be withheld on duplicate launch arg", dupArgOut.pluginFiles.isEmpty());
+    }
 
-        // Undeclared SYSTEM_LAUNCH_ARG fails naming plugin and undeclared argument
-        PluginRegistry.INSTANCE.clearRegistered();
+    @Test
+    public void undeclaredSystemLaunchArgumentIsRejected() throws Exception {
+        Resource sysRes = loadSimpleSystemFixture();
+        RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
+
         PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
             @Override public String id() { return "de.example.bad_sys_arg"; }
             @Override public List<BlockDescriptor> blocks() { return List.of(); }

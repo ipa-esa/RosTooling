@@ -205,6 +205,9 @@ for lang in "${languages[@]}"; do
 done
 
 # ---- Scoped plugin launch include isolation check -------------------------
+# Uses hand-written launch files to verify GroupAction(scoped=True) runtime
+# argument isolation per ROS distro; generated GroupAction output is checked
+# by PluginArchitecturePhase2Test#systemLaunchIncludeRendersScopedGroupAction.
 smoke_scoped_plugin_includes() {
   echo "------------------- scoped plugin launch (${distro}) -------------------"
   python3 - <<'PY'
