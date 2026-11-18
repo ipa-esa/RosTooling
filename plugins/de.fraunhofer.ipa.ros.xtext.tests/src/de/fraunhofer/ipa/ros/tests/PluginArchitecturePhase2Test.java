@@ -1734,6 +1734,136 @@ public class PluginArchitecturePhase2Test {
         assertTrue(sysOut.pluginDeletedFiles.isEmpty());
     }
 
+    @Test
+    public void generationContextNoticesArePrefixedWithPluginIdAndNeverBlockOutput() throws Exception {
+        XtextResourceSet pkgRs = ros2Injector.getInstance(XtextResourceSet.class);
+        String pkgModel = """
+                notice_pkg:
+                  artifacts:
+                    talker:
+                      node: talker_node
+                """;
+        Resource pkgRes = loadFromString(pkgRs, "inmemory:/notice_pkg.ros2", pkgModel);
+        EcoreUtil.resolveAll(pkgRs);
+
+        Ros2Generator pkgGen = ros2Injector.getInstance(Ros2Generator.class);
+        InMemoryFileSystemAccess baselinePkgFsa = new InMemoryFileSystemAccess();
+        Ros2Generator.PluginGenerationOutcome baselinePkgOut =
+                pkgGen.generateTargetedWithPlugins(pkgRes, baselinePkgFsa, null, "cpp", "jazzy", List.of());
+        assertTrue(baselinePkgOut.errors.isEmpty());
+        assertTrue(baselinePkgOut.notices.isEmpty());
+        Map<String, String> baselinePkgFiles = new LinkedHashMap<>();
+        baselinePkgFsa.getTextFiles().forEach((k, v) -> baselinePkgFiles.put(k, v.toString()));
+
+        Resource sysBaselineRes = loadSimpleSystemFixture();
+        RosSystemGenerator sysGen = rosSystemInjector.getInstance(RosSystemGenerator.class);
+        InMemoryFileSystemAccess baselineSysFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome baselineSysOut =
+                sysGen.generateSystemWithPlugins(sysBaselineRes, baselineSysFsa, List.of(), "jazzy");
+        assertTrue(baselineSysOut.errors.isEmpty());
+        assertTrue(baselineSysOut.notices.isEmpty());
+        Map<String, String> baselineSysFiles = new LinkedHashMap<>();
+        baselineSysFsa.getTextFiles().forEach((k, v) -> baselineSysFiles.put(k, v.toString()));
+
+        PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override public String id() { return "de.example.notifier"; }
+            @Override public List<BlockDescriptor> blocks() { return List.of(); }
+            @Override public void validate(final ValidationContext context) {}
+
+            @Override
+            public void generatePackage(final PackageGenerationContext context) {
+                context.addNotice(null);
+                context.addNotice("   ");
+                context.addNotice("TalkerLeaf: port goal_pose renamed to target_pose; update TalkerLeafLogic.hpp");
+                context.addNotice("[de.example.notifier] already prefixed notice");
+                assertEquals(2, context.notices().size());
+                try {
+                    context.notices().add("mut");
+                    throw new AssertionError("context.notices() must be unmodifiable");
+                } catch (UnsupportedOperationException expected) {
+                    // expected
+                }
+            }
+
+            @Override
+            public void generateSystem(final SystemGenerationContext context) {
+                context.addNotice("SystemLeaf: review launch wiring");
+            }
+        });
+
+        InMemoryFileSystemAccess noticePkgFsa = new InMemoryFileSystemAccess();
+        Ros2Generator.PluginGenerationOutcome noticePkgOut =
+                pkgGen.generateTargetedWithPlugins(pkgRes, noticePkgFsa, null, "cpp", "jazzy", List.of());
+        assertTrue("Notices must never create errors: " + noticePkgOut.errors, noticePkgOut.errors.isEmpty());
+        assertEquals(List.of(
+                "[de.example.notifier] TalkerLeaf: port goal_pose renamed to target_pose; update TalkerLeafLogic.hpp",
+                "[de.example.notifier] already prefixed notice"),
+                noticePkgOut.notices);
+        Map<String, String> actualPkgFiles = new LinkedHashMap<>();
+        noticePkgFsa.getTextFiles().forEach((k, v) -> actualPkgFiles.put(k, v.toString()));
+        assertEquals("Package output without plugin-written files must remain byte-identical",
+                baselinePkgFiles, actualPkgFiles);
+
+        InMemoryFileSystemAccess noticeSysFsa = new InMemoryFileSystemAccess();
+        RosSystemGenerator.SystemGenerationOutcome noticeSysOut =
+                sysGen.generateSystemWithPlugins(sysBaselineRes, noticeSysFsa, List.of(), "jazzy");
+        assertTrue("System notices must never create errors: " + noticeSysOut.errors, noticeSysOut.errors.isEmpty());
+        assertEquals(List.of("[de.example.notifier] SystemLeaf: review launch wiring"), noticeSysOut.notices);
+        Map<String, String> actualSysFiles = new LinkedHashMap<>();
+        noticeSysFsa.getTextFiles().forEach((k, v) -> actualSysFiles.put(k, v.toString()));
+        assertEquals("System output without plugin-written files must remain byte-identical",
+                baselineSysFiles, actualSysFiles);
+
+        // Verify LSP command result maps surface notices without blocking files
+        Path tempDir = Files.createTempDirectory("rostooling-notice-cmd-");
+        try {
+            Path pkgFile = tempDir.resolve("notice_pkg.ros2");
+            Files.writeString(pkgFile, pkgModel, StandardCharsets.UTF_8);
+            Path sysFile = tempDir.resolve("notice_sys.rossystem");
+            Files.writeString(sysFile, """
+                    notice_sys:
+                      parameters:
+                        mode:
+                          type: String
+                          value: "ok"
+                    """, StandardCharsets.UTF_8);
+            var rspReg = ros2IdeInjector.getInstance(IResourceServiceProvider.Registry.class);
+            Map<String, Object> pkgCmdOut = RosPluginCommandSupport.generatePluginOutputs(
+                    Map.of("fileUri", pkgFile.toUri().toString(),
+                            "modelPath", pkgFile.toString(),
+                            "language", "cpp",
+                            "distro", "jazzy"),
+                    null,
+                    rspReg,
+                    CancelIndicator.NullImpl);
+            assertEquals("pkgCmdOut=" + pkgCmdOut, Boolean.TRUE, pkgCmdOut.get("success"));
+            assertFalse(((Map<?, ?>) pkgCmdOut.get("files")).isEmpty());
+            assertEquals(List.of(
+                    "[de.example.notifier] TalkerLeaf: port goal_pose renamed to target_pose; update TalkerLeafLogic.hpp",
+                    "[de.example.notifier] already prefixed notice"),
+                    pkgCmdOut.get("notices"));
+
+            var sysRspReg = rosSystemInjector.getInstance(IResourceServiceProvider.Registry.class);
+            Map<String, Object> sysCmdOut = RosPluginCommandSupport.generatePluginOutputs(
+                    Map.of("fileUri", sysFile.toUri().toString(),
+                            "modelPath", sysFile.toString(),
+                            "distro", "jazzy"),
+                    null,
+                    sysRspReg,
+                    CancelIndicator.NullImpl);
+            assertEquals("sysCmdOut=" + sysCmdOut, Boolean.TRUE, sysCmdOut.get("success"));
+            assertFalse(((Map<?, ?>) sysCmdOut.get("files")).isEmpty());
+            assertEquals(List.of("[de.example.notifier] SystemLeaf: review launch wiring"), sysCmdOut.get("notices"));
+        } finally {
+            try (var walk = Files.walk(tempDir)) {
+                walk.sorted(java.util.Comparator.reverseOrder()).forEach(p -> {
+                    try { Files.deleteIfExists(p); } catch (Exception ignored) {}
+                });
+            }
+        }
+    }
+
     private static String resolveBundleOrClassLocation(final Class<?> clazz) throws Exception {
         Bundle b = FrameworkUtil.getBundle(clazz);
         if (b != null) {

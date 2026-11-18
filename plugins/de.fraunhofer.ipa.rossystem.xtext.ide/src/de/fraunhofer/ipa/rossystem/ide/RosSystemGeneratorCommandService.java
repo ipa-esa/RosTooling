@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -147,22 +148,26 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
 							if (!outcome.errors.isEmpty()) {
 								String errMsg = String.join("; ", outcome.errors);
 								forceLog("PLUGIN ERROR: " + errMsg);
-								return Map.of(
-									"success", false,
-									"error", errMsg,
-									"errors", outcome.errors,
-									"conflictErrors", outcome.pluginConflictErrors);
+								Map<String, Object> errOut = new LinkedHashMap<>();
+								errOut.put("success", false);
+								errOut.put("error", errMsg);
+								errOut.put("errors", outcome.errors);
+								errOut.put("conflictErrors", outcome.pluginConflictErrors);
+								errOut.put("notices", outcome.notices);
+								return errOut;
 							}
 							Map<String, String> files = fsa.getAllFiles().entrySet().stream()
 								.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
 							forceLog("SUCCESS: Generated " + files.size() + " files.");
-							return Map.of(
-								"success", true,
-								"files", files,
-								"pluginFiles", outcome.pluginFiles,
-								"prunedFiles", new ArrayList<>(outcome.pluginDeletedFiles),
-								"warnings", new ArrayList<>(outcome.warnings),
-								"count", files.size());
+							Map<String, Object> out = new LinkedHashMap<>();
+							out.put("success", true);
+							out.put("files", files);
+							out.put("pluginFiles", outcome.pluginFiles);
+							out.put("prunedFiles", new ArrayList<>(outcome.pluginDeletedFiles));
+							out.put("warnings", new ArrayList<>(outcome.warnings));
+							out.put("notices", new ArrayList<>(outcome.notices));
+							out.put("count", files.size());
+							return out;
 						}
 						generator.doGenerate(resource, fsa, context1);
 
@@ -170,7 +175,7 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
 		                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
 
 		                forceLog("SUCCESS: Generated " + files.size() + " files.");
-		                return Map.of("success", true, "files", files, "count", files.size());
+		                return Map.of("success", true, "files", files, "notices", List.of(), "count", files.size());
 					} catch (Exception e) {
 						forceLog("GENERATION ERROR: " + e.getMessage());
 						e.printStackTrace();

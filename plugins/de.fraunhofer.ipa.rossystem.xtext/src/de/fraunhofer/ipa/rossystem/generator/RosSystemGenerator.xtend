@@ -213,6 +213,7 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                     )
                     plugin.generateSystem(ctx)
                     sysContexts.add(ctx)
+                    outcome.notices.addAll(ctx.notices)
                 }
             }
 

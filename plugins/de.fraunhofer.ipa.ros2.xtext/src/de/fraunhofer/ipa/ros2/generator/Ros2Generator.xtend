@@ -338,6 +338,7 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
                         )
                         plugin.generatePackage(ctx)
                         contexts.add(ctx)
+                        outcome.notices.addAll(ctx.notices)
                     }
                     pluginBuild.setCurrentPluginId("core")
 

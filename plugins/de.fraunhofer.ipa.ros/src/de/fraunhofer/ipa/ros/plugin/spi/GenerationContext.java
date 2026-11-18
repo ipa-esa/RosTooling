@@ -1,6 +1,7 @@
 package de.fraunhofer.ipa.ros.plugin.spi;
 
 import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -42,6 +43,7 @@ public abstract sealed class GenerationContext permits PackageGenerationContext,
     private final Map<String, String> allPluginOwnedFiles;
     private final Map<String, String> pluginWrittenFiles = new LinkedHashMap<>();
     private final Set<String> pluginDeletedFiles = new LinkedHashSet<>();
+    private final List<String> notices = new ArrayList<>();
     protected final List<String> errors;
     protected final PluginRegistry registry;
 
@@ -272,6 +274,24 @@ public abstract sealed class GenerationContext permits PackageGenerationContext,
 
     public final Set<String> deletedFiles() {
         return Collections.unmodifiableSet(pluginDeletedFiles);
+    }
+
+    /**
+     * Records a non-blocking informational notice emitted by this plugin. Non-blank messages are
+     * automatically prefixed with {@code [<pluginId>] } unless already prefixed, and returned in
+     * generation results without blocking output.
+     */
+    public final void addNotice(final String message) {
+        if (message == null || message.isBlank()) {
+            return;
+        }
+        String trimmed = message.trim();
+        String prefix = "[" + pluginId + "] ";
+        notices.add(trimmed.startsWith(prefix) ? trimmed : prefix + trimmed);
+    }
+
+    public final List<String> notices() {
+        return Collections.unmodifiableList(notices);
     }
 
     protected final void recordError(final String message) {

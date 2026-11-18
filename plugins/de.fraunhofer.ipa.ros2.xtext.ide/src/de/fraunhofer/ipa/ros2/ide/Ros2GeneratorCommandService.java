@@ -198,6 +198,7 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                     PluginRegistry.INSTANCE.ensureLoadedFromEnvironment();
                     List<String> prunedFiles = List.of();
                     List<String> warnings = List.of();
+                    List<String> notices = List.of();
                     if (generator instanceof Ros2Generator) {
                         Ros2Generator.PluginGenerationOutcome outcome = ((Ros2Generator) generator).generateTargetedWithPlugins(
                             resource,
@@ -210,14 +211,17 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                         if (!outcome.errors.isEmpty()) {
                             String errMsg = String.join("; ", outcome.errors);
                             log("PLUGIN ERROR: " + errMsg);
-                            return Map.of(
-                                "success", false,
-                                "error", errMsg,
-                                "errors", outcome.errors,
-                                "conflictErrors", outcome.pluginConflictErrors);
+                            Map<String, Object> errOut = new LinkedHashMap<>();
+                            errOut.put("success", false);
+                            errOut.put("error", errMsg);
+                            errOut.put("errors", outcome.errors);
+                            errOut.put("conflictErrors", outcome.pluginConflictErrors);
+                            errOut.put("notices", outcome.notices);
+                            return errOut;
                         }
                         prunedFiles = new ArrayList<>(outcome.pluginDeletedFiles);
                         warnings = new ArrayList<>(outcome.warnings);
+                        notices = new ArrayList<>(outcome.notices);
                     } else {
                         generator.doGenerate(resource, fsa, genContext);
                     }
@@ -226,7 +230,15 @@ public class Ros2GeneratorCommandService implements IExecutableCommandService {
                         .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
 
                     log("Successfully generated " + files.size() + " files for " + fileUriStr);
-                    return Map.of("success", true, "files", files, "prunedFiles", prunedFiles, "warnings", warnings, "count", files.size(), "distro", finalDistro);
+                    Map<String, Object> out = new LinkedHashMap<>();
+                    out.put("success", true);
+                    out.put("files", files);
+                    out.put("prunedFiles", prunedFiles);
+                    out.put("warnings", warnings);
+                    out.put("notices", notices);
+                    out.put("count", files.size());
+                    out.put("distro", finalDistro);
+                    return out;
                 } catch (Exception e) {
                     log("Generation failed: " + e.getMessage());
                     e.printStackTrace();

@@ -410,6 +410,7 @@ public final class RosPluginCommandSupport {
             out.put("errors", outcome.errors);
             out.put("conflictErrors", outcome.pluginConflictErrors);
             out.put("warnings", hasErrors ? List.of() : outcome.warnings);
+            out.put("notices", outcome.notices);
             out.put("distro", resolvedDistro.name());
             out.put("count", allFiles.size());
             if (hasErrors) {

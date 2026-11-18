@@ -23,6 +23,7 @@ public interface IPluginAwareGenerator {
         public final List<String> errors = new ArrayList<>();
         public final List<String> pluginConflictErrors = new ArrayList<>();
         public final List<String> warnings = new ArrayList<>();
+        public final List<String> notices = new ArrayList<>();
     }
 
     Outcome generateWithPlugins(

@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.6.0] - 2026-11-18
 
 ### Added
+- **Plugin Notice Extension Point (`GenerationContext.addNotice`)**:
+  - Added `GenerationContext.addNotice(String)` and `GenerationContext.notices()` so active plugins can emit non-blocking, plugin-ID-prefixed informational notices alongside package and system generation results without altering core outputs when no plugins are active.
 - **Generic Plugin SPI (`de.fraunhofer.ipa.ros.plugin.spi`)**:
   - Added `RosToolingPlugin`, `PluginRegistry` (passive JAR `ServiceLoader` and OSGi service discovery enabled only via configuration, dependency ordering, version range `CORE_VERSION = "3.6.0"`), sealed `GenerationContext`, `PackageGenerationContext`, `SystemGenerationContext`, and `PackageBuild`.
   - Supported both package-level (`generatePackage`) and system-level (`generateSystem`) generation phases backed by validated and XML/CMake-escaped structured `PackageBuild` contributions (`depend`, `find_package`, targets, `install`, `ament_add_gtest`, XML exports), plus external plugin registration claims (`claimExternalPluginRegistration`).
