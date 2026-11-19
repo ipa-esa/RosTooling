@@ -124,8 +124,11 @@ public final class PluginRegistry {
     }
 
     /**
-     * Test-only constructor injecting an isolated approval file path. Never reachable from
-     * configuration, LSP, or MCP servers.
+     * Test-only constructor injecting an isolated approval file path.
+     *
+     * @implNote For tests only. Production code must use {@link #INSTANCE} (which always reads
+     * {@code <Java user.home>/.rostooling/trusted-plugins.json}) and must never invoke this
+     * constructor directly. Never reachable from configuration, LSP, or MCP servers.
      */
     public PluginRegistry(final Path trustStorePath) {
         if (trustStorePath == null) {

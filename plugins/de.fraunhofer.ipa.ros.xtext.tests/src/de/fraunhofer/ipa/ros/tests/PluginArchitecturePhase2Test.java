@@ -2451,6 +2451,68 @@ public class PluginArchitecturePhase2Test {
         }
     }
 
+    @Test
+    public void noProductionCoreSourceConstructsPluginRegistry() throws Exception {
+        Path pluginsRoot = locatePluginsRoot();
+        assertNotNull("Could not locate RosTooling plugins/ directory from " + Path.of(".").toAbsolutePath(), pluginsRoot);
+
+        var pattern = java.util.regex.Pattern.compile("new\\s+PluginRegistry\\s*\\(");
+        List<String> violations = new ArrayList<>();
+        try (var moduleStream = Files.list(pluginsRoot)) {
+            for (Path module : moduleStream.filter(Files::isDirectory).sorted().toList()) {
+                String moduleName = module.getFileName().toString();
+                if (moduleName.endsWith(".tests")) {
+                    continue;
+                }
+                for (String srcSub : List.of("src", "src/main/java")) {
+                    Path srcRoot = module.resolve(srcSub);
+                    if (!Files.isDirectory(srcRoot)) {
+                        continue;
+                    }
+                    try (var walk = Files.walk(srcRoot)) {
+                        for (Path file : walk.filter(Files::isRegularFile).toList()) {
+                            String rel = pluginsRoot.relativize(file).toString().replace('\\', '/');
+                            if (!(rel.endsWith(".java") || rel.endsWith(".xtend"))) {
+                                continue;
+                            }
+                            if (rel.contains("/src/test/")) {
+                                continue;
+                            }
+                            List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);
+                            for (int i = 0; i < lines.size(); i++) {
+                                String line = lines.get(i);
+                                if (pattern.matcher(line).find()) {
+                                    // Only PluginRegistry.INSTANCE static singleton initializer is allowed
+                                    if (rel.endsWith("PluginRegistry.java") && line.contains("INSTANCE = new PluginRegistry()")) {
+                                        continue;
+                                    }
+                                    violations.add(rel + ":" + (i + 1) + ": " + line.trim());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        assertTrue("Production core sources must not construct PluginRegistry: " + violations, violations.isEmpty());
+    }
+
+    private static Path locatePluginsRoot() {
+        Path cur = Path.of(".").toAbsolutePath().normalize();
+        while (cur != null) {
+            Path direct = cur.resolve("de.fraunhofer.ipa.ros");
+            if (Files.isDirectory(direct)) {
+                return cur;
+            }
+            Path underPlugins = cur.resolve("plugins");
+            if (Files.isDirectory(underPlugins.resolve("de.fraunhofer.ipa.ros"))) {
+                return underPlugins;
+            }
+            cur = cur.getParent();
+        }
+        return null;
+    }
+
     private static void writeTestTrustStore(
             final Path trustFile,
             final List<Path> jars,
