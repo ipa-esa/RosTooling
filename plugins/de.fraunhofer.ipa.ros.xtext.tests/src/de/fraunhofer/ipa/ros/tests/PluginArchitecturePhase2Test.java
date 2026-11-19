@@ -41,10 +41,13 @@ import de.fraunhofer.ipa.rossystem.generator.RosSystemGenerator;
 import de.fraunhofer.ipa.rossystem.validation.RosSystemValidator;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
@@ -1526,14 +1529,23 @@ public class PluginArchitecturePhase2Test {
                 jos.closeEntry();
             }
 
-            // Rule 4: passive until explicitly enabled
-            PluginRegistry.INSTANCE.loadFromPaths(List.of(jarPath), Set.of());
-            assertTrue("Plugin must NOT activate unless explicitly enabled",
-                    PluginRegistry.INSTANCE.activePlugins().isEmpty());
+            Path trustFile = tempRoot.resolve("trusted-plugins.json");
+            writeTestTrustStore(trustFile, List.of(jarPath), List.of("de.example.compiled_ext"));
+            PluginRegistry isolatedRegistry = new PluginRegistry(trustFile);
+            try {
+                // Rule 4: passive until explicitly enabled
+                isolatedRegistry.loadFromPaths(List.of(jarPath), Set.of());
+                assertTrue("Plugin must NOT activate unless explicitly enabled",
+                        isolatedRegistry.activePlugins().isEmpty());
 
-            PluginRegistry.INSTANCE.loadFromPaths(List.of(jarPath), Set.of("de.example.compiled_ext"));
-            assertEquals(1, PluginRegistry.INSTANCE.activePlugins().size());
-            assertEquals("de.example.compiled_ext", PluginRegistry.INSTANCE.activePlugins().get(0).id());
+                isolatedRegistry.loadFromPaths(List.of(jarPath), Set.of("de.example.compiled_ext"));
+                assertEquals(1, isolatedRegistry.activePlugins().size());
+                assertEquals("de.example.compiled_ext", isolatedRegistry.activePlugins().get(0).id());
+
+                PluginRegistry.INSTANCE.register(isolatedRegistry.activePlugins().get(0));
+            } finally {
+                isolatedRegistry.dispose();
+            }
 
             XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
             Resource pkgRes = loadFromString(rs, "inmemory:/jar_pkg.ros2", """
@@ -2088,12 +2100,17 @@ public class PluginArchitecturePhase2Test {
             // Command service: listDiscoveredPlugins + getPluginDocumentation (inactive still must NOT classload)
             Ros2GeneratorCommandService cmdService = ros2IdeInjector.getInstance(Ros2GeneratorCommandService.class);
             @SuppressWarnings("unchecked")
-            List<Map<String, Object>> listed = (List<Map<String, Object>>) cmdService.execute(
+            Map<String, Object> listedResp = (Map<String, Object>) cmdService.execute(
                     new ExecuteCommandParams("rostooling.listDiscoveredPlugins", List.of()),
                     null, CancelIndicator.NullImpl);
+            assertNotNull(listedResp.get("trustStorePath"));
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> listed = (List<Map<String, Object>>) listedResp.get("plugins");
             assertEquals(1, listed.size());
             assertEquals("de.example.passive", listed.get(0).get("id"));
             assertEquals(Boolean.FALSE, listed.get(0).get("active"));
+            assertEquals("valid-1.2.3.jar", listed.get(0).get("fileName"));
+            assertFalse(String.valueOf(listed.get(0).get("sha256")).isEmpty());
 
             @SuppressWarnings("unchecked")
             Map<String, Object> inactiveDoc = (Map<String, Object>) cmdService.execute(
@@ -2111,86 +2128,105 @@ public class PluginArchitecturePhase2Test {
                     null, CancelIndicator.NullImpl);
             assertEquals("", unknownDoc.get("documentationMarkdown"));
 
-            // Now enable validJar: class loads, active=true, doc comes from plugin.documentationMarkdown()
-            PluginRegistry.INSTANCE.loadFromPaths(List.of(validJar), Set.of("de.example.passive"));
-            assertEquals("static-init", System.getProperty(initProp));
-            assertEquals(1, PluginRegistry.INSTANCE.activePlugins().size());
-            PluginRegistry.DiscoveredPlugin activeEntry = PluginRegistry.INSTANCE.discoveredPlugins().get(0);
-            assertTrue(activeEntry.enabled());
-            assertTrue(activeEntry.active());
-            @SuppressWarnings("unchecked")
-            Map<String, Object> activeDoc = (Map<String, Object>) cmdService.execute(
-                    new ExecuteCommandParams("rostooling.getPluginDocumentation",
-                            List.of(Map.of("id", "de.example.passive"))),
-                    null, CancelIndicator.NullImpl);
-            assertEquals("# Active Doc\n\nFrom active plugin", activeDoc.get("documentationMarkdown"));
+            // Now enable validJar in an isolated approved registry: class loads, active=true, doc comes from plugin.documentationMarkdown()
+            Path testTrust = tempRoot.resolve("passive-trust.json");
+            writeTestTrustStore(testTrust, List.of(validJar), List.of("de.example.passive"));
+            PluginRegistry approvedReg = new PluginRegistry(testTrust);
+            try {
+                approvedReg.loadFromPaths(List.of(validJar), Set.of("de.example.passive"));
+                assertEquals("static-init", System.getProperty(initProp));
+                assertEquals(1, approvedReg.activePlugins().size());
+                PluginRegistry.DiscoveredPlugin activeEntry = approvedReg.discoveredPlugins().get(0);
+                assertTrue(activeEntry.enabled());
+                assertTrue(activeEntry.active());
+                assertEquals("approved", activeEntry.approvalState());
+                assertEquals("# Active Doc\n\nFrom active plugin",
+                        approvedReg.documentationMarkdownFor("de.example.passive"));
 
-            // Register programmatic plugin: must appear in listDiscoveredPlugins with empty sourceJarPath
-            PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
-                @Override public String id() { return "de.example.programmatic_doc"; }
-                @Override public String version() { return "2.0.0"; }
-                @Override public String documentationMarkdown() { return "# Prog\n\nProgrammatic doc"; }
-                @Override public List<BlockDescriptor> blocks() { return List.of(); }
-                @Override public void validate(ValidationContext context) {}
-            });
-            List<Map<String, Object>> withProg = RosPluginCommandSupport.listDiscoveredPlugins();
-            Map<String, Object> progEntry = withProg.stream()
-                    .filter(m -> "de.example.programmatic_doc".equals(m.get("id")))
-                    .findFirst().orElseThrow();
-            assertEquals("", progEntry.get("sourceJarPath"));
-            assertEquals(Boolean.TRUE, progEntry.get("active"));
-            assertEquals("Programmatic doc", progEntry.get("summary"));
-            assertEquals("# Prog\n\nProgrammatic doc",
-                    RosPluginCommandSupport.getPluginDocumentation("de.example.programmatic_doc").get("documentationMarkdown"));
-            PluginRegistry.INSTANCE.clearRegistered();
+                PluginRegistry.INSTANCE.register(approvedReg.activePlugins().get(0));
+                @SuppressWarnings("unchecked")
+                Map<String, Object> activeDoc = (Map<String, Object>) cmdService.execute(
+                        new ExecuteCommandParams("rostooling.getPluginDocumentation",
+                                List.of(Map.of("id", "de.example.passive"))),
+                        null, CancelIndicator.NullImpl);
+                assertEquals("# Active Doc\n\nFrom active plugin", activeDoc.get("documentationMarkdown"));
+                PluginRegistry.INSTANCE.clearRegistered();
 
-            // 2. Incompatible version range -> compatible=false, remains inactive even when enabled
-            Path incompatJar = buildTestPluginJar(
-                    compiler, tempRoot, "incompat", "de.example.incompat", "IncompatPlugin",
-                    "1.0.0", "[99.0.0,100.0.0)", "",
-                    Map.of("META-INF/rostooling-plugin.properties",
-                            "id=de.example.incompat\nversion=1.0.0\nsupportedCoreVersionRange=[99.0.0,100.0.0)\nsummary=Future plugin\n"));
-            PluginRegistry.INSTANCE.loadFromPaths(List.of(incompatJar), Set.of("de.example.incompat"));
-            assertTrue(PluginRegistry.INSTANCE.activePlugins().isEmpty());
-            PluginRegistry.DiscoveredPlugin incompatDiscovered = PluginRegistry.INSTANCE.discoveredPlugins().get(0);
-            assertEquals("de.example.incompat", incompatDiscovered.id());
-            assertFalse(incompatDiscovered.compatible());
-            assertFalse(incompatDiscovered.active());
+                // Register programmatic plugin: must appear in listDiscoveredPlugins with empty sourceJarPath
+                PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+                    @Override public String id() { return "de.example.programmatic_doc"; }
+                    @Override public String version() { return "2.0.0"; }
+                    @Override public String documentationMarkdown() { return "# Prog\n\nProgrammatic doc"; }
+                    @Override public List<BlockDescriptor> blocks() { return List.of(); }
+                    @Override public void validate(ValidationContext context) {}
+                });
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> withProg = (List<Map<String, Object>>)
+                        RosPluginCommandSupport.listDiscoveredPlugins().get("plugins");
+                Map<String, Object> progEntry = withProg.stream()
+                        .filter(m -> "de.example.programmatic_doc".equals(m.get("id")))
+                        .findFirst().orElseThrow();
+                assertEquals("", progEntry.get("sourceJarPath"));
+                assertEquals(Boolean.TRUE, progEntry.get("active"));
+                assertEquals("Programmatic doc", progEntry.get("summary"));
+                assertEquals("# Prog\n\nProgrammatic doc",
+                        RosPluginCommandSupport.getPluginDocumentation("de.example.programmatic_doc").get("documentationMarkdown"));
+                PluginRegistry.INSTANCE.clearRegistered();
 
-            // 3. JAR without metadata -> id="", specific loadError; still works when explicitly enabled by ID
-            Path noMetaJar = buildTestPluginJar(
-                    compiler, tempRoot, "nometa", "de.example.nometa", "NoMetaPlugin",
-                    "1.0.0", "[3.6.0,4.0.0)", "", Map.of());
-            PluginRegistry.INSTANCE.loadFromPaths(List.of(noMetaJar), Set.of());
-            PluginRegistry.DiscoveredPlugin noMetaDisc = PluginRegistry.INSTANCE.discoveredPlugins().get(0);
-            assertEquals("", noMetaDisc.id());
-            assertEquals("no plugin metadata; enable by id in settings", noMetaDisc.loadError());
-            assertFalse(noMetaDisc.active());
-            PluginRegistry.INSTANCE.loadFromPaths(List.of(noMetaJar), Set.of("de.example.nometa"));
-            assertEquals(1, PluginRegistry.INSTANCE.activePlugins().size());
-            assertEquals("de.example.nometa", PluginRegistry.INSTANCE.activePlugins().get(0).id());
+                // 2. Incompatible version range -> compatible=false, remains inactive even when enabled (and approved)
+                Path incompatJar = buildTestPluginJar(
+                        compiler, tempRoot, "incompat", "de.example.incompat", "IncompatPlugin",
+                        "1.0.0", "[99.0.0,100.0.0)", "",
+                        Map.of("META-INF/rostooling-plugin.properties",
+                                "id=de.example.incompat\nversion=1.0.0\nsupportedCoreVersionRange=[99.0.0,100.0.0)\nsummary=Future plugin\n"));
+                writeTestTrustStore(testTrust, List.of(incompatJar), List.of("de.example.incompat"));
+                approvedReg.loadFromPaths(List.of(incompatJar), Set.of("de.example.incompat"));
+                assertTrue(approvedReg.activePlugins().isEmpty());
+                PluginRegistry.DiscoveredPlugin incompatDiscovered = approvedReg.discoveredPlugins().get(0);
+                assertEquals("de.example.incompat", incompatDiscovered.id());
+                assertFalse(incompatDiscovered.compatible());
+                assertFalse(incompatDiscovered.active());
 
-            // 4. ID mismatch & version mismatch between metadata and plugin class -> loadError, stays inactive
-            Path idMismatchJar = buildTestPluginJar(
-                    compiler, tempRoot, "idmismatch", "de.example.realid", "IdMismatchPlugin",
-                    "1.0.0", "[3.6.0,4.0.0)", "",
-                    Map.of("META-INF/rostooling-plugin.properties",
-                            "id=de.example.claimedid\nversion=1.0.0\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary=Mismatch\n"));
-            PluginRegistry.INSTANCE.loadFromPaths(List.of(idMismatchJar), Set.of("de.example.claimedid", "de.example.realid"));
-            assertTrue("ID mismatch plugin must stay inactive", PluginRegistry.INSTANCE.activePlugins().isEmpty());
-            assertTrue("Expected mismatch loadError, got: " + PluginRegistry.INSTANCE.discoveredPlugins().get(0).loadError(),
-                    PluginRegistry.INSTANCE.discoveredPlugins().get(0).loadError().contains("mismatch"));
+                // 3. JAR without metadata -> id="", specific loadError; works when approved & explicitly enabled by ID
+                Path noMetaJar = buildTestPluginJar(
+                        compiler, tempRoot, "nometa", "de.example.nometa", "NoMetaPlugin",
+                        "1.0.0", "[3.6.0,4.0.0)", "", Map.of());
+                writeTestTrustStore(testTrust, List.of(noMetaJar), List.of(""));
+                approvedReg.loadFromPaths(List.of(noMetaJar), Set.of());
+                PluginRegistry.DiscoveredPlugin noMetaDisc = approvedReg.discoveredPlugins().get(0);
+                assertEquals("", noMetaDisc.id());
+                assertEquals("no plugin metadata; enable by id in settings", noMetaDisc.loadError());
+                assertFalse(noMetaDisc.active());
+                approvedReg.loadFromPaths(List.of(noMetaJar), Set.of("de.example.nometa"));
+                assertEquals(1, approvedReg.activePlugins().size());
+                assertEquals("de.example.nometa", approvedReg.activePlugins().get(0).id());
 
-            Path verMismatchJar = buildTestPluginJar(
-                    compiler, tempRoot, "vermismatch", "de.example.vermis", "VerMismatchPlugin",
-                    "1.0.0", "[3.6.0,4.0.0)",
-                    "@Override public String version() { return \"2.0.0\"; }",
-                    Map.of("META-INF/rostooling-plugin.properties",
-                            "id=de.example.vermis\nversion=1.0.0\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary=Ver mismatch\n"));
-            PluginRegistry.INSTANCE.loadFromPaths(List.of(verMismatchJar), Set.of("de.example.vermis"));
-            assertTrue("Version mismatch plugin must stay inactive", PluginRegistry.INSTANCE.activePlugins().isEmpty());
-            assertTrue("Expected mismatch loadError, got: " + PluginRegistry.INSTANCE.discoveredPlugins().get(0).loadError(),
-                    PluginRegistry.INSTANCE.discoveredPlugins().get(0).loadError().contains("mismatch"));
+                // 4. ID mismatch & version mismatch between metadata and plugin class -> loadError, stays inactive
+                Path idMismatchJar = buildTestPluginJar(
+                        compiler, tempRoot, "idmismatch", "de.example.realid", "IdMismatchPlugin",
+                        "1.0.0", "[3.6.0,4.0.0)", "",
+                        Map.of("META-INF/rostooling-plugin.properties",
+                                "id=de.example.claimedid\nversion=1.0.0\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary=Mismatch\n"));
+                writeTestTrustStore(testTrust, List.of(idMismatchJar), List.of("de.example.claimedid"));
+                approvedReg.loadFromPaths(List.of(idMismatchJar), Set.of("de.example.claimedid", "de.example.realid"));
+                assertTrue("ID mismatch plugin must stay inactive", approvedReg.activePlugins().isEmpty());
+                assertTrue("Expected mismatch loadError, got: " + approvedReg.discoveredPlugins().get(0).loadError(),
+                        approvedReg.discoveredPlugins().get(0).loadError().contains("mismatch"));
+
+                Path verMismatchJar = buildTestPluginJar(
+                        compiler, tempRoot, "vermismatch", "de.example.vermis", "VerMismatchPlugin",
+                        "1.0.0", "[3.6.0,4.0.0)",
+                        "@Override public String version() { return \"2.0.0\"; }",
+                        Map.of("META-INF/rostooling-plugin.properties",
+                                "id=de.example.vermis\nversion=1.0.0\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary=Ver mismatch\n"));
+                writeTestTrustStore(testTrust, List.of(verMismatchJar), List.of("de.example.vermis"));
+                approvedReg.loadFromPaths(List.of(verMismatchJar), Set.of("de.example.vermis"));
+                assertTrue("Version mismatch plugin must stay inactive", approvedReg.activePlugins().isEmpty());
+                assertTrue("Expected mismatch loadError, got: " + approvedReg.discoveredPlugins().get(0).loadError(),
+                        approvedReg.discoveredPlugins().get(0).loadError().contains("mismatch"));
+            } finally {
+                approvedReg.dispose();
+            }
 
             // 5. Missing required key -> loadError
             Path missingKeyJar = tempRoot.resolve("missing-key.jar");
@@ -2239,6 +2275,216 @@ public class PluginArchitecturePhase2Test {
                 });
             }
         }
+    }
+
+    @Test
+    public void jarApprovalCacheAndNeedRulesEnforceIsolationAndSafety() throws Exception {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        assertNotNull("JDK compiler must be available for approval test", compiler);
+
+        Path tempRoot = Files.createTempDirectory("rostooling-jar-approval-");
+        String propA = "rostooling.test.approve.a." + System.nanoTime();
+        String propB = "rostooling.test.approve.b." + System.nanoTime();
+        String propC = "rostooling.test.approve.c." + System.nanoTime();
+        String propU1 = "rostooling.test.approve.u1." + System.nanoTime();
+        String propU2 = "rostooling.test.approve.u2." + System.nanoTime();
+        for (String p : List.of(propA, propB, propC, propU1, propU2)) {
+            System.clearProperty(p);
+        }
+
+        try {
+            Path jarA = buildTestPluginJar(compiler, tempRoot, "apra", "de.example.apra", "PluginA",
+                    "1.0.0", "[3.6.0,4.0.0)",
+                    "static { System.setProperty(\"%s\", \"ran-a\"); }".formatted(propA),
+                    Map.of("META-INF/rostooling-plugin.properties",
+                            "id=de.example.apra\nversion=1.0.0\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary=Plugin A\n"));
+            Path jarB = buildTestPluginJar(compiler, tempRoot, "aprb", "de.example.aprb", "PluginB",
+                    "1.0.0", "[3.6.0,4.0.0)",
+                    "static { System.setProperty(\"%s\", \"ran-b\"); }".formatted(propB),
+                    Map.of("META-INF/rostooling-plugin.properties",
+                            "id=de.example.aprb\nversion=1.0.0\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary=Plugin B\n"));
+            Path jarC = buildTestPluginJar(compiler, tempRoot, "aprc", "de.example.aprc", "PluginC",
+                    "1.0.0", "[3.6.0,4.0.0)",
+                    "static { System.setProperty(\"%s\", \"ran-c\"); }".formatted(propC),
+                    Map.of("META-INF/rostooling-plugin.properties",
+                            "id=de.example.aprc\nversion=1.0.0\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary=Plugin C\n"));
+            Path jarU1 = buildTestPluginJar(compiler, tempRoot, "upru1", "de.example.u1", "PluginU1",
+                    "1.0.0", "[3.6.0,4.0.0)",
+                    "static { System.setProperty(\"%s\", \"ran-u1\"); }".formatted(propU1),
+                    Map.of());
+            Path jarU2 = buildTestPluginJar(compiler, tempRoot, "upru2", "de.example.u2", "PluginU2",
+                    "1.0.0", "[3.6.0,4.0.0)",
+                    "static { System.setProperty(\"%s\", \"ran-u2\"); }".formatted(propU2),
+                    Map.of());
+
+            Path trustFile = tempRoot.resolve("trusted-plugins.json");
+            Path missingTrust = tempRoot.resolve("nonexistent-trusted-plugins.json");
+
+            // 5f. Missing approval file -> no external JAR loads; listing shows unapproved + generic notice
+            PluginRegistry missingReg = new PluginRegistry(missingTrust);
+            try {
+                missingReg.loadFromPaths(List.of(jarA, jarU1), Set.of("de.example.apra"));
+                assertTrue(missingReg.activePlugins().isEmpty());
+                assertEquals(null, System.getProperty(propA));
+                assertEquals(null, System.getProperty(propU1));
+                assertFalse("Missing trust file must emit generic notice", missingReg.notices().isEmpty());
+                assertEquals("unapproved", missingReg.discoveredPlugins().get(0).approvalState());
+                assertEquals("unapproved", missingReg.discoveredPlugins().get(1).approvalState());
+            } finally {
+                missingReg.dispose();
+            }
+
+            // Invalid/corrupt JSON approval file -> nothing approved + notice, never crashes
+            Path invalidTrust = tempRoot.resolve("corrupt-trusted-plugins.json");
+            Files.writeString(invalidTrust, "{not-valid-json", StandardCharsets.UTF_8);
+            PluginRegistry invalidReg = new PluginRegistry(invalidTrust);
+            try {
+                invalidReg.loadFromPaths(List.of(jarA), Set.of("de.example.apra"));
+                assertTrue(invalidReg.activePlugins().isEmpty());
+                assertEquals(null, System.getProperty(propA));
+                assertFalse(invalidReg.notices().isEmpty());
+                assertEquals("unapproved", invalidReg.discoveredPlugins().get(0).approvalState());
+            } finally {
+                invalidReg.dispose();
+            }
+
+            // 5a + 5e: A and B are both approved; only A is enabled -> A loads from private cache, B's initializer does NOT run
+            writeTestTrustStore(trustFile, List.of(jarA, jarB), List.of("de.example.apra", "de.example.aprb"));
+            String hashA1 = sha256Of(jarA);
+            PluginRegistry reg = new PluginRegistry(trustFile);
+            Path observedCacheDir = null;
+            try {
+                reg.loadFromPaths(List.of(jarA, jarB), Set.of("de.example.apra"));
+                assertEquals("ran-a", System.getProperty(propA));
+                assertEquals("Unneeded approved plugin B must NOT load or run static initializer",
+                        null, System.getProperty(propB));
+                assertEquals(1, reg.activePlugins().size());
+                RosToolingPlugin loadedA = reg.activePlugins().get(0);
+                assertTrue(loadedA.getClass().getClassLoader() instanceof URLClassLoader);
+                URL[] urls = ((URLClassLoader) loadedA.getClass().getClassLoader()).getURLs();
+                assertEquals(1, urls.length);
+                Path cachedJarPath = Path.of(urls[0].toURI()).toAbsolutePath().normalize();
+                observedCacheDir = cachedJarPath.getParent();
+                assertFalse("ClassLoader URL must point into cache copy, not original JAR path",
+                        cachedJarPath.equals(jarA.toAbsolutePath().normalize()));
+                assertEquals(hashA1 + ".jar", cachedJarPath.getFileName().toString());
+                assertTrue(observedCacheDir.getFileName().toString().startsWith("rostooling-plugin-cache-"));
+                assertTrue(Files.exists(cachedJarPath));
+            } finally {
+                reg.dispose();
+            }
+            assertNotNull(observedCacheDir);
+            assertFalse("Private cache folder must be deleted when registry is disposed", Files.exists(observedCacheDir));
+
+            // 5b. Labeled C is enabled but not approved -> C does not load, listed as unapproved, notice emitted
+            System.clearProperty(propA);
+            System.clearProperty(propB);
+            PluginRegistry reg5b = new PluginRegistry(trustFile);
+            try {
+                reg5b.loadFromPaths(List.of(jarC), Set.of("de.example.aprc"));
+                assertTrue(reg5b.activePlugins().isEmpty());
+                assertEquals("Unapproved plugin C must NOT run static initializer", null, System.getProperty(propC));
+                PluginRegistry.DiscoveredPlugin discC = reg5b.discoveredPlugins().get(0);
+                assertEquals("de.example.aprc", discC.id());
+                assertEquals("unapproved", discC.approvalState());
+                assertFalse(discC.active());
+                assertTrue("Unapproved enabled plugin C must emit a notice",
+                        reg5b.notices().stream().anyMatch(n -> n.contains("de.example.aprc") || n.contains("unapproved")));
+            } finally {
+                reg5b.dispose();
+            }
+
+            // 5c. A is approved, then its bytes change -> listed as "changed", does not load
+            Path modifiedA = buildTestPluginJar(compiler, tempRoot, "apra", "de.example.apra", "PluginA",
+                    "1.0.1", "[3.6.0,4.0.0)",
+                    "static { System.setProperty(\"%s\", \"ran-a-modified\"); }".formatted(propA),
+                    Map.of("META-INF/rostooling-plugin.properties",
+                            "id=de.example.apra\nversion=1.0.1\nsupportedCoreVersionRange=[3.6.0,4.0.0)\nsummary=Plugin A\n"));
+            Files.copy(modifiedA, jarA, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            assertFalse(sha256Of(jarA).equals(hashA1));
+            PluginRegistry reg5c = new PluginRegistry(trustFile);
+            try {
+                reg5c.loadFromPaths(List.of(jarA), Set.of("de.example.apra"));
+                assertTrue("Modified JAR A must NOT load", reg5c.activePlugins().isEmpty());
+                assertEquals("Modified JAR A must NOT run static initializer", null, System.getProperty(propA));
+                PluginRegistry.DiscoveredPlugin discChanged = reg5c.discoveredPlugins().get(0);
+                assertEquals("changed", discChanged.approvalState());
+                assertFalse(discChanged.active());
+                assertTrue(reg5c.notices().stream().anyMatch(n -> n.contains("changed")));
+            } finally {
+                reg5c.dispose();
+            }
+
+            // 5d. Unlabeled U1 is approved, unlabeled U2 is NOT; enabled ID is provided by U1 -> U1 loads and U2's initializer does not run
+            writeTestTrustStore(trustFile, List.of(jarU1), List.of(""));
+            PluginRegistry reg5d = new PluginRegistry(trustFile);
+            try {
+                reg5d.loadFromPaths(List.of(jarU1, jarU2), Set.of("de.example.u1"));
+                assertEquals(1, reg5d.activePlugins().size());
+                assertEquals("de.example.u1", reg5d.activePlugins().get(0).id());
+                assertEquals("ran-u1", System.getProperty(propU1));
+                assertEquals("Unapproved unlabeled U2 must NOT run static initializer",
+                        null, System.getProperty(propU2));
+                List<PluginRegistry.DiscoveredPlugin> discList = reg5d.discoveredPlugins();
+                assertEquals(2, discList.size());
+                PluginRegistry.DiscoveredPlugin discU1 = discList.stream()
+                        .filter(d -> jarU1.getFileName().toString().equals(d.fileName())).findFirst().orElseThrow();
+                PluginRegistry.DiscoveredPlugin discU2 = discList.stream()
+                        .filter(d -> jarU2.getFileName().toString().equals(d.fileName())).findFirst().orElseThrow();
+                assertEquals("approved", discU1.approvalState());
+                assertTrue(discU1.active());
+                assertEquals("unapproved", discU2.approvalState());
+                assertEquals("", discU2.id());
+                assertFalse(discU2.active());
+            } finally {
+                reg5d.dispose();
+            }
+        } finally {
+            for (String p : List.of(propA, propB, propC, propU1, propU2)) {
+                System.clearProperty(p);
+            }
+            try (var walk = Files.walk(tempRoot)) {
+                walk.sorted(java.util.Comparator.reverseOrder()).forEach(p -> {
+                    try { Files.deleteIfExists(p); } catch (Exception ignored) {}
+                });
+            }
+        }
+    }
+
+    private static void writeTestTrustStore(
+            final Path trustFile,
+            final List<Path> jars,
+            final List<String> ids) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\"version\":1,\"approved\":[");
+        for (int i = 0; i < jars.size(); i++) {
+            if (i > 0) {
+                sb.append(',');
+            }
+            Path jar = jars.get(i);
+            String sha = sha256Of(jar);
+            String fileName = jar.getFileName().toString().replace("\"", "\\\"");
+            String id = i < ids.size() ? ids.get(i).replace("\"", "\\\"") : "";
+            sb.append("{\"sha256\":\"").append(sha)
+              .append("\",\"fileName\":\"").append(fileName)
+              .append("\",\"id\":\"").append(id)
+              .append("\",\"approvedAt\":\"2026-11-19T00:00:00Z\"}");
+        }
+        sb.append("]}");
+        Files.createDirectories(trustFile.getParent());
+        Files.writeString(trustFile, sb.toString(), StandardCharsets.UTF_8);
+    }
+
+    private static String sha256Of(final Path file) throws Exception {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] bytes = Files.readAllBytes(file);
+        byte[] digest = md.digest(bytes);
+        StringBuilder sb = new StringBuilder(digest.length * 2);
+        for (byte b : digest) {
+            sb.append(Character.forDigit((b >>> 4) & 0xF, 16));
+            sb.append(Character.forDigit(b & 0xF, 16));
+        }
+        return sb.toString();
     }
 
     private static Path buildTestPluginJar(

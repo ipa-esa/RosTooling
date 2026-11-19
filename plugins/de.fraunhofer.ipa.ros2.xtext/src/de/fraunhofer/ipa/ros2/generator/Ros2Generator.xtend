@@ -104,6 +104,7 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
         val outcome = new PluginGenerationOutcome()
         val existingList = if (existingFiles !== null) existingFiles else new ArrayList<String>()
         val activePlugins = PluginRegistry.INSTANCE.activePlugins()
+        outcome.notices.addAll(PluginRegistry.INSTANCE.notices())
 
         for (pkg : resource.allContents.toIterable.filter(Package)) {
             val pkgName = pkg.name.toLowerCase

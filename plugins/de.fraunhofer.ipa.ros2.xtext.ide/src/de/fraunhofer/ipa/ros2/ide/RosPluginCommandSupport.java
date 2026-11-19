@@ -124,13 +124,16 @@ public final class RosPluginCommandSupport {
         out.put("plugins", pluginsOut);
         out.put("tools", toolsOut);
         out.put("loadErrors", PluginRegistry.INSTANCE.loadErrors());
+        out.put("notices", PluginRegistry.INSTANCE.notices());
         return out;
     }
 
-    public static List<Map<String, Object>> listDiscoveredPlugins() {
+    public static Map<String, Object> listDiscoveredPlugins() {
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("trustStorePath", PluginRegistry.INSTANCE.trustStorePath().toString());
         try {
             PluginRegistry.INSTANCE.ensureLoadedFromEnvironment();
-            List<Map<String, Object>> out = new ArrayList<>();
+            List<Map<String, Object>> pluginsOut = new ArrayList<>();
             for (PluginRegistry.DiscoveredPlugin dp : PluginRegistry.INSTANCE.discoveredPlugins()) {
                 Map<String, Object> entry = new LinkedHashMap<>();
                 entry.put("id", dp.id());
@@ -142,11 +145,18 @@ public final class RosPluginCommandSupport {
                 entry.put("active", dp.active());
                 entry.put("sourceJarPath", dp.sourceJarPath());
                 entry.put("loadError", dp.loadError());
-                out.add(entry);
+                entry.put("fileName", dp.fileName());
+                entry.put("sha256", dp.sha256());
+                entry.put("approvalState", dp.approvalState());
+                pluginsOut.add(entry);
             }
-            return out;
+            result.put("plugins", pluginsOut);
+            result.put("notices", PluginRegistry.INSTANCE.notices());
+            return result;
         } catch (Throwable ignored) {
-            return List.of();
+            result.put("plugins", List.of());
+            result.put("notices", List.of());
+            return result;
         }
     }
 

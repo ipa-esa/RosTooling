@@ -89,6 +89,7 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
         val outcome = new SystemGenerationOutcome()
         val existingList = if (existingFiles !== null) existingFiles else new ArrayList<String>()
         val activePlugins = PluginRegistry.INSTANCE.activePlugins()
+        outcome.notices.addAll(PluginRegistry.INSTANCE.notices())
 
         for (system : resource.allContents.toIterable.filter(System)) {
             var yaml_gen = false
