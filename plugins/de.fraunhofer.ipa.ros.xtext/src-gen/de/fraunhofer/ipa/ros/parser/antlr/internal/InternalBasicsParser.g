@@ -1487,33 +1487,57 @@ ruleParameterStructMember returns [EObject current=null]
 	(
 		(
 			(
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getParameterStructMemberAccess().getNameEStringParserRuleCall_0_0_0_0());
+						}
+						lv_name_0_0=ruleEString
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getParameterStructMemberRule());
+							}
+							set(
+								$current,
+								"name",
+								lv_name_0_0,
+								"de.fraunhofer.ipa.ros.Basics.EString");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				otherlv_1=Colon
 				{
-					newCompositeNode(grammarAccess.getParameterStructMemberAccess().getNameEStringParserRuleCall_0_0());
-				}
-				lv_name_0_0=ruleEString
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getParameterStructMemberRule());
-					}
-					set(
-						$current,
-						"name",
-						lv_name_0_0,
-						"de.fraunhofer.ipa.ros.Basics.EString");
-					afterParserOrEnumRuleCall();
+					newLeafNode(otherlv_1, grammarAccess.getParameterStructMemberAccess().getColonKeyword_0_0_1());
 				}
 			)
+			    |
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getParameterStructMemberAccess().getNameAddedKeywordNameParserRuleCall_0_1_0());
+					}
+					lv_name_2_0=ruleAddedKeywordName
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getParameterStructMemberRule());
+						}
+						set(
+							$current,
+							"name",
+							lv_name_2_0,
+							"de.fraunhofer.ipa.ros.Basics.AddedKeywordName");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
 		)
-		otherlv_1=Colon
-		{
-			newLeafNode(otherlv_1, grammarAccess.getParameterStructMemberAccess().getColonKeyword_1());
-		}
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getParameterStructMemberAccess().getValueParameterValueParserRuleCall_2_0());
+					newCompositeNode(grammarAccess.getParameterStructMemberAccess().getValueParameterValueParserRuleCall_1_0());
 				}
-				lv_value_2_0=ruleParameterValue
+				lv_value_3_0=ruleParameterValue
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getParameterStructMemberRule());
@@ -1521,7 +1545,7 @@ ruleParameterStructMember returns [EObject current=null]
 					set(
 						$current,
 						"value",
-						lv_value_2_0,
+						lv_value_3_0,
 						"de.fraunhofer.ipa.ros.Basics.ParameterValue");
 					afterParserOrEnumRuleCall();
 				}
@@ -3142,6 +3166,108 @@ ruleEString returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()
 	)
 ;
 
+// Entry rule entryRuleAddedKeywordName
+entryRuleAddedKeywordName returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getAddedKeywordNameRule()); }
+	iv_ruleAddedKeywordName=ruleAddedKeywordName
+	{ $current=$iv_ruleAddedKeywordName.current.getText(); }
+	EOF;
+
+// Rule AddedKeywordName
+ruleAddedKeywordName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		kw=Lifecycle
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getLifecycleKeyword_0());
+		}
+		    |
+		kw=Active_in
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getActive_inKeyword_1());
+		}
+		    |
+		kw=Plugins
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getPluginsKeyword_2());
+		}
+		    |
+		kw=Implements
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getImplementsKeyword_3());
+		}
+		    |
+		kw=Pluginslots
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getPluginslotsKeyword_4());
+		}
+		    |
+		kw=Pluginbases
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getPluginbasesKeyword_5());
+		}
+		    |
+		kw=Base
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getBaseKeyword_6());
+		}
+		    |
+		kw=Parameter
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getParameterKeyword_7());
+		}
+		    |
+		kw=Format
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getFormatKeyword_8());
+		}
+		    |
+		kw=Multiple
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getMultipleKeyword_9());
+		}
+		    |
+		kw=Class
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getClassKeyword_10());
+		}
+		    |
+		kw=Header_1
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getHeaderKeyword_11());
+		}
+		    |
+		kw=Loader
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getLoaderKeyword_12());
+		}
+		    |
+		kw=Slots
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getAddedKeywordNameAccess().getSlotsKeyword_13());
+		}
+	)
+;
+
 // Entry rule entryRuleExtensionBlockName
 entryRuleExtensionBlockName returns [String current=null]:
 	{ newCompositeNode(grammarAccess.getExtensionBlockNameRule()); }
@@ -3251,13 +3377,33 @@ ruleExtensionEntry returns [EObject current=null]
 					}
 				)
 			)
+			    |
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getExtensionEntryAccess().getKeyAddedKeywordNameParserRuleCall_1_2_0());
+					}
+					lv_key_4_0=ruleAddedKeywordName
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getExtensionEntryRule());
+						}
+						set(
+							$current,
+							"key",
+							lv_key_4_0,
+							"de.fraunhofer.ipa.ros.Basics.AddedKeywordName");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
 		)
 		(
 			(
 				{
 					newCompositeNode(grammarAccess.getExtensionEntryAccess().getValueExtensionValueParserRuleCall_2_0());
 				}
-				lv_value_4_0=ruleExtensionValue
+				lv_value_5_0=ruleExtensionValue
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getExtensionEntryRule());
@@ -3265,7 +3411,7 @@ ruleExtensionEntry returns [EObject current=null]
 					set(
 						$current,
 						"value",
-						lv_value_4_0,
+						lv_value_5_0,
 						"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
 					afterParserOrEnumRuleCall();
 				}

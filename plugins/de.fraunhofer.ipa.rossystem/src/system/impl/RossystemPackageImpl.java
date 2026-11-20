@@ -36,6 +36,7 @@ import system.RosTopicConnection;
 import system.Rossystem;
 import system.RossystemFactory;
 import system.RossystemPackage;
+import system.SlotAttachment;
 import system.SubSystem;
 
 /**
@@ -90,6 +91,13 @@ public class RossystemPackageImpl extends EPackageImpl implements RossystemPacka
     /**
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass slotAttachmentEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
     private EClass rosInterfaceEClass = null;
@@ -470,7 +478,7 @@ public class RossystemPackageImpl extends EPackageImpl implements RossystemPacka
 	 * @generated
 	 */
 	@Override
-	public EReference getRosNode_Plugins() {
+	public EReference getRosNode_Slots() {
 		return (EReference)rosNodeEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -480,6 +488,36 @@ public class RossystemPackageImpl extends EPackageImpl implements RossystemPacka
 	 * @generated
 	 */
     @Override
+	public EClass getSlotAttachment() {
+		return slotAttachmentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getSlotAttachment_Slot() {
+		return (EReference)slotAttachmentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getSlotAttachment_Plugins() {
+		return (EReference)slotAttachmentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
     public EClass getRosInterface() {
 		return rosInterfaceEClass;
 	}
@@ -898,7 +936,11 @@ public class RossystemPackageImpl extends EPackageImpl implements RossystemPacka
 		createEReference(rosNodeEClass, ROS_NODE__FROM);
 		createEReference(rosNodeEClass, ROS_NODE__ROSINTERFACES);
 		createEReference(rosNodeEClass, ROS_NODE__ROSPARAMETERS);
-		createEReference(rosNodeEClass, ROS_NODE__PLUGINS);
+		createEReference(rosNodeEClass, ROS_NODE__SLOTS);
+
+		slotAttachmentEClass = createEClass(SLOT_ATTACHMENT);
+		createEReference(slotAttachmentEClass, SLOT_ATTACHMENT__SLOT);
+		createEReference(slotAttachmentEClass, SLOT_ATTACHMENT__PLUGINS);
 
 		rosInterfaceEClass = createEClass(ROS_INTERFACE);
 		createEAttribute(rosInterfaceEClass, ROS_INTERFACE__NAME);
@@ -1031,7 +1073,11 @@ public class RossystemPackageImpl extends EPackageImpl implements RossystemPacka
 		initEReference(getRosNode_From(), theRosPackage.getNode(), null, "from", null, 1, 1, RosNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRosNode_Rosinterfaces(), this.getRosInterface(), null, "rosinterfaces", null, 0, -1, RosNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRosNode_Rosparameters(), this.getRosParameter(), null, "rosparameters", null, 0, -1, RosNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getRosNode_Plugins(), theRosPackage.getPlugin(), null, "plugins", null, 0, -1, RosNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRosNode_Slots(), this.getSlotAttachment(), null, "slots", null, 0, -1, RosNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(slotAttachmentEClass, SlotAttachment.class, "SlotAttachment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSlotAttachment_Slot(), theRosPackage.getPluginSlot(), null, "slot", null, 1, 1, SlotAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSlotAttachment_Plugins(), theRosPackage.getPlugin(), null, "plugins", null, 0, -1, SlotAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(rosInterfaceEClass, RosInterface.class, "RosInterface", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getRosInterface_Name(), ecorePackage.getEString(), "name", null, 1, 1, RosInterface.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

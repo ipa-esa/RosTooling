@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import ros.Artifact;
 import ros.Dependency;
+import ros.PluginBase;
 import ros.RosPackage;
 import ros.SpecBase;
 
@@ -37,6 +38,7 @@ import ros.SpecBase;
  *   <li>{@link ros.impl.PackageImpl#getArtifact <em>Artifact</em>}</li>
  *   <li>{@link ros.impl.PackageImpl#getFromGitRepo <em>From Git Repo</em>}</li>
  *   <li>{@link ros.impl.PackageImpl#getDependency <em>Dependency</em>}</li>
+ *   <li>{@link ros.impl.PackageImpl#getPluginBases <em>Plugin Bases</em>}</li>
  * </ul>
  *
  * @generated
@@ -111,6 +113,16 @@ public class PackageImpl extends MinimalEObjectImpl.Container implements ros.Pac
 	 * @ordered
 	 */
 	protected EList<Dependency> dependency;
+
+	/**
+	 * The cached value of the '{@link #getPluginBases() <em>Plugin Bases</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPluginBases()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<PluginBase> pluginBases;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -221,6 +233,19 @@ public class PackageImpl extends MinimalEObjectImpl.Container implements ros.Pac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public EList<PluginBase> getPluginBases() {
+		if (pluginBases == null) {
+			pluginBases = new EObjectContainmentEList<PluginBase>(PluginBase.class, this, RosPackage.PACKAGE__PLUGIN_BASES);
+		}
+		return pluginBases;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -245,6 +270,8 @@ public class PackageImpl extends MinimalEObjectImpl.Container implements ros.Pac
 				return ((InternalEList<?>)getArtifact()).basicRemove(otherEnd, msgs);
 			case RosPackage.PACKAGE__DEPENDENCY:
 				return ((InternalEList<?>)getDependency()).basicRemove(otherEnd, msgs);
+			case RosPackage.PACKAGE__PLUGIN_BASES:
+				return ((InternalEList<?>)getPluginBases()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -267,6 +294,8 @@ public class PackageImpl extends MinimalEObjectImpl.Container implements ros.Pac
 				return getFromGitRepo();
 			case RosPackage.PACKAGE__DEPENDENCY:
 				return getDependency();
+			case RosPackage.PACKAGE__PLUGIN_BASES:
+				return getPluginBases();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -298,6 +327,10 @@ public class PackageImpl extends MinimalEObjectImpl.Container implements ros.Pac
 				getDependency().clear();
 				getDependency().addAll((Collection<? extends Dependency>)newValue);
 				return;
+			case RosPackage.PACKAGE__PLUGIN_BASES:
+				getPluginBases().clear();
+				getPluginBases().addAll((Collection<? extends PluginBase>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -325,6 +358,9 @@ public class PackageImpl extends MinimalEObjectImpl.Container implements ros.Pac
 			case RosPackage.PACKAGE__DEPENDENCY:
 				getDependency().clear();
 				return;
+			case RosPackage.PACKAGE__PLUGIN_BASES:
+				getPluginBases().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -347,6 +383,8 @@ public class PackageImpl extends MinimalEObjectImpl.Container implements ros.Pac
 				return FROM_GIT_REPO_EDEFAULT == null ? fromGitRepo != null : !FROM_GIT_REPO_EDEFAULT.equals(fromGitRepo);
 			case RosPackage.PACKAGE__DEPENDENCY:
 				return dependency != null && !dependency.isEmpty();
+			case RosPackage.PACKAGE__PLUGIN_BASES:
+				return pluginBases != null && !pluginBases.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

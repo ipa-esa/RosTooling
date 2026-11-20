@@ -41,6 +41,8 @@ Unconfigured : 'Unconfigured';
 
 FromGitRepo : 'fromGitRepo:';
 
+Pluginbases : 'pluginbases:';
+
 Pluginslots : 'pluginslots:';
 
 Reliability : 'reliability:';
@@ -89,7 +91,7 @@ Keep_last : 'keep_last';
 
 Lifespan : 'lifespan:';
 
-Pluginlib : 'pluginlib';
+Multiple : 'multiple:';
 
 Inactive : 'Inactive';
 
@@ -98,8 +100,6 @@ Actions : 'actions:';
 Default : 'default:';
 
 Duration : 'duration';
-
-External : 'external';
 
 Feedback : 'feedback';
 
@@ -136,6 +136,8 @@ Float32 : 'float32';
 Float64 : 'float64';
 
 Format : 'format:';
+
+Header_1 : 'header:';
 
 Int16_1 : 'int16[]';
 
@@ -176,6 +178,8 @@ Bool_1 : 'bool[]';
 Byte_1 : 'byte[]';
 
 Char_1 : 'char[]';
+
+Class_1 : 'class:';
 
 Depth : 'depth:';
 

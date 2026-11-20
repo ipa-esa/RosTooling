@@ -31,6 +31,11 @@
         eType="#//RosInterface" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rosparameters" upperBound="-1"
         eType="#//RosParameter" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="slots" upperBound="-1"
+        eType="#//SlotAttachment" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SlotAttachment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="slot" lowerBound="1" eType="ecore:EClass ../../de.fraunhofer.ipa.ros/model/ros.ecore#//PluginSlot"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="plugins" upperBound="-1"
         eType="ecore:EClass ../../de.fraunhofer.ipa.ros/model/ros.ecore#//Plugin"/>
   </eClassifiers>

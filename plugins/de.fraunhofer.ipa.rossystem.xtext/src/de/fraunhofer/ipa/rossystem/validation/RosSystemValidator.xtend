@@ -18,8 +18,6 @@ import ros.Node
 import ros.Parameter
 import ros.ParameterString
 import ros.ParameterStringType
-import ros.Plugin
-import ros.PluginLoader
 import system.Component
 import system.Connection
 import system.InterfaceReference
@@ -176,33 +174,21 @@ class RosSystemValidator extends AbstractRosSystemValidator {
     if (fromNode !== null && fromNode.eIsProxy) {
         fromNode = EcoreUtil.resolve(fromNode, rosNode) as Node
     }
-    for (pluginRef : rosNode.plugins) {
-        var plugin = pluginRef
-        if (plugin !== null && plugin.eIsProxy) {
-            plugin = EcoreUtil.resolve(plugin, rosNode) as Plugin
-        }
-        if (plugin === null || plugin.eIsProxy) {
-            // Unresolved link already flagged by Xtext linker.
-        } else {
-            val expectedImpl = plugin.implements?.trim
-            if (expectedImpl === null || expectedImpl.empty) {
-                error(
-                    "Node '" + rosNode.name + "' attaches plugin '" + plugin.name
-                        + "', which must declare 'implements:' matching a pluginslot on host node '"
-                        + (if (fromNode !== null && !fromNode.eIsProxy) fromNode.name else "?") + "'",
-                    rosNode,
-                    RossystemPackage.Literals.ROS_NODE__PLUGINS,
-                    INCOMPATIBLE_PLUGIN
-                )
-            } else if (fromNode !== null && !fromNode.eIsProxy) {
-                val hasMatchingSlot = fromNode.pluginSlots.exists[base == expectedImpl]
-                if (!hasMatchingSlot) {
+    for (attachment : rosNode.slots) {
+        val slot = attachment.slot
+        if (slot !== null && !slot.eIsProxy && slot.base !== null && !slot.base.eIsProxy) {
+            for (var i = 0; i < attachment.plugins.size; i++) {
+                val plugin = attachment.plugins.get(i)
+                val base = plugin?.implements
+                // Unresolved links are already flagged by the Xtext linker.
+                if (plugin !== null && !plugin.eIsProxy && base !== null && !base.eIsProxy && base !== slot.base) {
                     error(
-                        "Node '" + rosNode.name + "' attaches plugin '" + plugin.name
-                            + "' (implements '" + expectedImpl + "'), which does not match any pluginslot on host node '"
-                            + fromNode.name + "'",
-                        rosNode,
-                        RossystemPackage.Literals.ROS_NODE__PLUGINS,
+                        "Plugin '" + plugin.name + "' implements '" + base.name + "', but slot '" + slot.name
+                            + "' on host node '" + (if (fromNode !== null && !fromNode.eIsProxy) fromNode.name else "?")
+                            + "' takes '" + slot.base.name + "'",
+                        attachment,
+                        RossystemPackage.Literals.SLOT_ATTACHMENT__PLUGINS,
+                        i,
                         INCOMPATIBLE_PLUGIN
                     )
                 }

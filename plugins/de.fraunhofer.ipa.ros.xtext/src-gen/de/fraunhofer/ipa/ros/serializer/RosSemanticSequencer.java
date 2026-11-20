@@ -385,7 +385,7 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *     ActionClient returns ActionClient
 	 *
 	 * Constraint:
-	 *     (name=EString action=[ActionSpec|EString] namespace=Namespace?)
+	 *     ((name=EString | name=AddedKeywordName) action=[ActionSpec|EString] namespace=Namespace?)
 	 * </pre>
 	 */
 	protected void sequence_ActionClient(ISerializationContext context, ActionClient semanticObject) {
@@ -399,7 +399,7 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *     ActionServer returns ActionServer
 	 *
 	 * Constraint:
-	 *     (name=EString action=[ActionSpec|EString] namespace=Namespace?)
+	 *     ((name=EString | name=AddedKeywordName) action=[ActionSpec|EString] namespace=Namespace?)
 	 * </pre>
 	 */
 	protected void sequence_ActionServer(ISerializationContext context, ActionServer semanticObject) {
@@ -427,7 +427,7 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *     Artifact returns Artifact
 	 *
 	 * Constraint:
-	 *     (name=RosNames node=Node? plugins+=Plugin*)
+	 *     ((name=RosNames | name=AddedKeywordName) (node=Node | plugins+=Plugin+)?)
 	 * </pre>
 	 */
 	protected void sequence_Artifact(ISerializationContext context, Artifact semanticObject) {
@@ -539,7 +539,13 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *     Package_Impl returns Package
 	 *
 	 * Constraint:
-	 *     (name=RosNames fromGitRepo=EString? (dependency+=Dependency dependency+=Dependency*)? (spec+=TopicSpec | spec+=ServiceSpec | spec+=ActionSpec)*)
+	 *     (
+	 *         (name=RosNames | name=AddedKeywordName) 
+	 *         fromGitRepo=EString? 
+	 *         (dependency+=Dependency dependency+=Dependency*)? 
+	 *         spec+=TopicSpec? 
+	 *         ((spec+=ServiceSpec | spec+=ActionSpec)? spec+=TopicSpec?)*
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_Package_Impl(ISerializationContext context, ros.Package semanticObject) {
@@ -554,11 +560,17 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=EString 
+	 *         (name=EString | name=AddedKeywordName) 
 	 *         (
-	 *             (base=EString | parameter=EString | valueFormat=PluginSlotValueFormat | defaultPlugin=EString)+ | 
-	 *             (base=EString parameter=EString valueFormat=PluginSlotValueFormat? defaultPlugin=EString?)
-	 *         )?
+	 *             (
+	 *                 base=[PluginBase|QualifiedRef]? 
+	 *                 (
+	 *                     (parameter=EString | valueFormat=PluginSlotValueFormat | multiple=boolean0 | defaultPlugin=[Plugin|QualifiedRef])? 
+	 *                     base=[PluginBase|QualifiedRef]?
+	 *                 )*
+	 *             ) | 
+	 *             (base=[PluginBase|QualifiedRef] parameter=EString valueFormat=PluginSlotValueFormat? multiple=boolean0? defaultPlugin=[Plugin|QualifiedRef]?)
+	 *         )
 	 *     )
 	 * </pre>
 	 */
@@ -574,10 +586,9 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=RosNames 
+	 *         (name=RosNames | name=AddedKeywordName) 
+	 *         implements=[PluginBase|QualifiedRef] 
 	 *         (
-	 *             implements=EString | 
-	 *             loader=PluginLoader | 
 	 *             publisher+=Publisher | 
 	 *             subscriber+=Subscriber | 
 	 *             serviceserver+=ServiceServer | 
@@ -601,7 +612,7 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *     Publisher returns Publisher
 	 *
 	 * Constraint:
-	 *     (name=EString message=[TopicSpec|EString] namespace=Namespace?)
+	 *     ((name=EString | name=AddedKeywordName) message=[TopicSpec|EString] namespace=Namespace?)
 	 * </pre>
 	 */
 	protected void sequence_Publisher(ISerializationContext context, Publisher semanticObject) {
@@ -615,7 +626,7 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *     ServiceClient returns ServiceClient
 	 *
 	 * Constraint:
-	 *     (name=EString service=[ServiceSpec|EString] namespace=Namespace?)
+	 *     ((name=EString | name=AddedKeywordName) service=[ServiceSpec|EString] namespace=Namespace?)
 	 * </pre>
 	 */
 	protected void sequence_ServiceClient(ISerializationContext context, ServiceClient semanticObject) {
@@ -629,7 +640,7 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *     ServiceServer returns ServiceServer
 	 *
 	 * Constraint:
-	 *     (name=EString service=[ServiceSpec|EString] namespace=Namespace?)
+	 *     ((name=EString | name=AddedKeywordName) service=[ServiceSpec|EString] namespace=Namespace?)
 	 * </pre>
 	 */
 	protected void sequence_ServiceServer(ISerializationContext context, ServiceServer semanticObject) {
@@ -657,7 +668,7 @@ public class RosSemanticSequencer extends BasicsSemanticSequencer {
 	 *     Subscriber returns Subscriber
 	 *
 	 * Constraint:
-	 *     (name=EString message=[TopicSpec|EString] namespace=Namespace?)
+	 *     ((name=EString | name=AddedKeywordName) message=[TopicSpec|EString] namespace=Namespace?)
 	 * </pre>
 	 */
 	protected void sequence_Subscriber(ISerializationContext context, Subscriber semanticObject) {

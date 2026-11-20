@@ -5,7 +5,6 @@ package system;
 import org.eclipse.emf.common.util.EList;
 
 import ros.Node;
-import ros.Plugin;
 
 /**
  * <!-- begin-user-doc -->
@@ -21,7 +20,7 @@ import ros.Plugin;
  *   <li>{@link system.RosNode#getFrom <em>From</em>}</li>
  *   <li>{@link system.RosNode#getRosinterfaces <em>Rosinterfaces</em>}</li>
  *   <li>{@link system.RosNode#getRosparameters <em>Rosparameters</em>}</li>
- *   <li>{@link system.RosNode#getPlugins <em>Plugins</em>}</li>
+ *   <li>{@link system.RosNode#getSlots <em>Slots</em>}</li>
  * </ul>
  *
  * @see system.RossystemPackage#getRosNode()
@@ -120,15 +119,15 @@ public interface RosNode extends Component {
     EList<RosParameter> getRosparameters();
 
 				/**
-	 * Returns the value of the '<em><b>Plugins</b></em>' reference list.
-	 * The list contents are of type {@link ros.Plugin}.
+	 * Returns the value of the '<em><b>Slots</b></em>' containment reference list.
+	 * The list contents are of type {@link system.SlotAttachment}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Plugins</em>' reference list.
-	 * @see system.RossystemPackage#getRosNode_Plugins()
-	 * @model
+	 * @return the value of the '<em>Slots</em>' containment reference list.
+	 * @see system.RossystemPackage#getRosNode_Slots()
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<Plugin> getPlugins();
+	EList<SlotAttachment> getSlots();
 
 } // RosNode

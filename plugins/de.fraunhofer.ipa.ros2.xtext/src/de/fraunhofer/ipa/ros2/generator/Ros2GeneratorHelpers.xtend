@@ -5,7 +5,7 @@ import ros.InterfaceHolder
 import ros.Node
 import ros.Package
 import ros.Plugin
-import ros.PluginLoader
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases
 import ros.Publisher
 import ros.Subscriber
 import ros.ServiceServer
@@ -149,11 +149,11 @@ class Ros2GeneratorHelpers {
     }
 
     def List<Plugin> getPluginlibPlugins(Package pkg) {
-        return getAllPlugins(pkg).filter[loader == PluginLoader.PLUGINLIB].toList
+        return getAllPlugins(pkg).filter[PluginBases.isPluginlib(it)].toList
     }
 
     def List<Plugin> getExternalPlugins(Package pkg) {
-        return getAllPlugins(pkg).filter[loader == PluginLoader.EXTERNAL].toList
+        return getAllPlugins(pkg).filter[!PluginBases.isPluginlib(it)].toList
     }
 
     def String getSpecPackage(TopicSpec spec) {

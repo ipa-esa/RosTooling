@@ -94,6 +94,7 @@ import system.RosSubscriberReference;
 import system.RosSystemConnection;
 import system.RosTopicConnection;
 import system.RossystemPackage;
+import system.SlotAttachment;
 import system.SubSystem;
 
 @SuppressWarnings("all")
@@ -364,6 +365,9 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 			case RossystemPackage.ROS_TOPIC_CONNECTION:
 				sequence_RosTopicConnection(context, (RosTopicConnection) semanticObject); 
 				return; 
+			case RossystemPackage.SLOT_ATTACHMENT:
+				sequence_SlotAttachment(context, (SlotAttachment) semanticObject); 
+				return; 
 			case RossystemPackage.SUB_SYSTEM:
 				sequence_SubSystem(context, (SubSystem) semanticObject); 
 				return; 
@@ -381,7 +385,7 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 *     Process returns Process
 	 *
 	 * Constraint:
-	 *     (name=EString (components+=[RosNode|EString] components+=[RosNode|EString]*)? threads=Integer0?)
+	 *     ((name=EString | name=AddedKeywordName) (components+=[RosNode|EString] components+=[RosNode|EString]*)? threads=Integer0?)
 	 * </pre>
 	 */
 	protected void sequence_Process(ISerializationContext context, system.Process semanticObject) {
@@ -462,7 +466,7 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 *     RosInterface returns RosInterface
 	 *
 	 * Constraint:
-	 *     (name=EString reference=InterfaceReference extensions+=ExtensionBlock*)
+	 *     ((name=EString | name=AddedKeywordName) reference=InterfaceReference extensions+=ExtensionBlock*)
 	 * </pre>
 	 */
 	protected void sequence_RosInterface(ISerializationContext context, RosInterface semanticObject) {
@@ -477,10 +481,10 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=EString 
+	 *         (name=EString | name=AddedKeywordName) 
 	 *         from=[Node|EString] 
 	 *         namespace=EString? 
-	 *         (plugins+=[Plugin|EString] plugins+=[Plugin|EString]*)? 
+	 *         slots+=SlotAttachment* 
 	 *         rosinterfaces+=RosInterface* 
 	 *         rosparameters+=RosParameter* 
 	 *         extensions+=ExtensionBlock*
@@ -498,23 +502,11 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 *     RosParameter returns RosParameter
 	 *
 	 * Constraint:
-	 *     (name=EString from=[Parameter|EString] value=ParameterValue)
+	 *     ((name=EString | name=AddedKeywordName) from=[Parameter|EString] value=ParameterValue)
 	 * </pre>
 	 */
 	protected void sequence_RosParameter(ISerializationContext context, RosParameter semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__NAME));
-			if (transientValues.isValueTransient(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__FROM) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__FROM));
-			if (transientValues.isValueTransient(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__VALUE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getRosParameterAccess().getNameEStringParserRuleCall_1_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getRosParameterAccess().getFromParameterEStringParserRuleCall_3_0_1(), semanticObject.eGet(RossystemPackage.Literals.ROS_PARAMETER__FROM, false));
-		feeder.accept(grammarAccess.getRosParameterAccess().getValueParameterValueParserRuleCall_6_0(), semanticObject.getValue());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -659,15 +651,12 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=EString 
+	 *         (name=EString | name=AddedKeywordName) 
 	 *         fromFile=EString? 
+	 *         components+=SubSystem? 
 	 *         (
-	 *             components+=SubSystem | 
-	 *             processes+=Process | 
-	 *             components+=RosNode | 
-	 *             parameter+=Parameter | 
-	 *             connections+=Connection | 
-	 *             extensions+=ExtensionBlock
+	 *             (processes+=Process | components+=RosNode | parameter+=Parameter | connections+=Connection | extensions+=ExtensionBlock)? 
+	 *             components+=SubSystem?
 	 *         )*
 	 *     )
 	 * </pre>
@@ -699,6 +688,20 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 		feeder.accept(grammarAccess.getRosTopicConnectionAccess().getFromPublisherEStringParserRuleCall_2_0_1(), semanticObject.eGet(RossystemPackage.Literals.ROS_TOPIC_CONNECTION__FROM, false));
 		feeder.accept(grammarAccess.getRosTopicConnectionAccess().getToSubscriberEStringParserRuleCall_4_0_1(), semanticObject.eGet(RossystemPackage.Literals.ROS_TOPIC_CONNECTION__TO, false));
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     SlotAttachment returns SlotAttachment
+	 *
+	 * Constraint:
+	 *     ((slot=[PluginSlot|EString] | slot=[PluginSlot|AddedKeywordName]) (plugins+=[Plugin|QualifiedRef] plugins+=[Plugin|QualifiedRef]*)?)
+	 * </pre>
+	 */
+	protected void sequence_SlotAttachment(ISerializationContext context, SlotAttachment semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

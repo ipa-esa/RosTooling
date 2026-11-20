@@ -378,7 +378,7 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     ExtensionEntry returns ExtensionEntry
 	 *
 	 * Constraint:
-	 *     ((key=ExtensionKey | key=ExtensionColonKey) value=ExtensionValue)
+	 *     ((key=ExtensionKey | key=ExtensionColonKey | key=AddedKeywordName) value=ExtensionValue)
 	 * </pre>
 	 */
 	protected void sequence_ExtensionEntry(ISerializationContext context, ExtensionEntry semanticObject) {
@@ -799,20 +799,11 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     ParameterStructMember returns ParameterStructMember
 	 *
 	 * Constraint:
-	 *     (name=EString value=ParameterValue)
+	 *     ((name=EString | name=AddedKeywordName) value=ParameterValue)
 	 * </pre>
 	 */
 	protected void sequence_ParameterStructMember(ISerializationContext context, ParameterStructMember semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, RosPackage.Literals.PARAMETER_STRUCT_MEMBER__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RosPackage.Literals.PARAMETER_STRUCT_MEMBER__NAME));
-			if (transientValues.isValueTransient(semanticObject, RosPackage.Literals.PARAMETER_STRUCT_MEMBER__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RosPackage.Literals.PARAMETER_STRUCT_MEMBER__VALUE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getParameterStructMemberAccess().getNameEStringParserRuleCall_0_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getParameterStructMemberAccess().getValueParameterValueParserRuleCall_2_0(), semanticObject.getValue());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -875,7 +866,7 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     Parameter returns Parameter
 	 *
 	 * Constraint:
-	 *     (name=EString namespace=Namespace? type=ParameterType value=ParameterValue?)
+	 *     ((name=EString | name=AddedKeywordName) namespace=Namespace? type=ParameterType value=ParameterValue?)
 	 * </pre>
 	 */
 	protected void sequence_Parameter(ISerializationContext context, ros.Parameter semanticObject) {

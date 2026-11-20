@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.glsp.handlers;
 
+import de.fraunhofer.ipa.ros.glsp.model.SlotAttachments;
 import com.google.inject.Inject;
 import de.fraunhofer.ipa.ros.glsp.RosModelTypes;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
@@ -77,8 +78,7 @@ public class CreateRosNodeOperationHandler extends EMFCreateOperationHandler<Cre
                             String trimmed = rawRef.trim();
                             if (!trimmed.isEmpty()) {
                                 RosElementResolver.resolveOriginPlugin(rs, trimmed)
-                                        .filter(pl -> !newNode.getPlugins().contains(pl))
-                                        .ifPresent(newNode.getPlugins()::add);
+                                        .ifPresent(pl -> SlotAttachments.attach(newNode, pl));
                             }
                         }
                     }

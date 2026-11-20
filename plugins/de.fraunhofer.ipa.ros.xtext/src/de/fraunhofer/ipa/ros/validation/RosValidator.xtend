@@ -14,8 +14,7 @@ import ros.ParameterArrayType
 import ros.ParameterListType
 import ros.ParameterStringType
 import ros.ParameterType
-import ros.Plugin
-import ros.PluginLoader
+import ros.PluginBase
 import ros.PluginSlot
 import ros.Publisher
 import ros.QualityOfService
@@ -171,39 +170,19 @@ class RosValidator extends AbstractRosValidator {
     }
   }
 
-  public static val PLUGIN_MISSING_IMPLEMENTS = 'plugin.missingImplements'
   public static val PLUGIN_INVALID_IMPLEMENTS = 'plugin.invalidImplements'
   public static val SLOT_DUPLICATE = 'slot.duplicate'
-  public static val SLOT_INVALID_BASE = 'slot.invalidBase'
   public static val SLOT_MISSING_PARAM = 'slot.missingParameter'
   public static val SLOT_INVALID_PARAM_TYPE = 'slot.invalidParameterType'
 
   @Check
-  def void checkPluginDefinition(Plugin plugin) {
-    val impl = plugin.implements?.trim
-    if (plugin.loader == PluginLoader.PLUGINLIB) {
-      if (impl === null || impl.empty) {
-        error(
-          "Plugin '" + plugin.name + "' with loader 'pluginlib' must specify 'implements: \"pkg::BaseClass\"'",
-          plugin,
-          RosPackage.Literals.PLUGIN__IMPLEMENTS,
-          PLUGIN_MISSING_IMPLEMENTS
-        )
-        return
-      }
-      if (!isValidQualifiedCppType(impl)) {
-        error(
-          "Plugin '" + plugin.name + "' field 'implements' must be a C++ namespace-qualified base class (e.g. 'nav2_core::GlobalPlanner')",
-          plugin,
-          RosPackage.Literals.PLUGIN__IMPLEMENTS,
-          PLUGIN_INVALID_IMPLEMENTS
-        )
-      }
-    } else if (impl !== null && !impl.empty && !isValidQualifiedCppType(impl)) {
+  def void checkPluginBase(PluginBase base) {
+    val cls = base.className?.trim
+    if (!isValidQualifiedCppType(cls)) {
       error(
-        "Plugin '" + plugin.name + "' field 'implements' must be a C++ namespace-qualified base class (e.g. 'pkg::BaseClass')",
-        plugin,
-        RosPackage.Literals.PLUGIN__IMPLEMENTS,
+        "Plugin base '" + base.name + "' field 'class' must be a C++ namespace-qualified class (e.g. 'nav2_core::GlobalPlanner')",
+        base,
+        RosPackage.Literals.PLUGIN_BASE__CLASS_NAME,
         PLUGIN_INVALID_IMPLEMENTS
       )
     }
@@ -219,15 +198,6 @@ class RosValidator extends AbstractRosValidator {
           slot,
           RosPackage.Literals.PLUGIN_SLOT__NAME,
           SLOT_DUPLICATE
-        )
-      }
-      val baseType = slot.base?.trim
-      if (baseType === null || !isValidQualifiedCppType(baseType)) {
-        error(
-          "PluginSlot '" + slot.name + "' must declare a C++ qualified 'base:' class (e.g. 'nav2_core::GlobalPlanner')",
-          slot,
-          RosPackage.Literals.PLUGIN_SLOT__BASE,
-          SLOT_INVALID_BASE
         )
       }
       val paramName = slot.parameter?.trim

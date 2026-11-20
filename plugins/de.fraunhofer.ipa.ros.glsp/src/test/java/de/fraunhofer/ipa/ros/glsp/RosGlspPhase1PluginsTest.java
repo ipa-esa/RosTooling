@@ -112,12 +112,16 @@ class RosGlspPhase1PluginsTest {
         Path pkgFile = tempDir.resolve("my_plugins.ros2");
         Files.writeString(pkgFile, """
                 my_plugins:
+                  pluginbases:
+                    GlobalPlanner:
+                      class: "my_plugins::GlobalPlanner"
+                      header: "my_plugins/global_planner.hpp"
+                      loader: pluginlib
                   artifacts:
                     planners_lib:
                       plugins:
                         StraightLine:
-                          implements: "nav2_core::GlobalPlanner"
-                          loader: pluginlib
+                          implements: my_plugins.GlobalPlanner
                           publishers:
                             path_out:
                               type: "std_msgs/msg/String"
@@ -133,9 +137,10 @@ class RosGlspPhase1PluginsTest {
 
         // Add a second plugin to the same library artifact via GLSP edit operation
         exec(s, new EditRosPropertyOperation("planners_lib", "addPlugin", "ThetaStar",
-                "{\"implements\":\"nav2_core::GlobalPlanner\",\"loader\":\"pluginlib\"}", null));
+                "{\"implements\":\"my_plugins.GlobalPlanner\"}", null));
         String updated = RosAstNodeModelSerializer.computeAndCommit(s.state).newText;
         assertTrue(updated.contains("ThetaStar:"), "Expected ThetaStar plugin:\n" + updated);
+        assertTrue(updated.contains("implements: my_plugins.GlobalPlanner"), updated);
 
         Files.writeString(pkgFile, updated);
         Session reopened = open(pkgFile, "phase1-pkg-2");
@@ -158,16 +163,19 @@ class RosGlspPhase1PluginsTest {
 
         Session s = open(pkgFile, "phase1-slot-format");
         exec(s, new EditRosPropertyOperation("orch_node", "addPluginSlot", "leaves",
-                "{\"base\":\"custom_core::LeafBase\",\"parameter\":\"leaf_libraries\",\"format\":\"library\"}", null));
+                "{\"base\":\"custom_core.LeafBase\",\"parameter\":\"leaf_libraries\",\"format\":\"library\",\"multiple\":true}", null));
 
         String updated = RosAstNodeModelSerializer.computeAndCommit(s.state).newText;
         assertTrue(updated.contains("format: library"), "Expected format: library in .ros2:\n" + updated);
+        assertTrue(updated.contains("base: custom_core.LeafBase"), updated);
+        assertTrue(updated.contains("multiple: true"), updated);
 
         Files.writeString(pkgFile, updated);
         Session reopened = open(pkgFile, "phase1-slot-format-2");
         GModelElement card = findNodesByName(reopened.state.getRoot(), RosModelTypes.ROS_NODE).get(0);
         String slotsJson = String.valueOf(card.getArgs().get("pluginSlotsJson"));
         assertTrue(slotsJson.contains("\"format\":\"library\""), "Expected format in pluginSlotsJson: " + slotsJson);
+        assertTrue(slotsJson.contains("\"multiple\":true"), slotsJson);
     }
 
     @Test
@@ -181,6 +189,16 @@ class RosGlspPhase1PluginsTest {
                         string data
                 """);
 
+        Path coreFile = tempDir.resolve("nav2_core.ros2");
+        Files.writeString(coreFile, """
+                nav2_core:
+                  pluginbases:
+                    GlobalPlanner:
+                      class: "nav2_core::GlobalPlanner"
+                      header: "nav2_core/global_planner.hpp"
+                      loader: pluginlib
+                """);
+
         Path hostFile = tempDir.resolve("host_pkg.ros2");
         Files.writeString(hostFile, """
                 host_pkg:
@@ -192,7 +210,7 @@ class RosGlspPhase1PluginsTest {
                           type: String
                       pluginslots:
                         planner:
-                          base: "nav2_core::GlobalPlanner"
+                          base: nav2_core.GlobalPlanner
                           parameter: active_plugin
                 """);
 
@@ -203,8 +221,7 @@ class RosGlspPhase1PluginsTest {
                     planner_lib:
                       plugins:
                         MyPlanner:
-                          implements: "nav2_core::GlobalPlanner"
-                          loader: pluginlib
+                          implements: nav2_core.GlobalPlanner
                           publishers:
                             plugin_debug:
                               type: "std_msgs/msg/String"
@@ -227,7 +244,8 @@ class RosGlspPhase1PluginsTest {
                   nodes:
                     host_inst:
                       from: "host_pkg.host_node"
-                      plugins: ["plugin_pkg.MyPlanner"]
+                      slots:
+                        planner: [plugin_pkg.MyPlanner]
                     consumer_inst:
                       from: "consumer_pkg.consumer_node"
                 """);
@@ -256,7 +274,7 @@ class RosGlspPhase1PluginsTest {
 
         exec(s, new ApplyRosAutoConnectOperation(List.of(wantedId)));
         String saved = RosAstNodeModelSerializer.computeAndCommit(s.state).newText;
-        assertTrue(saved.contains("plugins: [\"plugin_pkg.MyPlanner\"]"), saved);
+        assertTrue(saved.contains("planner: [plugin_pkg.MyPlanner]"), saved);
         assertTrue(saved.contains("host_inst::plugin_debug"), saved);
     }
 

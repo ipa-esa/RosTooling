@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.tests;
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -94,7 +95,6 @@ import ros.AmentPackage;
 import ros.ExtensionBlock;
 import ros.Node;
 import ros.Plugin;
-import ros.PluginLoader;
 import ros.RosPackage;
 import system.RosNode;
 
@@ -343,7 +343,7 @@ public class PluginArchitecturePhase2Test {
 
                 for (var art : context.packageModel().getArtifact()) {
                     for (Plugin pl : art.getPlugins()) {
-                        if (pl.getLoader() == PluginLoader.EXTERNAL) {
+                        if (!PluginBases.isPluginlib(pl)) {
                             context.claimExternalPluginRegistration(pl);
                         }
                     }
@@ -414,6 +414,11 @@ public class PluginArchitecturePhase2Test {
         // 3. Valid model with external plugin, list > 4 items, nested map, and pub-> ref
         String validRos2Text = """
                 valid_audit:
+                  pluginbases:
+                    AuditBase:
+                      class: "valid_audit::AuditBase"
+                      header: "valid_audit/audit_base.hpp"
+                      loader: audit_loader
                   artifacts:
                     app_bin:
                       node: app_node
@@ -429,9 +434,10 @@ public class PluginArchitecturePhase2Test {
                         rules:
                           r1:
                             weight: 3
+                    ext_art:
                       plugins:
                         ExtAuditor:
-                          loader: external
+                          implements: valid_audit.AuditBase
                 """;
         Resource validRes = loadFromString(rs, "inmemory:/valid_audit.ros2", validRos2Text);
         EcoreUtil.resolveAll(rs);
@@ -635,15 +641,20 @@ public class PluginArchitecturePhase2Test {
         XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
         Resource res = loadFromString(rs, "inmemory:/conflict_pkg.ros2", """
                 conflict_pkg:
+                  pluginbases:
+                    ExtBase:
+                      class: "conflict_pkg::ExtBase"
+                      header: "conflict_pkg/ext_base.hpp"
+                      loader: test_loader
                   artifacts:
                     art1:
                       node: host
                     art2:
                       plugins:
                         ExtAlphaAndBeta:
-                          loader: external
+                          implements: conflict_pkg.ExtBase
                         ExtUnclaimed:
-                          loader: external
+                          implements: conflict_pkg.ExtBase
                 """);
         EcoreUtil.resolveAll(rs);
 
@@ -833,6 +844,11 @@ public class PluginArchitecturePhase2Test {
         XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
         Resource res = loadFromString(rs, "inmemory:/shield_pkg.ros2", """
                 shield_pkg:
+                  pluginbases:
+                    ShieldBase:
+                      class: "shield_core::ShieldBase"
+                      header: "shield_core/shield_base.hpp"
+                      loader: pluginlib
                   artifacts:
                     shield_cpp:
                       node: shield_cpp_node
@@ -841,7 +857,7 @@ public class PluginArchitecturePhase2Test {
                     shield_plugin_art:
                       plugins:
                         ShieldPlugin:
-                          loader: pluginlib
+                          implements: shield_pkg.ShieldBase
                 """);
         EcoreUtil.resolveAll(rs);
 

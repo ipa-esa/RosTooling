@@ -30,6 +30,7 @@ import system.RosSystemConnection;
 import system.RosTopicConnection;
 import system.Rossystem;
 import system.RossystemPackage;
+import system.SlotAttachment;
 import system.SubSystem;
 
 /**
@@ -111,6 +112,10 @@ public class RossystemAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseRosNode(RosNode object) {
 				return createRosNodeAdapter();
+			}
+			@Override
+			public Adapter caseSlotAttachment(SlotAttachment object) {
+				return createSlotAttachmentAdapter();
 			}
 			@Override
 			public Adapter caseRosInterface(RosInterface object) {
@@ -281,6 +286,20 @@ public class RossystemAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
     public Adapter createRosNodeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link system.SlotAttachment <em>Slot Attachment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see system.SlotAttachment
+	 * @generated
+	 */
+	public Adapter createSlotAttachmentAdapter() {
 		return null;
 	}
 

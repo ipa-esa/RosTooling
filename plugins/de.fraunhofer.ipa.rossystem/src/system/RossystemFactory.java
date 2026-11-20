@@ -58,6 +58,15 @@ public interface RossystemFactory extends EFactory {
     RosNode createRosNode();
 
     /**
+	 * Returns a new object of class '<em>Slot Attachment</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Slot Attachment</em>'.
+	 * @generated
+	 */
+	SlotAttachment createSlotAttachment();
+
+	/**
 	 * Returns a new object of class '<em>Ros Interface</em>'.
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

@@ -61,6 +61,7 @@ import ros.ParameterStructTypeMember;
 import ros.ParameterType;
 import ros.ParameterValue;
 import ros.Plugin;
+import ros.PluginBase;
 import ros.PluginSlot;
 import ros.PrivateNamespace;
 import ros.Publisher;
@@ -174,6 +175,10 @@ public class RosAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter casePlugin(Plugin object) {
 				return createPluginAdapter();
+			}
+			@Override
+			public Adapter casePluginBase(PluginBase object) {
+				return createPluginBaseAdapter();
 			}
 			@Override
 			public Adapter casePluginSlot(PluginSlot object) {
@@ -558,6 +563,20 @@ public class RosAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createPluginAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.PluginBase <em>Plugin Base</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.PluginBase
+	 * @generated
+	 */
+	public Adapter createPluginBaseAdapter() {
 		return null;
 	}
 

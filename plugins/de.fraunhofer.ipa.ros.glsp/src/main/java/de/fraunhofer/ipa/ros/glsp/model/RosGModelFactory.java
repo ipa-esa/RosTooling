@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.glsp.model;
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import de.fraunhofer.ipa.ros.glsp.RosModelTypes;
@@ -241,7 +242,7 @@ public class RosGModelFactory extends EMFGModelFactory {
             addInheritedHolderPorts(nodeId, originNode, explicitByOrigin, targetPorts, sourcePorts);
         }
         List<Plugin> resolvedPlugins = new ArrayList<>();
-        for (Plugin pl : rosNode.getPlugins()) {
+        for (Plugin pl : SlotAttachments.plugins(rosNode)) {
             Plugin resolved = pl;
             if (resolved != null && resolved.eIsProxy()) {
                 EObject r = EcoreUtil.resolve(resolved, rosNode);
@@ -883,8 +884,8 @@ public class RosGModelFactory extends EMFGModelFactory {
                             .addArgument("artifactId", getElementId(artifact))
                             .addArgument("nodeName", nullToEmpty(plugin.getName()))
                             .addArgument("isPlugin", true)
-                            .addArgument("implements", nullToEmpty(plugin.getImplements()))
-                            .addArgument("loader", plugin.getLoader() != null ? plugin.getLoader().getLiteral() : "pluginlib")
+                            .addArgument("implements", RosDslText.refText(null, plugin, ros.RosPackage.Literals.PLUGIN__IMPLEMENTS))
+                            .addArgument("loader", nullToEmpty(PluginBases.loaderOf(plugin)))
                             .addArgument("publishersCount", plugin.getPublisher().size())
                             .addArgument("subscribersCount", plugin.getSubscriber().size())
                             .addArgument("serviceserversCount", plugin.getServiceserver().size())
@@ -977,10 +978,12 @@ public class RosGModelFactory extends EMFGModelFactory {
             String fmt = slot.getValueFormat() != null ? slot.getValueFormat().getLiteral() : "class";
             items.add("{\"id\":\"" + escapeJson(getElementId(slot))
                     + "\",\"name\":\"" + escapeJson(nullToEmpty(slot.getName()))
-                    + "\",\"base\":\"" + escapeJson(nullToEmpty(slot.getBase()))
+                    + "\",\"base\":\"" + escapeJson(RosDslText.refText(null, slot, ros.RosPackage.Literals.PLUGIN_SLOT__BASE))
                     + "\",\"parameter\":\"" + escapeJson(nullToEmpty(slot.getParameter()))
                     + "\",\"format\":\"" + escapeJson(fmt)
-                    + "\",\"default\":\"" + escapeJson(nullToEmpty(slot.getDefaultPlugin())) + "\"}");
+                    + "\",\"multiple\":" + slot.isMultiple()
+                    + ",\"default\":\"" + escapeJson(slot.getDefaultPlugin() == null ? ""
+                            : RosDslText.refText(null, slot, ros.RosPackage.Literals.PLUGIN_SLOT__DEFAULT_PLUGIN)) + "\"}");
         }
         return "[" + String.join(",", items) + "]";
     }

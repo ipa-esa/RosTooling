@@ -32,7 +32,7 @@ import ros.Package;
 import ros.PackageSet;
 import ros.Parameter;
 import ros.Plugin;
-import ros.PluginLoader;
+import ros.PluginBase;
 import ros.PluginSlot;
 import ros.PluginSlotValueFormat;
 import ros.QualityOfService;
@@ -759,6 +759,12 @@ final class RosPackageSetSerializer {
         if (pkg.getFromGitRepo() != null && !pkg.getFromGitRepo().isBlank()) {
             sb.append("  fromGitRepo: ").append(RosDslText.quote(pkg.getFromGitRepo())).append('\n');
         }
+        if (!pkg.getPluginBases().isEmpty()) {
+            sb.append("  pluginbases:\n");
+            for (PluginBase base : pkg.getPluginBases()) {
+                sb.append(renderPluginBase(base, "    "));
+            }
+        }
         if (!pkg.getArtifact().isEmpty()) {
             sb.append("  artifacts:\n");
             for (Artifact art : pkg.getArtifact()) {
@@ -816,17 +822,35 @@ final class RosPackageSetSerializer {
         return sb.toString();
     }
 
+    private String renderPluginBase(final PluginBase base, final String indent) {
+        StringBuilder sb = new StringBuilder();
+        String inner = indent + "  ";
+        sb.append(indent).append(base.getName()).append(":\n");
+        sb.append(inner).append("class: ").append(RosDslText.quote(base.getClassName())).append('\n');
+        sb.append(inner).append("header: ").append(RosDslText.quote(base.getHeader())).append('\n');
+        sb.append(inner).append("loader: ").append(base.getLoader()).append('\n');
+        return sb.toString();
+    }
+
     private String renderPluginSlot(final PluginSlot slot, final String indent) {
         StringBuilder sb = new StringBuilder();
         String inner = indent + "  ";
         sb.append(indent).append(slot.getName()).append(":\n");
-        sb.append(inner).append("base: ").append(RosDslText.quote(slot.getBase())).append('\n');
+        sb.append(inner).append("base: ")
+                .append(RosDslText.qualifiedRefLiteral(RosDslText.refText(state, slot, RosPackage.Literals.PLUGIN_SLOT__BASE)))
+                .append('\n');
         sb.append(inner).append("parameter: ").append(slot.getParameter()).append('\n');
         if (slot.getValueFormat() == PluginSlotValueFormat.LIBRARY) {
             sb.append(inner).append("format: library\n");
         }
-        if (slot.getDefaultPlugin() != null && !slot.getDefaultPlugin().isBlank()) {
-            sb.append(inner).append("default: ").append(RosDslText.quote(slot.getDefaultPlugin())).append('\n');
+        if (slot.isMultiple()) {
+            sb.append(inner).append("multiple: true\n");
+        }
+        if (slot.getDefaultPlugin() != null) {
+            sb.append(inner).append("default: ")
+                    .append(RosDslText.qualifiedRefLiteral(
+                            RosDslText.refText(state, slot, RosPackage.Literals.PLUGIN_SLOT__DEFAULT_PLUGIN)))
+                    .append('\n');
         }
         return sb.toString();
     }
@@ -835,12 +859,9 @@ final class RosPackageSetSerializer {
         StringBuilder sb = new StringBuilder();
         String inner = indent + "  ";
         sb.append(indent).append(plugin.getName()).append(":\n");
-        if (plugin.getImplements() != null && !plugin.getImplements().isBlank()) {
-            sb.append(inner).append("implements: ").append(RosDslText.quote(plugin.getImplements())).append('\n');
-        }
-        if (plugin.getLoader() == PluginLoader.EXTERNAL) {
-            sb.append(inner).append("loader: external\n");
-        }
+        sb.append(inner).append("implements: ")
+                .append(RosDslText.qualifiedRefLiteral(RosDslText.refText(state, plugin, RosPackage.Literals.PLUGIN__IMPLEMENTS)))
+                .append('\n');
         for (String section : NODE_SECTIONS) {
             List<InterfaceType> items = itemsOfSection(plugin, section);
             if (items.isEmpty()) {

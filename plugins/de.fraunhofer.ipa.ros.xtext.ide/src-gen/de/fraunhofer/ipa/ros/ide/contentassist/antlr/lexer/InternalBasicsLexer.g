@@ -19,17 +19,33 @@ GlobalNamespace : 'GlobalNamespace';
 
 ParameterAny : 'ParameterAny';
 
+Pluginbases : 'pluginbases:';
+
+Pluginslots : 'pluginslots:';
+
+Implements : 'implements:';
+
+Active_in : 'active_in:';
+
+Lifecycle : 'lifecycle:';
+
+Parameter : 'parameter:';
+
 GraphName : 'GraphName';
 
 Float32_1 : 'float32[]';
 
 Float64_1 : 'float64[]';
 
+Multiple : 'multiple:';
+
 Default : 'default:';
 
 Duration : 'duration';
 
 Feedback : 'feedback';
+
+Plugins : 'plugins:';
 
 String_2 : 'string[]';
 
@@ -47,11 +63,17 @@ Float32 : 'float32';
 
 Float64 : 'float64';
 
+Format : 'format:';
+
+Header_1 : 'header:';
+
 Int16_1 : 'int16[]';
 
 Int32_1 : 'int32[]';
 
 Int64_1 : 'int64[]';
+
+Loader : 'loader:';
 
 Message : 'message';
 
@@ -79,9 +101,13 @@ Byte_1 : 'byte[]';
 
 Char_1 : 'char[]';
 
+Class : 'class:';
+
 Int8_1 : 'int8[]';
 
 Result : 'result';
+
+Slots : 'slots:';
 
 String_1 : 'string';
 
@@ -94,6 +120,8 @@ Uint64 : 'uint64';
 Value_1 : 'value:';
 
 Array : 'Array';
+
+Base : 'base:';
 
 Int16 : 'int16';
 

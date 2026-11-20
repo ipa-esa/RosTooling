@@ -424,13 +424,13 @@ int PROCESS_FEATURE_COUNT = 3;
     int ROS_NODE__ROSPARAMETERS = COMPONENT_FEATURE_COUNT + 4;
 
     /**
-	 * The feature id for the '<em><b>Plugins</b></em>' reference list.
+	 * The feature id for the '<em><b>Slots</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ROS_NODE__PLUGINS = COMPONENT_FEATURE_COUNT + 5;
+	int ROS_NODE__SLOTS = COMPONENT_FEATURE_COUNT + 5;
 
 				/**
 	 * The number of structural features of the '<em>Ros Node</em>' class.
@@ -451,6 +451,52 @@ int PROCESS_FEATURE_COUNT = 3;
     int ROS_NODE_OPERATION_COUNT = COMPONENT_OPERATION_COUNT + 0;
 
     /**
+	 * The meta object id for the '{@link system.impl.SlotAttachmentImpl <em>Slot Attachment</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see system.impl.SlotAttachmentImpl
+	 * @see system.impl.RossystemPackageImpl#getSlotAttachment()
+	 * @generated
+	 */
+	int SLOT_ATTACHMENT = 6;
+
+	/**
+	 * The feature id for the '<em><b>Slot</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SLOT_ATTACHMENT__SLOT = 0;
+
+	/**
+	 * The feature id for the '<em><b>Plugins</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SLOT_ATTACHMENT__PLUGINS = 1;
+
+	/**
+	 * The number of structural features of the '<em>Slot Attachment</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SLOT_ATTACHMENT_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Slot Attachment</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SLOT_ATTACHMENT_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link system.impl.RosInterfaceImpl <em>Ros Interface</em>}' class.
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -458,7 +504,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosInterface()
 	 * @generated
 	 */
-    int ROS_INTERFACE = 6;
+	int ROS_INTERFACE = 7;
 
     /**
 	 * The feature id for the '<em><b>Extensions</b></em>' containment reference list.
@@ -513,7 +559,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getInterfaceReference()
 	 * @generated
 	 */
-    int INTERFACE_REFERENCE = 7;
+	int INTERFACE_REFERENCE = 8;
 
     /**
 	 * The number of structural features of the '<em>Interface Reference</em>' class.
@@ -541,7 +587,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosPublisherReference()
 	 * @generated
 	 */
-    int ROS_PUBLISHER_REFERENCE = 8;
+	int ROS_PUBLISHER_REFERENCE = 9;
 
     /**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -578,7 +624,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosSubscriberReference()
 	 * @generated
 	 */
-    int ROS_SUBSCRIBER_REFERENCE = 9;
+	int ROS_SUBSCRIBER_REFERENCE = 10;
 
     /**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -615,7 +661,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosServiceServerReference()
 	 * @generated
 	 */
-    int ROS_SERVICE_SERVER_REFERENCE = 10;
+	int ROS_SERVICE_SERVER_REFERENCE = 11;
 
     /**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -652,7 +698,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosServiceClientReference()
 	 * @generated
 	 */
-    int ROS_SERVICE_CLIENT_REFERENCE = 11;
+	int ROS_SERVICE_CLIENT_REFERENCE = 12;
 
     /**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -689,7 +735,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosActionServerReference()
 	 * @generated
 	 */
-    int ROS_ACTION_SERVER_REFERENCE = 12;
+	int ROS_ACTION_SERVER_REFERENCE = 13;
 
     /**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -726,7 +772,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosActionClientReference()
 	 * @generated
 	 */
-    int ROS_ACTION_CLIENT_REFERENCE = 13;
+	int ROS_ACTION_CLIENT_REFERENCE = 14;
 
     /**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -763,7 +809,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosParameterReference()
 	 * @generated
 	 */
-    int ROS_PARAMETER_REFERENCE = 14;
+	int ROS_PARAMETER_REFERENCE = 15;
 
     /**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -800,7 +846,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosParameter()
 	 * @generated
 	 */
-    int ROS_PARAMETER = 15;
+	int ROS_PARAMETER = 16;
 
     /**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -855,7 +901,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosSystemConnection()
 	 * @generated
 	 */
-    int ROS_SYSTEM_CONNECTION = 16;
+	int ROS_SYSTEM_CONNECTION = 17;
 
                 /**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -901,7 +947,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosConnection()
 	 * @generated
 	 */
-    int ROS_CONNECTION = 17;
+	int ROS_CONNECTION = 18;
 
     /**
 	 * The number of structural features of the '<em>Ros Connection</em>' class.
@@ -930,7 +976,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosTopicConnection()
 	 * @generated
 	 */
-    int ROS_TOPIC_CONNECTION = 18;
+	int ROS_TOPIC_CONNECTION = 19;
 
                 /**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -976,7 +1022,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosServiceConnection()
 	 * @generated
 	 */
-    int ROS_SERVICE_CONNECTION = 19;
+	int ROS_SERVICE_CONNECTION = 20;
 
                 /**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -1022,7 +1068,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getRosActionConnection()
 	 * @generated
 	 */
-    int ROS_ACTION_CONNECTION = 20;
+	int ROS_ACTION_CONNECTION = 21;
 
                 /**
 	 * The feature id for the '<em><b>From</b></em>' reference.
@@ -1069,7 +1115,7 @@ int PROCESS_FEATURE_COUNT = 3;
 	 * @see system.impl.RossystemPackageImpl#getSubSystem()
 	 * @generated
 	 */
-    int SUB_SYSTEM = 21;
+	int SUB_SYSTEM = 22;
 
                                                                 /**
 	 * The feature id for the '<em><b>Extensions</b></em>' containment reference list.
@@ -1323,15 +1369,47 @@ int PROCESS_FEATURE_COUNT = 3;
     EReference getRosNode_Rosparameters();
 
     /**
-	 * Returns the meta object for the reference list '{@link system.RosNode#getPlugins <em>Plugins</em>}'.
+	 * Returns the meta object for the containment reference list '{@link system.RosNode#getSlots <em>Slots</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Plugins</em>'.
-	 * @see system.RosNode#getPlugins()
+	 * @return the meta object for the containment reference list '<em>Slots</em>'.
+	 * @see system.RosNode#getSlots()
 	 * @see #getRosNode()
 	 * @generated
 	 */
-	EReference getRosNode_Plugins();
+	EReference getRosNode_Slots();
+
+	/**
+	 * Returns the meta object for class '{@link system.SlotAttachment <em>Slot Attachment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Slot Attachment</em>'.
+	 * @see system.SlotAttachment
+	 * @generated
+	 */
+	EClass getSlotAttachment();
+
+	/**
+	 * Returns the meta object for the reference '{@link system.SlotAttachment#getSlot <em>Slot</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Slot</em>'.
+	 * @see system.SlotAttachment#getSlot()
+	 * @see #getSlotAttachment()
+	 * @generated
+	 */
+	EReference getSlotAttachment_Slot();
+
+	/**
+	 * Returns the meta object for the reference list '{@link system.SlotAttachment#getPlugins <em>Plugins</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Plugins</em>'.
+	 * @see system.SlotAttachment#getPlugins()
+	 * @see #getSlotAttachment()
+	 * @generated
+	 */
+	EReference getSlotAttachment_Plugins();
 
 				/**
 	 * Returns the meta object for class '{@link system.RosInterface <em>Ros Interface</em>}'.
@@ -1920,12 +1998,38 @@ int PROCESS_FEATURE_COUNT = 3;
         EReference ROS_NODE__ROSPARAMETERS = eINSTANCE.getRosNode_Rosparameters();
 
         /**
+		 * The meta object literal for the '<em><b>Slots</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ROS_NODE__SLOTS = eINSTANCE.getRosNode_Slots();
+
+		/**
+		 * The meta object literal for the '{@link system.impl.SlotAttachmentImpl <em>Slot Attachment</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see system.impl.SlotAttachmentImpl
+		 * @see system.impl.RossystemPackageImpl#getSlotAttachment()
+		 * @generated
+		 */
+		EClass SLOT_ATTACHMENT = eINSTANCE.getSlotAttachment();
+
+		/**
+		 * The meta object literal for the '<em><b>Slot</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SLOT_ATTACHMENT__SLOT = eINSTANCE.getSlotAttachment_Slot();
+
+		/**
 		 * The meta object literal for the '<em><b>Plugins</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ROS_NODE__PLUGINS = eINSTANCE.getRosNode_Plugins();
+		EReference SLOT_ATTACHMENT__PLUGINS = eINSTANCE.getSlotAttachment_Plugins();
 
 								/**
 		 * The meta object literal for the '{@link system.impl.RosInterfaceImpl <em>Ros Interface</em>}' class.

@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link ros.PluginSlot#getBase <em>Base</em>}</li>
  *   <li>{@link ros.PluginSlot#getParameter <em>Parameter</em>}</li>
  *   <li>{@link ros.PluginSlot#getDefaultPlugin <em>Default Plugin</em>}</li>
+ *   <li>{@link ros.PluginSlot#isMultiple <em>Multiple</em>}</li>
  *   <li>{@link ros.PluginSlot#getValueFormat <em>Value Format</em>}</li>
  * </ul>
  *
@@ -48,26 +49,26 @@ public interface PluginSlot extends EObject {
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Base</b></em>' attribute.
+	 * Returns the value of the '<em><b>Base</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Base</em>' attribute.
-	 * @see #setBase(String)
+	 * @return the value of the '<em>Base</em>' reference.
+	 * @see #setBase(PluginBase)
 	 * @see ros.RosPackage#getPluginSlot_Base()
 	 * @model required="true"
 	 * @generated
 	 */
-	String getBase();
+	PluginBase getBase();
 
 	/**
-	 * Sets the value of the '{@link ros.PluginSlot#getBase <em>Base</em>}' attribute.
+	 * Sets the value of the '{@link ros.PluginSlot#getBase <em>Base</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Base</em>' attribute.
+	 * @param value the new value of the '<em>Base</em>' reference.
 	 * @see #getBase()
 	 * @generated
 	 */
-	void setBase(String value);
+	void setBase(PluginBase value);
 
 	/**
 	 * Returns the value of the '<em><b>Parameter</b></em>' attribute.
@@ -92,26 +93,49 @@ public interface PluginSlot extends EObject {
 	void setParameter(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Default Plugin</b></em>' attribute.
+	 * Returns the value of the '<em><b>Default Plugin</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Default Plugin</em>' attribute.
-	 * @see #setDefaultPlugin(String)
+	 * @return the value of the '<em>Default Plugin</em>' reference.
+	 * @see #setDefaultPlugin(Plugin)
 	 * @see ros.RosPackage#getPluginSlot_DefaultPlugin()
 	 * @model
 	 * @generated
 	 */
-	String getDefaultPlugin();
+	Plugin getDefaultPlugin();
 
 	/**
-	 * Sets the value of the '{@link ros.PluginSlot#getDefaultPlugin <em>Default Plugin</em>}' attribute.
+	 * Sets the value of the '{@link ros.PluginSlot#getDefaultPlugin <em>Default Plugin</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Default Plugin</em>' attribute.
+	 * @param value the new value of the '<em>Default Plugin</em>' reference.
 	 * @see #getDefaultPlugin()
 	 * @generated
 	 */
-	void setDefaultPlugin(String value);
+	void setDefaultPlugin(Plugin value);
+
+	/**
+	 * Returns the value of the '<em><b>Multiple</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Multiple</em>' attribute.
+	 * @see #setMultiple(boolean)
+	 * @see ros.RosPackage#getPluginSlot_Multiple()
+	 * @model default="false"
+	 * @generated
+	 */
+	boolean isMultiple();
+
+	/**
+	 * Sets the value of the '{@link ros.PluginSlot#isMultiple <em>Multiple</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Multiple</em>' attribute.
+	 * @see #isMultiple()
+	 * @generated
+	 */
+	void setMultiple(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Value Format</b></em>' attribute.

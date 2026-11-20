@@ -5,10 +5,13 @@ package ros.impl;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
+import ros.Plugin;
+import ros.PluginBase;
 import ros.PluginSlot;
 import ros.PluginSlotValueFormat;
 import ros.RosPackage;
@@ -25,6 +28,7 @@ import ros.RosPackage;
  *   <li>{@link ros.impl.PluginSlotImpl#getBase <em>Base</em>}</li>
  *   <li>{@link ros.impl.PluginSlotImpl#getParameter <em>Parameter</em>}</li>
  *   <li>{@link ros.impl.PluginSlotImpl#getDefaultPlugin <em>Default Plugin</em>}</li>
+ *   <li>{@link ros.impl.PluginSlotImpl#isMultiple <em>Multiple</em>}</li>
  *   <li>{@link ros.impl.PluginSlotImpl#getValueFormat <em>Value Format</em>}</li>
  * </ul>
  *
@@ -52,24 +56,14 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getBase() <em>Base</em>}' attribute.
+	 * The cached value of the '{@link #getBase() <em>Base</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getBase()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String BASE_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getBase() <em>Base</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getBase()
-	 * @generated
-	 * @ordered
-	 */
-	protected String base = BASE_EDEFAULT;
+	protected PluginBase base;
 
 	/**
 	 * The default value of the '{@link #getParameter() <em>Parameter</em>}' attribute.
@@ -92,24 +86,34 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 	protected String parameter = PARAMETER_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDefaultPlugin() <em>Default Plugin</em>}' attribute.
+	 * The cached value of the '{@link #getDefaultPlugin() <em>Default Plugin</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getDefaultPlugin()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String DEFAULT_PLUGIN_EDEFAULT = null;
+	protected Plugin defaultPlugin;
 
 	/**
-	 * The cached value of the '{@link #getDefaultPlugin() <em>Default Plugin</em>}' attribute.
+	 * The default value of the '{@link #isMultiple() <em>Multiple</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDefaultPlugin()
+	 * @see #isMultiple()
 	 * @generated
 	 * @ordered
 	 */
-	protected String defaultPlugin = DEFAULT_PLUGIN_EDEFAULT;
+	protected static final boolean MULTIPLE_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isMultiple() <em>Multiple</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isMultiple()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean multiple = MULTIPLE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getValueFormat() <em>Value Format</em>}' attribute.
@@ -179,7 +183,24 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 	 * @generated
 	 */
 	@Override
-	public String getBase() {
+	public PluginBase getBase() {
+		if (base != null && base.eIsProxy()) {
+			InternalEObject oldBase = (InternalEObject)base;
+			base = (PluginBase)eResolveProxy(oldBase);
+			if (base != oldBase) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RosPackage.PLUGIN_SLOT__BASE, oldBase, base));
+			}
+		}
+		return base;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PluginBase basicGetBase() {
 		return base;
 	}
 
@@ -189,8 +210,8 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 	 * @generated
 	 */
 	@Override
-	public void setBase(String newBase) {
-		String oldBase = base;
+	public void setBase(PluginBase newBase) {
+		PluginBase oldBase = base;
 		base = newBase;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, RosPackage.PLUGIN_SLOT__BASE, oldBase, base));
@@ -225,7 +246,24 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 	 * @generated
 	 */
 	@Override
-	public String getDefaultPlugin() {
+	public Plugin getDefaultPlugin() {
+		if (defaultPlugin != null && defaultPlugin.eIsProxy()) {
+			InternalEObject oldDefaultPlugin = (InternalEObject)defaultPlugin;
+			defaultPlugin = (Plugin)eResolveProxy(oldDefaultPlugin);
+			if (defaultPlugin != oldDefaultPlugin) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN, oldDefaultPlugin, defaultPlugin));
+			}
+		}
+		return defaultPlugin;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Plugin basicGetDefaultPlugin() {
 		return defaultPlugin;
 	}
 
@@ -235,11 +273,34 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 	 * @generated
 	 */
 	@Override
-	public void setDefaultPlugin(String newDefaultPlugin) {
-		String oldDefaultPlugin = defaultPlugin;
+	public void setDefaultPlugin(Plugin newDefaultPlugin) {
+		Plugin oldDefaultPlugin = defaultPlugin;
 		defaultPlugin = newDefaultPlugin;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN, oldDefaultPlugin, defaultPlugin));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isMultiple() {
+		return multiple;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setMultiple(boolean newMultiple) {
+		boolean oldMultiple = multiple;
+		multiple = newMultiple;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RosPackage.PLUGIN_SLOT__MULTIPLE, oldMultiple, multiple));
 	}
 
 	/**
@@ -276,11 +337,15 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 			case RosPackage.PLUGIN_SLOT__NAME:
 				return getName();
 			case RosPackage.PLUGIN_SLOT__BASE:
-				return getBase();
+				if (resolve) return getBase();
+				return basicGetBase();
 			case RosPackage.PLUGIN_SLOT__PARAMETER:
 				return getParameter();
 			case RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN:
-				return getDefaultPlugin();
+				if (resolve) return getDefaultPlugin();
+				return basicGetDefaultPlugin();
+			case RosPackage.PLUGIN_SLOT__MULTIPLE:
+				return isMultiple();
 			case RosPackage.PLUGIN_SLOT__VALUE_FORMAT:
 				return getValueFormat();
 		}
@@ -299,13 +364,16 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 				setName((String)newValue);
 				return;
 			case RosPackage.PLUGIN_SLOT__BASE:
-				setBase((String)newValue);
+				setBase((PluginBase)newValue);
 				return;
 			case RosPackage.PLUGIN_SLOT__PARAMETER:
 				setParameter((String)newValue);
 				return;
 			case RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN:
-				setDefaultPlugin((String)newValue);
+				setDefaultPlugin((Plugin)newValue);
+				return;
+			case RosPackage.PLUGIN_SLOT__MULTIPLE:
+				setMultiple((Boolean)newValue);
 				return;
 			case RosPackage.PLUGIN_SLOT__VALUE_FORMAT:
 				setValueFormat((PluginSlotValueFormat)newValue);
@@ -326,13 +394,16 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 				setName(NAME_EDEFAULT);
 				return;
 			case RosPackage.PLUGIN_SLOT__BASE:
-				setBase(BASE_EDEFAULT);
+				setBase((PluginBase)null);
 				return;
 			case RosPackage.PLUGIN_SLOT__PARAMETER:
 				setParameter(PARAMETER_EDEFAULT);
 				return;
 			case RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN:
-				setDefaultPlugin(DEFAULT_PLUGIN_EDEFAULT);
+				setDefaultPlugin((Plugin)null);
+				return;
+			case RosPackage.PLUGIN_SLOT__MULTIPLE:
+				setMultiple(MULTIPLE_EDEFAULT);
 				return;
 			case RosPackage.PLUGIN_SLOT__VALUE_FORMAT:
 				setValueFormat(VALUE_FORMAT_EDEFAULT);
@@ -352,11 +423,13 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 			case RosPackage.PLUGIN_SLOT__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case RosPackage.PLUGIN_SLOT__BASE:
-				return BASE_EDEFAULT == null ? base != null : !BASE_EDEFAULT.equals(base);
+				return base != null;
 			case RosPackage.PLUGIN_SLOT__PARAMETER:
 				return PARAMETER_EDEFAULT == null ? parameter != null : !PARAMETER_EDEFAULT.equals(parameter);
 			case RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN:
-				return DEFAULT_PLUGIN_EDEFAULT == null ? defaultPlugin != null : !DEFAULT_PLUGIN_EDEFAULT.equals(defaultPlugin);
+				return defaultPlugin != null;
+			case RosPackage.PLUGIN_SLOT__MULTIPLE:
+				return multiple != MULTIPLE_EDEFAULT;
 			case RosPackage.PLUGIN_SLOT__VALUE_FORMAT:
 				return valueFormat != VALUE_FORMAT_EDEFAULT;
 		}
@@ -375,12 +448,10 @@ public class PluginSlotImpl extends MinimalEObjectImpl.Container implements Plug
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: ");
 		result.append(name);
-		result.append(", base: ");
-		result.append(base);
 		result.append(", parameter: ");
 		result.append(parameter);
-		result.append(", defaultPlugin: ");
-		result.append(defaultPlugin);
+		result.append(", multiple: ");
+		result.append(multiple);
 		result.append(", valueFormat: ");
 		result.append(valueFormat);
 		result.append(')');

@@ -35,13 +35,18 @@ public class BasicsParser extends AbstractContentAssistParser {
 		private static void init(ImmutableMap.Builder<AbstractElement, String> builder, BasicsGrammarAccess grammarAccess) {
 			builder.put(grammarAccess.getNamespaceAccess().getAlternatives(), "rule__Namespace__Alternatives");
 			builder.put(grammarAccess.getRosParamNamesAccess().getAlternatives(), "rule__RosParamNames__Alternatives");
+			builder.put(grammarAccess.getParameterAccess().getAlternatives_1(), "rule__Parameter__Alternatives_1");
 			builder.put(grammarAccess.getParameterTypeAccess().getAlternatives(), "rule__ParameterType__Alternatives");
 			builder.put(grammarAccess.getParameterValueAccess().getAlternatives(), "rule__ParameterValue__Alternatives");
+			builder.put(grammarAccess.getParameterStructMemberAccess().getAlternatives_0(), "rule__ParameterStructMember__Alternatives_0");
 			builder.put(grammarAccess.getMessagePartAccess().getDataAlternatives_1_0(), "rule__MessagePart__DataAlternatives_1_0");
 			builder.put(grammarAccess.getAbstractTypeAccess().getAlternatives(), "rule__AbstractType__Alternatives");
 			builder.put(grammarAccess.getKEYWORDAccess().getAlternatives(), "rule__KEYWORD__Alternatives");
 			builder.put(grammarAccess.getEStringAccess().getAlternatives(), "rule__EString__Alternatives");
 			builder.put(grammarAccess.getRosNamesAccess().getAlternatives(), "rule__RosNames__Alternatives");
+			builder.put(grammarAccess.getAddedKeywordNameAccess().getAlternatives(), "rule__AddedKeywordName__Alternatives");
+			builder.put(grammarAccess.getQualifiedRefAccess().getAlternatives(), "rule__QualifiedRef__Alternatives");
+			builder.put(grammarAccess.getQualifiedRefAccess().getAlternatives_1_1(), "rule__QualifiedRef__Alternatives_1_1");
 			builder.put(grammarAccess.getExtensionBlockAccess().getAlternatives_4(), "rule__ExtensionBlock__Alternatives_4");
 			builder.put(grammarAccess.getExtensionEntryAccess().getAlternatives_1(), "rule__ExtensionEntry__Alternatives_1");
 			builder.put(grammarAccess.getExtensionKeyAccess().getAlternatives(), "rule__ExtensionKey__Alternatives");
@@ -59,8 +64,9 @@ public class BasicsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getPrivateNamespaceAccess().getGroup_2(), "rule__PrivateNamespace__Group_2__0");
 			builder.put(grammarAccess.getPrivateNamespaceAccess().getGroup_2_2(), "rule__PrivateNamespace__Group_2_2__0");
 			builder.put(grammarAccess.getParameterAccess().getGroup(), "rule__Parameter__Group__0");
-			builder.put(grammarAccess.getParameterAccess().getGroup_4(), "rule__Parameter__Group_4__0");
-			builder.put(grammarAccess.getParameterAccess().getGroup_7(), "rule__Parameter__Group_7__0");
+			builder.put(grammarAccess.getParameterAccess().getGroup_1_0(), "rule__Parameter__Group_1_0__0");
+			builder.put(grammarAccess.getParameterAccess().getGroup_3(), "rule__Parameter__Group_3__0");
+			builder.put(grammarAccess.getParameterAccess().getGroup_6(), "rule__Parameter__Group_6__0");
 			builder.put(grammarAccess.getParameterListTypeAccess().getGroup(), "rule__ParameterListType__Group__0");
 			builder.put(grammarAccess.getParameterListTypeAccess().getGroup_4(), "rule__ParameterListType__Group_4__0");
 			builder.put(grammarAccess.getParameterStructTypeAccess().getGroup(), "rule__ParameterStructType__Group__0");
@@ -88,6 +94,7 @@ public class BasicsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getParameterStructAccess().getGroup(), "rule__ParameterStruct__Group__0");
 			builder.put(grammarAccess.getParameterStructAccess().getGroup_1(), "rule__ParameterStruct__Group_1__0");
 			builder.put(grammarAccess.getParameterStructMemberAccess().getGroup(), "rule__ParameterStructMember__Group__0");
+			builder.put(grammarAccess.getParameterStructMemberAccess().getGroup_0_0(), "rule__ParameterStructMember__Group_0_0__0");
 			builder.put(grammarAccess.getParameterStructTypeMemberAccess().getGroup(), "rule__ParameterStructTypeMember__Group__0");
 			builder.put(grammarAccess.getMessagePartAccess().getGroup(), "rule__MessagePart__Group__0");
 			builder.put(grammarAccess.getBoolAccess().getGroup(), "rule__Bool__Group__0");
@@ -122,6 +129,9 @@ public class BasicsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getCharArrayAccess().getGroup(), "rule__CharArray__Group__0");
 			builder.put(grammarAccess.getHeaderAccess().getGroup(), "rule__Header__Group__0");
 			builder.put(grammarAccess.getArraySpecRefAccess().getGroup(), "rule__ArraySpecRef__Group__0");
+			builder.put(grammarAccess.getQualifiedRefAccess().getGroup_1(), "rule__QualifiedRef__Group_1__0");
+			builder.put(grammarAccess.getQualifiedRefAccess().getGroup_1_1_0(), "rule__QualifiedRef__Group_1_1_0__0");
+			builder.put(grammarAccess.getQualifiedRefAccess().getGroup_1_1_1(), "rule__QualifiedRef__Group_1_1_1__0");
 			builder.put(grammarAccess.getExtensionBlockAccess().getGroup(), "rule__ExtensionBlock__Group__0");
 			builder.put(grammarAccess.getExtensionBlockAccess().getGroup_4_0(), "rule__ExtensionBlock__Group_4_0__0");
 			builder.put(grammarAccess.getExtensionBlockAccess().getGroup_4_1(), "rule__ExtensionBlock__Group_4_1__0");
@@ -146,10 +156,11 @@ public class BasicsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getRelativeNamespace_ImplAccess().getPartsAssignment_2_2_1(), "rule__RelativeNamespace_Impl__PartsAssignment_2_2_1");
 			builder.put(grammarAccess.getPrivateNamespaceAccess().getPartsAssignment_2_1(), "rule__PrivateNamespace__PartsAssignment_2_1");
 			builder.put(grammarAccess.getPrivateNamespaceAccess().getPartsAssignment_2_2_1(), "rule__PrivateNamespace__PartsAssignment_2_2_1");
-			builder.put(grammarAccess.getParameterAccess().getNameAssignment_1(), "rule__Parameter__NameAssignment_1");
-			builder.put(grammarAccess.getParameterAccess().getNamespaceAssignment_4_1(), "rule__Parameter__NamespaceAssignment_4_1");
-			builder.put(grammarAccess.getParameterAccess().getTypeAssignment_6(), "rule__Parameter__TypeAssignment_6");
-			builder.put(grammarAccess.getParameterAccess().getValueAssignment_7_1(), "rule__Parameter__ValueAssignment_7_1");
+			builder.put(grammarAccess.getParameterAccess().getNameAssignment_1_0_0(), "rule__Parameter__NameAssignment_1_0_0");
+			builder.put(grammarAccess.getParameterAccess().getNameAssignment_1_1(), "rule__Parameter__NameAssignment_1_1");
+			builder.put(grammarAccess.getParameterAccess().getNamespaceAssignment_3_1(), "rule__Parameter__NamespaceAssignment_3_1");
+			builder.put(grammarAccess.getParameterAccess().getTypeAssignment_5(), "rule__Parameter__TypeAssignment_5");
+			builder.put(grammarAccess.getParameterAccess().getValueAssignment_6_1(), "rule__Parameter__ValueAssignment_6_1");
 			builder.put(grammarAccess.getParameterListTypeAccess().getSequenceAssignment_3(), "rule__ParameterListType__SequenceAssignment_3");
 			builder.put(grammarAccess.getParameterListTypeAccess().getSequenceAssignment_4_1(), "rule__ParameterListType__SequenceAssignment_4_1");
 			builder.put(grammarAccess.getParameterStructTypeAccess().getParameterstructypetmemberAssignment_3(), "rule__ParameterStructType__ParameterstructypetmemberAssignment_3");
@@ -173,8 +184,9 @@ public class BasicsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getParameterBooleanAccess().getValueAssignment(), "rule__ParameterBoolean__ValueAssignment");
 			builder.put(grammarAccess.getParameterStructAccess().getValueAssignment_1_2(), "rule__ParameterStruct__ValueAssignment_1_2");
 			builder.put(grammarAccess.getParameterDateAccess().getValueAssignment(), "rule__ParameterDate__ValueAssignment");
-			builder.put(grammarAccess.getParameterStructMemberAccess().getNameAssignment_0(), "rule__ParameterStructMember__NameAssignment_0");
-			builder.put(grammarAccess.getParameterStructMemberAccess().getValueAssignment_2(), "rule__ParameterStructMember__ValueAssignment_2");
+			builder.put(grammarAccess.getParameterStructMemberAccess().getNameAssignment_0_0_0(), "rule__ParameterStructMember__NameAssignment_0_0_0");
+			builder.put(grammarAccess.getParameterStructMemberAccess().getNameAssignment_0_1(), "rule__ParameterStructMember__NameAssignment_0_1");
+			builder.put(grammarAccess.getParameterStructMemberAccess().getValueAssignment_1(), "rule__ParameterStructMember__ValueAssignment_1");
 			builder.put(grammarAccess.getParameterStructTypeMemberAccess().getNameAssignment_0(), "rule__ParameterStructTypeMember__NameAssignment_0");
 			builder.put(grammarAccess.getParameterStructTypeMemberAccess().getTypeAssignment_1(), "rule__ParameterStructTypeMember__TypeAssignment_1");
 			builder.put(grammarAccess.getMessagePartAccess().getTypeAssignment_0(), "rule__MessagePart__TypeAssignment_0");
@@ -187,6 +199,7 @@ public class BasicsParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getExtensionBlockAccess().getEntriesAssignment_4_1_1_1_1(), "rule__ExtensionBlock__EntriesAssignment_4_1_1_1_1");
 			builder.put(grammarAccess.getExtensionEntryAccess().getKeyAssignment_1_0_0(), "rule__ExtensionEntry__KeyAssignment_1_0_0");
 			builder.put(grammarAccess.getExtensionEntryAccess().getKeyAssignment_1_1(), "rule__ExtensionEntry__KeyAssignment_1_1");
+			builder.put(grammarAccess.getExtensionEntryAccess().getKeyAssignment_1_2(), "rule__ExtensionEntry__KeyAssignment_1_2");
 			builder.put(grammarAccess.getExtensionEntryAccess().getValueAssignment_2(), "rule__ExtensionEntry__ValueAssignment_2");
 			builder.put(grammarAccess.getExtensionListValueAccess().getItemsAssignment_2_0(), "rule__ExtensionListValue__ItemsAssignment_2_0");
 			builder.put(grammarAccess.getExtensionListValueAccess().getItemsAssignment_2_1_1(), "rule__ExtensionListValue__ItemsAssignment_2_1_1");

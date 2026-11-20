@@ -720,7 +720,7 @@ public interface RosPackage extends EPackage {
 	int PLUGIN__PARAMETER = INTERFACE_HOLDER__PARAMETER;
 
 	/**
-	 * The feature id for the '<em><b>Implements</b></em>' attribute.
+	 * The feature id for the '<em><b>Implements</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -729,22 +729,13 @@ public interface RosPackage extends EPackage {
 	int PLUGIN__IMPLEMENTS = INTERFACE_HOLDER_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Loader</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PLUGIN__LOADER = INTERFACE_HOLDER_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>Plugin</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PLUGIN_FEATURE_COUNT = INTERFACE_HOLDER_FEATURE_COUNT + 2;
+	int PLUGIN_FEATURE_COUNT = INTERFACE_HOLDER_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Plugin</em>' class.
@@ -756,6 +747,70 @@ public interface RosPackage extends EPackage {
 	int PLUGIN_OPERATION_COUNT = INTERFACE_HOLDER_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link ros.impl.PluginBaseImpl <em>Plugin Base</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.impl.PluginBaseImpl
+	 * @see ros.impl.RosPackageImpl#getPluginBase()
+	 * @generated
+	 */
+	int PLUGIN_BASE = 11;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_BASE__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Class Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_BASE__CLASS_NAME = 1;
+
+	/**
+	 * The feature id for the '<em><b>Header</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_BASE__HEADER = 2;
+
+	/**
+	 * The feature id for the '<em><b>Loader</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_BASE__LOADER = 3;
+
+	/**
+	 * The number of structural features of the '<em>Plugin Base</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_BASE_FEATURE_COUNT = 4;
+
+	/**
+	 * The number of operations of the '<em>Plugin Base</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_BASE_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link ros.impl.PluginSlotImpl <em>Plugin Slot</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -763,7 +818,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPluginSlot()
 	 * @generated
 	 */
-	int PLUGIN_SLOT = 11;
+	int PLUGIN_SLOT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -775,7 +830,7 @@ public interface RosPackage extends EPackage {
 	int PLUGIN_SLOT__NAME = 0;
 
 	/**
-	 * The feature id for the '<em><b>Base</b></em>' attribute.
+	 * The feature id for the '<em><b>Base</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -793,7 +848,7 @@ public interface RosPackage extends EPackage {
 	int PLUGIN_SLOT__PARAMETER = 2;
 
 	/**
-	 * The feature id for the '<em><b>Default Plugin</b></em>' attribute.
+	 * The feature id for the '<em><b>Default Plugin</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -802,13 +857,22 @@ public interface RosPackage extends EPackage {
 	int PLUGIN_SLOT__DEFAULT_PLUGIN = 3;
 
 	/**
+	 * The feature id for the '<em><b>Multiple</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PLUGIN_SLOT__MULTIPLE = 4;
+
+	/**
 	 * The feature id for the '<em><b>Value Format</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PLUGIN_SLOT__VALUE_FORMAT = 4;
+	int PLUGIN_SLOT__VALUE_FORMAT = 5;
 
 	/**
 	 * The number of structural features of the '<em>Plugin Slot</em>' class.
@@ -817,7 +881,7 @@ public interface RosPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PLUGIN_SLOT_FEATURE_COUNT = 5;
+	int PLUGIN_SLOT_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>Plugin Slot</em>' class.
@@ -836,7 +900,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPackage()
 	 * @generated
 	 */
-	int PACKAGE = 12;
+	int PACKAGE = 13;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -884,13 +948,22 @@ public interface RosPackage extends EPackage {
 	int PACKAGE__DEPENDENCY = 4;
 
 	/**
+	 * The feature id for the '<em><b>Plugin Bases</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PACKAGE__PLUGIN_BASES = 5;
+
+	/**
 	 * The number of structural features of the '<em>Package</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PACKAGE_FEATURE_COUNT = 5;
+	int PACKAGE_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>Package</em>' class.
@@ -909,7 +982,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getDependency()
 	 * @generated
 	 */
-	int DEPENDENCY = 13;
+	int DEPENDENCY = 14;
 
 	/**
 	 * The number of structural features of the '<em>Dependency</em>' class.
@@ -937,7 +1010,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getSpecBase()
 	 * @generated
 	 */
-	int SPEC_BASE = 22;
+	int SPEC_BASE = 23;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -992,7 +1065,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getServiceSpec()
 	 * @generated
 	 */
-	int SERVICE_SPEC = 14;
+	int SERVICE_SPEC = 15;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1065,7 +1138,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getInterfaceType()
 	 * @generated
 	 */
-	int INTERFACE_TYPE = 34;
+	int INTERFACE_TYPE = 35;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -1129,7 +1202,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getServiceServer()
 	 * @generated
 	 */
-	int SERVICE_SERVER = 15;
+	int SERVICE_SERVER = 16;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -1202,7 +1275,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getTopicSpec()
 	 * @generated
 	 */
-	int TOPIC_SPEC = 16;
+	int TOPIC_SPEC = 17;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1266,7 +1339,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPackageDependency()
 	 * @generated
 	 */
-	int PACKAGE_DEPENDENCY = 17;
+	int PACKAGE_DEPENDENCY = 18;
 
 	/**
 	 * The feature id for the '<em><b>Package</b></em>' reference.
@@ -1303,7 +1376,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getExternalDependency()
 	 * @generated
 	 */
-	int EXTERNAL_DEPENDENCY = 18;
+	int EXTERNAL_DEPENDENCY = 19;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1340,7 +1413,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getCatkinPackage()
 	 * @generated
 	 */
-	int CATKIN_PACKAGE = 19;
+	int CATKIN_PACKAGE = 20;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1388,6 +1461,15 @@ public interface RosPackage extends EPackage {
 	int CATKIN_PACKAGE__DEPENDENCY = PACKAGE__DEPENDENCY;
 
 	/**
+	 * The feature id for the '<em><b>Plugin Bases</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATKIN_PACKAGE__PLUGIN_BASES = PACKAGE__PLUGIN_BASES;
+
+	/**
 	 * The number of structural features of the '<em>Catkin Package</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1413,7 +1495,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPublisher()
 	 * @generated
 	 */
-	int PUBLISHER = 20;
+	int PUBLISHER = 21;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -1486,7 +1568,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getArtifact()
 	 * @generated
 	 */
-	int ARTIFACT = 21;
+	int ARTIFACT = 22;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1541,7 +1623,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getSubscriber()
 	 * @generated
 	 */
-	int SUBSCRIBER = 23;
+	int SUBSCRIBER = 24;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -1614,7 +1696,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getServiceClient()
 	 * @generated
 	 */
-	int SERVICE_CLIENT = 24;
+	int SERVICE_CLIENT = 25;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -1687,7 +1769,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPackageSet()
 	 * @generated
 	 */
-	int PACKAGE_SET = 25;
+	int PACKAGE_SET = 26;
 
 	/**
 	 * The feature id for the '<em><b>Package</b></em>' containment reference list.
@@ -1724,7 +1806,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getActionSpec()
 	 * @generated
 	 */
-	int ACTION_SPEC = 26;
+	int ACTION_SPEC = 27;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1806,7 +1888,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getActionServer()
 	 * @generated
 	 */
-	int ACTION_SERVER = 27;
+	int ACTION_SERVER = 28;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -1879,7 +1961,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getActionClient()
 	 * @generated
 	 */
-	int ACTION_CLIENT = 28;
+	int ACTION_CLIENT = 29;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -1952,7 +2034,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getMessageDefinition()
 	 * @generated
 	 */
-	int MESSAGE_DEFINITION = 29;
+	int MESSAGE_DEFINITION = 30;
 
 	/**
 	 * The feature id for the '<em><b>Message Part</b></em>' containment reference list.
@@ -1989,7 +2071,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getNamespace()
 	 * @generated
 	 */
-	int NAMESPACE = 30;
+	int NAMESPACE = 31;
 
 	/**
 	 * The feature id for the '<em><b>Parts</b></em>' attribute list.
@@ -2026,7 +2108,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getGlobalNamespace()
 	 * @generated
 	 */
-	int GLOBAL_NAMESPACE = 31;
+	int GLOBAL_NAMESPACE = 32;
 
 	/**
 	 * The feature id for the '<em><b>Parts</b></em>' attribute list.
@@ -2063,7 +2145,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getRelativeNamespace()
 	 * @generated
 	 */
-	int RELATIVE_NAMESPACE = 32;
+	int RELATIVE_NAMESPACE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Parts</b></em>' attribute list.
@@ -2100,7 +2182,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPrivateNamespace()
 	 * @generated
 	 */
-	int PRIVATE_NAMESPACE = 33;
+	int PRIVATE_NAMESPACE = 34;
 
 	/**
 	 * The feature id for the '<em><b>Parts</b></em>' attribute list.
@@ -2137,7 +2219,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterType()
 	 * @generated
 	 */
-	int PARAMETER_TYPE = 35;
+	int PARAMETER_TYPE = 36;
 
 	/**
 	 * The number of structural features of the '<em>Parameter Type</em>' class.
@@ -2165,7 +2247,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterListType()
 	 * @generated
 	 */
-	int PARAMETER_LIST_TYPE = 36;
+	int PARAMETER_LIST_TYPE = 37;
 
 	/**
 	 * The feature id for the '<em><b>Sequence</b></em>' containment reference list.
@@ -2211,7 +2293,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterStructType()
 	 * @generated
 	 */
-	int PARAMETER_STRUCT_TYPE = 37;
+	int PARAMETER_STRUCT_TYPE = 38;
 
 	/**
 	 * The feature id for the '<em><b>Parameterstructypetmember</b></em>' containment reference list.
@@ -2248,7 +2330,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterIntegerType()
 	 * @generated
 	 */
-	int PARAMETER_INTEGER_TYPE = 38;
+	int PARAMETER_INTEGER_TYPE = 39;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -2285,7 +2367,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterStringType()
 	 * @generated
 	 */
-	int PARAMETER_STRING_TYPE = 39;
+	int PARAMETER_STRING_TYPE = 40;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -2322,7 +2404,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterDoubleType()
 	 * @generated
 	 */
-	int PARAMETER_DOUBLE_TYPE = 40;
+	int PARAMETER_DOUBLE_TYPE = 41;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -2359,7 +2441,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameter()
 	 * @generated
 	 */
-	int PARAMETER = 41;
+	int PARAMETER = 42;
 
 	/**
 	 * The feature id for the '<em><b>Namespace</b></em>' containment reference.
@@ -2441,7 +2523,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterDateType()
 	 * @generated
 	 */
-	int PARAMETER_DATE_TYPE = 42;
+	int PARAMETER_DATE_TYPE = 43;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -2478,7 +2560,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterBooleanType()
 	 * @generated
 	 */
-	int PARAMETER_BOOLEAN_TYPE = 43;
+	int PARAMETER_BOOLEAN_TYPE = 44;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -2515,7 +2597,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterBase64Type()
 	 * @generated
 	 */
-	int PARAMETER_BASE64_TYPE = 44;
+	int PARAMETER_BASE64_TYPE = 45;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -2552,7 +2634,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterAnyType()
 	 * @generated
 	 */
-	int PARAMETER_ANY_TYPE = 45;
+	int PARAMETER_ANY_TYPE = 46;
 
 	/**
 	 * The feature id for the '<em><b>Default</b></em>' containment reference.
@@ -2589,7 +2671,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterStructTypeMember()
 	 * @generated
 	 */
-	int PARAMETER_STRUCT_TYPE_MEMBER = 46;
+	int PARAMETER_STRUCT_TYPE_MEMBER = 47;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2644,7 +2726,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterArrayType()
 	 * @generated
 	 */
-	int PARAMETER_ARRAY_TYPE = 47;
+	int PARAMETER_ARRAY_TYPE = 48;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' containment reference.
@@ -2690,7 +2772,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterValue()
 	 * @generated
 	 */
-	int PARAMETER_VALUE = 48;
+	int PARAMETER_VALUE = 49;
 
 	/**
 	 * The number of structural features of the '<em>Parameter Value</em>' class.
@@ -2718,7 +2800,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterAny()
 	 * @generated
 	 */
-	int PARAMETER_ANY = 49;
+	int PARAMETER_ANY = 50;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2755,7 +2837,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterString()
 	 * @generated
 	 */
-	int PARAMETER_STRING = 50;
+	int PARAMETER_STRING = 51;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2792,7 +2874,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterBase64()
 	 * @generated
 	 */
-	int PARAMETER_BASE64 = 51;
+	int PARAMETER_BASE64 = 52;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2829,7 +2911,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterInteger()
 	 * @generated
 	 */
-	int PARAMETER_INTEGER = 52;
+	int PARAMETER_INTEGER = 53;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2866,7 +2948,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterDouble()
 	 * @generated
 	 */
-	int PARAMETER_DOUBLE = 53;
+	int PARAMETER_DOUBLE = 54;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2903,7 +2985,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterBoolean()
 	 * @generated
 	 */
-	int PARAMETER_BOOLEAN = 54;
+	int PARAMETER_BOOLEAN = 55;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -2940,7 +3022,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterSequence()
 	 * @generated
 	 */
-	int PARAMETER_SEQUENCE = 55;
+	int PARAMETER_SEQUENCE = 56;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' containment reference list.
@@ -2977,7 +3059,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterStruct()
 	 * @generated
 	 */
-	int PARAMETER_STRUCT = 56;
+	int PARAMETER_STRUCT = 57;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' containment reference list.
@@ -3014,7 +3096,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterStructMember()
 	 * @generated
 	 */
-	int PARAMETER_STRUCT_MEMBER = 57;
+	int PARAMETER_STRUCT_MEMBER = 58;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3060,7 +3142,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getParameterDate()
 	 * @generated
 	 */
-	int PARAMETER_DATE = 58;
+	int PARAMETER_DATE = 59;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -3097,7 +3179,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getAmentPackage()
 	 * @generated
 	 */
-	int AMENT_PACKAGE = 59;
+	int AMENT_PACKAGE = 60;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3145,6 +3227,15 @@ public interface RosPackage extends EPackage {
 	int AMENT_PACKAGE__DEPENDENCY = PACKAGE__DEPENDENCY;
 
 	/**
+	 * The feature id for the '<em><b>Plugin Bases</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AMENT_PACKAGE__PLUGIN_BASES = PACKAGE__PLUGIN_BASES;
+
+	/**
 	 * The number of structural features of the '<em>Ament Package</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3170,7 +3261,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getQualityOfService()
 	 * @generated
 	 */
-	int QUALITY_OF_SERVICE = 60;
+	int QUALITY_OF_SERVICE = 61;
 
 	/**
 	 * The feature id for the '<em><b>Qo SProfile</b></em>' attribute.
@@ -3279,7 +3370,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getTopicSpecMsgRef()
 	 * @generated
 	 */
-	int TOPIC_SPEC_MSG_REF = 61;
+	int TOPIC_SPEC_MSG_REF = 62;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -3316,7 +3407,7 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getArrayTopicSpecMsgRef()
 	 * @generated
 	 */
-	int ARRAY_TOPIC_SPEC_MSG_REF = 62;
+	int ARRAY_TOPIC_SPEC_MSG_REF = 63;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -3353,17 +3444,8 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getLifecycleState()
 	 * @generated
 	 */
-	int LIFECYCLE_STATE = 63;
+	int LIFECYCLE_STATE = 64;
 
-	/**
-	 * The meta object id for the '{@link ros.PluginLoader <em>Plugin Loader</em>}' enum.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ros.PluginLoader
-	 * @see ros.impl.RosPackageImpl#getPluginLoader()
-	 * @generated
-	 */
-	int PLUGIN_LOADER = 64;
 
 	/**
 	 * The meta object id for the '{@link ros.PluginSlotValueFormat <em>Plugin Slot Value Format</em>}' enum.
@@ -3739,26 +3821,69 @@ public interface RosPackage extends EPackage {
 	EClass getPlugin();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ros.Plugin#getImplements <em>Implements</em>}'.
+	 * Returns the meta object for the reference '{@link ros.Plugin#getImplements <em>Implements</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Implements</em>'.
+	 * @return the meta object for the reference '<em>Implements</em>'.
 	 * @see ros.Plugin#getImplements()
 	 * @see #getPlugin()
 	 * @generated
 	 */
-	EAttribute getPlugin_Implements();
+	EReference getPlugin_Implements();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ros.Plugin#getLoader <em>Loader</em>}'.
+	 * Returns the meta object for class '{@link ros.PluginBase <em>Plugin Base</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Plugin Base</em>'.
+	 * @see ros.PluginBase
+	 * @generated
+	 */
+	EClass getPluginBase();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.PluginBase#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see ros.PluginBase#getName()
+	 * @see #getPluginBase()
+	 * @generated
+	 */
+	EAttribute getPluginBase_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.PluginBase#getClassName <em>Class Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Class Name</em>'.
+	 * @see ros.PluginBase#getClassName()
+	 * @see #getPluginBase()
+	 * @generated
+	 */
+	EAttribute getPluginBase_ClassName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.PluginBase#getHeader <em>Header</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Header</em>'.
+	 * @see ros.PluginBase#getHeader()
+	 * @see #getPluginBase()
+	 * @generated
+	 */
+	EAttribute getPluginBase_Header();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.PluginBase#getLoader <em>Loader</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Loader</em>'.
-	 * @see ros.Plugin#getLoader()
-	 * @see #getPlugin()
+	 * @see ros.PluginBase#getLoader()
+	 * @see #getPluginBase()
 	 * @generated
 	 */
-	EAttribute getPlugin_Loader();
+	EAttribute getPluginBase_Loader();
 
 	/**
 	 * Returns the meta object for class '{@link ros.PluginSlot <em>Plugin Slot</em>}'.
@@ -3782,15 +3907,15 @@ public interface RosPackage extends EPackage {
 	EAttribute getPluginSlot_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ros.PluginSlot#getBase <em>Base</em>}'.
+	 * Returns the meta object for the reference '{@link ros.PluginSlot#getBase <em>Base</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Base</em>'.
+	 * @return the meta object for the reference '<em>Base</em>'.
 	 * @see ros.PluginSlot#getBase()
 	 * @see #getPluginSlot()
 	 * @generated
 	 */
-	EAttribute getPluginSlot_Base();
+	EReference getPluginSlot_Base();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ros.PluginSlot#getParameter <em>Parameter</em>}'.
@@ -3804,15 +3929,26 @@ public interface RosPackage extends EPackage {
 	EAttribute getPluginSlot_Parameter();
 
 	/**
-	 * Returns the meta object for the attribute '{@link ros.PluginSlot#getDefaultPlugin <em>Default Plugin</em>}'.
+	 * Returns the meta object for the reference '{@link ros.PluginSlot#getDefaultPlugin <em>Default Plugin</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Default Plugin</em>'.
+	 * @return the meta object for the reference '<em>Default Plugin</em>'.
 	 * @see ros.PluginSlot#getDefaultPlugin()
 	 * @see #getPluginSlot()
 	 * @generated
 	 */
-	EAttribute getPluginSlot_DefaultPlugin();
+	EReference getPluginSlot_DefaultPlugin();
+
+	/**
+	 * Returns the meta object for the attribute '{@link ros.PluginSlot#isMultiple <em>Multiple</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Multiple</em>'.
+	 * @see ros.PluginSlot#isMultiple()
+	 * @see #getPluginSlot()
+	 * @generated
+	 */
+	EAttribute getPluginSlot_Multiple();
 
 	/**
 	 * Returns the meta object for the attribute '{@link ros.PluginSlot#getValueFormat <em>Value Format</em>}'.
@@ -3889,6 +4025,17 @@ public interface RosPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getPackage_Dependency();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link ros.Package#getPluginBases <em>Plugin Bases</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Plugin Bases</em>'.
+	 * @see ros.Package#getPluginBases()
+	 * @see #getPackage()
+	 * @generated
+	 */
+	EReference getPackage_PluginBases();
 
 	/**
 	 * Returns the meta object for class '{@link ros.Dependency <em>Dependency</em>}'.
@@ -5127,16 +5274,6 @@ public interface RosPackage extends EPackage {
 	EEnum getLifecycleState();
 
 	/**
-	 * Returns the meta object for enum '{@link ros.PluginLoader <em>Plugin Loader</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Plugin Loader</em>'.
-	 * @see ros.PluginLoader
-	 * @generated
-	 */
-	EEnum getPluginLoader();
-
-	/**
 	 * Returns the meta object for enum '{@link ros.PluginSlotValueFormat <em>Plugin Slot Value Format</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5467,12 +5604,46 @@ public interface RosPackage extends EPackage {
 		EClass PLUGIN = eINSTANCE.getPlugin();
 
 		/**
-		 * The meta object literal for the '<em><b>Implements</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Implements</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PLUGIN__IMPLEMENTS = eINSTANCE.getPlugin_Implements();
+		EReference PLUGIN__IMPLEMENTS = eINSTANCE.getPlugin_Implements();
+
+		/**
+		 * The meta object literal for the '{@link ros.impl.PluginBaseImpl <em>Plugin Base</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.impl.PluginBaseImpl
+		 * @see ros.impl.RosPackageImpl#getPluginBase()
+		 * @generated
+		 */
+		EClass PLUGIN_BASE = eINSTANCE.getPluginBase();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PLUGIN_BASE__NAME = eINSTANCE.getPluginBase_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Class Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PLUGIN_BASE__CLASS_NAME = eINSTANCE.getPluginBase_ClassName();
+
+		/**
+		 * The meta object literal for the '<em><b>Header</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PLUGIN_BASE__HEADER = eINSTANCE.getPluginBase_Header();
 
 		/**
 		 * The meta object literal for the '<em><b>Loader</b></em>' attribute feature.
@@ -5480,7 +5651,7 @@ public interface RosPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PLUGIN__LOADER = eINSTANCE.getPlugin_Loader();
+		EAttribute PLUGIN_BASE__LOADER = eINSTANCE.getPluginBase_Loader();
 
 		/**
 		 * The meta object literal for the '{@link ros.impl.PluginSlotImpl <em>Plugin Slot</em>}' class.
@@ -5501,12 +5672,12 @@ public interface RosPackage extends EPackage {
 		EAttribute PLUGIN_SLOT__NAME = eINSTANCE.getPluginSlot_Name();
 
 		/**
-		 * The meta object literal for the '<em><b>Base</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Base</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PLUGIN_SLOT__BASE = eINSTANCE.getPluginSlot_Base();
+		EReference PLUGIN_SLOT__BASE = eINSTANCE.getPluginSlot_Base();
 
 		/**
 		 * The meta object literal for the '<em><b>Parameter</b></em>' attribute feature.
@@ -5517,12 +5688,20 @@ public interface RosPackage extends EPackage {
 		EAttribute PLUGIN_SLOT__PARAMETER = eINSTANCE.getPluginSlot_Parameter();
 
 		/**
-		 * The meta object literal for the '<em><b>Default Plugin</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Default Plugin</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PLUGIN_SLOT__DEFAULT_PLUGIN = eINSTANCE.getPluginSlot_DefaultPlugin();
+		EReference PLUGIN_SLOT__DEFAULT_PLUGIN = eINSTANCE.getPluginSlot_DefaultPlugin();
+
+		/**
+		 * The meta object literal for the '<em><b>Multiple</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PLUGIN_SLOT__MULTIPLE = eINSTANCE.getPluginSlot_Multiple();
 
 		/**
 		 * The meta object literal for the '<em><b>Value Format</b></em>' attribute feature.
@@ -5581,6 +5760,14 @@ public interface RosPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PACKAGE__DEPENDENCY = eINSTANCE.getPackage_Dependency();
+
+		/**
+		 * The meta object literal for the '<em><b>Plugin Bases</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PACKAGE__PLUGIN_BASES = eINSTANCE.getPackage_PluginBases();
 
 		/**
 		 * The meta object literal for the '{@link ros.impl.DependencyImpl <em>Dependency</em>}' class.
@@ -6619,16 +6806,6 @@ public interface RosPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum LIFECYCLE_STATE = eINSTANCE.getLifecycleState();
-
-		/**
-		 * The meta object literal for the '{@link ros.PluginLoader <em>Plugin Loader</em>}' enum.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ros.PluginLoader
-		 * @see ros.impl.RosPackageImpl#getPluginLoader()
-		 * @generated
-		 */
-		EEnum PLUGIN_LOADER = eINSTANCE.getPluginLoader();
 
 		/**
 		 * The meta object literal for the '{@link ros.PluginSlotValueFormat <em>Plugin Slot Value Format</em>}' enum.

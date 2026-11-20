@@ -24,7 +24,7 @@ Package returns Package:
 
 Package_Impl returns Package:
     {Package}
-    name=RosNames':'
+    (name=RosNames':' | name=AddedKeywordName)
     BEGIN
      ('fromGitRepo:' fromGitRepo=EString)?
      ('dependencies:' '[' dependency+=Dependency (',' dependency+=Dependency)* ']' )?
@@ -111,16 +111,18 @@ MessageDefinition returns MessageDefinition:
 ///////////////////
 //ARTIFACT, NODE AND PLUGINS
 ///////////////////
+// An artifact holds a node or plugins, never both. An artifact with plugins is built as a
+// shared library.
 Artifact returns Artifact:
     {Artifact}
-        name=RosNames':'
+        (name=RosNames':' | name=AddedKeywordName)
         BEGIN
-        (node=Node)?
+        (node=Node |
         ('plugins:'
             BEGIN
             plugins+=Plugin*
             END
-        )?
+        ))?
         END;
 
 Node returns Node:
@@ -170,11 +172,6 @@ Node returns Node:
     )*
     ;
 
-enum PluginLoader returns PluginLoader:
-    PLUGINLIB = 'pluginlib' |
-    EXTERNAL = 'external'
-;
-
 enum PluginSlotValueFormat returns PluginSlotValueFormat:
     CLASS = 'class' |
     LIBRARY = 'library'
@@ -182,11 +179,10 @@ enum PluginSlotValueFormat returns PluginSlotValueFormat:
 
 Plugin returns Plugin:
     {Plugin}
-    name=RosNames':'
+    (name=RosNames':' | name=AddedKeywordName)
     BEGIN
+    'implements:' implements=[PluginBase|QualifiedRef]
     (
-    ('implements:' implements=EString)|
-    ('loader:' loader=PluginLoader)|
     ('publishers:'
         BEGIN
         publisher+=Publisher*
@@ -226,35 +222,43 @@ Plugin returns Plugin:
     )*
     END;
 
+// A slot owns its parameter. With multiple: true the parameter is a string list and any number
+// of plugins may attach; otherwise at most one.
 PluginSlot returns PluginSlot:
     {PluginSlot}
-    name=EString':'
+    (name=EString':' | name=AddedKeywordName)
     (
     (BEGIN
-        (('base:' base=EString) &
+        (('base:' base=[PluginBase|QualifiedRef]) &
          ('parameter:' parameter=EString) &
          ('format:' valueFormat=PluginSlotValueFormat)? &
-         ('default:' defaultPlugin=EString)?)
+         ('multiple:' multiple=boolean0)? &
+         ('default:' defaultPlugin=[Plugin|QualifiedRef])?)
     END) |
     ('{'
-        'base:' base=EString
+        'base:' base=[PluginBase|QualifiedRef]
         ','? 'parameter:' parameter=EString
         (','? 'format:' valueFormat=PluginSlotValueFormat)?
-        (','? 'default:' defaultPlugin=EString)?
+        (','? 'multiple:' multiple=boolean0)?
+        (','? 'default:' defaultPlugin=[Plugin|QualifiedRef])?
     '}')
     );
 
 @Override
+AddedKeywordName returns ecore::EString:
+    'plugins:' | 'implements:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:' | 'multiple:';
+
+@Override
 EString returns ecore::EString:
-    STRING | ID | 'pluginlib' | 'external' | 'class' | 'library';
+    STRING | ID | 'class' | 'library';
 
 @Override
 RosNames returns ecore::EString:
-    ROS_CONVENTION_A | ID | 'node' | 'pluginlib' | 'external' | 'class' | 'library';
+    ROS_CONVENTION_A | ID | 'node' | 'class' | 'library';
 
 @Override
 ExtensionKey returns ecore::EString:
-    ID | STRING | KEYWORD | 'node' | 'pluginlib' | 'external' | 'class' | 'library' |
+    ID | STRING | KEYWORD | 'node' | 'class' | 'library' |
     'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
     'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
 
@@ -263,15 +267,14 @@ ExtensionColonKey returns ecore::EString:
     'ns:' | 'type:' | 'value:' | 'default:' |
     'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
     'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
-    'actionservers:' | 'actionclients:' | 'parameters:' |
-    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:';
+    'actionservers:' | 'actionclients:' | 'parameters:';
 
 ///////////////////
 //INTERFACES
 ///////////////////
 Publisher returns Publisher:
     {Publisher}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         BEGIN
             'type:' message=[TopicSpec|EString]
             ('ns:' namespace=Namespace)?
@@ -280,7 +283,7 @@ Publisher returns Publisher:
 
 Subscriber returns Subscriber:
     {Subscriber}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         BEGIN
             'type:' message=[TopicSpec|EString]
             ('ns:' namespace=Namespace)?
@@ -289,7 +292,7 @@ Subscriber returns Subscriber:
 
 ServiceServer returns ServiceServer:
     {ServiceServer}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         BEGIN
             'type:' service=[ServiceSpec|EString]
             ('ns:' namespace=Namespace)?
@@ -298,7 +301,7 @@ ServiceServer returns ServiceServer:
 
 ServiceClient returns ServiceClient:
     {ServiceClient}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         BEGIN
             'type:' service=[ServiceSpec|EString]
             ('ns:' namespace=Namespace)?
@@ -307,7 +310,7 @@ ServiceClient returns ServiceClient:
 
 ActionServer returns ActionServer:
     {ActionServer}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         BEGIN
             'type:' action=[ActionSpec|EString]
             ('ns:' namespace=Namespace)?
@@ -316,7 +319,7 @@ ActionServer returns ActionServer:
 
 ActionClient returns ActionClient:
     {ActionClient}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         BEGIN
             'type:' action=[ActionSpec|EString]
             ('ns:' namespace=Namespace)?

@@ -55,7 +55,7 @@ import ros.ParameterStructMember;
 import ros.ParameterStructType;
 import ros.ParameterStructTypeMember;
 import ros.Plugin;
-import ros.PluginLoader;
+import ros.PluginBase;
 import ros.PluginSlot;
 import ros.PluginSlotValueFormat;
 import ros.PrivateNamespace;
@@ -123,6 +123,7 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 			case RosPackage.EXTENSION_REF_VALUE: return createExtensionRefValue();
 			case RosPackage.NODE: return createNode();
 			case RosPackage.PLUGIN: return createPlugin();
+			case RosPackage.PLUGIN_BASE: return createPluginBase();
 			case RosPackage.PLUGIN_SLOT: return createPluginSlot();
 			case RosPackage.PACKAGE: return createPackage();
 			case RosPackage.SERVICE_SPEC: return createServiceSpec();
@@ -185,8 +186,6 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 		switch (eDataType.getClassifierID()) {
 			case RosPackage.LIFECYCLE_STATE:
 				return createLifecycleStateFromString(eDataType, initialValue);
-			case RosPackage.PLUGIN_LOADER:
-				return createPluginLoaderFromString(eDataType, initialValue);
 			case RosPackage.PLUGIN_SLOT_VALUE_FORMAT:
 				return createPluginSlotValueFormatFromString(eDataType, initialValue);
 			case RosPackage.GRAPH_NAME:
@@ -206,8 +205,6 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 		switch (eDataType.getClassifierID()) {
 			case RosPackage.LIFECYCLE_STATE:
 				return convertLifecycleStateToString(eDataType, instanceValue);
-			case RosPackage.PLUGIN_LOADER:
-				return convertPluginLoaderToString(eDataType, instanceValue);
 			case RosPackage.PLUGIN_SLOT_VALUE_FORMAT:
 				return convertPluginSlotValueFormatToString(eDataType, instanceValue);
 			case RosPackage.GRAPH_NAME:
@@ -303,6 +300,17 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 	public Plugin createPlugin() {
 		PluginImpl plugin = new PluginImpl();
 		return plugin;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public PluginBase createPluginBase() {
+		PluginBaseImpl pluginBase = new PluginBaseImpl();
+		return pluginBase;
 	}
 
 	/**
@@ -839,26 +847,6 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 	 * @generated
 	 */
 	public String convertLifecycleStateToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public PluginLoader createPluginLoaderFromString(EDataType eDataType, String initialValue) {
-		PluginLoader result = PluginLoader.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertPluginLoaderToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

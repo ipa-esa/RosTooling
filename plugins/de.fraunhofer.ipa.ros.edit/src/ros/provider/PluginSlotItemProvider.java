@@ -64,6 +64,7 @@ public class PluginSlotItemProvider
 			addBasePropertyDescriptor(object);
 			addParameterPropertyDescriptor(object);
 			addDefaultPluginPropertyDescriptor(object);
+			addMultiplePropertyDescriptor(object);
 			addValueFormatPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
@@ -108,7 +109,7 @@ public class PluginSlotItemProvider
 				 true,
 				 false,
 				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
 				 null,
 				 null));
 	}
@@ -152,7 +153,29 @@ public class PluginSlotItemProvider
 				 true,
 				 false,
 				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Multiple feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addMultiplePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_PluginSlot_multiple_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_PluginSlot_multiple_feature", "_UI_PluginSlot_type"),
+				 RosPackage.Literals.PLUGIN_SLOT__MULTIPLE,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -221,6 +244,7 @@ public class PluginSlotItemProvider
 			case RosPackage.PLUGIN_SLOT__BASE:
 			case RosPackage.PLUGIN_SLOT__PARAMETER:
 			case RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN:
+			case RosPackage.PLUGIN_SLOT__MULTIPLE:
 			case RosPackage.PLUGIN_SLOT__VALUE_FORMAT:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;

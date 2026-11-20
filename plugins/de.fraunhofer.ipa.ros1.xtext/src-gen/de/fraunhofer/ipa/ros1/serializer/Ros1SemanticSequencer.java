@@ -389,7 +389,7 @@ public class Ros1SemanticSequencer extends RosSemanticSequencer {
 	 *     CatkinPackage returns CatkinPackage
 	 *
 	 * Constraint:
-	 *     (name=RosNames fromGitRepo=EString? artifact+=Artifact* (dependency+=Dependency dependency+=Dependency*)?)
+	 *     ((name=RosNames | name=AddedKeywordName) fromGitRepo=EString? artifact+=Artifact* (dependency+=Dependency dependency+=Dependency*)?)
 	 * </pre>
 	 */
 	protected void sequence_CatkinPackage(ISerializationContext context, CatkinPackage semanticObject) {

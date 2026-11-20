@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.glsp.handlers;
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -119,8 +120,8 @@ public class RequestRosIndexActionHandler extends AbstractActionHandler<RequestR
             for (Plugin pl : art.getPlugins()) {
                 JsonObject plObj = new JsonObject();
                 plObj.addProperty("name", RosDslText.nullToEmpty(pl.getName()));
-                plObj.addProperty("implements", RosDslText.nullToEmpty(pl.getImplements()));
-                plObj.addProperty("loader", pl.getLoader() != null ? pl.getLoader().getLiteral() : "pluginlib");
+                plObj.addProperty("implements", RosDslText.refText(null, pl, ros.RosPackage.Literals.PLUGIN__IMPLEMENTS));
+                plObj.addProperty("loader", RosDslText.nullToEmpty(PluginBases.loaderOf(pl)));
                 plObj.add("interfaces", describeHolderInterfaces(pl));
                 plObj.add("parameters", describeHolderParameters(pl));
                 pluginsJson.add(plObj);

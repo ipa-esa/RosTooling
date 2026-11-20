@@ -37,7 +37,7 @@ done < "$units" > "$expanded"
 units="$expanded"
 
 ROSTOOLING_COMPAT_UNITS="$units" ROSTOOLING_COMPAT_OUT="$out" \
-  "$repo/mvnw" -q -B verify -f "$repo/plugins/de.fraunhofer.ipa.ros.parent/pom.xml" \
+  "$repo/mvnw" -q -B clean verify -f "$repo/plugins/de.fraunhofer.ipa.ros.parent/pom.xml" \
     -Dtest=CompatibilitySnapshotTest -Dsurefire.failIfNoSpecifiedTests=false -DfailIfNoTests=false
 
 if [[ ! -f "$out/SUMMARY.txt" ]]; then

@@ -38,6 +38,7 @@ import ros.ParameterStruct;
 import ros.ParameterStructMember;
 import ros.ParameterValue;
 import ros.Plugin;
+import ros.PluginSlot;
 import ros.Publisher;
 import ros.RosPackage;
 import ros.ServiceClient;
@@ -57,6 +58,7 @@ import system.RosServiceServerReference;
 import system.RosSubscriberReference;
 import system.RosSystemConnection;
 import system.RossystemPackage;
+import system.SlotAttachment;
 
 /**
  * Node-model-guided AST serializer for Xtext RosTooling resources (.rossystem, .ros2, .ros1, .ros).
@@ -408,32 +410,7 @@ public final class RosAstNodeModelSerializer {
                 }
             }
         }
-        if (!rosNode.getPlugins().isEmpty()) {
-            List<String> refs = new ArrayList<>();
-            for (Plugin pl : rosNode.getPlugins()) {
-                String ref = formatPluginCrossRef(pl);
-                if (!ref.isEmpty()) {
-                    refs.add("\"" + ref + "\"");
-                }
-            }
-            if (!refs.isEmpty()) {
-                List<INode> plNodes = NodeModelUtils.findNodesForFeature(rosNode, RossystemPackage.Literals.ROS_NODE__PLUGINS);
-                String listText = "[" + String.join(", ", refs) + "]";
-                if (!plNodes.isEmpty()) {
-                    int s0 = firstNonHiddenOffset(plNodes.get(0));
-                    int s1 = lastNonHiddenOffset(plNodes.get(plNodes.size() - 1));
-                    int bracketStart = text.lastIndexOf('[', s0);
-                    int bracketEnd = text.indexOf(']', s1);
-                    if (bracketStart >= 0 && bracketEnd >= bracketStart
-                            && !text.substring(bracketStart, bracketEnd + 1).equals(listText)) {
-                        edits.add(new SpanEdit(bracketStart, bracketEnd + 1 - bracketStart, listText));
-                    }
-                } else {
-                    int anchor = findAfterFromOrNamespaceOffset(rosNode, nodeComp, text);
-                    edits.add(new SpanEdit(anchor, 0, "\n      plugins: " + listText));
-                }
-            }
-        }
+        collectSlotAttachmentEdits(rosNode, nodeComp, text, edits);
 
         // Check existing RosInterfaces & collect new RosInterfaces. A new interface is only written
         // when a connection uses it: GLSP creates interfaces solely to connect inherited ports, while
@@ -750,6 +727,12 @@ public final class RosAstNodeModelSerializer {
             return;
         }
         String currentRaw = text.substring(start, end);
+        if (isAddedKeywordName(fNode) && currentRaw.endsWith(":")) {
+            // The name lexed as a keyword such as "base:", whose one token includes the colon:
+            // replace only the name and keep the colon.
+            end--;
+            currentRaw = currentRaw.substring(0, currentRaw.length() - 1);
+        }
         boolean wasQuoted = currentRaw.length() >= 2
                 && ((currentRaw.startsWith("\"") && currentRaw.endsWith("\""))
                         || (currentRaw.startsWith("'") && currentRaw.endsWith("'")));
@@ -761,6 +744,12 @@ public final class RosAstNodeModelSerializer {
         char quoteChar = wasQuoted && currentRaw.startsWith("'") ? '\'' : '"';
         String replacement = needsQuotes ? quoteChar + newValue + quoteChar : newValue;
         edits.add(new SpanEdit(start, end - start, replacement));
+    }
+
+    /** Whether {@code node} is a name parsed by the AddedKeywordName rule (a keyword token ending in ':'). */
+    static boolean isAddedKeywordName(final INode node) {
+        return node.getGrammarElement() instanceof org.eclipse.xtext.RuleCall call
+                && call.getRule() != null && "AddedKeywordName".equals(call.getRule().getName());
     }
 
     /**
@@ -1029,16 +1018,10 @@ public final class RosAstNodeModelSerializer {
         if (rn.getNamespace() != null && !rn.getNamespace().isEmpty()) {
             sb.append(indent).append("  namespace: \"").append(rn.getNamespace()).append("\"\n");
         }
-        if (!rn.getPlugins().isEmpty()) {
-            List<String> pluginRefs = new ArrayList<>();
-            for (Plugin pl : rn.getPlugins()) {
-                String ref = formatPluginCrossRef(pl);
-                if (!ref.isEmpty()) {
-                    pluginRefs.add("\"" + ref + "\"");
-                }
-            }
-            if (!pluginRefs.isEmpty()) {
-                sb.append(indent).append("  plugins: [").append(String.join(", ", pluginRefs)).append("]\n");
+        if (!rn.getSlots().isEmpty()) {
+            sb.append(indent).append("  slots:\n");
+            for (SlotAttachment attachment : rn.getSlots()) {
+                sb.append(indent).append("    ").append(slotAttachmentLine(attachment)).append('\n');
             }
         }
         // Interfaces from the text or used by a connection; not ones synthesized by linking/validation.
@@ -1138,6 +1121,80 @@ public final class RosAstNodeModelSerializer {
             return raw;
         }
         return "";
+    }
+
+    /**
+     * Writes slot attachments that are new or whose plugin list changed. New attachments go after
+     * the last existing one, or into a new {@code slots:} section after {@code from:}/{@code namespace:}.
+     */
+    private static void collectSlotAttachmentEdits(
+            final RosNode rosNode,
+            final ICompositeNode nodeComp,
+            final String text,
+            final List<SpanEdit> edits) {
+        List<SlotAttachment> fresh = new ArrayList<>();
+        ICompositeNode lastExisting = null;
+        for (SlotAttachment attachment : rosNode.getSlots()) {
+            ICompositeNode comp = NodeModelUtils.findActualNodeFor(attachment);
+            if (comp == null) {
+                fresh.add(attachment);
+                continue;
+            }
+            lastExisting = comp;
+            int start = firstNonHiddenOffset(comp);
+            int end = lastNonHiddenOffset(comp);
+            int bracketStart = text.indexOf('[', start);
+            int bracketEnd = text.lastIndexOf(']', end);
+            String listText = "[" + String.join(", ", pluginRefs(attachment)) + "]";
+            if (bracketStart >= 0 && bracketEnd >= bracketStart && bracketEnd <= end
+                    && !text.substring(bracketStart, bracketEnd + 1).equals(listText)) {
+                edits.add(new SpanEdit(bracketStart, bracketEnd + 1 - bracketStart, listText));
+            }
+        }
+        if (fresh.isEmpty()) {
+            return;
+        }
+        StringBuilder lines = new StringBuilder();
+        if (lastExisting != null) {
+            String indent = " ".repeat(Math.max(0, firstNonHiddenOffset(lastExisting)
+                    - (text.lastIndexOf('\n', firstNonHiddenOffset(lastExisting) - 1) + 1)));
+            for (SlotAttachment attachment : fresh) {
+                lines.append('\n').append(indent).append(slotAttachmentLine(attachment));
+            }
+            edits.add(new SpanEdit(findLineEndOffsetWithoutNewline(text, lastNonHiddenOffset(lastExisting)), 0,
+                    lines.toString()));
+        } else {
+            lines.append("\n      slots:");
+            for (SlotAttachment attachment : fresh) {
+                lines.append("\n        ").append(slotAttachmentLine(attachment));
+            }
+            edits.add(new SpanEdit(findAfterFromOrNamespaceOffset(rosNode, nodeComp, text), 0, lines.toString()));
+        }
+    }
+
+    /** {@code slot_name: [pkg.Plugin, ...]} */
+    static String slotAttachmentLine(final SlotAttachment attachment) {
+        return slotName(attachment) + ": [" + String.join(", ", pluginRefs(attachment)) + "]";
+    }
+
+    private static String slotName(final SlotAttachment attachment) {
+        Object slot = attachment.eGet(RossystemPackage.Literals.SLOT_ATTACHMENT__SLOT, false);
+        if (slot instanceof PluginSlot resolved && !resolved.eIsProxy() && resolved.getName() != null) {
+            return resolved.getName();
+        }
+        List<INode> nodes = NodeModelUtils.findNodesForFeature(attachment, RossystemPackage.Literals.SLOT_ATTACHMENT__SLOT);
+        return nodes.isEmpty() ? "" : NodeModelUtils.getTokenText(nodes.get(0)).trim().replaceAll(":$", "");
+    }
+
+    private static List<String> pluginRefs(final SlotAttachment attachment) {
+        List<String> refs = new ArrayList<>();
+        for (Plugin pl : attachment.getPlugins()) {
+            String ref = formatPluginCrossRef(pl);
+            if (!ref.isEmpty()) {
+                refs.add(RosDslText.qualifiedRefLiteral(ref));
+            }
+        }
+        return refs;
     }
 
     public static String formatPluginCrossRef(final Plugin pl) {

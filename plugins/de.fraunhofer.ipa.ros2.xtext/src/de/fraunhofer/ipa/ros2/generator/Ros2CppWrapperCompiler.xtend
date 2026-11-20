@@ -5,7 +5,7 @@ import ros.Artifact
 import ros.Node
 import ros.Package
 import ros.Plugin
-import ros.PluginLoader
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases
 import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target
 
 class Ros2CppWrapperCompiler {
@@ -1549,7 +1549,7 @@ private:
         val pkgLower = pkg.name.toLowerCase
         val cls = pluginClassName(plugin)
         val snake = pluginSnakeName(plugin)
-        val baseHeader = baseClassIncludePath(plugin.implements)
+        val baseHeader = baseClassIncludePath(PluginBases.baseClassOf(plugin))
         return '''
 #pragma once
 
@@ -1561,15 +1561,15 @@ private:
 namespace «pkgLower» {
 
 /**
- * @brief Domain logic implementation for plugin '«plugin.name»' implementing '«plugin.implements»'.
+ * @brief Domain logic implementation for plugin '«plugin.name»' implementing '«PluginBases.baseClassOf(plugin)»'.
  * PROTECTED LOGIC FILE (Domain Logic Shield): written once and never overwritten on regeneration.
  */
-class «cls» : public «plugin.implements» {
+class «cls» : public «PluginBases.baseClassOf(plugin)» {
 public:
     «cls»() = default;
     ~«cls»() override = default;
 
-    // Implement pure virtual methods of «plugin.implements» here and use ros_wrapper_.
+    // Implement pure virtual methods of «PluginBases.baseClassOf(plugin)» here and use ros_wrapper_.
 
 protected:
     «cls»RosWrapper ros_wrapper_;
@@ -1587,7 +1587,7 @@ protected:
 #include "«pkgLower»/«snake»_plugin.hpp"
 #include <pluginlib/class_list_macros.hpp>
 
-PLUGINLIB_EXPORT_CLASS(«pkgLower»::«cls», «plugin.implements»)
+PLUGINLIB_EXPORT_CLASS(«pkgLower»::«cls», «PluginBases.baseClassOf(plugin)»)
 '''
     }
 
@@ -1596,11 +1596,11 @@ PLUGINLIB_EXPORT_CLASS(«pkgLower»::«cls», «plugin.implements»)
         return '''
 <class_libraries>
 «FOR art : pkg.artifact»
-«val pluginlibList = art.plugins.filter[loader == PluginLoader.PLUGINLIB].toList»
+«val pluginlibList = art.plugins.filter[PluginBases.isPluginlib(it)].toList»
 «IF !pluginlibList.empty»
   <library path="«pluginLibraryTargetName(art)»">
 «FOR plugin : pluginlibList»
-    <class name="«pkgLower»::«plugin.name»" type="«pkgLower»::«pluginClassName(plugin)»" base_class_type="«plugin.implements»">
+    <class name="«pkgLower»::«plugin.name»" type="«pkgLower»::«pluginClassName(plugin)»" base_class_type="«PluginBases.baseClassOf(plugin)»">
       <description>ROS 2 pluginlib plugin '«plugin.name»'</description>
     </class>
 «ENDFOR»

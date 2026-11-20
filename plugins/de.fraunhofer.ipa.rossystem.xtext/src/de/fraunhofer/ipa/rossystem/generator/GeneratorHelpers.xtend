@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.rossystem.generator
 
+import de.fraunhofer.ipa.rossystem.scoping.RosSystemScopeProvider
 import java.util.ArrayList
 import java.util.LinkedHashSet
 import java.util.List
@@ -482,7 +483,7 @@ class GeneratorHelpers {
                 if (!Pkg.nullOrEmpty && !PkgsList.contains(Pkg)){
                     PkgsList.add(Pkg)
                 }
-                for (pl : node.plugins) {
+                for (pl : RosSystemScopeProvider.attachedPlugins(node)) {
                     val CharSequence plPkg = getPluginPackageName(pl)
                     if (plPkg !== null && plPkg.length > 0 && !PkgsList.contains(plPkg)) {
                         PkgsList.add(plPkg)
@@ -644,7 +645,7 @@ class GeneratorHelpers {
      * Resolves auto-populated parameter entries for host {@link PluginSlot}s strictly from the
      * {@code .ros2}/{@code .rossystem} model:
      * <ul>
-     *   <li>Matching requires {@code plugin.implements == slot.base} for every loader.</li>
+     *   <li>Each slot takes the plugins attached to it under {@code slots:}, or its {@code default:}.</li>
      *   <li>{@code format: class} (default) emits {@code pkg::Plugin}; {@code format: library}
      *       emits the owning {@link Artifact} name deduplicated in attachment order.</li>
      * </ul>
@@ -662,7 +663,7 @@ class GeneratorHelpers {
         if (component === null || component.from === null || component.from.pluginSlots.empty) {
             return result
         }
-        if (component.plugins.empty && !component.from.pluginSlots.exists[defaultPlugin !== null && !defaultPlugin.trim.empty]) {
+        if (component.slots.forall[plugins.empty] && !component.from.pluginSlots.exists[defaultPlugin !== null]) {
             return result
         }
 
@@ -681,19 +682,20 @@ class GeneratorHelpers {
             val paramName = slot.parameter
             if (paramName !== null && !paramName.empty && !explicitParamNames.contains(paramName)) {
                 val matchedSet = new LinkedHashSet<String>()
-                for (Plugin pl : component.plugins) {
-                    val expectedImpl = pl.implements?.trim
-                    if (!pl.eIsProxy && expectedImpl !== null && !expectedImpl.empty && expectedImpl == slot.base) {
-                        matchedSet.add(resolveSlotValueForPlugin(pl, slot))
+                for (attachment : component.slots.filter[it.slot === slot]) {
+                    for (Plugin pl : attachment.plugins) {
+                        if (!pl.eIsProxy) {
+                            matchedSet.add(resolveSlotValueForPlugin(pl, slot))
+                        }
                     }
                 }
                 val matchedValues = new ArrayList<String>(matchedSet)
-                if (matchedValues.empty && slot.defaultPlugin !== null && !slot.defaultPlugin.trim.empty) {
-                    matchedValues.add(slot.defaultPlugin.trim)
+                if (matchedValues.empty && slot.defaultPlugin !== null && !slot.defaultPlugin.eIsProxy) {
+                    matchedValues.add(resolveSlotValueForPlugin(slot.defaultPlugin, slot))
                 }
                 if (!matchedValues.empty) {
                     val declaredParam = component.from.parameter.findFirst[name == paramName]
-                    val isArray = declaredParam !== null && (declaredParam.type instanceof ParameterArrayType || declaredParam.type instanceof ParameterListType)
+                    val isArray = slot.multiple || (declaredParam !== null && (declaredParam.type instanceof ParameterArrayType || declaredParam.type instanceof ParameterListType))
                     result.add(new SlotParamEntry(paramName, matchedValues, isArray))
                 }
             }

@@ -8,6 +8,7 @@ import ros.ServiceSpec
 import ros.ActionSpec
 import ros.Node
 import ros.Plugin
+import ros.PluginBase
 import ros.Package
 import ros.Publisher
 import ros.Artifact
@@ -47,6 +48,11 @@ class RosQNP extends DefaultDeclarativeQualifiedNameProvider{
       if (obj.eContainer !== null && obj.eContainer.eContainer instanceof Package) {
         val pkg = obj.eContainer.eContainer as Package
         return getConverter().toQualifiedName(pkg.name + "." + plugin_name);
+      }
+    }
+    if (obj instanceof PluginBase) {
+      if (obj.eContainer instanceof Package) {
+        return getConverter().toQualifiedName((obj.eContainer as Package).name + "." + obj.name);
       }
     }
     if (obj instanceof TopicSpec) {

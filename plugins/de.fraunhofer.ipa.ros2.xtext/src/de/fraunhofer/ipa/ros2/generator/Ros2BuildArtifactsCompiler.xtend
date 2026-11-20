@@ -14,7 +14,7 @@ import ros.Package
 import ros.PackageDependency
 import ros.ExternalDependency
 import ros.Plugin
-import ros.PluginLoader
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases
 
 class Ros2BuildArtifactsCompiler {
 
@@ -39,8 +39,8 @@ class Ros2BuildArtifactsCompiler {
     def Set<String> getAllPluginBasePackages(List<Plugin> plugins) {
         val set = new LinkedHashSet<String>()
         for (pl : plugins) {
-            if (pl.loader == PluginLoader.PLUGINLIB) {
-                val basePkg = basePackageName(pl.implements)
+            if (PluginBases.isPluginlib(pl)) {
+                val basePkg = basePackageName(PluginBases.baseClassOf(pl))
                 if (!basePkg.empty) {
                     set.add(basePkg)
                 }
@@ -78,7 +78,7 @@ class Ros2BuildArtifactsCompiler {
         if (pkg === null || build === null) return
         val pkgLower = pkg.name.toLowerCase
         val allPlugins = getAllPlugins(pkg)
-        val pluginlibPlugins = allPlugins.filter[loader == PluginLoader.PLUGINLIB].toList
+        val pluginlibPlugins = allPlugins.filter[PluginBases.isPluginlib(it)].toList
         val hasPlugins = !allPlugins.empty
         val isHybrid = !cppNodes.empty && !pythonNodes.empty
         val isPurePython = cppNodes.empty && !hasPlugins && !pythonNodes.empty
@@ -180,7 +180,7 @@ class Ros2BuildArtifactsCompiler {
         }
 
         for (art : pkg.artifact) {
-            val plibs = art.plugins.filter[loader == PluginLoader.PLUGINLIB].toList
+            val plibs = art.plugins.filter[PluginBases.isPluginlib(it)].toList
             if (!plibs.empty) {
                 val libTarget = pluginLibraryTargetName(art)
                 val pluginLib = build.getOrCreateLibrary(libTarget, true, null)
@@ -204,7 +204,7 @@ class Ros2BuildArtifactsCompiler {
     def String compilePackageXml(Package pkg, List<Node> cppNodes, List<Node> pythonNodes, PackageBuild pluginBuild) {
         val pkgLower = pkg.name.toLowerCase
         val allPlugins = getAllPlugins(pkg)
-        val pluginlibPlugins = allPlugins.filter[loader == PluginLoader.PLUGINLIB].toList
+        val pluginlibPlugins = allPlugins.filter[PluginBases.isPluginlib(it)].toList
         val hasPlugins = !allPlugins.empty
         val isHybrid = !cppNodes.empty && !pythonNodes.empty
         val isPurePython = cppNodes.empty && !hasPlugins && !pythonNodes.empty && (pluginBuild === null || (pluginBuild.libraries.empty && pluginBuild.executables.empty))
@@ -346,10 +346,10 @@ class Ros2BuildArtifactsCompiler {
         val pkgs = new LinkedHashSet<String>()
         pkgs.add("rclcpp")
         pkgs.add("pluginlib")
-        val plibs = art.plugins.filter[loader == PluginLoader.PLUGINLIB].toList
+        val plibs = art.plugins.filter[PluginBases.isPluginlib(it)].toList
         if (plibs.exists[hasActions]) pkgs.add("rclcpp_action")
         for (pl : plibs) {
-            val basePkg = basePackageName(pl.implements)
+            val basePkg = basePackageName(PluginBases.baseClassOf(pl))
             if (!basePkg.empty && basePkg != ownPkgLower) {
                 pkgs.add(basePkg)
             }
@@ -365,7 +365,7 @@ class Ros2BuildArtifactsCompiler {
     def String compileCMakeLists(Package pkg, List<Node> cppNodes, List<Node> pythonNodes, Ros2Target target, PackageBuild pluginBuild) {
         val pkgLower = pkg.name.toLowerCase
         val allPlugins = getAllPlugins(pkg)
-        val pluginlibPlugins = allPlugins.filter[loader == PluginLoader.PLUGINLIB].toList
+        val pluginlibPlugins = allPlugins.filter[PluginBases.isPluginlib(it)].toList
         val pluginBasePkgs = getAllPluginBasePackages(pluginlibPlugins)
         val hasPlugins = !allPlugins.empty
         val isHybrid = !cppNodes.empty && !pythonNodes.empty
@@ -391,7 +391,7 @@ class Ros2BuildArtifactsCompiler {
         val hasLifecycle = hasLifecycle(cppNodes)
         val pluginLibTargets = new java.util.ArrayList<String>()
         for (art : pkg.artifact) {
-            if (art.plugins.exists[loader == PluginLoader.PLUGINLIB]) {
+            if (art.plugins.exists[PluginBases.isPluginlib(it)]) {
                 pluginLibTargets.add(pluginLibraryTargetName(art))
             }
         }
@@ -517,8 +517,8 @@ target_link_libraries(«node.artifactName» PRIVATE
 )
 «ENDFOR»
 «FOR art : pkg.artifact»
-«val plibs = art.plugins.filter[loader == PluginLoader.PLUGINLIB].toList»
-«val extPlugins = art.plugins.filter[loader == PluginLoader.EXTERNAL].toList»
+«val plibs = art.plugins.filter[PluginBases.isPluginlib(it)].toList»
+«val extPlugins = art.plugins.filter[!PluginBases.isPluginlib(it)].toList»
 «IF !plibs.empty»
 «val libTarget = pluginLibraryTargetName(art)»
 

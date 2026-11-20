@@ -45,8 +45,6 @@ Duration : 'duration';
 
 Feedback : 'feedback';
 
-Plugins : 'plugins:';
-
 String_2 : 'string[]';
 
 Threads : 'threads:';
@@ -102,6 +100,8 @@ Int8_1 : 'int8[]';
 Nodes : 'nodes:';
 
 Result : 'result';
+
+Slots : 'slots:';
 
 String_1 : 'string';
 

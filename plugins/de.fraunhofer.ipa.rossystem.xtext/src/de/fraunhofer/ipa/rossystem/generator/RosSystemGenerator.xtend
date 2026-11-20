@@ -160,7 +160,7 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                             resolvedPkgSet.add(p)
                         }
                     }
-                    for (pl : rnode.plugins) {
+                    for (pl : RosSystemScopeProvider.attachedPlugins(rnode)) {
                         if (pl !== null && !pl.eIsProxy) {
                             val p = enclosingPackage(pl)
                             if (p !== null) {

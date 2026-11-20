@@ -13,7 +13,6 @@ package ros;
  * </p>
  * <ul>
  *   <li>{@link ros.Plugin#getImplements <em>Implements</em>}</li>
- *   <li>{@link ros.Plugin#getLoader <em>Loader</em>}</li>
  * </ul>
  *
  * @see ros.RosPackage#getPlugin()
@@ -22,51 +21,25 @@ package ros;
  */
 public interface Plugin extends InterfaceHolder {
 	/**
-	 * Returns the value of the '<em><b>Implements</b></em>' attribute.
+	 * Returns the value of the '<em><b>Implements</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Implements</em>' attribute.
-	 * @see #setImplements(String)
+	 * @return the value of the '<em>Implements</em>' reference.
+	 * @see #setImplements(PluginBase)
 	 * @see ros.RosPackage#getPlugin_Implements()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
-	String getImplements();
+	PluginBase getImplements();
 
 	/**
-	 * Sets the value of the '{@link ros.Plugin#getImplements <em>Implements</em>}' attribute.
+	 * Sets the value of the '{@link ros.Plugin#getImplements <em>Implements</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Implements</em>' attribute.
+	 * @param value the new value of the '<em>Implements</em>' reference.
 	 * @see #getImplements()
 	 * @generated
 	 */
-	void setImplements(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Loader</b></em>' attribute.
-	 * The default value is <code>"pluginlib"</code>.
-	 * The literals are from the enumeration {@link ros.PluginLoader}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Loader</em>' attribute.
-	 * @see ros.PluginLoader
-	 * @see #setLoader(PluginLoader)
-	 * @see ros.RosPackage#getPlugin_Loader()
-	 * @model default="pluginlib"
-	 * @generated
-	 */
-	PluginLoader getLoader();
-
-	/**
-	 * Sets the value of the '{@link ros.Plugin#getLoader <em>Loader</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Loader</em>' attribute.
-	 * @see ros.PluginLoader
-	 * @see #getLoader()
-	 * @generated
-	 */
-	void setLoader(PluginLoader value);
+	void setImplements(PluginBase value);
 
 } // Plugin

@@ -265,26 +265,30 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.Parameter");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cParameterAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameEStringParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Keyword cColonKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final RuleCall cBEGINTerminalRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
-		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
-		private final Keyword cNsKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
-		private final Assignment cNamespaceAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cNamespaceNamespaceParserRuleCall_4_1_0 = (RuleCall)cNamespaceAssignment_4_1.eContents().get(0);
-		private final Keyword cTypeKeyword_5 = (Keyword)cGroup.eContents().get(5);
-		private final Assignment cTypeAssignment_6 = (Assignment)cGroup.eContents().get(6);
-		private final RuleCall cTypeParameterTypeParserRuleCall_6_0 = (RuleCall)cTypeAssignment_6.eContents().get(0);
-		private final Group cGroup_7 = (Group)cGroup.eContents().get(7);
-		private final Keyword cValueKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
-		private final Assignment cValueAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
-		private final RuleCall cValueParameterValueParserRuleCall_7_1_0 = (RuleCall)cValueAssignment_7_1.eContents().get(0);
-		private final RuleCall cENDTerminalRuleCall_8 = (RuleCall)cGroup.eContents().get(8);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
+		private final Assignment cNameAssignment_1_0_0 = (Assignment)cGroup_1_0.eContents().get(0);
+		private final RuleCall cNameEStringParserRuleCall_1_0_0_0 = (RuleCall)cNameAssignment_1_0_0.eContents().get(0);
+		private final Keyword cColonKeyword_1_0_1 = (Keyword)cGroup_1_0.eContents().get(1);
+		private final Assignment cNameAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
+		private final RuleCall cNameAddedKeywordNameParserRuleCall_1_1_0 = (RuleCall)cNameAssignment_1_1.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
+		private final Keyword cNsKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
+		private final Assignment cNamespaceAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
+		private final RuleCall cNamespaceNamespaceParserRuleCall_3_1_0 = (RuleCall)cNamespaceAssignment_3_1.eContents().get(0);
+		private final Keyword cTypeKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Assignment cTypeAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final RuleCall cTypeParameterTypeParserRuleCall_5_0 = (RuleCall)cTypeAssignment_5.eContents().get(0);
+		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
+		private final Keyword cValueKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
+		private final Assignment cValueAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
+		private final RuleCall cValueParameterValueParserRuleCall_6_1_0 = (RuleCall)cValueAssignment_6_1.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_7 = (RuleCall)cGroup.eContents().get(7);
 		
 		//Parameter returns Parameter:
 		//    {Parameter}
-		//        name=EString':'
+		//        (name=EString':' | name=AddedKeywordName)
 		//        BEGIN
 		//        ('ns:' namespace=Namespace)?
 		//        'type:' type=ParameterType
@@ -294,7 +298,7 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		@Override public ParserRule getRule() { return rule; }
 		
 		//{Parameter}
-		//    name=EString':'
+		//    (name=EString':' | name=AddedKeywordName)
 		//    BEGIN
 		//    ('ns:' namespace=Namespace)?
 		//    'type:' type=ParameterType
@@ -305,53 +309,65 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//{Parameter}
 		public Action getParameterAction_0() { return cParameterAction_0; }
 		
+		//(name=EString':' | name=AddedKeywordName)
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//name=EString':'
+		public Group getGroup_1_0() { return cGroup_1_0; }
+		
 		//name=EString
-		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		public Assignment getNameAssignment_1_0_0() { return cNameAssignment_1_0_0; }
 		
 		//EString
-		public RuleCall getNameEStringParserRuleCall_1_0() { return cNameEStringParserRuleCall_1_0; }
+		public RuleCall getNameEStringParserRuleCall_1_0_0_0() { return cNameEStringParserRuleCall_1_0_0_0; }
 		
 		//':'
-		public Keyword getColonKeyword_2() { return cColonKeyword_2; }
+		public Keyword getColonKeyword_1_0_1() { return cColonKeyword_1_0_1; }
+		
+		//name=AddedKeywordName
+		public Assignment getNameAssignment_1_1() { return cNameAssignment_1_1; }
+		
+		//AddedKeywordName
+		public RuleCall getNameAddedKeywordNameParserRuleCall_1_1_0() { return cNameAddedKeywordNameParserRuleCall_1_1_0; }
 		
 		//BEGIN
-		public RuleCall getBEGINTerminalRuleCall_3() { return cBEGINTerminalRuleCall_3; }
+		public RuleCall getBEGINTerminalRuleCall_2() { return cBEGINTerminalRuleCall_2; }
 		
 		//('ns:' namespace=Namespace)?
-		public Group getGroup_4() { return cGroup_4; }
+		public Group getGroup_3() { return cGroup_3; }
 		
 		//'ns:'
-		public Keyword getNsKeyword_4_0() { return cNsKeyword_4_0; }
+		public Keyword getNsKeyword_3_0() { return cNsKeyword_3_0; }
 		
 		//namespace=Namespace
-		public Assignment getNamespaceAssignment_4_1() { return cNamespaceAssignment_4_1; }
+		public Assignment getNamespaceAssignment_3_1() { return cNamespaceAssignment_3_1; }
 		
 		//Namespace
-		public RuleCall getNamespaceNamespaceParserRuleCall_4_1_0() { return cNamespaceNamespaceParserRuleCall_4_1_0; }
+		public RuleCall getNamespaceNamespaceParserRuleCall_3_1_0() { return cNamespaceNamespaceParserRuleCall_3_1_0; }
 		
 		//'type:'
-		public Keyword getTypeKeyword_5() { return cTypeKeyword_5; }
+		public Keyword getTypeKeyword_4() { return cTypeKeyword_4; }
 		
 		//type=ParameterType
-		public Assignment getTypeAssignment_6() { return cTypeAssignment_6; }
+		public Assignment getTypeAssignment_5() { return cTypeAssignment_5; }
 		
 		//ParameterType
-		public RuleCall getTypeParameterTypeParserRuleCall_6_0() { return cTypeParameterTypeParserRuleCall_6_0; }
+		public RuleCall getTypeParameterTypeParserRuleCall_5_0() { return cTypeParameterTypeParserRuleCall_5_0; }
 		
 		//('value:' value=ParameterValue)?
-		public Group getGroup_7() { return cGroup_7; }
+		public Group getGroup_6() { return cGroup_6; }
 		
 		//'value:'
-		public Keyword getValueKeyword_7_0() { return cValueKeyword_7_0; }
+		public Keyword getValueKeyword_6_0() { return cValueKeyword_6_0; }
 		
 		//value=ParameterValue
-		public Assignment getValueAssignment_7_1() { return cValueAssignment_7_1; }
+		public Assignment getValueAssignment_6_1() { return cValueAssignment_6_1; }
 		
 		//ParameterValue
-		public RuleCall getValueParameterValueParserRuleCall_7_1_0() { return cValueParameterValueParserRuleCall_7_1_0; }
+		public RuleCall getValueParameterValueParserRuleCall_6_1_0() { return cValueParameterValueParserRuleCall_6_1_0; }
 		
 		//END
-		public RuleCall getENDTerminalRuleCall_8() { return cENDTerminalRuleCall_8; }
+		public RuleCall getENDTerminalRuleCall_7() { return cENDTerminalRuleCall_7; }
 	}
 	public class ParameterTypeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.ParameterType");
@@ -1125,33 +1141,49 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	public class ParameterStructMemberElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.ParameterStructMember");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cNameEStringParserRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
-		private final Keyword cColonKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cValueAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cValueParameterValueParserRuleCall_2_0 = (RuleCall)cValueAssignment_2.eContents().get(0);
+		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
+		private final Group cGroup_0_0 = (Group)cAlternatives_0.eContents().get(0);
+		private final Assignment cNameAssignment_0_0_0 = (Assignment)cGroup_0_0.eContents().get(0);
+		private final RuleCall cNameEStringParserRuleCall_0_0_0_0 = (RuleCall)cNameAssignment_0_0_0.eContents().get(0);
+		private final Keyword cColonKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
+		private final Assignment cNameAssignment_0_1 = (Assignment)cAlternatives_0.eContents().get(1);
+		private final RuleCall cNameAddedKeywordNameParserRuleCall_0_1_0 = (RuleCall)cNameAssignment_0_1.eContents().get(0);
+		private final Assignment cValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cValueParameterValueParserRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
 		
 		//ParameterStructMember returns ParameterStructMember:
-		//    name=EString':'value=ParameterValue;
+		//    (name=EString':' | name=AddedKeywordName) value=ParameterValue;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//name=EString':'value=ParameterValue
+		//(name=EString':' | name=AddedKeywordName) value=ParameterValue
 		public Group getGroup() { return cGroup; }
 		
+		//(name=EString':' | name=AddedKeywordName)
+		public Alternatives getAlternatives_0() { return cAlternatives_0; }
+		
+		//name=EString':'
+		public Group getGroup_0_0() { return cGroup_0_0; }
+		
 		//name=EString
-		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
+		public Assignment getNameAssignment_0_0_0() { return cNameAssignment_0_0_0; }
 		
 		//EString
-		public RuleCall getNameEStringParserRuleCall_0_0() { return cNameEStringParserRuleCall_0_0; }
+		public RuleCall getNameEStringParserRuleCall_0_0_0_0() { return cNameEStringParserRuleCall_0_0_0_0; }
 		
 		//':'
-		public Keyword getColonKeyword_1() { return cColonKeyword_1; }
+		public Keyword getColonKeyword_0_0_1() { return cColonKeyword_0_0_1; }
+		
+		//name=AddedKeywordName
+		public Assignment getNameAssignment_0_1() { return cNameAssignment_0_1; }
+		
+		//AddedKeywordName
+		public RuleCall getNameAddedKeywordNameParserRuleCall_0_1_0() { return cNameAddedKeywordNameParserRuleCall_0_1_0; }
 		
 		//value=ParameterValue
-		public Assignment getValueAssignment_2() { return cValueAssignment_2; }
+		public Assignment getValueAssignment_1() { return cValueAssignment_1; }
 		
 		//ParameterValue
-		public RuleCall getValueParameterValueParserRuleCall_2_0() { return cValueParameterValueParserRuleCall_2_0; }
+		public RuleCall getValueParameterValueParserRuleCall_1_0() { return cValueParameterValueParserRuleCall_1_0; }
 	}
 	public class ParameterStructTypeMemberElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.ParameterStructTypeMember");
@@ -2260,6 +2292,135 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'node'
 		public Keyword getNodeKeyword_2() { return cNodeKeyword_2; }
 	}
+	public class AddedKeywordNameElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.AddedKeywordName");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Keyword cLifecycleKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
+		private final Keyword cActive_inKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword cPluginsKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword cImplementsKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Keyword cPluginslotsKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
+		private final Keyword cPluginbasesKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		private final Keyword cBaseKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
+		private final Keyword cParameterKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
+		private final Keyword cFormatKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
+		private final Keyword cMultipleKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
+		private final Keyword cClassKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
+		private final Keyword cHeaderKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
+		private final Keyword cLoaderKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
+		private final Keyword cSlotsKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
+		
+		//// Colon keywords added after main. A name directly followed by ':' lexes as one of these, so
+		//// every name position also accepts them: a model on main with, for example, a parameter called
+		//// "format" keeps parsing. The value converter strips the colon. Each language overrides this
+		//// rule with the keywords it actually uses, so it reserves no others.
+		//AddedKeywordName returns ecore::EString:
+		//    'lifecycle:' | 'active_in:' |
+		//    'plugins:' | 'implements:' | 'pluginslots:' | 'pluginbases:' | 'base:' | 'parameter:' |
+		//    'format:' | 'multiple:' | 'class:' | 'header:' | 'loader:' | 'slots:';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'lifecycle:' | 'active_in:' |
+		//'plugins:' | 'implements:' | 'pluginslots:' | 'pluginbases:' | 'base:' | 'parameter:' |
+		//'format:' | 'multiple:' | 'class:' | 'header:' | 'loader:' | 'slots:'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//'lifecycle:'
+		public Keyword getLifecycleKeyword_0() { return cLifecycleKeyword_0; }
+		
+		//'active_in:'
+		public Keyword getActive_inKeyword_1() { return cActive_inKeyword_1; }
+		
+		//'plugins:'
+		public Keyword getPluginsKeyword_2() { return cPluginsKeyword_2; }
+		
+		//'implements:'
+		public Keyword getImplementsKeyword_3() { return cImplementsKeyword_3; }
+		
+		//'pluginslots:'
+		public Keyword getPluginslotsKeyword_4() { return cPluginslotsKeyword_4; }
+		
+		//'pluginbases:'
+		public Keyword getPluginbasesKeyword_5() { return cPluginbasesKeyword_5; }
+		
+		//'base:'
+		public Keyword getBaseKeyword_6() { return cBaseKeyword_6; }
+		
+		//'parameter:'
+		public Keyword getParameterKeyword_7() { return cParameterKeyword_7; }
+		
+		//'format:'
+		public Keyword getFormatKeyword_8() { return cFormatKeyword_8; }
+		
+		//'multiple:'
+		public Keyword getMultipleKeyword_9() { return cMultipleKeyword_9; }
+		
+		//'class:'
+		public Keyword getClassKeyword_10() { return cClassKeyword_10; }
+		
+		//'header:'
+		public Keyword getHeaderKeyword_11() { return cHeaderKeyword_11; }
+		
+		//'loader:'
+		public Keyword getLoaderKeyword_12() { return cLoaderKeyword_12; }
+		
+		//'slots:'
+		public Keyword getSlotsKeyword_13() { return cSlotsKeyword_13; }
+	}
+	public class QualifiedRefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.QualifiedRef");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cSTRINGTerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final RuleCall cIDTerminalRuleCall_1_0 = (RuleCall)cGroup_1.eContents().get(0);
+		private final Alternatives cAlternatives_1_1 = (Alternatives)cGroup_1.eContents().get(1);
+		private final Group cGroup_1_1_0 = (Group)cAlternatives_1_1.eContents().get(0);
+		private final Keyword cFullStopKeyword_1_1_0_0 = (Keyword)cGroup_1_1_0.eContents().get(0);
+		private final RuleCall cIDTerminalRuleCall_1_1_0_1 = (RuleCall)cGroup_1_1_0.eContents().get(1);
+		private final Group cGroup_1_1_1 = (Group)cAlternatives_1_1.eContents().get(1);
+		private final RuleCall cDOUBLETerminalRuleCall_1_1_1_0 = (RuleCall)cGroup_1_1_1.eContents().get(0);
+		private final RuleCall cIDTerminalRuleCall_1_1_1_1 = (RuleCall)cGroup_1_1_1.eContents().get(1);
+		
+		//// A reference to a plugin base or plugin by its qualified name, package.Name, quoted or not.
+		//// The DOUBLE terminal lexes ".E" or ".e" (an exponent without digits), so a segment that starts
+		//// with E or e arrives as DOUBLE followed by the rest of the name.
+		//QualifiedRef returns ecore::EString:
+		//    STRING | ID (('.' ID) | (DOUBLE ID?))*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//STRING | ID (('.' ID) | (DOUBLE ID?))*
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//STRING
+		public RuleCall getSTRINGTerminalRuleCall_0() { return cSTRINGTerminalRuleCall_0; }
+		
+		//ID (('.' ID) | (DOUBLE ID?))*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//ID
+		public RuleCall getIDTerminalRuleCall_1_0() { return cIDTerminalRuleCall_1_0; }
+		
+		//(('.' ID) | (DOUBLE ID?))*
+		public Alternatives getAlternatives_1_1() { return cAlternatives_1_1; }
+		
+		//('.' ID)
+		public Group getGroup_1_1_0() { return cGroup_1_1_0; }
+		
+		//'.'
+		public Keyword getFullStopKeyword_1_1_0_0() { return cFullStopKeyword_1_1_0_0; }
+		
+		//ID
+		public RuleCall getIDTerminalRuleCall_1_1_0_1() { return cIDTerminalRuleCall_1_1_0_1; }
+		
+		//(DOUBLE ID?)
+		public Group getGroup_1_1_1() { return cGroup_1_1_1; }
+		
+		//DOUBLE
+		public RuleCall getDOUBLETerminalRuleCall_1_1_1_0() { return cDOUBLETerminalRuleCall_1_1_1_0; }
+		
+		//ID?
+		public RuleCall getIDTerminalRuleCall_1_1_1_1() { return cIDTerminalRuleCall_1_1_1_1; }
+	}
 	public class ExtensionBlockElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.ExtensionBlock");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -2409,24 +2570,26 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final Keyword cColonKeyword_1_0_1 = (Keyword)cGroup_1_0.eContents().get(1);
 		private final Assignment cKeyAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
 		private final RuleCall cKeyExtensionColonKeyParserRuleCall_1_1_0 = (RuleCall)cKeyAssignment_1_1.eContents().get(0);
+		private final Assignment cKeyAssignment_1_2 = (Assignment)cAlternatives_1.eContents().get(2);
+		private final RuleCall cKeyAddedKeywordNameParserRuleCall_1_2_0 = (RuleCall)cKeyAssignment_1_2.eContents().get(0);
 		private final Assignment cValueAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cValueExtensionValueParserRuleCall_2_0 = (RuleCall)cValueAssignment_2.eContents().get(0);
 		
 		//ExtensionEntry returns ExtensionEntry:
 		//    {ExtensionEntry}
-		//    (key=ExtensionKey ':' | key=ExtensionColonKey)
+		//    (key=ExtensionKey ':' | key=ExtensionColonKey | key=AddedKeywordName)
 		//    value=ExtensionValue;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//{ExtensionEntry}
-		//(key=ExtensionKey ':' | key=ExtensionColonKey)
+		//(key=ExtensionKey ':' | key=ExtensionColonKey | key=AddedKeywordName)
 		//value=ExtensionValue
 		public Group getGroup() { return cGroup; }
 		
 		//{ExtensionEntry}
 		public Action getExtensionEntryAction_0() { return cExtensionEntryAction_0; }
 		
-		//(key=ExtensionKey ':' | key=ExtensionColonKey)
+		//(key=ExtensionKey ':' | key=ExtensionColonKey | key=AddedKeywordName)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//key=ExtensionKey ':'
@@ -2446,6 +2609,12 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		
 		//ExtensionColonKey
 		public RuleCall getKeyExtensionColonKeyParserRuleCall_1_1_0() { return cKeyExtensionColonKeyParserRuleCall_1_1_0; }
+		
+		//key=AddedKeywordName
+		public Assignment getKeyAssignment_1_2() { return cKeyAssignment_1_2; }
+		
+		//AddedKeywordName
+		public RuleCall getKeyAddedKeywordNameParserRuleCall_1_2_0() { return cKeyAddedKeywordNameParserRuleCall_1_2_0; }
 		
 		//value=ExtensionValue
 		public Assignment getValueAssignment_2() { return cValueAssignment_2; }
@@ -3000,6 +3169,8 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	private final TerminalRule tSL_COMMENT;
 	private final EStringElements pEString;
 	private final RosNamesElements pRosNames;
+	private final AddedKeywordNameElements pAddedKeywordName;
+	private final QualifiedRefElements pQualifiedRef;
 	private final TerminalRule tROS_CONVENTION_A;
 	private final TerminalRule tROS_CONVENTION_PARAM;
 	private final ExtensionBlockElements pExtensionBlock;
@@ -3112,6 +3283,8 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		this.tSL_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SL_COMMENT");
 		this.pEString = new EStringElements();
 		this.pRosNames = new RosNamesElements();
+		this.pAddedKeywordName = new AddedKeywordNameElements();
+		this.pQualifiedRef = new QualifiedRefElements();
 		this.tROS_CONVENTION_A = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.ROS_CONVENTION_A");
 		this.tROS_CONVENTION_PARAM = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.ROS_CONVENTION_PARAM");
 		this.pExtensionBlock = new ExtensionBlockElements();
@@ -3230,7 +3403,7 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	
 	//Parameter returns Parameter:
 	//    {Parameter}
-	//        name=EString':'
+	//        (name=EString':' | name=AddedKeywordName)
 	//        BEGIN
 	//        ('ns:' namespace=Namespace)?
 	//        'type:' type=ParameterType
@@ -3499,7 +3672,7 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	}
 	
 	//ParameterStructMember returns ParameterStructMember:
-	//    name=EString':'value=ParameterValue;
+	//    (name=EString':' | name=AddedKeywordName) value=ParameterValue;
 	public ParameterStructMemberElements getParameterStructMemberAccess() {
 		return pParameterStructMember;
 	}
@@ -4109,6 +4282,35 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return getRosNamesAccess().getRule();
 	}
 	
+	//// Colon keywords added after main. A name directly followed by ':' lexes as one of these, so
+	//// every name position also accepts them: a model on main with, for example, a parameter called
+	//// "format" keeps parsing. The value converter strips the colon. Each language overrides this
+	//// rule with the keywords it actually uses, so it reserves no others.
+	//AddedKeywordName returns ecore::EString:
+	//    'lifecycle:' | 'active_in:' |
+	//    'plugins:' | 'implements:' | 'pluginslots:' | 'pluginbases:' | 'base:' | 'parameter:' |
+	//    'format:' | 'multiple:' | 'class:' | 'header:' | 'loader:' | 'slots:';
+	public AddedKeywordNameElements getAddedKeywordNameAccess() {
+		return pAddedKeywordName;
+	}
+	
+	public ParserRule getAddedKeywordNameRule() {
+		return getAddedKeywordNameAccess().getRule();
+	}
+	
+	//// A reference to a plugin base or plugin by its qualified name, package.Name, quoted or not.
+	//// The DOUBLE terminal lexes ".E" or ".e" (an exponent without digits), so a segment that starts
+	//// with E or e arrives as DOUBLE followed by the rest of the name.
+	//QualifiedRef returns ecore::EString:
+	//    STRING | ID (('.' ID) | (DOUBLE ID?))*;
+	public QualifiedRefElements getQualifiedRefAccess() {
+		return pQualifiedRef;
+	}
+	
+	public ParserRule getQualifiedRefRule() {
+		return getQualifiedRefAccess().getRule();
+	}
+	
 	//terminal ROS_CONVENTION_A:
 	//    ( ('/' ID ) | ( ID '/' ) )* ;
 	public TerminalRule getROS_CONVENTION_ARule() {
@@ -4151,7 +4353,7 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	
 	//ExtensionEntry returns ExtensionEntry:
 	//    {ExtensionEntry}
-	//    (key=ExtensionKey ':' | key=ExtensionColonKey)
+	//    (key=ExtensionKey ':' | key=ExtensionColonKey | key=AddedKeywordName)
 	//    value=ExtensionValue;
 	public ExtensionEntryElements getExtensionEntryAccess() {
 		return pExtensionEntry;

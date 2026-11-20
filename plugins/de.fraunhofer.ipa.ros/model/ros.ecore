@@ -57,24 +57,27 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="pluginSlots" upperBound="-1"
         eType="#//PluginSlot" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="PluginLoader">
-    <eLiterals name="PLUGINLIB" literal="pluginlib"/>
-    <eLiterals name="EXTERNAL" value="1" literal="external"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="PluginSlotValueFormat">
     <eLiterals name="CLASS" literal="class"/>
     <eLiterals name="LIBRARY" value="1" literal="library"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Plugin" eSuperTypes="#//InterfaceHolder">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="implements" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="loader" eType="#//PluginLoader"
-        defaultValueLiteral="pluginlib"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="implements" lowerBound="1"
+        eType="#//PluginBase"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PluginBase">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="className" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="header" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="loader" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PluginSlot">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="base" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="base" lowerBound="1" eType="#//PluginBase"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="parameter" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultPlugin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="defaultPlugin" eType="#//Plugin"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiple" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueFormat" eType="#//PluginSlotValueFormat"
         defaultValueLiteral="class"/>
   </eClassifiers>
@@ -88,6 +91,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fromGitRepo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependency" upperBound="-1"
         eType="#//Dependency" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pluginBases" upperBound="-1"
+        eType="#//PluginBase" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Dependency" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="ServiceSpec" eSuperTypes="#//SpecBase">

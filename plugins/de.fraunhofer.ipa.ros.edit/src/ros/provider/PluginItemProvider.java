@@ -11,7 +11,6 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import ros.Plugin;
@@ -46,7 +45,6 @@ public class PluginItemProvider extends InterfaceHolderItemProvider {
 			super.getPropertyDescriptors(object);
 
 			addImplementsPropertyDescriptor(object);
-			addLoaderPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -68,29 +66,7 @@ public class PluginItemProvider extends InterfaceHolderItemProvider {
 				 true,
 				 false,
 				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
 				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Loader feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addLoaderPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Plugin_loader_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Plugin_loader_feature", "_UI_Plugin_type"),
-				 RosPackage.Literals.PLUGIN__LOADER,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -134,7 +110,6 @@ public class PluginItemProvider extends InterfaceHolderItemProvider {
 
 		switch (notification.getFeatureID(Plugin.class)) {
 			case RosPackage.PLUGIN__IMPLEMENTS:
-			case RosPackage.PLUGIN__LOADER:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

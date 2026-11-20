@@ -23,7 +23,7 @@ import org.eclipse.xtext.generator.IGeneratorContext
 import ros.Node
 import ros.Package
 import ros.Plugin
-import ros.PluginLoader
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases
 
 /**
  * Main code generator for ROS 2 package models (.ros2).
@@ -128,8 +128,8 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
             }
 
             val allPlugins = getAllPlugins(pkg)
-            val pluginlibPlugins = allPlugins.filter[loader == PluginLoader.PLUGINLIB].toList
-            val extPlugins = allPlugins.filter[loader == PluginLoader.EXTERNAL].toList
+            val pluginlibPlugins = allPlugins.filter[PluginBases.isPluginlib(it)].toList
+            val extPlugins = allPlugins.filter[!PluginBases.isPluginlib(it)].toList
             val generatePlugins = !allPlugins.empty && (targetNodes === null || targetNodes.empty ||
                 pkg.artifact.exists[art | art.plugins.exists[pl |
                     targetNodes.contains(art.name) || targetNodes.contains(pl.name) || targetNodes.contains(pluginClassName(pl))
@@ -224,7 +224,7 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
                 // 2b. Generate C++ pluginlib Artifacts (external plugins intentionally emit no class/interface code in Phase A)
                 if (generatePlugins && !pluginlibPlugins.empty) {
                     for (art : pkg.artifact) {
-                        for (pl : art.plugins.filter[loader == PluginLoader.PLUGINLIB]) {
+                        for (pl : art.plugins.filter[PluginBases.isPluginlib(it)]) {
                             val matchTarget = targetNodes === null || targetNodes.empty ||
                                 targetNodes.contains(art.name) ||
                                 targetNodes.contains(pl.name) ||

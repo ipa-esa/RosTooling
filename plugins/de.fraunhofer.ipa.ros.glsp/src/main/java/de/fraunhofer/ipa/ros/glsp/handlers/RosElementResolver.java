@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.glsp.handlers;
 
+import de.fraunhofer.ipa.ros.glsp.model.SlotAttachments;
 import de.fraunhofer.ipa.ros.glsp.RosModelTypes;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
 import java.util.ArrayList;
@@ -534,7 +535,7 @@ public final class RosElementResolver {
         if (origin != null && !origin.eIsProxy()) {
             holders.add(origin);
         }
-        for (Plugin pl : rn.getPlugins()) {
+        for (Plugin pl : SlotAttachments.plugins(rn)) {
             Plugin resolved = pl;
             if (resolved != null && resolved.eIsProxy()) {
                 resolved = (Plugin) EcoreUtil.resolve(resolved, rn);
@@ -741,7 +742,7 @@ public final class RosElementResolver {
                 }
             }
         }
-        for (Plugin pl : rn.getPlugins()) {
+        for (Plugin pl : SlotAttachments.plugins(rn)) {
             Plugin resolved = pl;
             if (resolved != null && resolved.eIsProxy()) {
                 resolved = (Plugin) EcoreUtil.resolve(resolved, rn);

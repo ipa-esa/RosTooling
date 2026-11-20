@@ -29,6 +29,7 @@ import system.RosTopicConnection;
 import system.Rossystem;
 import system.RossystemFactory;
 import system.RossystemPackage;
+import system.SlotAttachment;
 import system.SubSystem;
 
 /**
@@ -79,6 +80,7 @@ public class RossystemFactoryImpl extends EFactoryImpl implements RossystemFacto
 			case RossystemPackage.ROSSYSTEM: return createRossystem();
 			case RossystemPackage.PROCESS: return createProcess();
 			case RossystemPackage.ROS_NODE: return createRosNode();
+			case RossystemPackage.SLOT_ATTACHMENT: return createSlotAttachment();
 			case RossystemPackage.ROS_INTERFACE: return createRosInterface();
 			case RossystemPackage.INTERFACE_REFERENCE: return createInterfaceReference();
 			case RossystemPackage.ROS_PUBLISHER_REFERENCE: return createRosPublisherReference();
@@ -145,6 +147,17 @@ public class RossystemFactoryImpl extends EFactoryImpl implements RossystemFacto
 	}
 
     /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public SlotAttachment createSlotAttachment() {
+		SlotAttachmentImpl slotAttachment = new SlotAttachmentImpl();
+		return slotAttachment;
+	}
+
+	/**
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @generated

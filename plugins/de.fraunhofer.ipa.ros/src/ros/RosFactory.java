@@ -94,6 +94,15 @@ public interface RosFactory extends EFactory {
 	Plugin createPlugin();
 
 	/**
+	 * Returns a new object of class '<em>Plugin Base</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Plugin Base</em>'.
+	 * @generated
+	 */
+	PluginBase createPluginBase();
+
+	/**
 	 * Returns a new object of class '<em>Plugin Slot</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -5,11 +5,12 @@ package ros.impl;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import ros.Plugin;
-import ros.PluginLoader;
+import ros.PluginBase;
 import ros.RosPackage;
 
 /**
@@ -21,51 +22,20 @@ import ros.RosPackage;
  * </p>
  * <ul>
  *   <li>{@link ros.impl.PluginImpl#getImplements <em>Implements</em>}</li>
- *   <li>{@link ros.impl.PluginImpl#getLoader <em>Loader</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class PluginImpl extends InterfaceHolderImpl implements Plugin {
 	/**
-	 * The default value of the '{@link #getImplements() <em>Implements</em>}' attribute.
+	 * The cached value of the '{@link #getImplements() <em>Implements</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getImplements()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String IMPLEMENTS_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getImplements() <em>Implements</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getImplements()
-	 * @generated
-	 * @ordered
-	 */
-	protected String implements_ = IMPLEMENTS_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getLoader() <em>Loader</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLoader()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final PluginLoader LOADER_EDEFAULT = PluginLoader.PLUGINLIB;
-
-	/**
-	 * The cached value of the '{@link #getLoader() <em>Loader</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLoader()
-	 * @generated
-	 * @ordered
-	 */
-	protected PluginLoader loader = LOADER_EDEFAULT;
+	protected PluginBase implements_;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -92,7 +62,24 @@ public class PluginImpl extends InterfaceHolderImpl implements Plugin {
 	 * @generated
 	 */
 	@Override
-	public String getImplements() {
+	public PluginBase getImplements() {
+		if (implements_ != null && implements_.eIsProxy()) {
+			InternalEObject oldImplements = (InternalEObject)implements_;
+			implements_ = (PluginBase)eResolveProxy(oldImplements);
+			if (implements_ != oldImplements) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RosPackage.PLUGIN__IMPLEMENTS, oldImplements, implements_));
+			}
+		}
+		return implements_;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PluginBase basicGetImplements() {
 		return implements_;
 	}
 
@@ -102,8 +89,8 @@ public class PluginImpl extends InterfaceHolderImpl implements Plugin {
 	 * @generated
 	 */
 	@Override
-	public void setImplements(String newImplements) {
-		String oldImplements = implements_;
+	public void setImplements(PluginBase newImplements) {
+		PluginBase oldImplements = implements_;
 		implements_ = newImplements;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, RosPackage.PLUGIN__IMPLEMENTS, oldImplements, implements_));
@@ -115,35 +102,11 @@ public class PluginImpl extends InterfaceHolderImpl implements Plugin {
 	 * @generated
 	 */
 	@Override
-	public PluginLoader getLoader() {
-		return loader;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setLoader(PluginLoader newLoader) {
-		PluginLoader oldLoader = loader;
-		loader = newLoader == null ? LOADER_EDEFAULT : newLoader;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RosPackage.PLUGIN__LOADER, oldLoader, loader));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case RosPackage.PLUGIN__IMPLEMENTS:
-				return getImplements();
-			case RosPackage.PLUGIN__LOADER:
-				return getLoader();
+				if (resolve) return getImplements();
+				return basicGetImplements();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -157,10 +120,7 @@ public class PluginImpl extends InterfaceHolderImpl implements Plugin {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case RosPackage.PLUGIN__IMPLEMENTS:
-				setImplements((String)newValue);
-				return;
-			case RosPackage.PLUGIN__LOADER:
-				setLoader((PluginLoader)newValue);
+				setImplements((PluginBase)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -175,10 +135,7 @@ public class PluginImpl extends InterfaceHolderImpl implements Plugin {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case RosPackage.PLUGIN__IMPLEMENTS:
-				setImplements(IMPLEMENTS_EDEFAULT);
-				return;
-			case RosPackage.PLUGIN__LOADER:
-				setLoader(LOADER_EDEFAULT);
+				setImplements((PluginBase)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -193,29 +150,9 @@ public class PluginImpl extends InterfaceHolderImpl implements Plugin {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case RosPackage.PLUGIN__IMPLEMENTS:
-				return IMPLEMENTS_EDEFAULT == null ? implements_ != null : !IMPLEMENTS_EDEFAULT.equals(implements_);
-			case RosPackage.PLUGIN__LOADER:
-				return loader != LOADER_EDEFAULT;
+				return implements_ != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (implements: ");
-		result.append(implements_);
-		result.append(", loader: ");
-		result.append(loader);
-		result.append(')');
-		return result.toString();
 	}
 
 } //PluginImpl

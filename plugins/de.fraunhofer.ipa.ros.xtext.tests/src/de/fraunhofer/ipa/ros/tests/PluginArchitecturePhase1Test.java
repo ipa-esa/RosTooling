@@ -37,13 +37,13 @@ import org.eclipse.xtext.validation.Issue;
 import org.junit.Before;
 import org.junit.Test;
 import ros.AmentPackage;
-import ros.PluginLoader;
+import ros.PluginBase;
 import ros.PluginSlotValueFormat;
 
 /**
- * Phase 1 verification tests: core ROS 2 {@code pluginlib} and {@code external} plugins,
- * {@code pluginslots:} on host nodes, node-less plugin artifacts, and {@code RosNode.plugins}
- * host-rule wiring, validation, and launch/CMake generation.
+ * Core ROS 2 plugin model: plugin bases ({@code pluginbases:}), {@code pluginlib} and
+ * language-plugin loaders, {@code pluginslots:} on host nodes, plugin-only artifacts, and
+ * {@code slots:} attachments in {@code .rossystem}, with validation and launch/CMake generation.
  */
 public class PluginArchitecturePhase1Test {
 
@@ -117,6 +117,32 @@ public class PluginArchitecturePhase1Test {
                 """;
     }
 
+    private static String navCoreModel() {
+        return """
+                nav2_core:
+                  pluginbases:
+                    GlobalPlanner:
+                      class: "nav2_core::GlobalPlanner"
+                      header: "nav2_core/global_planner.hpp"
+                      loader: pluginlib
+                """;
+    }
+
+    private static String customCoreModel() {
+        return """
+                custom_core:
+                  pluginbases:
+                    ActionBase:
+                      class: "custom_core::ActionBase"
+                      header: "custom_core/action_base.hpp"
+                      loader: custom_loader
+                    StrategyBase:
+                      class: "custom_core::StrategyBase"
+                      header: "custom_core/strategy_base.hpp"
+                      loader: custom_loader
+                """;
+    }
+
     private static String hostPkgModel() {
         return """
                 planner_host_pkg:
@@ -133,9 +159,9 @@ public class PluginArchitecturePhase1Test {
                           type: Array [ String ]
                       pluginslots:
                         global_planner:
-                          base: "nav2_core::GlobalPlanner"
+                          base: nav2_core.GlobalPlanner
                           parameter: planner_plugin
-                          default: "planner_plugins_pkg::StraightLine"
+                          default: planner_plugins_pkg.StraightLine
                 """;
     }
 
@@ -146,8 +172,7 @@ public class PluginArchitecturePhase1Test {
                     straight_line_planner:
                       plugins:
                         StraightLine:
-                          implements: "nav2_core::GlobalPlanner"
-                          loader: pluginlib
+                          implements: nav2_core.GlobalPlanner
                           publishers:
                             plan_debug:
                               type: "std_msgs/msg/String"
@@ -162,9 +187,18 @@ public class PluginArchitecturePhase1Test {
     public void parseAndValidatePluginlibAndPluginSlot() throws Exception {
         XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
         loadFromString(rs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        Resource coreRes = loadFromString(rs, "inmemory:/nav2_core.ros2", navCoreModel());
         Resource hostRes = loadFromString(rs, "inmemory:/planner_host.ros2", hostPkgModel());
         Resource plugRes = loadFromString(rs, "inmemory:/planner_plugins.ros2", validPluginlibPkgModel());
         EcoreUtil.resolveAll(rs);
+
+        List<Issue> coreErrors = validate(ros2Injector, coreRes).stream()
+                .filter(i -> i.getSeverity() == Severity.ERROR).toList();
+        assertTrue("Base package validation errors: " + coreErrors, coreErrors.isEmpty());
+        PluginBase base = ((AmentPackage) coreRes.getContents().get(0)).getPluginBases().get(0);
+        assertEquals("nav2_core::GlobalPlanner", base.getClassName());
+        assertEquals("nav2_core/global_planner.hpp", base.getHeader());
+        assertEquals("pluginlib", base.getLoader());
 
         List<Issue> hostErrors = validate(ros2Injector, hostRes).stream()
                 .filter(i -> i.getSeverity() == Severity.ERROR).toList();
@@ -174,39 +208,121 @@ public class PluginArchitecturePhase1Test {
         assertTrue("Plugin validation errors: " + plugErrors, plugErrors.isEmpty());
 
         AmentPackage hostPkg = (AmentPackage) hostRes.getContents().get(0);
-        assertEquals(PluginSlotValueFormat.CLASS,
-                hostPkg.getArtifact().get(0).getNode().getPluginSlots().get(0).getValueFormat());
+        ros.PluginSlot slot = hostPkg.getArtifact().get(0).getNode().getPluginSlots().get(0);
+        assertEquals(PluginSlotValueFormat.CLASS, slot.getValueFormat());
+        assertEquals(base, slot.getBase());
+        assertFalse(slot.isMultiple());
 
         AmentPackage pkg = (AmentPackage) plugRes.getContents().get(0);
         assertEquals(1, pkg.getArtifact().size());
         assertEquals(null, pkg.getArtifact().get(0).getNode());
         assertEquals(1, pkg.getArtifact().get(0).getPlugins().size());
-        assertEquals(PluginLoader.PLUGINLIB, pkg.getArtifact().get(0).getPlugins().get(0).getLoader());
+        assertEquals(base, pkg.getArtifact().get(0).getPlugins().get(0).getImplements());
+        assertEquals(pkg.getArtifact().get(0).getPlugins().get(0), slot.getDefaultPlugin());
     }
 
     @Test
-    public void validateRejectsMissingImplementsAndInvalidSlots() throws Exception {
+    public void artifactHoldsNodeOrPluginsAndReferencesAreChecked() throws Exception {
+        XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
+        loadFromString(rs, "inmemory:/nav2_core.ros2", navCoreModel());
+        Resource both = loadFromString(rs, "inmemory:/both.ros2", """
+                both_pkg:
+                  artifacts:
+                    mixed:
+                      node: mixed
+                      plugins:
+                        P:
+                          implements: nav2_core.GlobalPlanner
+                """);
+        Resource noImplements = loadFromString(rs, "inmemory:/no_impl.ros2", """
+                no_impl_pkg:
+                  artifacts:
+                    lib:
+                      plugins:
+                        P:
+                          publishers:
+                            out:
+                              type: "std_msgs/msg/String"
+                """);
+        Resource unknownBase = loadFromString(rs, "inmemory:/unknown_base.ros2", """
+                unknown_base_pkg:
+                  artifacts:
+                    lib:
+                      plugins:
+                        P:
+                          implements: nav2_core.NoSuchBase
+                """);
+        Resource exponentLike = loadFromString(rs, "inmemory:/exponent_like.ros2", """
+                exp_pkg:
+                  pluginbases:
+                    ExtBase:
+                      class: "exp_pkg::ExtBase"
+                      header: "exp_pkg/ext_base.hpp"
+                      loader: pluginlib
+                    e2e:
+                      class: "exp_pkg::E2e"
+                      header: "exp_pkg/e2e.hpp"
+                      loader: pluginlib
+                  artifacts:
+                    lib:
+                      plugins:
+                        A:
+                          implements: exp_pkg.ExtBase
+                        B:
+                          implements: exp_pkg.e2e
+                """);
+        Resource quoted = loadFromString(rs, "inmemory:/quoted.ros2", """
+                quoted_pkg:
+                  artifacts:
+                    lib:
+                      plugins:
+                        P:
+                          implements: "nav2_core.GlobalPlanner"
+                    host:
+                      node: host
+                      parameters:
+                        planners:
+                          type: Array [ String ]
+                      pluginslots:
+                        planners:
+                          base: nav2_core.GlobalPlanner
+                          parameter: planners
+                          multiple: true
+                """);
+        EcoreUtil.resolveAll(rs);
+
+        assertFalse("node: and plugins: in one artifact must not parse", both.getErrors().isEmpty());
+        assertFalse("a plugin without implements: must not parse", noImplements.getErrors().isEmpty());
+        assertTrue(validate(ros2Injector, unknownBase).stream().anyMatch(i ->
+                i.getSeverity() == Severity.ERROR && i.getMessage().contains("nav2_core.NoSuchBase")));
+
+        List<Issue> exponentErrors = validate(ros2Injector, exponentLike).stream()
+                .filter(i -> i.getSeverity() == Severity.ERROR).toList();
+        assertTrue("Segments starting with E or e must link: " + exponentErrors, exponentErrors.isEmpty());
+        AmentPackage expPkg = (AmentPackage) exponentLike.getContents().get(0);
+        assertEquals("ExtBase", expPkg.getArtifact().get(0).getPlugins().get(0).getImplements().getName());
+        assertEquals("e2e", expPkg.getArtifact().get(0).getPlugins().get(1).getImplements().getName());
+
+        List<Issue> quotedErrors = validate(ros2Injector, quoted).stream()
+                .filter(i -> i.getSeverity() == Severity.ERROR).toList();
+        assertTrue("Quoted reference and multiple: errors: " + quotedErrors, quotedErrors.isEmpty());
+        AmentPackage pkg = (AmentPackage) quoted.getContents().get(0);
+        assertEquals("GlobalPlanner", pkg.getArtifact().get(0).getPlugins().get(0).getImplements().getName());
+        assertTrue(pkg.getArtifact().get(1).getNode().getPluginSlots().get(0).isMultiple());
+    }
+
+    @Test
+    public void validateRejectsInvalidBasesSlotsAndAttachments() throws Exception {
         XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
         loadFromString(rs, "inmemory:/std_msgs.ros", stdMsgsSpec());
-        loadFromString(rs, "inmemory:/host_for_val.ros2", hostPkgModel());
-        Resource badPlugRes = loadFromString(rs, "inmemory:/bad_plug.ros2", """
-                bad_plug_pkg:
-                  artifacts:
-                    bad_lib:
-                      plugins:
-                        BrokenPlugin:
-                          loader: pluginlib
-                """);
-        Resource unattachedExtRes = loadFromString(rs, "inmemory:/unattached_ext.ros2", """
-                unattached_ext_pkg:
-                  artifacts:
-                    ext_lib:
-                      plugins:
-                        UnattachedExt:
-                          loader: external
-                        MismatchedExt:
-                          loader: external
-                          implements: "other_core::WrongBase"
+        loadFromString(rs, "inmemory:/nav2_core.ros2", navCoreModel());
+        Resource badBaseRes = loadFromString(rs, "inmemory:/bad_base.ros2", """
+                bad_base_pkg:
+                  pluginbases:
+                    NoNamespace:
+                      class: "NoNamespaceBase"
+                      header: "bad_base_pkg/no_namespace.hpp"
+                      loader: pluginlib
                 """);
         Resource badSlotRes = loadFromString(rs, "inmemory:/bad_slot.ros2", """
                 bad_slot_pkg:
@@ -218,78 +334,72 @@ public class PluginArchitecturePhase1Test {
                           type: Integer
                       pluginslots:
                         s1:
-                          base: "NoNamespaceBase"
+                          base: nav2_core.GlobalPlanner
                           parameter: missing_param
                         s2:
-                          base: "pkg::GoodBase"
+                          base: nav2_core.GlobalPlanner
                           parameter: count
                 """);
         EcoreUtil.resolveAll(rs);
 
-        List<Issue> plugIssues = validate(ros2Injector, badPlugRes);
-        assertTrue(plugIssues.stream().anyMatch(i ->
-                i.getSeverity() == Severity.ERROR
-                        && RosValidator.PLUGIN_MISSING_IMPLEMENTS.equals(i.getCode())));
-
-        // Unattached external plugins do not require 'implements:' in .ros2.
-        List<Issue> unattachedExtErrors = validate(ros2Injector, unattachedExtRes).stream()
-                .filter(i -> i.getSeverity() == Severity.ERROR).toList();
-        assertTrue("Unattached external plugin errors: " + unattachedExtErrors, unattachedExtErrors.isEmpty());
+        List<Issue> baseIssues = validate(ros2Injector, badBaseRes);
+        assertTrue(baseIssues.stream().anyMatch(i ->
+                i.getSeverity() == Severity.ERROR && RosValidator.PLUGIN_INVALID_IMPLEMENTS.equals(i.getCode())));
 
         List<Issue> slotIssues = validate(ros2Injector, badSlotRes);
-        assertTrue(slotIssues.stream().anyMatch(i -> RosValidator.SLOT_INVALID_BASE.equals(i.getCode())));
         assertTrue(slotIssues.stream().anyMatch(i -> RosValidator.SLOT_MISSING_PARAM.equals(i.getCode())));
         assertTrue(slotIssues.stream().anyMatch(i -> RosValidator.SLOT_INVALID_PARAM_TYPE.equals(i.getCode())));
 
-        // In .rossystem, strict matching rejects ANY attached plugin (even external) lacking 'implements:'
-        // or whose 'implements:' does not match a host PluginSlot.base.
+        // In .rossystem, a plugin must implement the base of the slot it is attached to, and the
+        // slot must exist on the host node.
         XtextResourceSet sysRs = rosSystemInjector.getInstance(XtextResourceSet.class);
         loadFromString(sysRs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        loadFromString(sysRs, "inmemory:/nav2_core.ros2", navCoreModel());
+        loadFromString(sysRs, "inmemory:/custom_core.ros2", customCoreModel());
         loadFromString(sysRs, "inmemory:/host_for_val.ros2", hostPkgModel());
-        loadFromString(sysRs, "inmemory:/unattached_ext.ros2", """
-                unattached_ext_pkg:
+        loadFromString(sysRs, "inmemory:/planner_plugins.ros2", validPluginlibPkgModel());
+        loadFromString(sysRs, "inmemory:/other_plugins.ros2", """
+                other_plugins_pkg:
                   artifacts:
-                    ext_lib:
+                    other_lib:
                       plugins:
-                        UnattachedExt:
-                          loader: external
-                        MismatchedExt:
-                          loader: external
-                          implements: "other_core::WrongBase"
+                        WrongBase:
+                          implements: custom_core.ActionBase
                 """);
-        Resource extNoImplSys = loadFromString(sysRs, "inmemory:/ext_no_impl.rossystem", """
-                ext_no_impl:
+        Resource mismatchSys = loadFromString(sysRs, "inmemory:/mismatch.rossystem", """
+                mismatch:
                   nodes:
                     planner_inst:
                       from: "planner_host_pkg.planner_server"
-                      plugins: ["unattached_ext_pkg.UnattachedExt"]
+                      slots:
+                        global_planner: [other_plugins_pkg.WrongBase]
                 """);
-        Resource extMismatchSys = loadFromString(sysRs, "inmemory:/ext_mismatch.rossystem", """
-                ext_mismatch:
+        Resource unknownSlotSys = loadFromString(sysRs, "inmemory:/unknown_slot.rossystem", """
+                unknown_slot:
                   nodes:
                     planner_inst:
                       from: "planner_host_pkg.planner_server"
-                      plugins: ["unattached_ext_pkg.MismatchedExt"]
+                      slots:
+                        no_such_slot: [planner_plugins_pkg.StraightLine]
                 """);
         EcoreUtil.resolveAll(sysRs);
 
-        List<Issue> noImplIssues = validate(rosSystemInjector, extNoImplSys);
-        assertTrue("Expected INCOMPATIBLE_PLUGIN for external plugin without implements: " + noImplIssues,
-                noImplIssues.stream().anyMatch(i ->
-                        i.getSeverity() == Severity.ERROR
-                                && RosSystemValidator.INCOMPATIBLE_PLUGIN.equals(i.getCode())));
-
-        List<Issue> mismatchIssues = validate(rosSystemInjector, extMismatchSys);
-        assertTrue("Expected INCOMPATIBLE_PLUGIN for external plugin with mismatched implements: " + mismatchIssues,
+        List<Issue> mismatchIssues = validate(rosSystemInjector, mismatchSys);
+        assertTrue("Expected INCOMPATIBLE_PLUGIN for a plugin of another base: " + mismatchIssues,
                 mismatchIssues.stream().anyMatch(i ->
                         i.getSeverity() == Severity.ERROR
                                 && RosSystemValidator.INCOMPATIBLE_PLUGIN.equals(i.getCode())));
+        List<Issue> unknownSlotIssues = validate(rosSystemInjector, unknownSlotSys);
+        assertTrue("Expected a linking error for an unknown slot: " + unknownSlotIssues,
+                unknownSlotIssues.stream().anyMatch(i ->
+                        i.getSeverity() == Severity.ERROR && i.getMessage().contains("no_such_slot")));
     }
 
     @Test
     public void generatePluginlibArtifactsAndRespectDomainLogicShield() throws Exception {
         XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
         loadFromString(rs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        loadFromString(rs, "inmemory:/nav2_core.ros2", navCoreModel());
         Resource plugRes = loadFromString(rs, "inmemory:/planner_plugins.ros2", validPluginlibPkgModel());
         EcoreUtil.resolveAll(rs);
 
@@ -351,14 +461,14 @@ public class PluginArchitecturePhase1Test {
     public void generatePluginlibAcrossDistroMatrixConformsToDialects() throws Exception {
         XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
         loadFromString(rs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        loadFromString(rs, "inmemory:/nav2_core.ros2", navCoreModel());
         Resource plugRes = loadFromString(rs, "inmemory:/srv_plugins.ros2", """
                 srv_plugins_pkg:
                   artifacts:
                     srv_plugin_lib:
                       plugins:
                         ServicePlugin:
-                          implements: "nav2_core::GlobalPlanner"
-                          loader: pluginlib
+                          implements: nav2_core.GlobalPlanner
                           serviceservers:
                             reset_plan:
                               type: "std_srvs/srv/Trigger"
@@ -395,13 +505,14 @@ public class PluginArchitecturePhase1Test {
     public void generateExternalPluginEmitsNoClassOrPluginlibExport() throws Exception {
         XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
         loadFromString(rs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        loadFromString(rs, "inmemory:/custom_core.ros2", customCoreModel());
         Resource extRes = loadFromString(rs, "inmemory:/ext_plugins.ros2", """
                 ext_plugins_pkg:
                   artifacts:
                     ext_lib:
                       plugins:
                         MyExtPlugin:
-                          loader: external
+                          implements: custom_core.ActionBase
                           publishers:
                             out_topic:
                               type: "std_msgs/msg/String"
@@ -426,6 +537,7 @@ public class PluginArchitecturePhase1Test {
     public void systemHostRuleExposesPluginInterfacesConnectsAndEmitsSlotParameter() throws Exception {
         XtextResourceSet rs = rosSystemInjector.getInstance(XtextResourceSet.class);
         loadFromString(rs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        loadFromString(rs, "inmemory:/nav2_core.ros2", navCoreModel());
         loadFromString(rs, "inmemory:/planner_host.ros2", hostPkgModel());
         loadFromString(rs, "inmemory:/planner_plugins.ros2", validPluginlibPkgModel());
         loadFromString(rs, "inmemory:/consumer.ros2", """
@@ -442,7 +554,8 @@ public class PluginArchitecturePhase1Test {
                   nodes:
                     planner_inst:
                       from: "planner_host_pkg.planner_server"
-                      plugins: ["planner_plugins_pkg.StraightLine"]
+                      slots:
+                        global_planner: [planner_plugins_pkg.StraightLine]
                     consumer_inst:
                       from: "consumer_pkg.consumer_node"
                   connections:
@@ -465,19 +578,33 @@ public class PluginArchitecturePhase1Test {
         assertTrue("package.xml should depend on plugin package: " + pkgXml,
                 pkgXml.contains("<exec_depend>planner_plugins_pkg</exec_depend>"));
 
-        // Negative test: attaching pluginlib plugin to a host with NO matching slot produces error.
+        // Negative test: a host without slots has no slot to attach to.
         Resource badSysRes = loadFromString(rs, "inmemory:/bad_nav_sys.rossystem", """
                 bad_nav_sys:
                   nodes:
                     consumer_inst:
                       from: "consumer_pkg.consumer_node"
-                      plugins: ["planner_plugins_pkg.StraightLine"]
+                      slots:
+                        global_planner: [planner_plugins_pkg.StraightLine]
                 """);
         EcoreUtil.resolveAll(rs);
         List<Issue> badIssues = validate(rosSystemInjector, badSysRes);
         assertTrue(badIssues.stream().anyMatch(i ->
-                i.getSeverity() == Severity.ERROR
-                        && RosSystemValidator.INCOMPATIBLE_PLUGIN.equals(i.getCode())));
+                i.getSeverity() == Severity.ERROR && i.getMessage().contains("global_planner")));
+
+        // With no attachment the slot falls back to its default plugin.
+        Resource defaultSysRes = loadFromString(rs, "inmemory:/default_nav_sys.rossystem", """
+                default_nav_sys:
+                  nodes:
+                    planner_inst:
+                      from: "planner_host_pkg.planner_server"
+                """);
+        EcoreUtil.resolveAll(rs);
+        InMemoryFileSystemAccess defaultFsa = new InMemoryFileSystemAccess();
+        sysGen.generateSystemTargeted(defaultSysRes, defaultFsa, List.of());
+        String defaultLaunch = defaultFsa.getTextFiles().get("DEFAULT_OUTPUTdefault_nav_sys/launch/default_nav_sys.launch.py").toString();
+        assertTrue("Launch should emit the slot default: " + defaultLaunch,
+                defaultLaunch.contains("\"planner_plugin\": ParameterValue(\"planner_plugins_pkg::StraightLine\", value_type=str)"));
     }
 
     @Test
@@ -496,11 +623,12 @@ public class PluginArchitecturePhase1Test {
                           type: Struct [ mode String ]
                       pluginslots:
                         leaves_slot:
-                          base: "custom_core::ActionBase"
+                          base: custom_core.ActionBase
                           parameter: leaf_libraries
                           format: library
+                          multiple: true
                         strategy_slot:
-                          base: "custom_core::StrategyBase"
+                          base: custom_core.StrategyBase
                           parameter: strategy_plugin
                           format: class
                 """;
@@ -510,30 +638,25 @@ public class PluginArchitecturePhase1Test {
                     leaves_lib:
                       plugins:
                         ActionLeafA:
-                          implements: "custom_core::ActionBase"
-                          loader: external
+                          implements: custom_core.ActionBase
                           publishers:
                             leaf_status:
                               type: "std_msgs/msg/String"
                         ActionLeafB:
-                          implements: "custom_core::ActionBase"
-                          loader: external
-                        StandaloneHelper:
-                          loader: external
+                          implements: custom_core.ActionBase
                     extra_leaves_lib:
                       plugins:
                         ActionLeafC:
-                          implements: "custom_core::ActionBase"
-                          loader: external
+                          implements: custom_core.ActionBase
                     strategy_lib:
                       plugins:
                         FastStrategy:
-                          implements: "custom_core::StrategyBase"
-                          loader: external
+                          implements: custom_core.StrategyBase
                 """;
 
         XtextResourceSet rs = ros2Injector.getInstance(XtextResourceSet.class);
         loadFromString(rs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        loadFromString(rs, "inmemory:/custom_core.ros2", customCoreModel());
         Resource hostRes = loadFromString(rs, "inmemory:/custom_host.ros2", orchestratorPkg);
         Resource leavesRes = loadFromString(rs, "inmemory:/custom_leaves.ros2", leavesPkg);
         EcoreUtil.resolveAll(rs);
@@ -551,11 +674,12 @@ public class PluginArchitecturePhase1Test {
         assertEquals(PluginSlotValueFormat.CLASS,
                 hostPkg.getArtifact().get(0).getNode().getPluginSlots().get(1).getValueFormat());
 
-        // System wiring (inline launch params AND yaml config):
-        // Attach two external plugins from leaves_lib plus one from extra_leaves_lib to library-format slot,
-        // and one external plugin to class-format slot (confirming loader does not dictate format).
+        // System wiring (inline launch params AND yaml config): two plugins from leaves_lib plus one
+        // from extra_leaves_lib go to the library-format slot, one plugin to the class-format slot
+        // (the loader does not dictate the format).
         XtextResourceSet sysRs = rosSystemInjector.getInstance(XtextResourceSet.class);
         loadFromString(sysRs, "inmemory:/std_msgs.ros", stdMsgsSpec());
+        loadFromString(sysRs, "inmemory:/custom_core.ros2", customCoreModel());
         loadFromString(sysRs, "inmemory:/custom_host.ros2", orchestratorPkg);
         loadFromString(sysRs, "inmemory:/custom_leaves.ros2", leavesPkg);
 
@@ -564,7 +688,9 @@ public class PluginArchitecturePhase1Test {
                   nodes:
                     orch:
                       from: "custom_host_pkg.host_orchestrator"
-                      plugins: ["custom_leaves_pkg.ActionLeafA", "custom_leaves_pkg.ActionLeafB", "custom_leaves_pkg.ActionLeafC", "custom_leaves_pkg.FastStrategy"]
+                      slots:
+                        leaves_slot: [custom_leaves_pkg.ActionLeafA, custom_leaves_pkg.ActionLeafB, custom_leaves_pkg.ActionLeafC]
+                        strategy_slot: [custom_leaves_pkg.FastStrategy]
                 """);
         EcoreUtil.resolveAll(sysRs);
 
@@ -588,7 +714,9 @@ public class PluginArchitecturePhase1Test {
                   nodes:
                     orch:
                       from: "custom_host_pkg.host_orchestrator"
-                      plugins: ["custom_leaves_pkg.ActionLeafA", "custom_leaves_pkg.ActionLeafB", "custom_leaves_pkg.ActionLeafC", "custom_leaves_pkg.FastStrategy"]
+                      slots:
+                        leaves_slot: [custom_leaves_pkg.ActionLeafA, custom_leaves_pkg.ActionLeafB, custom_leaves_pkg.ActionLeafC]
+                        strategy_slot: [custom_leaves_pkg.FastStrategy]
                       parameters:
                         - extra_cfg: "custom_host_pkg.host_orchestrator.extra_cfg"
                           value: [

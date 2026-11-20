@@ -34,6 +34,38 @@ public class RosBasicsValueConverterService extends Ecore2XtextTerminalConverter
         };
     }
 
+    /** A name that lexed as a keyword added after main, such as {@code format:}; the value is the bare name. */
+    @ValueConverter(rule = "AddedKeywordName")
+    public IValueConverter<String> AddedKeywordName() {
+        return ExtensionColonKey();
+    }
+
+    /** {@code package.Name}, quoted or not; the value is the unquoted name without spaces around the dots. */
+    @ValueConverter(rule = "QualifiedRef")
+    public IValueConverter<String> QualifiedRef() {
+        return new IValueConverter<String>() {
+            @Override
+            public String toValue(final String string, final INode node) throws ValueConverterException {
+                if (string == null) {
+                    return null;
+                }
+                String trimmed = string.trim();
+                if (trimmed.length() >= 2 && trimmed.startsWith("\"") && trimmed.endsWith("\"")) {
+                    return trimmed.substring(1, trimmed.length() - 1);
+                }
+                return trimmed.replaceAll("\\s+", "");
+            }
+
+            @Override
+            public String toString(final String value) throws ValueConverterException {
+                if (value == null) {
+                    return null;
+                }
+                return value.matches("[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)*") ? value : "\"" + value + "\"";
+            }
+        };
+    }
+
     @ValueConverter(rule = "ExtensionKey")
     public IValueConverter<String> ExtensionKey() {
         return new IValueConverter<String>() {

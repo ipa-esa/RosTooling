@@ -37,7 +37,6 @@ import ros.Parameter;
 import ros.ParameterType;
 import ros.ParameterValue;
 import ros.Plugin;
-import ros.PluginLoader;
 import ros.PluginSlot;
 import ros.PluginSlotValueFormat;
 import ros.QualityOfService;
@@ -234,17 +233,18 @@ public final class RosPackageSetEditor {
                     param = jsonStr(obj, "parameter", param);
                     def = jsonStr(obj, "default", def);
                     formatStr = jsonStr(obj, "format", jsonStr(obj, "valueFormat", formatStr));
+                    slot.setMultiple(Boolean.parseBoolean(jsonStr(obj, "multiple", "false")));
                 } catch (Exception ignored) {
                     // Fall back to literal values
                 }
             }
-            slot.setBase(base);
+            slot.setBase(blank(base) ? null : PluginRefs.base(node, base));
             slot.setParameter(param);
             if ("library".equalsIgnoreCase(formatStr.trim())) {
                 slot.setValueFormat(PluginSlotValueFormat.LIBRARY);
             }
             if (!blank(def)) {
-                slot.setDefaultPlugin(def);
+                slot.setDefaultPlugin(PluginRefs.plugin(node, def));
             }
             node.getPluginSlots().add(slot);
             state.markDirty(node, "pluginSlots");
@@ -341,7 +341,7 @@ public final class RosPackageSetEditor {
             return true;
         }
         if (is(prop, "base")) {
-            slot.setBase(val == null ? "" : val.trim());
+            slot.setBase(PluginRefs.base(slot, val));
             return true;
         }
         if (is(prop, "parameter")) {
@@ -349,7 +349,11 @@ public final class RosPackageSetEditor {
             return true;
         }
         if (is(prop, "default", "defaultPlugin")) {
-            slot.setDefaultPlugin(val == null || val.isBlank() ? null : val.trim());
+            slot.setDefaultPlugin(PluginRefs.plugin(slot, val));
+            return true;
+        }
+        if (is(prop, "multiple")) {
+            slot.setMultiple(Boolean.parseBoolean(val == null ? "" : val.trim()));
             return true;
         }
         if (is(prop, "format", "valueFormat")) {
@@ -369,11 +373,7 @@ public final class RosPackageSetEditor {
             final String val,
             final String valType) {
         if (is(prop, "implements")) {
-            plugin.setImplements(val == null ? null : val.trim());
-            return true;
-        }
-        if (is(prop, "loader")) {
-            plugin.setLoader("external".equalsIgnoreCase(val) ? PluginLoader.EXTERNAL : PluginLoader.PLUGINLIB);
+            plugin.setImplements(PluginRefs.base(plugin, val));
             return true;
         }
         if (is(prop, "setExtensionBlock", "removeExtensionBlock")) {
@@ -390,6 +390,10 @@ public final class RosPackageSetEditor {
             final String key,
             final String val,
             final String valType) {
+        if (art.getNode() != null) {
+            // An artifact holds a node or plugins, never both.
+            return false;
+        }
         Plugin pl = RosFactory.eINSTANCE.createPlugin();
         List<String> existing = new ArrayList<>();
         for (Plugin p : art.getPlugins()) {
@@ -397,20 +401,17 @@ public final class RosPackageSetEditor {
         }
         pl.setName(nonBlank(key, uniqueName(existing, "Plugin")));
         String impl = val != null ? val.trim() : "";
-        String loaderStr = valType != null ? valType.trim() : "pluginlib";
         if (val != null && val.trim().startsWith("{")) {
             try {
                 JsonObject obj = JsonParser.parseString(val).getAsJsonObject();
                 impl = jsonStr(obj, "implements", impl);
-                loaderStr = jsonStr(obj, "loader", loaderStr);
             } catch (Exception ignored) {
                 // Fall back to literal values
             }
         }
         if (!impl.isEmpty()) {
-            pl.setImplements(impl);
+            pl.setImplements(PluginRefs.base(art, impl));
         }
-        pl.setLoader("external".equalsIgnoreCase(loaderStr) ? PluginLoader.EXTERNAL : PluginLoader.PLUGINLIB);
         art.getPlugins().add(pl);
         return true;
     }

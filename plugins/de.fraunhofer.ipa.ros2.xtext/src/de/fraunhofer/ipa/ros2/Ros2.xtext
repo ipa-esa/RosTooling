@@ -12,15 +12,32 @@ Package returns Package:
 
 AmentPackage returns AmentPackage:
     {AmentPackage}
-    name=RosNames':'
+    (name=RosNames':' | name=AddedKeywordName)
     BEGIN
         ('fromGitRepo:' fromGitRepo=EString)?
+        (('pluginbases:'
+            BEGIN
+            pluginBases+=PluginBase*
+            END
+        )? &
         ('artifacts:'
             BEGIN
             artifact+=Artifact*
             END
-        )?
+        )?)
         ('dependencies:' '[' dependency+=Dependency (',' dependency+=Dependency)* ']' )?
+    END;
+
+// A plugin base (the interface plugins implement) states facts only. RosTooling does not
+// generate it; the header is written by hand or comes from another package. The loader is
+// "pluginlib" or an id registered by a language plugin.
+PluginBase returns PluginBase:
+    {PluginBase}
+    (name=EString':' | name=AddedKeywordName)
+    BEGIN
+        (('class:' className=EString) &
+         ('header:' header=EString) &
+         ('loader:' loader=EString))
     END;
 
 ///////////////////
@@ -107,7 +124,7 @@ QualityOfService returns QualityOfService:
 @Override
 Publisher returns Publisher:
     {Publisher}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         (
         (BEGIN
             'type:' message=[TopicSpec|EString]
@@ -127,7 +144,7 @@ Publisher returns Publisher:
 @Override
 Subscriber returns Subscriber:
     {Subscriber}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         (
         (BEGIN
             'type:' message=[TopicSpec|EString]
@@ -147,7 +164,7 @@ Subscriber returns Subscriber:
 @Override
 ServiceServer returns ServiceServer:
     {ServiceServer}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         (
         (BEGIN
             'type:' service=[ServiceSpec|EString]
@@ -167,7 +184,7 @@ ServiceServer returns ServiceServer:
 @Override
 ServiceClient returns ServiceClient:
     {ServiceClient}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         (
         (BEGIN
             'type:' service=[ServiceSpec|EString]
@@ -187,7 +204,7 @@ ServiceClient returns ServiceClient:
 @Override
 ActionServer returns ActionServer:
     {ActionServer}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         (
         (BEGIN
             'type:' action=[ActionSpec|EString]
@@ -207,7 +224,7 @@ ActionServer returns ActionServer:
 @Override
 ActionClient returns ActionClient:
     {ActionClient}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         (
         (BEGIN
             'type:' action=[ActionSpec|EString]
@@ -227,7 +244,7 @@ ActionClient returns ActionClient:
 @Override
 Parameter returns Parameter:
     {Parameter}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         (
         (BEGIN
         'type:' type=ParameterType
@@ -245,12 +262,17 @@ Parameter returns Parameter:
         ;
 
 @Override
+AddedKeywordName returns ecore::EString:
+    'lifecycle:' | 'active_in:' |
+    'plugins:' | 'implements:' | 'pluginslots:' | 'pluginbases:' | 'base:' | 'parameter:' |
+    'format:' | 'multiple:' | 'class:' | 'header:' | 'loader:';
+
+@Override
 ExtensionColonKey returns ecore::EString:
     'ns:' | 'type:' | 'value:' | 'default:' |
     'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
     'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
     'actionservers:' | 'actionclients:' | 'parameters:' |
-    'plugins:' | 'implements:' | 'loader:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:' |
-    'artifacts:' | 'lifecycle:' | 'profile:' | 'history:' | 'depth:' |
+    'artifacts:' | 'profile:' | 'history:' | 'depth:' |
     'reliability:' | 'durability:' | 'lease_duration:' | 'liveliness:' |
-    'lifespan:' | 'deadline:' | 'active_in:' | 'qos:';
+    'lifespan:' | 'deadline:' | 'qos:';

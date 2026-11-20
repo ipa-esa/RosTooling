@@ -11,6 +11,7 @@ import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.scoping.IScope
+import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import ros.InterfaceHolder
 import ros.Node
@@ -48,7 +49,7 @@ class RosSystemScopeProvider extends AbstractRosSystemScopeProvider {
         if (fromNode !== null && !fromNode.eIsProxy) {
           extraHolders.add(fromNode)
         }
-        for (p : rosNode.plugins) {
+        for (p : attachedPlugins(rosNode)) {
           var resolved = p
           if (resolved !== null && resolved.eIsProxy) {
             resolved = EcoreUtil.resolve(resolved, context) as Plugin
@@ -59,6 +60,18 @@ class RosSystemScopeProvider extends AbstractRosSystemScopeProvider {
         }
       }
       return ExtensionScopingHelper.scopeForExtensionRef(context, reference, extraHolders)
+    }
+    if (reference == RossystemPackage.Literals.SLOT_ATTACHMENT__SLOT) {
+      // A slot name is resolved on the node in from:, by its simple name.
+      val rosNode = EcoreUtil2.getContainerOfType(context, RosNode)
+      var fromNode = rosNode?.from
+      if (fromNode !== null && fromNode.eIsProxy) {
+        fromNode = EcoreUtil.resolve(fromNode, context) as Node
+      }
+      if (fromNode === null || fromNode.eIsProxy) {
+        return IScope.NULLSCOPE
+      }
+      return Scopes.scopeFor(fromNode.pluginSlots)
     }
     if (reference == RossystemPackage.Literals.ROS_SYSTEM_CONNECTION__FROM ||
         reference == RossystemPackage.Literals.ROS_SYSTEM_CONNECTION__TO) {
@@ -187,7 +200,7 @@ class RosSystemScopeProvider extends AbstractRosSystemScopeProvider {
 
   /**
    * Synthesizes default {@link RosInterface} entries on {@code rosNode} from its host {@code from}
-   * node and all attached {@code plugins} when {@code interfaces:} was omitted in the model.
+   * node and all plugins attached to its slots when {@code interfaces:} was omitted in the model.
    */
   def static void ensureDefaultInterfacesSynthesized(RosNode rosNode, EObject contextForResolve) {
     if (rosNode === null) {
@@ -208,7 +221,7 @@ class RosSystemScopeProvider extends AbstractRosSystemScopeProvider {
       synthesizeInterfacesFromHolder(rosNode, fromNode, existingNames)
     }
 
-    for (plugin : rosNode.plugins) {
+    for (plugin : attachedPlugins(rosNode)) {
       var resolvedPlugin = plugin
       if (resolvedPlugin !== null && resolvedPlugin.eIsProxy) {
         resolvedPlugin = EcoreUtil.resolve(resolvedPlugin, contextForResolve) as Plugin
@@ -217,6 +230,15 @@ class RosSystemScopeProvider extends AbstractRosSystemScopeProvider {
         synthesizeInterfacesFromHolder(rosNode, resolvedPlugin, existingNames)
       }
     }
+  }
+
+  /** The plugins attached to {@code rosNode} through its slots, in model order. */
+  def static List<Plugin> attachedPlugins(RosNode rosNode) {
+    val List<Plugin> plugins = newArrayList
+    for (attachment : rosNode.slots) {
+      plugins.addAll(attachment.plugins)
+    }
+    return plugins
   }
 
   def static void synthesizeInterfacesFromHolder(

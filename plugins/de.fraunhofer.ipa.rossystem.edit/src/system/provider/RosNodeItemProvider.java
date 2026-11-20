@@ -51,7 +51,6 @@ public class RosNodeItemProvider extends ComponentItemProvider {
 			addNamePropertyDescriptor(object);
 			addNamespacePropertyDescriptor(object);
 			addFromPropertyDescriptor(object);
-			addPluginsPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -123,28 +122,6 @@ public class RosNodeItemProvider extends ComponentItemProvider {
 	}
 
     /**
-	 * This adds a property descriptor for the Plugins feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addPluginsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_RosNode_plugins_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RosNode_plugins_feature", "_UI_RosNode_type"),
-				 RossystemPackage.Literals.ROS_NODE__PLUGINS,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
-	}
-
-				/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -158,6 +135,7 @@ public class RosNodeItemProvider extends ComponentItemProvider {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(RossystemPackage.Literals.ROS_NODE__ROSINTERFACES);
 			childrenFeatures.add(RossystemPackage.Literals.ROS_NODE__ROSPARAMETERS);
+			childrenFeatures.add(RossystemPackage.Literals.ROS_NODE__SLOTS);
 		}
 		return childrenFeatures;
 	}
@@ -219,6 +197,7 @@ public class RosNodeItemProvider extends ComponentItemProvider {
 				return;
 			case RossystemPackage.ROS_NODE__ROSINTERFACES:
 			case RossystemPackage.ROS_NODE__ROSPARAMETERS:
+			case RossystemPackage.ROS_NODE__SLOTS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -245,6 +224,11 @@ public class RosNodeItemProvider extends ComponentItemProvider {
 			(createChildParameter
 				(RossystemPackage.Literals.ROS_NODE__ROSPARAMETERS,
 				 RossystemFactory.eINSTANCE.createRosParameter()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(RossystemPackage.Literals.ROS_NODE__SLOTS,
+				 RossystemFactory.eINSTANCE.createSlotAttachment()));
 	}
 
 }

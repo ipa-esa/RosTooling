@@ -538,7 +538,7 @@ public final class RosAutoConnector {
             if (from != null && !from.eIsProxy()) {
                 addInheritedHolder(out, wrapped, rn, nodeId, isDrawn, from);
             }
-            for (Plugin pl : rn.getPlugins()) {
+            for (Plugin pl : SlotAttachments.plugins(rn)) {
                 Plugin resolved = pl;
                 if (resolved != null && resolved.eIsProxy()) {
                     EObject resObj = EcoreUtil.resolve(resolved, root);
@@ -621,7 +621,7 @@ public final class RosAutoConnector {
             if (from != null && !from.eIsProxy()) {
                 collectHolderOrigins(from, origins);
             }
-            for (Plugin pl : rn.getPlugins()) {
+            for (Plugin pl : SlotAttachments.plugins(rn)) {
                 Plugin resolved = pl;
                 if (resolved != null && resolved.eIsProxy()) {
                     EObject resObj = EcoreUtil.resolve(resolved, sys);

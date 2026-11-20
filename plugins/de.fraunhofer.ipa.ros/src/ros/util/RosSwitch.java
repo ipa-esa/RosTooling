@@ -59,6 +59,7 @@ import ros.ParameterStructTypeMember;
 import ros.ParameterType;
 import ros.ParameterValue;
 import ros.Plugin;
+import ros.PluginBase;
 import ros.PluginSlot;
 import ros.PrivateNamespace;
 import ros.Publisher;
@@ -202,6 +203,12 @@ public class RosSwitch<T> extends Switch<T> {
 				T result = casePlugin(plugin);
 				if (result == null) result = caseInterfaceHolder(plugin);
 				if (result == null) result = caseExtensible(plugin);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.PLUGIN_BASE: {
+				PluginBase pluginBase = (PluginBase)theEObject;
+				T result = casePluginBase(pluginBase);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -722,6 +729,21 @@ public class RosSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T casePlugin(Plugin object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Plugin Base</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Plugin Base</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePluginBase(PluginBase object) {
 		return null;
 	}
 

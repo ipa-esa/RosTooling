@@ -15,16 +15,15 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import ros.Node;
 
-import ros.Plugin;
 import system.RosInterface;
 import system.RosNode;
 import system.RosParameter;
 import system.RossystemPackage;
+import system.SlotAttachment;
 
 /**
  * <!-- begin-user-doc -->
@@ -39,7 +38,7 @@ import system.RossystemPackage;
  *   <li>{@link system.impl.RosNodeImpl#getFrom <em>From</em>}</li>
  *   <li>{@link system.impl.RosNodeImpl#getRosinterfaces <em>Rosinterfaces</em>}</li>
  *   <li>{@link system.impl.RosNodeImpl#getRosparameters <em>Rosparameters</em>}</li>
- *   <li>{@link system.impl.RosNodeImpl#getPlugins <em>Plugins</em>}</li>
+ *   <li>{@link system.impl.RosNodeImpl#getSlots <em>Slots</em>}</li>
  * </ul>
  *
  * @generated
@@ -116,14 +115,14 @@ public class RosNodeImpl extends ComponentImpl implements RosNode {
     protected EList<RosParameter> rosparameters;
 
     /**
-	 * The cached value of the '{@link #getPlugins() <em>Plugins</em>}' reference list.
+	 * The cached value of the '{@link #getSlots() <em>Slots</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPlugins()
+	 * @see #getSlots()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Plugin> plugins;
+	protected EList<SlotAttachment> slots;
 
 				/**
 	 * <!-- begin-user-doc -->
@@ -262,11 +261,11 @@ public class RosNodeImpl extends ComponentImpl implements RosNode {
 	 * @generated
 	 */
 	@Override
-	public EList<Plugin> getPlugins() {
-		if (plugins == null) {
-			plugins = new EObjectResolvingEList<Plugin>(Plugin.class, this, RossystemPackage.ROS_NODE__PLUGINS);
+	public EList<SlotAttachment> getSlots() {
+		if (slots == null) {
+			slots = new EObjectContainmentEList<SlotAttachment>(SlotAttachment.class, this, RossystemPackage.ROS_NODE__SLOTS);
 		}
-		return plugins;
+		return slots;
 	}
 
 				/**
@@ -281,6 +280,8 @@ public class RosNodeImpl extends ComponentImpl implements RosNode {
 				return ((InternalEList<?>)getRosinterfaces()).basicRemove(otherEnd, msgs);
 			case RossystemPackage.ROS_NODE__ROSPARAMETERS:
 				return ((InternalEList<?>)getRosparameters()).basicRemove(otherEnd, msgs);
+			case RossystemPackage.ROS_NODE__SLOTS:
+				return ((InternalEList<?>)getSlots()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -304,8 +305,8 @@ public class RosNodeImpl extends ComponentImpl implements RosNode {
 				return getRosinterfaces();
 			case RossystemPackage.ROS_NODE__ROSPARAMETERS:
 				return getRosparameters();
-			case RossystemPackage.ROS_NODE__PLUGINS:
-				return getPlugins();
+			case RossystemPackage.ROS_NODE__SLOTS:
+				return getSlots();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -336,9 +337,9 @@ public class RosNodeImpl extends ComponentImpl implements RosNode {
 				getRosparameters().clear();
 				getRosparameters().addAll((Collection<? extends RosParameter>)newValue);
 				return;
-			case RossystemPackage.ROS_NODE__PLUGINS:
-				getPlugins().clear();
-				getPlugins().addAll((Collection<? extends Plugin>)newValue);
+			case RossystemPackage.ROS_NODE__SLOTS:
+				getSlots().clear();
+				getSlots().addAll((Collection<? extends SlotAttachment>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -367,8 +368,8 @@ public class RosNodeImpl extends ComponentImpl implements RosNode {
 			case RossystemPackage.ROS_NODE__ROSPARAMETERS:
 				getRosparameters().clear();
 				return;
-			case RossystemPackage.ROS_NODE__PLUGINS:
-				getPlugins().clear();
+			case RossystemPackage.ROS_NODE__SLOTS:
+				getSlots().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -392,8 +393,8 @@ public class RosNodeImpl extends ComponentImpl implements RosNode {
 				return rosinterfaces != null && !rosinterfaces.isEmpty();
 			case RossystemPackage.ROS_NODE__ROSPARAMETERS:
 				return rosparameters != null && !rosparameters.isEmpty();
-			case RossystemPackage.ROS_NODE__PLUGINS:
-				return plugins != null && !plugins.isEmpty();
+			case RossystemPackage.ROS_NODE__SLOTS:
+				return slots != null && !slots.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

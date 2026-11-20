@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.glsp.handlers;
 
+import de.fraunhofer.ipa.ros.glsp.model.SlotAttachments;
 import com.google.inject.Inject;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
 import de.fraunhofer.ipa.ros.glsp.operations.EditRosPropertyOperation;
@@ -190,23 +191,22 @@ public class EditRosPropertyOperationHandler extends EMFOperationHandler<EditRos
                     .ifPresent(rn::setFrom);
         } else if ("plugins".equalsIgnoreCase(prop) && rosModelState.getSemanticResource() != null) {
             var rs = rosModelState.getSemanticResource().getResourceSet();
-            rn.getPlugins().clear();
+            rn.getSlots().clear();
             for (String rawRef : val.split(",")) {
                 String trimmed = rawRef.trim();
                 if (!trimmed.isEmpty()) {
                     RosElementResolver.resolveOriginPlugin(rs, trimmed)
-                            .filter(pl -> !rn.getPlugins().contains(pl))
-                            .ifPresent(rn.getPlugins()::add);
+                            .ifPresent(pl -> SlotAttachments.attach(rn, pl));
                 }
             }
             rosModelState.markDirty(rn, "plugins");
         } else if ("addPlugin".equalsIgnoreCase(prop) && rosModelState.getSemanticResource() != null) {
             RosElementResolver.resolveOriginPlugin(
                     rosModelState.getSemanticResource().getResourceSet(), val)
-                    .filter(pl -> !rn.getPlugins().contains(pl))
                     .ifPresent(pl -> {
-                        rn.getPlugins().add(pl);
-                        rosModelState.markDirty(rn, "plugins");
+                        if (SlotAttachments.attach(rn, pl)) {
+                            rosModelState.markDirty(rn, "plugins");
+                        }
                     });
         } else if ("parameter".equalsIgnoreCase(prop) && key != null && !key.isEmpty()) {
             RosParameter targetParam = null;

@@ -51,15 +51,13 @@ Float32_1 : 'float32[]';
 
 Float64_1 : 'float64[]';
 
-Pluginlib : 'pluginlib';
+Multiple : 'multiple:';
 
 Actions : 'actions:';
 
 Default : 'default:';
 
 Duration : 'duration';
-
-External : 'external';
 
 Feedback : 'feedback';
 
@@ -92,8 +90,6 @@ Int32_1 : 'int32[]';
 Int64_1 : 'int64[]';
 
 Library : 'library';
-
-Loader : 'loader:';
 
 Message : 'message';
 

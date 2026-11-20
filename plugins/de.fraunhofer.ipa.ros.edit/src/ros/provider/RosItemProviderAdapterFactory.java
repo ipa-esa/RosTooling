@@ -256,6 +256,29 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 	}
 
 				/**
+	 * This keeps track of the one adapter used for all {@link ros.PluginBase} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected PluginBaseItemProvider pluginBaseItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link ros.PluginBase}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createPluginBaseAdapter() {
+		if (pluginBaseItemProvider == null) {
+			pluginBaseItemProvider = new PluginBaseItemProvider(this);
+		}
+
+		return pluginBaseItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.PluginSlot} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1449,6 +1472,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		if (extensionRefValueItemProvider != null) extensionRefValueItemProvider.dispose();
 		if (nodeItemProvider != null) nodeItemProvider.dispose();
 		if (pluginItemProvider != null) pluginItemProvider.dispose();
+		if (pluginBaseItemProvider != null) pluginBaseItemProvider.dispose();
 		if (pluginSlotItemProvider != null) pluginSlotItemProvider.dispose();
 		if (packageItemProvider != null) packageItemProvider.dispose();
 		if (serviceSpecItemProvider != null) serviceSpecItemProvider.dispose();

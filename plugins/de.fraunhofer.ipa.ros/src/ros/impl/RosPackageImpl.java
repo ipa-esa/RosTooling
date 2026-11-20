@@ -68,7 +68,7 @@ import ros.ParameterStructTypeMember;
 import ros.ParameterType;
 import ros.ParameterValue;
 import ros.Plugin;
-import ros.PluginLoader;
+import ros.PluginBase;
 import ros.PluginSlot;
 import ros.PluginSlotValueFormat;
 import ros.PrivateNamespace;
@@ -168,6 +168,13 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	private EClass pluginEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass pluginBaseEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -539,13 +546,6 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	private EEnum lifecycleStateEEnum = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EEnum pluginLoaderEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -966,8 +966,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getPlugin_Implements() {
-		return (EAttribute)pluginEClass.getEStructuralFeatures().get(0);
+	public EReference getPlugin_Implements() {
+		return (EReference)pluginEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -976,8 +976,48 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getPlugin_Loader() {
-		return (EAttribute)pluginEClass.getEStructuralFeatures().get(1);
+	public EClass getPluginBase() {
+		return pluginBaseEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPluginBase_Name() {
+		return (EAttribute)pluginBaseEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPluginBase_ClassName() {
+		return (EAttribute)pluginBaseEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPluginBase_Header() {
+		return (EAttribute)pluginBaseEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPluginBase_Loader() {
+		return (EAttribute)pluginBaseEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1006,8 +1046,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getPluginSlot_Base() {
-		return (EAttribute)pluginSlotEClass.getEStructuralFeatures().get(1);
+	public EReference getPluginSlot_Base() {
+		return (EReference)pluginSlotEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1026,8 +1066,18 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getPluginSlot_DefaultPlugin() {
-		return (EAttribute)pluginSlotEClass.getEStructuralFeatures().get(3);
+	public EReference getPluginSlot_DefaultPlugin() {
+		return (EReference)pluginSlotEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPluginSlot_Multiple() {
+		return (EAttribute)pluginSlotEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1037,7 +1087,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 */
 	@Override
 	public EAttribute getPluginSlot_ValueFormat() {
-		return (EAttribute)pluginSlotEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)pluginSlotEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -1098,6 +1148,16 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	@Override
 	public EReference getPackage_Dependency() {
 		return (EReference)packageEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getPackage_PluginBases() {
+		return (EReference)packageEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -2276,16 +2336,6 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EEnum getPluginLoader() {
-		return pluginLoaderEEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EEnum getPluginSlotValueFormat() {
 		return pluginSlotValueFormatEEnum;
 	}
@@ -2372,14 +2422,20 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		createEReference(nodeEClass, NODE__PLUGIN_SLOTS);
 
 		pluginEClass = createEClass(PLUGIN);
-		createEAttribute(pluginEClass, PLUGIN__IMPLEMENTS);
-		createEAttribute(pluginEClass, PLUGIN__LOADER);
+		createEReference(pluginEClass, PLUGIN__IMPLEMENTS);
+
+		pluginBaseEClass = createEClass(PLUGIN_BASE);
+		createEAttribute(pluginBaseEClass, PLUGIN_BASE__NAME);
+		createEAttribute(pluginBaseEClass, PLUGIN_BASE__CLASS_NAME);
+		createEAttribute(pluginBaseEClass, PLUGIN_BASE__HEADER);
+		createEAttribute(pluginBaseEClass, PLUGIN_BASE__LOADER);
 
 		pluginSlotEClass = createEClass(PLUGIN_SLOT);
 		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__NAME);
-		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__BASE);
+		createEReference(pluginSlotEClass, PLUGIN_SLOT__BASE);
 		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__PARAMETER);
-		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__DEFAULT_PLUGIN);
+		createEReference(pluginSlotEClass, PLUGIN_SLOT__DEFAULT_PLUGIN);
+		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__MULTIPLE);
 		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__VALUE_FORMAT);
 
 		packageEClass = createEClass(PACKAGE);
@@ -2388,6 +2444,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		createEReference(packageEClass, PACKAGE__ARTIFACT);
 		createEAttribute(packageEClass, PACKAGE__FROM_GIT_REPO);
 		createEReference(packageEClass, PACKAGE__DEPENDENCY);
+		createEReference(packageEClass, PACKAGE__PLUGIN_BASES);
 
 		dependencyEClass = createEClass(DEPENDENCY);
 
@@ -2557,7 +2614,6 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 
 		// Create enums
 		lifecycleStateEEnum = createEEnum(LIFECYCLE_STATE);
-		pluginLoaderEEnum = createEEnum(PLUGIN_LOADER);
 		pluginSlotValueFormatEEnum = createEEnum(PLUGIN_SLOT_VALUE_FORMAT);
 
 		// Create data types
@@ -2686,14 +2742,20 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		initEReference(getNode_PluginSlots(), this.getPluginSlot(), null, "pluginSlots", null, 0, -1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(pluginEClass, Plugin.class, "Plugin", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getPlugin_Implements(), ecorePackage.getEString(), "implements", null, 0, 1, Plugin.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPlugin_Loader(), this.getPluginLoader(), "loader", "pluginlib", 0, 1, Plugin.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPlugin_Implements(), this.getPluginBase(), null, "implements", null, 1, 1, Plugin.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(pluginBaseEClass, PluginBase.class, "PluginBase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPluginBase_Name(), ecorePackage.getEString(), "name", null, 1, 1, PluginBase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPluginBase_ClassName(), ecorePackage.getEString(), "className", null, 1, 1, PluginBase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPluginBase_Header(), ecorePackage.getEString(), "header", null, 1, 1, PluginBase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPluginBase_Loader(), ecorePackage.getEString(), "loader", null, 1, 1, PluginBase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(pluginSlotEClass, PluginSlot.class, "PluginSlot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPluginSlot_Name(), ecorePackage.getEString(), "name", null, 1, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPluginSlot_Base(), ecorePackage.getEString(), "base", null, 1, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPluginSlot_Base(), this.getPluginBase(), null, "base", null, 1, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPluginSlot_Parameter(), ecorePackage.getEString(), "parameter", null, 1, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPluginSlot_DefaultPlugin(), ecorePackage.getEString(), "defaultPlugin", null, 0, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPluginSlot_DefaultPlugin(), this.getPlugin(), null, "defaultPlugin", null, 0, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPluginSlot_Multiple(), ecorePackage.getEBoolean(), "multiple", "false", 0, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPluginSlot_ValueFormat(), this.getPluginSlotValueFormat(), "valueFormat", "class", 0, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(packageEClass, ros.Package.class, "Package", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2702,6 +2764,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		initEReference(getPackage_Artifact(), this.getArtifact(), null, "artifact", null, 0, -1, ros.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPackage_FromGitRepo(), ecorePackage.getEString(), "fromGitRepo", null, 0, 1, ros.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPackage_Dependency(), this.getDependency(), null, "dependency", null, 0, -1, ros.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPackage_PluginBases(), this.getPluginBase(), null, "pluginBases", null, 0, -1, ros.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(dependencyEClass, Dependency.class, "Dependency", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -2875,10 +2938,6 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		addEEnumLiteral(lifecycleStateEEnum, LifecycleState.INACTIVE);
 		addEEnumLiteral(lifecycleStateEEnum, LifecycleState.ACTIVE);
 		addEEnumLiteral(lifecycleStateEEnum, LifecycleState.FINALIZED);
-
-		initEEnum(pluginLoaderEEnum, PluginLoader.class, "PluginLoader");
-		addEEnumLiteral(pluginLoaderEEnum, PluginLoader.PLUGINLIB);
-		addEEnumLiteral(pluginLoaderEEnum, PluginLoader.EXTERNAL);
 
 		initEEnum(pluginSlotValueFormatEEnum, PluginSlotValueFormat.class, "PluginSlotValueFormat");
 		addEEnumLiteral(pluginSlotValueFormatEEnum, PluginSlotValueFormat.CLASS);

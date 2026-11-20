@@ -85,6 +85,7 @@ import ros.ParameterStructMember;
 import ros.ParameterStructType;
 import ros.ParameterStructTypeMember;
 import ros.Plugin;
+import ros.PluginBase;
 import ros.PluginSlot;
 import ros.PrivateNamespace;
 import ros.Publisher;
@@ -348,6 +349,9 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 			case RosPackage.PLUGIN:
 				sequence_Plugin(context, (Plugin) semanticObject); 
 				return; 
+			case RosPackage.PLUGIN_BASE:
+				sequence_PluginBase(context, (PluginBase) semanticObject); 
+				return; 
 			case RosPackage.PLUGIN_SLOT:
 				sequence_PluginSlot(context, (PluginSlot) semanticObject); 
 				return; 
@@ -393,7 +397,7 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=EString 
+	 *         (name=EString | name=AddedKeywordName) 
 	 *         (
 	 *             (action=[ActionSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?) | 
 	 *             (action=[ActionSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?)
@@ -413,7 +417,7 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=EString 
+	 *         (name=EString | name=AddedKeywordName) 
 	 *         (
 	 *             (action=[ActionSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?) | 
 	 *             (action=[ActionSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?)
@@ -433,7 +437,13 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *     AmentPackage returns AmentPackage
 	 *
 	 * Constraint:
-	 *     (name=RosNames fromGitRepo=EString? artifact+=Artifact* (dependency+=Dependency dependency+=Dependency*)?)
+	 *     (
+	 *         (name=RosNames | name=AddedKeywordName) 
+	 *         fromGitRepo=EString? 
+	 *         pluginBases+=PluginBase? 
+	 *         (artifact+=Artifact? pluginBases+=PluginBase?)* 
+	 *         (dependency+=Dependency dependency+=Dependency*)?
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_AmentPackage(ISerializationContext context, AmentPackage semanticObject) {
@@ -476,7 +486,7 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=EString 
+	 *         (name=EString | name=AddedKeywordName) 
 	 *         (
 	 *             (type=ParameterType namespace=Namespace? value=ParameterValue? qos=QualityOfService?) | 
 	 *             (type=ParameterType namespace=Namespace? value=ParameterValue? qos=QualityOfService?)
@@ -492,11 +502,25 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     PluginBase returns PluginBase
+	 *
+	 * Constraint:
+	 *     ((name=EString | name=AddedKeywordName) (className=EString | header=EString | loader=EString)+)
+	 * </pre>
+	 */
+	protected void sequence_PluginBase(ISerializationContext context, PluginBase semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     Publisher returns Publisher
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=EString 
+	 *         (name=EString | name=AddedKeywordName) 
 	 *         (
 	 *             (message=[TopicSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?) | 
 	 *             (message=[TopicSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?)
@@ -550,7 +574,7 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=EString 
+	 *         (name=EString | name=AddedKeywordName) 
 	 *         (
 	 *             (service=[ServiceSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?) | 
 	 *             (service=[ServiceSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?)
@@ -570,7 +594,7 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=EString 
+	 *         (name=EString | name=AddedKeywordName) 
 	 *         (
 	 *             (service=[ServiceSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?) | 
 	 *             (service=[ServiceSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?)
@@ -590,7 +614,7 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=EString 
+	 *         (name=EString | name=AddedKeywordName) 
 	 *         (
 	 *             (message=[TopicSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?) | 
 	 *             (message=[TopicSpec|EString] namespace=Namespace? (activeStates+=LifecycleState activeStates+=LifecycleState*)? qos=QualityOfService?)

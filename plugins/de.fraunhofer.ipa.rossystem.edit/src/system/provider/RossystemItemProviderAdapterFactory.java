@@ -164,6 +164,29 @@ public class RossystemItemProviderAdapterFactory extends RossystemAdapterFactory
 	}
 
     /**
+	 * This keeps track of the one adapter used for all {@link system.SlotAttachment} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected SlotAttachmentItemProvider slotAttachmentItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link system.SlotAttachment}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createSlotAttachmentAdapter() {
+		if (slotAttachmentItemProvider == null) {
+			slotAttachmentItemProvider = new SlotAttachmentItemProvider(this);
+		}
+
+		return slotAttachmentItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link system.RosInterface} instances.
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -640,6 +663,7 @@ public class RossystemItemProviderAdapterFactory extends RossystemAdapterFactory
 		if (rossystemItemProvider != null) rossystemItemProvider.dispose();
 		if (processItemProvider != null) processItemProvider.dispose();
 		if (rosNodeItemProvider != null) rosNodeItemProvider.dispose();
+		if (slotAttachmentItemProvider != null) slotAttachmentItemProvider.dispose();
 		if (rosInterfaceItemProvider != null) rosInterfaceItemProvider.dispose();
 		if (interfaceReferenceItemProvider != null) interfaceReferenceItemProvider.dispose();
 		if (rosPublisherReferenceItemProvider != null) rosPublisherReferenceItemProvider.dispose();
