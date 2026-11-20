@@ -92,6 +92,16 @@ class «node.name»Wrapper(Node):
             self.get_logger().warn("Parameter '«param.name»' not provided at startup; remains None.")
         «ENDIF»
         «ENDFOR»
+        «FOR slot : node.pluginSlots»
+        # Plugin slot '«slot.name»': read-only, the plugins are chosen at startup
+        desc_«sanitizeName(slot.parameter)» = ParameterDescriptor(
+            description="Plugin slot '«slot.name»': «IF slot.multiple»names of the plugins«ELSE»name of the plugin«ENDIF» to load",
+            read_only=True
+        )
+        self.declare_parameter("«slot.parameter»", «slotParamDefaultPy(slot)», descriptor=desc_«sanitizeName(slot.parameter)»)
+        self._param_«sanitizeName(slot.parameter)» = «IF slot.multiple»list(self.get_parameter_or(
+            "«slot.parameter»", rclpy.Parameter("«slot.parameter»", rclpy.Parameter.Type.STRING_ARRAY, [])).value)«ELSE»self.get_parameter("«slot.parameter»").value«ENDIF»
+        «ENDFOR»
 
         self.add_on_set_parameters_callback(self._internal_on_set_parameters)
 
@@ -322,6 +332,12 @@ class «node.name»Wrapper(Node):
     «val pyType = getPythonType(param.type)»
     def get_param_«sanitizeName(param.name)»(self) -> Optional[«pyType»]:
         return self._param_«sanitizeName(param.name)»
+
+    «ENDFOR»
+    «FOR slot : node.pluginSlots»
+    def get_param_«sanitizeName(slot.parameter)»(self) -> «IF slot.multiple»List[str]«ELSE»str«ENDIF»:
+        """Plugin slot '«slot.name»'"""
+        return self._param_«sanitizeName(slot.parameter)»
 
     «ENDFOR»
     def _internal_on_set_parameters(self, parameters: List[rclpy.Parameter]) -> SetParametersResult:
@@ -863,6 +879,9 @@ class «node.name»Node(«node.name»Wrapper):
         # Inject parameters via setter
         «FOR param : node.parameter»
         self.logic.set_parameter("«param.name»", self.get_param_«param.name»())
+        «ENDFOR»
+        «FOR slot : node.pluginSlots»
+        self.logic.set_parameter("«slot.parameter»", self.get_param_«sanitizeName(slot.parameter)»())
         «ENDFOR»
 
         # Inject publisher delegates

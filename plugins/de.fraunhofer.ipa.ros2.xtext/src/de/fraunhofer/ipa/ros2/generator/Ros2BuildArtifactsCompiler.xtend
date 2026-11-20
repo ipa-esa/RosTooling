@@ -40,7 +40,7 @@ class Ros2BuildArtifactsCompiler {
         val set = new LinkedHashSet<String>()
         for (pl : plugins) {
             if (PluginBases.isPluginlib(pl)) {
-                val basePkg = basePackageName(PluginBases.baseClassOf(pl))
+                val basePkg = basePackageName(pl)
                 if (!basePkg.empty) {
                     set.add(basePkg)
                 }
@@ -349,7 +349,7 @@ class Ros2BuildArtifactsCompiler {
         val plibs = art.plugins.filter[PluginBases.isPluginlib(it)].toList
         if (plibs.exists[hasActions]) pkgs.add("rclcpp_action")
         for (pl : plibs) {
-            val basePkg = basePackageName(PluginBases.baseClassOf(pl))
+            val basePkg = basePackageName(pl)
             if (!basePkg.empty && basePkg != ownPkgLower) {
                 pkgs.add(basePkg)
             }
@@ -504,6 +504,11 @@ target_include_directories(«artCamel»_component PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 «target.cmake.linkPackages(artCamel + "_component", "PUBLIC", componentLinkPackages(node))»
+«FOR bp : getLoadedSlotBasePackages(node).filter[it != pkgLower]»
+if(DEFINED «bp»_INCLUDE_DIRS)
+  target_include_directories(«artCamel»_component PUBLIC ${«bp»_INCLUDE_DIRS})
+endif()
+«ENDFOR»
 rclcpp_components_register_nodes(«artCamel»_component "«pkgLower»::«artCamel»Node")
 
 # -----------------------------------------------------------------------------

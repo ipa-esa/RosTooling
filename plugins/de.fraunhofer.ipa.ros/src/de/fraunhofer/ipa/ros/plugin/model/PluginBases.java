@@ -2,6 +2,8 @@ package de.fraunhofer.ipa.ros.plugin.model;
 
 import ros.Plugin;
 import ros.PluginBase;
+import ros.PluginSlot;
+import ros.PluginSlotValueFormat;
 
 /**
  * Facts about a plugin that come from the base it implements. The loader lives on the base:
@@ -55,11 +57,33 @@ public final class PluginBases {
 
     /** The package that declares the base {@code plugin} implements, or {@code null}. */
     public static String basePackageOf(Plugin plugin) {
-        PluginBase base = baseOf(plugin);
-        if (base == null || !(base.eContainer() instanceof ros.Package)) {
+        return packageOf(baseOf(plugin));
+    }
+
+    /** The package that declares {@code base}, or {@code null}. */
+    public static String packageOf(PluginBase base) {
+        if (base == null || base.eIsProxy() || !(base.eContainer() instanceof ros.Package)) {
             return null;
         }
         return trimToNull(((ros.Package) base.eContainer()).getName());
+    }
+
+    /**
+     * The value that names {@code plugin} in the parameter of {@code slot}: the owning artifact
+     * (the library) for {@code format: library}, otherwise {@code package::Name}, the class name
+     * the generated {@code plugins.xml} registers.
+     */
+    public static String slotValue(Plugin plugin, PluginSlot slot) {
+        if (slot != null && slot.getValueFormat() == PluginSlotValueFormat.LIBRARY) {
+            if (plugin.eContainer() instanceof ros.Artifact art && art.getName() != null && !art.getName().isEmpty()) {
+                return art.getName();
+            }
+            return plugin.getName();
+        }
+        Object artifact = plugin.eContainer();
+        Object pkg = artifact instanceof ros.Artifact a ? a.eContainer() : null;
+        String pkgName = pkg instanceof ros.Package p && p.getName() != null ? p.getName().toLowerCase() : null;
+        return pkgName != null && !pkgName.isEmpty() ? pkgName + "::" + plugin.getName() : plugin.getName();
     }
 
     /** {@code package.Name} of {@code base}, as references to it are written. */

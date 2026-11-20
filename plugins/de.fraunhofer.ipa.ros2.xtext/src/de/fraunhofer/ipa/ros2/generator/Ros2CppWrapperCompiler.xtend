@@ -35,6 +35,12 @@ class Ros2CppWrapperCompiler {
 «IF node.hasActions»
 #include "rclcpp_action/rclcpp_action.hpp"
 «ENDIF»
+«IF !node.loadedSlots.empty»
+#include "pluginlib/class_loader.hpp"
+«ENDIF»
+«FOR header : node.loadedSlots.map[base.header].toSet»
+#include "«header»"
+«ENDFOR»
 
 // ROS 2 Interface Message / Service / Action headers
 «FOR pub : node.publisher»
@@ -290,6 +296,25 @@ protected:
     bool has_param_«sanitizeName(param.name)»() const { return param_«sanitizeName(param.name)»_.has_value(); }
     «ENDIF»
     «ENDFOR»
+    «FOR slot : node.pluginSlots»
+    /** @brief Plugin slot '«slot.name»': the plugin name(s) in parameter '«slot.parameter»' */
+    «slotParamCppType(slot)» get_param_«sanitizeName(slot.parameter)»() const { return param_«sanitizeName(slot.parameter)»_; }
+    «ENDFOR»
+    «IF !node.loadedSlots.empty»
+
+    // ==========================================
+    // PLUGIN SLOTS (loaded with pluginlib at construction)
+    // ==========================================
+    «FOR slot : node.loadedSlots»
+    «IF slot.multiple»
+    /** @brief Plugins loaded for slot '«slot.name»', in parameter order */
+    const std::vector<std::shared_ptr<«slot.base.className»>> & get_«slotId(slot)»_plugins() const { return slot_«slotId(slot)»_plugins_; }
+    «ELSE»
+    /** @brief Plugin loaded for slot '«slot.name»', or nullptr if none is set or it failed to load */
+    std::shared_ptr<«slot.base.className»> get_«slotId(slot)»_plugin() const { return slot_«slotId(slot)»_plugin_; }
+    «ENDIF»
+    «ENDFOR»
+    «ENDIF»
 
 private:
     rclcpp::CallbackGroup::SharedPtr client_cb_group_;
@@ -330,6 +355,18 @@ private:
     «cppType» param_«sanitizeName(param.name)»_{«defaultVal»};
     «ELSE»
     std::optional<«cppType»> param_«sanitizeName(param.name)»_;
+    «ENDIF»
+    «ENDFOR»
+    «FOR slot : node.pluginSlots»
+    «slotParamCppType(slot)» param_«sanitizeName(slot.parameter)»_;
+    «ENDFOR»
+    «FOR slot : node.loadedSlots»
+    // The loader is declared before the plugins so that it is destroyed after them.
+    std::unique_ptr<pluginlib::ClassLoader<«slot.base.className»>> slot_«slotId(slot)»_loader_;
+    «IF slot.multiple»
+    std::vector<std::shared_ptr<«slot.base.className»>> slot_«slotId(slot)»_plugins_;
+    «ELSE»
+    std::shared_ptr<«slot.base.className»> slot_«slotId(slot)»_plugin_;
     «ENDIF»
     «ENDFOR»
     «IF !node.parameter.empty»
@@ -379,6 +416,41 @@ namespace «pkg.name.toLowerCase» {
         }
         «ENDIF»
     }
+    «ENDFOR»
+    «FOR slot : node.pluginSlots»
+    {
+        // Plugin slot '«slot.name»': read-only, the plugins are chosen at startup
+        rcl_interfaces::msg::ParameterDescriptor desc;
+        desc.description = "Plugin slot '«slot.name»': «IF slot.multiple»names of the plugins«ELSE»name of the plugin«ENDIF» to load";
+        desc.read_only = true;
+        this->declare_parameter<«slotParamCppType(slot)»>("«slot.parameter»", «slotParamDefaultCpp(slot)», desc);
+        this->get_parameter("«slot.parameter»", param_«sanitizeName(slot.parameter)»_);
+    }
+    «ENDFOR»
+    «FOR slot : node.loadedSlots»
+    slot_«slotId(slot)»_loader_ = std::make_unique<pluginlib::ClassLoader<«slot.base.className»>>(
+        "«PluginBases.packageOf(slot.base)»", "«slot.base.className»");
+    «IF slot.multiple»
+    for (const auto & plugin_name : param_«sanitizeName(slot.parameter)»_) {
+        try {
+            slot_«slotId(slot)»_plugins_.push_back(slot_«slotId(slot)»_loader_->createSharedInstance(plugin_name));
+            RCLCPP_INFO(this->get_logger(), "Slot '«slot.name»': loaded plugin '%s'", plugin_name.c_str());
+        } catch (const pluginlib::PluginlibException & e) {
+            RCLCPP_ERROR(this->get_logger(), "Slot '«slot.name»': could not load plugin '%s': %s", plugin_name.c_str(), e.what());
+        }
+    }
+    «ELSE»
+    if (!param_«sanitizeName(slot.parameter)»_.empty()) {
+        try {
+            slot_«slotId(slot)»_plugin_ = slot_«slotId(slot)»_loader_->createSharedInstance(param_«sanitizeName(slot.parameter)»_);
+            RCLCPP_INFO(this->get_logger(), "Slot '«slot.name»': loaded plugin '%s'",
+                param_«sanitizeName(slot.parameter)»_.c_str());
+        } catch (const pluginlib::PluginlibException & e) {
+            RCLCPP_ERROR(this->get_logger(), "Slot '«slot.name»': could not load plugin '%s': %s",
+                param_«sanitizeName(slot.parameter)»_.c_str(), e.what());
+        }
+    }
+    «ENDIF»
     «ENDFOR»
     «IF !node.parameter.empty»
     param_cb_handle_ = this->add_on_set_parameters_callback(
@@ -690,6 +762,13 @@ rcl_interfaces::msg::SetParametersResult «artCamel»Wrapper::internal_on_set_pa
 «ENDFOR»
 «FOR actClient : node.actionclient»
 #include "«actClient.action.specPackage»/action/«toSnakeCase(actClient.action.specName)».hpp"
+«ENDFOR»
+«IF !node.loadedSlots.empty»
+
+// Plugin base classes for the node's plugin slots
+«ENDIF»
+«FOR header : node.loadedSlots.map[base.header].toSet»
+#include "«header»"
 «ENDFOR»
 
 namespace «pkg.name.toLowerCase» {
@@ -1276,6 +1355,23 @@ public:
             std::chrono::duration<double>(seconds)));
     }
         
+    «IF !node.loadedSlots.empty»
+    // ==========================================
+    // PLUGIN SLOTS (filled by the generated node)
+    // ==========================================
+    «FOR slot : node.loadedSlots»
+    «IF slot.multiple»
+    void set_«slotId(slot)»_plugins(std::vector<std::shared_ptr<«slot.base.className»>> plugins) { «slotId(slot)»_plugins_ = std::move(plugins); }
+    /** @brief Plugins attached to slot '«slot.name»', in parameter order */
+    const std::vector<std::shared_ptr<«slot.base.className»>> & «slotId(slot)»_plugins() const { return «slotId(slot)»_plugins_; }
+    «ELSE»
+    void set_«slotId(slot)»_plugin(std::shared_ptr<«slot.base.className»> plugin) { «slotId(slot)»_plugin_ = std::move(plugin); }
+    /** @brief Plugin attached to slot '«slot.name»', or nullptr */
+    std::shared_ptr<«slot.base.className»> «slotId(slot)»_plugin() const { return «slotId(slot)»_plugin_; }
+    «ENDIF»
+    «ENDFOR»
+
+    «ENDIF»
 private:
     TimerFactory timer_factory_;
     RateFactory rate_factory_;
@@ -1287,6 +1383,13 @@ private:
     std::unordered_map<std::string, ParameterValue> parameters_;
     «FOR pub : node.publisher»
     «pub.name»PubFn publish_«sanitizeName(pub.name)»_fn_;
+    «ENDFOR»
+    «FOR slot : node.loadedSlots»
+    «IF slot.multiple»
+    std::vector<std::shared_ptr<«slot.base.className»>> «slotId(slot)»_plugins_;
+    «ELSE»
+    std::shared_ptr<«slot.base.className»> «slotId(slot)»_plugin_;
+    «ENDIF»
     «ENDFOR»
     «FOR client : node.serviceclient»
     «client.name»SyncCaller call_«sanitizeName(client.name)»_sync_fn_;
@@ -1549,7 +1652,7 @@ private:
         val pkgLower = pkg.name.toLowerCase
         val cls = pluginClassName(plugin)
         val snake = pluginSnakeName(plugin)
-        val baseHeader = baseClassIncludePath(PluginBases.baseClassOf(plugin))
+        val baseHeader = baseHeader(plugin)
         return '''
 #pragma once
 

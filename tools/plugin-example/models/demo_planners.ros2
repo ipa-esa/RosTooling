@@ -1,0 +1,14 @@
+demo_planners:
+  artifacts:
+    planners:
+      plugins:
+        StraightLine:
+          implements: demo_core.Planner
+        Smooth:
+          implements: demo_core.Planner
+    critics:
+      plugins:
+        AlignCritic:
+          implements: demo_core.Critic
+        GoalCritic:
+          implements: demo_core.Critic

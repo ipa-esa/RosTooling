@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.rossystem.generator
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases
 import de.fraunhofer.ipa.rossystem.scoping.RosSystemScopeProvider
 import java.util.ArrayList
 import java.util.LinkedHashSet
@@ -694,9 +695,7 @@ class GeneratorHelpers {
                     matchedValues.add(resolveSlotValueForPlugin(slot.defaultPlugin, slot))
                 }
                 if (!matchedValues.empty) {
-                    val declaredParam = component.from.parameter.findFirst[name == paramName]
-                    val isArray = slot.multiple || (declaredParam !== null && (declaredParam.type instanceof ParameterArrayType || declaredParam.type instanceof ParameterListType))
-                    result.add(new SlotParamEntry(paramName, matchedValues, isArray))
+                    result.add(new SlotParamEntry(paramName, matchedValues, slot.multiple))
                 }
             }
         }
@@ -704,15 +703,7 @@ class GeneratorHelpers {
     }
 
     def private String resolveSlotValueForPlugin(Plugin plugin, PluginSlot slot) {
-        if (slot.valueFormat == PluginSlotValueFormat.LIBRARY) {
-            val art = if (plugin.eContainer instanceof Artifact) plugin.eContainer as Artifact else null
-            if (art !== null && !art.name.nullOrEmpty) {
-                return art.name
-            }
-            return plugin.name
-        }
-        val pkgName = getPluginPackageName(plugin)
-        return if (!pkgName.nullOrEmpty) pkgName + "::" + plugin.name else plugin.name
+        return PluginBases.slotValue(plugin, slot)
     }
 
     def boolean hasAutoSlotParameters(RosNode component) {

@@ -1,0 +1,7 @@
+demo_system:
+  nodes:
+    planner_server:
+      from: "demo_planner_server.planner_server"
+      slots:
+        planner: [demo_planners.Smooth]
+        critics: [demo_planners.AlignCritic, demo_planners.GoalCritic]
