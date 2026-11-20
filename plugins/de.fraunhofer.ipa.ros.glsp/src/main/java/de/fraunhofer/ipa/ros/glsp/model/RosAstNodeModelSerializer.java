@@ -235,6 +235,7 @@ public final class RosAstNodeModelSerializer {
                                 || sem instanceof RosInterface
                                 || sem instanceof RosParameter
                                 || sem instanceof RosSystemConnection
+                                || sem instanceof SlotAttachment
                                 || sem instanceof ExtensionBlock)
                         && !liveObjects.contains(sem)) {
                     // Skip if an ancestor is already marked for deletion
@@ -659,6 +660,7 @@ public final class RosAstNodeModelSerializer {
                 if (rnComp == null) continue;
                 if (rn.getRosinterfaces().isEmpty()) removeKeywordLine(rn, rnComp, "interfaces:", text, edits);
                 if (rn.getRosparameters().isEmpty()) removeKeywordLine(rn, rnComp, "parameters:", text, edits);
+                if (rn.getSlots().isEmpty()) removeKeywordLine(rn, rnComp, "slots:", text, edits);
             }
         }
     }
@@ -947,6 +949,7 @@ public final class RosAstNodeModelSerializer {
         for (ros.Package pkg : modelState.getPackageModelPackages()) {
             if (!pkg.getArtifact().isEmpty()
                     || !pkg.getSpec().isEmpty()
+                    || !pkg.getPluginBases().isEmpty()
                     || (pkg.getFromGitRepo() != null && !pkg.getFromGitRepo().isBlank())
                     || modelState.isDirty(pkg, "name")) {
                 return true;

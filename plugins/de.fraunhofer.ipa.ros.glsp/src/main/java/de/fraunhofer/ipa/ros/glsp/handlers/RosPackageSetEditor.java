@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.glsp.handlers;
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -37,6 +38,7 @@ import ros.Parameter;
 import ros.ParameterType;
 import ros.ParameterValue;
 import ros.Plugin;
+import ros.PluginBase;
 import ros.PluginSlot;
 import ros.PluginSlotValueFormat;
 import ros.QualityOfService;
@@ -108,7 +110,18 @@ public final class RosPackageSetEditor {
             return applyPlugin(state, pl, prop, key, val, valType);
         }
         if (target instanceof PluginSlot slot) {
-            return applyPluginSlot(slot, prop, val);
+            boolean applied = applyPluginSlot(slot, prop, val);
+            if (applied && state != null) {
+                state.markDirty(slot, "block");
+            }
+            return applied;
+        }
+        if (target instanceof PluginBase base) {
+            boolean applied = applyPluginBase(base, prop, val);
+            if (applied && state != null) {
+                state.markDirty(base, "block");
+            }
+            return applied;
         }
         if (target instanceof Parameter param) {
             return applyParameter(state, param, prop, val, valType);
@@ -166,6 +179,34 @@ public final class RosPackageSetEditor {
                 pkg.getArtifact().add(art);
             }
             applyAddPlugin(art, plName, val, valType);
+        } else if (is(prop, "addPluginBase")) {
+            // key = base name, value = {"class", "header", "loader"} (loader defaults to pluginlib)
+            List<String> existing = new ArrayList<>();
+            for (PluginBase b : pkg.getPluginBases()) {
+                existing.add(b.getName());
+            }
+            String name = nonBlank(key, uniqueName(existing, "Base"));
+            if (existing.contains(name)) {
+                return true;
+            }
+            PluginBase base = RosFactory.eINSTANCE.createPluginBase();
+            base.setName(name);
+            base.setLoader(PluginBases.PLUGINLIB);
+            if (val != null && val.trim().startsWith("{")) {
+                try {
+                    JsonObject obj = JsonParser.parseString(val).getAsJsonObject();
+                    base.setClassName(blankToNull(jsonStr(obj, "class", jsonStr(obj, "className", ""))));
+                    base.setHeader(blankToNull(jsonStr(obj, "header", "")));
+                    String loader = jsonStr(obj, "loader", "");
+                    if (!blank(loader)) {
+                        base.setLoader(loader.trim());
+                    }
+                } catch (Exception ignored) {
+                    // Keep the defaults
+                }
+            }
+            pkg.getPluginBases().add(base);
+            state.markDirty(pkg, "pluginBases");
         } else if (is(prop, "duplicateArtifact")) {
             Artifact source = findArtifact(state, pkg, key);
             if (source == null) {
@@ -365,6 +406,26 @@ public final class RosPackageSetEditor {
         return false;
     }
 
+    private static boolean applyPluginBase(final PluginBase base, final String prop, final String val) {
+        String v = val == null ? "" : val.trim();
+        if (is(prop, "name")) {
+            base.setName(v);
+        } else if (is(prop, "class", "className")) {
+            base.setClassName(blankToNull(v));
+        } else if (is(prop, "header")) {
+            base.setHeader(blankToNull(v));
+        } else if (is(prop, "loader")) {
+            base.setLoader(v.isEmpty() ? PluginBases.PLUGINLIB : v);
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    private static String blankToNull(final String value) {
+        return value == null || value.isBlank() ? null : value.trim();
+    }
+
     private static boolean applyPlugin(
             final RosModelState state,
             final Plugin plugin,
@@ -374,6 +435,9 @@ public final class RosPackageSetEditor {
             final String valType) {
         if (is(prop, "implements")) {
             plugin.setImplements(PluginRefs.base(plugin, val));
+            if (state != null) {
+                state.markDirty(plugin, "implements");
+            }
             return true;
         }
         if (is(prop, "setExtensionBlock", "removeExtensionBlock")) {

@@ -162,6 +162,11 @@ public final class RosElementResolver {
             if (idOrName.equals(pkg.getName())) {
                 return Optional.of(pkg);
             }
+            for (ros.PluginBase base : pkg.getPluginBases()) {
+                if (idOrName.equals(base.getName()) || idOrName.equals(pkg.getName() + "." + base.getName())) {
+                    return Optional.of(base);
+                }
+            }
             for (ros.Artifact art : pkg.getArtifact()) {
                 ros.Node node = art.getNode();
                 boolean artMatch = idOrName.equals(art.getName());
@@ -181,6 +186,11 @@ public final class RosElementResolver {
                     for (ros.Parameter p : node.getParameter()) {
                         if (tail.equals(p.getName())) {
                             return Optional.of(p);
+                        }
+                    }
+                    for (ros.PluginSlot slot : node.getPluginSlots()) {
+                        if (tail.equals(slot.getName())) {
+                            return Optional.of(slot);
                         }
                     }
                 }

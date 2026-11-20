@@ -127,7 +127,10 @@ final class RosPackageSetSerializer {
                 || sem instanceof Parameter
                 || sem instanceof SpecBase
                 || sem instanceof MessagePart
-                || sem instanceof ExtensionBlock;
+                || sem instanceof ExtensionBlock
+                || sem instanceof PluginBase
+                || sem instanceof PluginSlot
+                || sem instanceof Plugin;
     }
 
     /** When the last element of a section is deleted, the section keyword line must go too. */
@@ -145,8 +148,14 @@ final class RosPackageSetSerializer {
         }
         EObject owner = ownerComp.getSemanticElement();
         boolean empty;
-        if (owner instanceof Node node) {
+        if (owner instanceof Node node && deleted instanceof PluginSlot) {
+            empty = node.getPluginSlots().isEmpty();
+        } else if (owner instanceof Node node) {
             empty = RosPackageSetEditor.listFor(node, deleted).isEmpty();
+        } else if (owner instanceof Package pkg && deleted instanceof PluginBase) {
+            empty = pkg.getPluginBases().isEmpty();
+        } else if (owner instanceof Artifact art && deleted instanceof Plugin) {
+            empty = art.getPlugins().isEmpty();
         } else if (owner instanceof Package pkg && deleted instanceof Artifact) {
             empty = pkg.getArtifact().isEmpty();
         } else if (owner instanceof Package pkg && deleted instanceof SpecBase) {
@@ -198,6 +207,36 @@ final class RosPackageSetSerializer {
                 ? headerEnd
                 : RosAstNodeModelSerializer.findLineEndOffsetWithoutNewline(
                         text, RosAstNodeModelSerializer.lastNonHiddenOffset(gitNodes.get(gitNodes.size() - 1)));
+
+        // Plugin bases (.ros2): new ones are inserted, edited ones re-rendered.
+        List<PluginBase> newBases = new ArrayList<>();
+        ICompositeNode lastBase = null;
+        for (PluginBase base : pkg.getPluginBases()) {
+            ICompositeNode baseComp = NodeModelUtils.findActualNodeFor(base);
+            if (baseComp == null) {
+                newBases.add(base);
+            } else {
+                lastBase = baseComp;
+                rewriteIfDirty(base, baseComp, indent -> renderPluginBase(base, indent));
+            }
+        }
+        if (!newBases.isEmpty()) {
+            insertSectionElements(pkg, pkgComp, "pluginbases:", lastBase, pkgCol + 2, afterHeader, indent -> {
+                StringBuilder sb = new StringBuilder();
+                for (PluginBase b : newBases) {
+                    sb.append(renderPluginBase(b, indent));
+                }
+                return sb.toString();
+            });
+        }
+        if (lastBase != null) {
+            afterHeader = RosAstNodeModelSerializer.findElementBlockEndOffset(text, lastBase);
+        } else if (!newBases.isEmpty()) {
+            ILeafNode basesKw = findOwnKeywordLeaf(pkg, pkgComp, "pluginbases:", Integer.MAX_VALUE);
+            if (basesKw != null) {
+                afterHeader = RosAstNodeModelSerializer.findLineEndOffsetWithoutNewline(text, basesKw.getEndOffset());
+            }
+        }
 
         // Artifacts (.ros2 / .ros1)
         List<Artifact> newArtifacts = new ArrayList<>();
@@ -292,6 +331,7 @@ final class RosPackageSetSerializer {
                     freshSlots.add(slot);
                 } else {
                     lastSlotComp = sComp;
+                    rewriteIfDirty(slot, sComp, indent -> renderPluginSlot(slot, indent));
                 }
             }
             if (!freshSlots.isEmpty()) {
@@ -325,8 +365,18 @@ final class RosPackageSetSerializer {
                     lastPluginComp = plComp;
                     RosAstNodeModelSerializer.checkFeatureTokenEdit(
                             pl, RosPackage.Literals.INTERFACE_HOLDER__NAME, pl.getName(), false, text, edits);
+                    if (state.isDirty(pl, "implements")) {
+                        RosAstNodeModelSerializer.checkFeatureTokenEdit(pl, RosPackage.Literals.PLUGIN__IMPLEMENTS,
+                                RosDslText.qualifiedRefLiteral(RosDslText.refText(state, pl, RosPackage.Literals.PLUGIN__IMPLEMENTS)),
+                                false, text, edits);
+                    }
                     int plCol = column(RosAstNodeModelSerializer.firstNonHiddenOffset(plComp)) + 2;
-                    int plHeaderEnd = featureLineEnd(pl, RosPackage.Literals.INTERFACE_HOLDER__NAME, plComp);
+                    // "implements:" comes right after the name; new sections go below it.
+                    int plHeaderEnd = Math.max(
+                            featureLineEnd(pl, RosPackage.Literals.INTERFACE_HOLDER__NAME, plComp),
+                            NodeModelUtils.findNodesForFeature(pl, RosPackage.Literals.PLUGIN__IMPLEMENTS).isEmpty()
+                                    ? -1
+                                    : featureLineEnd(pl, RosPackage.Literals.PLUGIN__IMPLEMENTS, plComp));
                     List<EObject> plLive = new ArrayList<>(RosPackageSetEditor.allInterfaces(pl));
                     plLive.addAll(pl.getParameter());
                     plLive.addAll(pl.getExtensions());
@@ -820,6 +870,22 @@ final class RosPackageSetSerializer {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * Re-renders a small element whose fields an edit changed (marked dirty as "block"), keeping
+     * its indentation. Untouched elements are never rewritten.
+     */
+    private void rewriteIfDirty(final EObject element, final ICompositeNode comp, final Function<String, String> render) {
+        if (!state.isDirty(element, "block")) {
+            return;
+        }
+        int start = RosAstNodeModelSerializer.firstNonHiddenOffset(comp);
+        int end = RosAstNodeModelSerializer.findElementBlockEndOffset(text, comp);
+        String rendered = RosAstNodeModelSerializer.stripTrailingNewline(render.apply(spaces(column(start)))).stripLeading();
+        if (!text.substring(start, end).equals(rendered)) {
+            edits.add(new SpanEdit(start, end - start, rendered));
+        }
     }
 
     private String renderPluginBase(final PluginBase base, final String indent) {

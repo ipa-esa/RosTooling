@@ -83,6 +83,9 @@ public final class RosDslText {
         if (element instanceof ActionClient) return "actionclients:";
         if (element instanceof Parameter) return "parameters:";
         if (element instanceof ros.Artifact) return "artifacts:";
+        if (element instanceof ros.PluginBase) return "pluginbases:";
+        if (element instanceof ros.PluginSlot) return "pluginslots:";
+        if (element instanceof ros.Plugin) return "plugins:";
         if (element instanceof TopicSpec) return "msgs:";
         if (element instanceof ServiceSpec) return "srvs:";
         if (element instanceof ActionSpec) return "actions:";

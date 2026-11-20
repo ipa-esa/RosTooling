@@ -56,4 +56,45 @@ public final class SlotAttachments {
         attachment.getPlugins().add(plugin);
         return true;
     }
+
+    /**
+     * Sets the plugins attached to the host slot named {@code slotName} to exactly {@code plugins},
+     * in order. An empty list removes the attachment. Plugins of the wrong base are kept, so that
+     * validation reports them.
+     *
+     * @return false if the host node has no slot of that name
+     */
+    public static boolean set(final RosNode rosNode, final String slotName, final List<Plugin> plugins) {
+        Node host = rosNode == null ? null : rosNode.getFrom();
+        if (host == null || host.eIsProxy() || slotName == null) {
+            return false;
+        }
+        PluginSlot slot = host.getPluginSlots().stream()
+                .filter(s -> slotName.trim().equals(s.getName()))
+                .findFirst()
+                .orElse(null);
+        if (slot == null) {
+            return false;
+        }
+        SlotAttachment attachment = rosNode.getSlots().stream()
+                .filter(a -> a.getSlot() == slot)
+                .findFirst()
+                .orElse(null);
+        if (plugins.isEmpty()) {
+            if (attachment != null) {
+                rosNode.getSlots().remove(attachment);
+            }
+            return true;
+        }
+        if (attachment == null) {
+            attachment = RossystemFactory.eINSTANCE.createSlotAttachment();
+            attachment.setSlot(slot);
+            rosNode.getSlots().add(attachment);
+        }
+        if (!attachment.getPlugins().equals(plugins)) {
+            attachment.getPlugins().clear();
+            attachment.getPlugins().addAll(plugins);
+        }
+        return true;
+    }
 }

@@ -142,10 +142,18 @@ class RosGlspPhase1PluginsTest {
         assertTrue(updated.contains("ThetaStar:"), "Expected ThetaStar plugin:\n" + updated);
         assertTrue(updated.contains("implements: my_plugins.GlobalPlanner"), updated);
 
+
         Files.writeString(pkgFile, updated);
         Session reopened = open(pkgFile, "phase1-pkg-2");
         AmentPackage pkg = (AmentPackage) reopened.state.getSemanticModel();
         assertEquals(2, pkg.getArtifact().get(0).getPlugins().size());
+
+        // A new section on an existing plugin goes below its "implements:" line.
+        exec(reopened, new EditRosPropertyOperation("StraightLine", "addInterface", "status", "std_msgs/msg/String", "sub"));
+        String withSub = RosAstNodeModelSerializer.computeAndCommit(reopened.state).newText;
+        assertTrue(withSub.contains("StraightLine:\n          implements: my_plugins.GlobalPlanner\n"), withSub);
+        assertTrue(withSub.contains("subscribers:"), withSub);
+        assertTrue(withSub.indexOf("subscribers:") > withSub.indexOf("implements: my_plugins.GlobalPlanner"), withSub);
     }
 
     @Test
@@ -176,6 +184,15 @@ class RosGlspPhase1PluginsTest {
         String slotsJson = String.valueOf(card.getArgs().get("pluginSlotsJson"));
         assertTrue(slotsJson.contains("\"format\":\"library\""), "Expected format in pluginSlotsJson: " + slotsJson);
         assertTrue(slotsJson.contains("\"multiple\":true"), slotsJson);
+
+        // Editing an existing slot rewrites that slot only.
+        exec(reopened, new EditRosPropertyOperation("orch_bin.leaves", "format", "class"));
+        exec(reopened, new EditRosPropertyOperation("orch_bin.leaves", "parameter", "leaf_plugins"));
+        String edited = RosAstNodeModelSerializer.computeAndCommit(reopened.state).newText;
+        assertFalse(edited.contains("format: library"), edited);
+        assertTrue(edited.contains("parameter: leaf_plugins"), edited);
+        assertTrue(edited.contains("multiple: true"), edited);
+        assertTrue(edited.contains("rate:\n          type: Double"), edited);
     }
 
     @Test
@@ -273,6 +290,104 @@ class RosGlspPhase1PluginsTest {
         String saved = RosAstNodeModelSerializer.computeAndCommit(s.state).newText;
         assertTrue(saved.contains("planner: [plugin_pkg.MyPlanner]"), saved);
         assertTrue(saved.contains("host_inst::plugin_debug"), saved);
+    }
+
+    @Test
+    void addPluginBaseAndEditItsFields() throws Exception {
+        Path pkgFile = tempDir.resolve("my_core.ros2");
+        Files.writeString(pkgFile, """
+                my_core:
+                  artifacts:
+                    tool_bin:
+                      node: tool_node
+                """);
+
+        Session s = open(pkgFile, "phase4-base");
+        exec(s, new EditRosPropertyOperation("root", "addPluginBase", "Planner",
+                "{\"class\":\"my_core::Planner\",\"header\":\"my_core/planner.hpp\"}", null));
+        exec(s, new EditRosPropertyOperation("root", "addPluginBase", "Critic",
+                "{\"class\":\"my_core::Critic\",\"loader\":\"other_loader\"}", null));
+        exec(s, new EditRosPropertyOperation("Critic", "header", "my_core/critic.hpp"));
+        exec(s, new EditRosPropertyOperation("my_core.Critic", "loader", "pluginlib"));
+        String updated = RosAstNodeModelSerializer.computeAndCommit(s.state).newText;
+        assertTrue(updated.contains("pluginbases:"), updated);
+        assertTrue(updated.contains("Planner:\n      class: \"my_core::Planner\"\n      header: \"my_core/planner.hpp\"\n      loader: pluginlib"), updated);
+        assertTrue(updated.contains("Critic:\n      class: \"my_core::Critic\"\n      header: \"my_core/critic.hpp\"\n      loader: pluginlib"), updated);
+        assertTrue(updated.contains("tool_node"), updated);
+
+        Files.writeString(pkgFile, updated);
+        Session reopened = open(pkgFile, "phase4-base-2");
+        AmentPackage pkg = (AmentPackage) reopened.state.getSemanticModel();
+        assertEquals(2, pkg.getPluginBases().size());
+        GModelElement pkgCard = findNodesByName(reopened.state.getRoot(), RosModelTypes.PACKAGE_NODE).get(0);
+        String basesJson = String.valueOf(pkgCard.getArgs().get("pluginBasesJson"));
+        assertTrue(basesJson.contains("\"ref\":\"my_core.Planner\""), basesJson);
+        assertTrue(basesJson.contains("\"loader\":\"pluginlib\""), basesJson);
+    }
+
+    @Test
+    void slotEditSetsAndClearsTheAttachedPlugins() throws Exception {
+        Files.writeString(tempDir.resolve("core.ros2"), """
+                core:
+                  pluginbases:
+                    Critic:
+                      class: "core::Critic"
+                      header: "core/critic.hpp"
+                      loader: pluginlib
+                    Planner:
+                      class: "core::Planner"
+                      header: "core/planner.hpp"
+                      loader: pluginlib
+                  artifacts:
+                    critics:
+                      plugins:
+                        Goal:
+                          implements: core.Critic
+                        Align:
+                          implements: core.Critic
+                    planners:
+                      plugins:
+                        Straight:
+                          implements: core.Planner
+                    host:
+                      node: host
+                      pluginslots:
+                        planner:
+                          base: core.Planner
+                          parameter: planner_plugin
+                        critics:
+                          base: core.Critic
+                          parameter: critic_plugins
+                          multiple: true
+                """);
+        Path sysFile = tempDir.resolve("sys.rossystem");
+        Files.writeString(sysFile, """
+                sys:
+                  nodes:
+                    host_inst:
+                      from: "core.host"
+                      slots:
+                        planner: [core.Straight]
+                """);
+
+        Session s = open(sysFile, "phase4-slots");
+        GModelElement card = findNodesByName(s.state.getRoot(), RosModelTypes.ROS_NODE).get(0);
+        String slotsJson = String.valueOf(card.getArgs().get("slotsJson"));
+        assertTrue(slotsJson.contains("{\"slot\":\"planner\",\"base\":\"core.Planner\",\"multiple\":false,\"plugins\":[\"core.Straight\"]}"), slotsJson);
+        assertTrue(slotsJson.contains("{\"slot\":\"critics\",\"base\":\"core.Critic\",\"multiple\":true,\"plugins\":[]}"), slotsJson);
+
+        exec(s, new EditRosPropertyOperation("host_inst", "slot", "critics", "core.Align, core.Goal", null));
+        String updated = RosAstNodeModelSerializer.computeAndCommit(s.state).newText;
+        assertTrue(updated.contains("planner: [core.Straight]"), updated);
+        assertTrue(updated.contains("critics: [core.Align, core.Goal]"), updated);
+
+        Files.writeString(sysFile, updated);
+        Session reopened = open(sysFile, "phase4-slots-2");
+        exec(reopened, new EditRosPropertyOperation("host_inst", "slot", "critics", "core.Goal", null));
+        exec(reopened, new EditRosPropertyOperation("host_inst", "slot", "planner", "", null));
+        String cleared = RosAstNodeModelSerializer.computeAndCommit(reopened.state).newText;
+        assertTrue(cleared.contains("critics: [core.Goal]"), cleared);
+        assertFalse(cleared.contains("planner: ["), cleared);
     }
 
     @Test

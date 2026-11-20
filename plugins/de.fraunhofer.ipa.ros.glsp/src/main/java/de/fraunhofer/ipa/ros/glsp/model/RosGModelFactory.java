@@ -292,6 +292,7 @@ public class RosGModelFactory extends EMFGModelFactory {
                 .addArgument("from", fromRef)
                 .addArgument("isLifecycle", isLifecycle)
                 .addArgument("plugins", String.join(", ", pluginNames))
+                .addArgument("slotsJson", serializeSlotAttachments(rosNode, isResolvedOrigin ? originNode : null))
                 .addArgument("pluginsCount", pluginNames.size())
                 .addArgument("activeParams", activeParams)
                 .addArgument("totalParams", totalParams)
@@ -841,7 +842,8 @@ public class RosGModelFactory extends EMFGModelFactory {
                     .addArgument("fromGitRepo", nullToEmpty(pkg.getFromGitRepo()))
                     .addArgument("specsCount", pkg.getSpec().size())
                     .addArgument("artifactsCount", pkg.getArtifact().size())
-                    .addArgument("specsJson", serializeSpecs(pkg));
+                    .addArgument("specsJson", serializeSpecs(pkg))
+                    .addArgument("pluginBasesJson", serializePluginBases(pkg));
 
             pkgBuilder.add(new GLabelBuilder(RosModelTypes.LABEL_NAME)
                     .id(pkgId + "_label")
@@ -970,6 +972,46 @@ public class RosGModelFactory extends EMFGModelFactory {
             out.add(item);
         }
         return new Gson().toJson(out);
+    }
+
+    /** The plugin bases a package declares: {@code [{id, name, ref, class, header, loader}]}. */
+    protected String serializePluginBases(final Package pkg) {
+        List<String> items = new ArrayList<>();
+        for (ros.PluginBase base : pkg.getPluginBases()) {
+            items.add("{\"id\":\"" + escapeJson(getElementId(base))
+                    + "\",\"name\":\"" + escapeJson(nullToEmpty(base.getName()))
+                    + "\",\"ref\":\"" + escapeJson(nullToEmpty(PluginBases.qualifiedName(base)))
+                    + "\",\"class\":\"" + escapeJson(nullToEmpty(base.getClassName()))
+                    + "\",\"header\":\"" + escapeJson(nullToEmpty(base.getHeader()))
+                    + "\",\"loader\":\"" + escapeJson(nullToEmpty(base.getLoader())) + "\"}");
+        }
+        return "[" + String.join(",", items) + "]";
+    }
+
+    /**
+     * Every slot of the host node with the plugins attached to it in this system:
+     * {@code [{slot, base, multiple, plugins: ["pkg.Plugin", ...]}]}.
+     */
+    protected String serializeSlotAttachments(final RosNode rosNode, final Node host) {
+        List<String> items = new ArrayList<>();
+        if (host == null) {
+            return "[]";
+        }
+        for (PluginSlot slot : host.getPluginSlots()) {
+            List<String> refs = new ArrayList<>();
+            for (system.SlotAttachment attachment : rosNode.getSlots()) {
+                if (attachment.getSlot() == slot) {
+                    for (Plugin pl : attachment.getPlugins()) {
+                        refs.add("\"" + escapeJson(nullToEmpty(PluginBases.qualifiedName(pl))) + "\"");
+                    }
+                }
+            }
+            items.add("{\"slot\":\"" + escapeJson(nullToEmpty(slot.getName()))
+                    + "\",\"base\":\"" + escapeJson(slot.getBase() == null ? "" : nullToEmpty(PluginBases.qualifiedName(slot.getBase())))
+                    + "\",\"multiple\":" + slot.isMultiple()
+                    + ",\"plugins\":[" + String.join(",", refs) + "]}");
+        }
+        return "[" + String.join(",", items) + "]";
     }
 
     protected String serializeNodePluginSlots(final Node node) {

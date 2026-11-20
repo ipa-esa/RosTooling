@@ -4,6 +4,8 @@ import de.fraunhofer.ipa.ros.glsp.model.SlotAttachments;
 import com.google.inject.Inject;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
 import de.fraunhofer.ipa.ros.glsp.operations.EditRosPropertyOperation;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
@@ -200,6 +202,20 @@ public class EditRosPropertyOperationHandler extends EMFOperationHandler<EditRos
                 }
             }
             rosModelState.markDirty(rn, "plugins");
+        } else if ("slot".equalsIgnoreCase(prop) && key != null && !key.isBlank()
+                && rosModelState.getSemanticResource() != null) {
+            // key = host slot name, value = comma-separated plugin refs ("pkg.Plugin"); empty detaches all.
+            var rs = rosModelState.getSemanticResource().getResourceSet();
+            List<ros.Plugin> plugins = new ArrayList<>();
+            for (String rawRef : (val == null ? "" : val).split(",")) {
+                String trimmed = rawRef.trim();
+                if (!trimmed.isEmpty()) {
+                    RosElementResolver.resolveOriginPlugin(rs, trimmed).ifPresent(plugins::add);
+                }
+            }
+            if (SlotAttachments.set(rn, key, plugins)) {
+                rosModelState.markDirty(rn, "plugins");
+            }
         } else if ("addPlugin".equalsIgnoreCase(prop) && rosModelState.getSemanticResource() != null) {
             RosElementResolver.resolveOriginPlugin(
                     rosModelState.getSemanticResource().getResourceSet(), val)
