@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.plugin.spi;
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +42,12 @@ import java.util.stream.Stream;
 public final class PluginRegistry {
 
     public static final String CORE_VERSION = "3.6.0";
+    /**
+     * Version of the plugin interface: the types listed in the {@code spi} package documentation.
+     * Adding something bumps the minor version, removing or changing something the major version.
+     * A plugin JAR declares the versions it understands as {@code pluginApiVersionRange}.
+     */
+    public static final String PLUGIN_API_VERSION = "1.0.0";
     public static final String PROP_PLUGINS_DIR = "ros.plugins.dir";
     public static final String ENV_PLUGINS_DIR = "ROS_PLUGINS_DIR";
     public static final String PROP_PLUGINS_ENABLED = "ros.plugins.enabled";
@@ -52,6 +59,9 @@ public final class PluginRegistry {
     public static final PluginRegistry INSTANCE = new PluginRegistry();
 
     public record RegisteredBlock(RosToolingPlugin plugin, BlockDescriptor descriptor) {
+    }
+
+    public record RegisteredLoader(RosToolingPlugin plugin, LoaderDescriptor descriptor) {
     }
 
     public record DiscoveredPlugin(
@@ -95,7 +105,8 @@ public final class PluginRegistry {
             String loadError,
             String fileName,
             String sha256,
-            String approvalState) {
+            String approvalState,
+            String pluginApiVersionRange) {
     }
 
     private final Path trustStorePath;
@@ -118,6 +129,8 @@ public final class PluginRegistry {
     private Map<String, RegisteredBlock> unqualifiedBlocks = Map.of();
     private Map<String, RegisteredBlock> qualifiedBlocks = Map.of();
     private Set<String> collidingBlockNames = Set.of();
+    private Map<String, List<RegisteredLoader>> loadersById = Map.of();
+    private List<String> loaderErrors = List.of();
 
     public PluginRegistry() {
         this.trustStorePath = defaultTrustStorePath();
@@ -236,14 +249,20 @@ public final class PluginRegistry {
                         && !scan.id().isBlank()
                         && enabledSet.contains(scan.id());
                 if (needed && !scan.compatible()) {
-                    String err = "Plugin '" + scan.id() + "' requires core version "
-                            + scan.supportedCoreVersionRange() + " (current core is " + CORE_VERSION + ")";
+                    String err = incompatibility(scan.id(), scan.pluginApiVersionRange(),
+                            scan.supportedCoreVersionRange());
                     jarActivationErrors.put(scan.jarPath(), err);
                     loadErrors.add(err);
                     continue;
                 }
             } else {
-                needed = hasUnclaimedEnabledId;
+                if (hasUnclaimedEnabledId) {
+                    String err = "Plugin JAR '" + scan.fileName() + "' has no " + METADATA_ENTRY
+                            + " declaring pluginApiVersionRange and was not loaded";
+                    jarActivationErrors.put(scan.jarPath(), err);
+                    loadErrors.add(err);
+                }
+                continue;
             }
             if (!needed) {
                 continue;
@@ -395,8 +414,8 @@ public final class PluginRegistry {
                 String state = trustSnapshot.approvalStateFor(sha256, fileName, "");
                 return new JarScanResult(
                         jar, false, "", "", "", "", false, "",
-                        "no plugin metadata; enable by id in settings",
-                        fileName, sha256, state);
+                        "no plugin metadata (" + METADATA_ENTRY + " with id, version, summary and pluginApiVersionRange)",
+                        fileName, sha256, state, "");
             }
             byte[] metaBytes;
             try {
@@ -404,7 +423,7 @@ public final class PluginRegistry {
             } catch (IOException e) {
                 String state = trustSnapshot.approvalStateFor(sha256, fileName, "");
                 return new JarScanResult(jar, true, "", "", "", "", false, "", e.getMessage(),
-                        fileName, sha256, state);
+                        fileName, sha256, state, "");
             }
 
             Properties props = new Properties();
@@ -415,12 +434,13 @@ public final class PluginRegistry {
                 return new JarScanResult(
                         jar, true, "", "", "", "", false, "",
                         "Invalid plugin metadata properties: " + e.getMessage(),
-                        fileName, sha256, state);
+                        fileName, sha256, state, "");
             }
 
             String id = safeTrim(props.getProperty("id"));
             String version = safeTrim(props.getProperty("version"));
             String range = safeTrim(props.getProperty("supportedCoreVersionRange"));
+            String apiRange = safeTrim(props.getProperty("pluginApiVersionRange"));
             String summary = safeTrim(props.getProperty("summary"));
             String docPath = normalizeJarDocPath(props.getProperty("documentation"));
             String state = trustSnapshot.approvalStateFor(sha256, fileName, id);
@@ -428,13 +448,13 @@ public final class PluginRegistry {
             List<String> missing = new ArrayList<>();
             if (id.isEmpty()) missing.add("id");
             if (version.isEmpty()) missing.add("version");
-            if (range.isEmpty()) missing.add("supportedCoreVersionRange");
+            if (apiRange.isEmpty()) missing.add("pluginApiVersionRange");
             if (summary.isEmpty()) missing.add("summary");
             if (!missing.isEmpty()) {
                 return new JarScanResult(
                         jar, true, id, version, summary, range, false, "",
                         "Missing required metadata key(s): " + String.join(", ", missing),
-                        fileName, sha256, state);
+                        fileName, sha256, state, apiRange);
             }
 
             String cachedDoc = "";
@@ -458,16 +478,17 @@ public final class PluginRegistry {
                 }
             }
 
-            boolean compatible = isVersionCompatible(CORE_VERSION, range);
+            boolean compatible = isVersionCompatible(PLUGIN_API_VERSION, apiRange)
+                    && isVersionCompatible(CORE_VERSION, range);
             return new JarScanResult(
                     jar, true, id, version, summary, range, compatible, cachedDoc, docError,
-                    fileName, sha256, state);
+                    fileName, sha256, state, apiRange);
         } catch (Throwable t) {
             String state = trustSnapshot.approvalStateFor(sha256, fileName, "");
             return new JarScanResult(
                     jar, true, "", "", "", "", false, "",
                     "Failed to read plugin JAR: " + t.getMessage(),
-                    fileName, sha256, state);
+                    fileName, sha256, state, "");
         }
     }
 
@@ -740,6 +761,37 @@ public final class PluginRegistry {
         return owners;
     }
 
+    /**
+     * The active plugins that register loader {@code id}. A loader registered by more than one
+     * plugin has no owner: {@link #loaderOwner(String)} returns {@code null} and validation names
+     * every registering plugin.
+     */
+    public synchronized List<RegisteredLoader> loaderRegistrations(final String id) {
+        ensureLoadedFromEnvironment();
+        if (id == null) {
+            return List.of();
+        }
+        return loadersById.getOrDefault(id.trim(), List.of());
+    }
+
+    /** The one active plugin that registers loader {@code id}, or {@code null}. */
+    public synchronized RosToolingPlugin loaderOwner(final String id) {
+        List<RegisteredLoader> owners = loaderRegistrations(id);
+        return owners.size() == 1 ? owners.get(0).plugin() : null;
+    }
+
+    /** Every loader registered by an active plugin, by id. */
+    public synchronized Map<String, List<RegisteredLoader>> activeLoaders() {
+        ensureLoadedFromEnvironment();
+        return loadersById;
+    }
+
+    /** Problems with loader registrations of the active plugins: a reserved id, or an id registered twice. */
+    public synchronized List<String> loaderErrors() {
+        ensureLoadedFromEnvironment();
+        return loaderErrors;
+    }
+
     public synchronized List<PluginToolDescriptor> activeTools() {
         ensureLoadedFromEnvironment();
         List<PluginToolDescriptor> result = new ArrayList<>();
@@ -813,10 +865,42 @@ public final class PluginRegistry {
             unqualified.remove(collided);
         }
 
+        Map<String, List<RegisteredLoader>> loaders = new LinkedHashMap<>();
+        List<String> loaderProblems = new ArrayList<>();
+        for (RosToolingPlugin plugin : sorted) {
+            List<LoaderDescriptor> declared = plugin.loaders();
+            if (declared == null) {
+                continue;
+            }
+            for (LoaderDescriptor loader : declared) {
+                if (loader == null) {
+                    continue;
+                }
+                if (PluginBases.PLUGINLIB.equals(loader.id())) {
+                    loaderProblems.add("Plugin '" + plugin.id() + "' registers the loader '" + loader.id()
+                            + "', which is built into core; the registration is ignored");
+                    continue;
+                }
+                List<RegisteredLoader> owners = loaders.computeIfAbsent(loader.id(), ignored -> new ArrayList<>());
+                if (owners.stream().noneMatch(o -> o.plugin().id().equals(plugin.id()))) {
+                    owners.add(new RegisteredLoader(plugin, loader));
+                }
+            }
+        }
+        for (Map.Entry<String, List<RegisteredLoader>> e : loaders.entrySet()) {
+            if (e.getValue().size() > 1) {
+                loaderProblems.add("Loader '" + e.getKey() + "' is registered by several plugins: "
+                        + String.join(", ", e.getValue().stream().map(o -> o.plugin().id()).toList()));
+            }
+            e.setValue(List.copyOf(e.getValue()));
+        }
+
         this.orderedPlugins = Collections.unmodifiableList(sorted);
         this.unqualifiedBlocks = Collections.unmodifiableMap(unqualified);
         this.qualifiedBlocks = Collections.unmodifiableMap(qualified);
         this.collidingBlockNames = Collections.unmodifiableSet(collisions);
+        this.loadersById = Collections.unmodifiableMap(loaders);
+        this.loaderErrors = List.copyOf(loaderProblems);
         this.discoveredPlugins = rebuildDiscoveredPlugins(sorted);
     }
 
@@ -839,6 +923,11 @@ public final class PluginRegistry {
                 boolean isActive = active != null
                         && scan.jarPath().equals(activePluginJarPaths.get(id));
                 String err = !activationErr.isEmpty() ? activationErr : scan.loadError();
+                if (err.isEmpty() && !scan.pluginApiVersionRange().isEmpty()
+                        && !isVersionCompatible(PLUGIN_API_VERSION, scan.pluginApiVersionRange())) {
+                    // Listing tools word incompatibility as a core range, which does not apply here.
+                    err = incompatibility(id, scan.pluginApiVersionRange(), scan.supportedCoreVersionRange());
+                }
                 out.add(new DiscoveredPlugin(
                         id,
                         scan.version(),
@@ -990,6 +1079,16 @@ public final class PluginRegistry {
             }
         }
         return result;
+    }
+
+    /** Why a plugin with these declared ranges cannot run on this core. */
+    static String incompatibility(final String id, final String apiRange, final String coreRange) {
+        if (!isVersionCompatible(PLUGIN_API_VERSION, apiRange)) {
+            return "Plugin '" + id + "' needs plugin interface " + apiRange + ", but this core offers "
+                    + PLUGIN_API_VERSION + "; install a version of the plugin built for plugin interface "
+                    + PLUGIN_API_VERSION;
+        }
+        return "Plugin '" + id + "' requires core version " + coreRange + " (current core is " + CORE_VERSION + ")";
     }
 
     public static boolean isVersionCompatible(final String currentVersion, final String rangeSpec) {

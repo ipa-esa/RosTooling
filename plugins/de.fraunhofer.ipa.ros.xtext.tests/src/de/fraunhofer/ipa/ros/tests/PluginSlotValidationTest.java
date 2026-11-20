@@ -23,7 +23,11 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor;
+import de.fraunhofer.ipa.ros.plugin.spi.LoaderDescriptor;
 import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
+import de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin;
+import de.fraunhofer.ipa.ros.plugin.spi.ValidationContext;
 import de.fraunhofer.ipa.ros.validation.RosValidator;
 import de.fraunhofer.ipa.ros2.Ros2RuntimeModule;
 import de.fraunhofer.ipa.ros2.Ros2StandaloneSetup;
@@ -40,12 +44,21 @@ import de.fraunhofer.ipa.rossystem.validation.RosSystemValidator;
  */
 public class PluginSlotValidationTest {
 
+    /** Registers {@code other_loader}, so bases using it validate. */
+    private static final RosToolingPlugin OTHER_LOADER_PLUGIN = new RosToolingPlugin() {
+        @Override public String id() { return "test.other_loader"; }
+        @Override public List<BlockDescriptor> blocks() { return List.of(); }
+        @Override public List<LoaderDescriptor> loaders() { return List.of(new LoaderDescriptor("other_loader", "")); }
+        @Override public void validate(final ValidationContext context) { }
+    };
+
     private Injector ros2Injector;
     private Injector rosSystemInjector;
 
     @Before
     public void setUp() {
         PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(OTHER_LOADER_PLUGIN);
         ros2Injector = new Ros2StandaloneSetup() {
             @Override
             public Injector createInjector() {

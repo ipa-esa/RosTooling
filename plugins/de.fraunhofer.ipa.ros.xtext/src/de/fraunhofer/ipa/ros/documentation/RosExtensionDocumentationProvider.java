@@ -1,18 +1,20 @@
 package de.fraunhofer.ipa.ros.documentation;
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
 import de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor;
 import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
 import de.fraunhofer.ipa.ros.plugin.spi.HookLocation;
 import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
+import de.fraunhofer.ipa.ros.plugin.spi.SchemaHints;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.documentation.impl.MultiLineCommentDocumentationProvider;
 import ros.ExtensionBlock;
 import ros.ExtensionEntry;
+import ros.PluginBase;
 
 /**
  * Provides hover documentation for {@code @<name>:} extension blocks and their schema fields
@@ -20,8 +22,6 @@ import ros.ExtensionEntry;
  * {@link PluginRegistry}.
  */
 public class RosExtensionDocumentationProvider extends MultiLineCommentDocumentationProvider {
-
-    private static final String GENMODEL_SOURCE = "http://www.eclipse.org/emf/2002/GenModel";
 
     @Override
     public String getDocumentation(final EObject o) {
@@ -31,7 +31,34 @@ public class RosExtensionDocumentationProvider extends MultiLineCommentDocumenta
         if (o instanceof ExtensionEntry entry) {
             return documentEntry(entry);
         }
+        if (o instanceof PluginBase base) {
+            String loaderDoc = documentLoader(base);
+            String own = super.getDocumentation(o);
+            if (loaderDoc == null) {
+                return own;
+            }
+            return own == null || own.isBlank() ? loaderDoc : own + "\n\n" + loaderDoc;
+        }
         return super.getDocumentation(o);
+    }
+
+    /** The loader of a plugin base: built into core, or registered by a plugin. */
+    private String documentLoader(final PluginBase base) {
+        String loader = base.getLoader() == null ? null : base.getLoader().trim();
+        if (loader == null || loader.isEmpty()) {
+            return null;
+        }
+        if (PluginBases.PLUGINLIB.equals(loader)) {
+            return "**Loader:** `pluginlib`, built into core: the host loads plugins with `pluginlib::ClassLoader`.";
+        }
+        List<PluginRegistry.RegisteredLoader> owners = PluginRegistry.INSTANCE.loaderRegistrations(loader);
+        if (owners.size() != 1) {
+            return null;
+        }
+        PluginRegistry.RegisteredLoader owner = owners.get(0);
+        String summary = owner.descriptor().summary();
+        return "**Loader:** `" + loader + "`, from plugin `" + owner.plugin().id() + "`"
+                + (summary.isEmpty() ? "." : ": " + summary);
     }
 
     private String documentBlock(final ExtensionBlock block) {
@@ -59,18 +86,24 @@ public class RosExtensionDocumentationProvider extends MultiLineCommentDocumenta
         }
         EClass schema = desc.schemaClass();
         if (schema != null) {
-            List<EStructuralFeature> features = schema.getEAllStructuralFeatures().stream()
-                    .filter(EStructuralFeature::isChangeable)
-                    .toList();
+            String schemaHelp = SchemaHints.get(schema, SchemaHints.HELP);
+            if (schemaHelp != null && !schemaHelp.equals(desc.description())) {
+                sb.append(schemaHelp).append("\n\n");
+            }
+            List<EStructuralFeature> features = SchemaHints.orderedFeatures(schema);
             if (!features.isEmpty()) {
                 sb.append("**Fields:**\n");
                 for (EStructuralFeature f : features) {
-                    sb.append("- `").append(f.getName()).append("`: ")
-                            .append(ExtensionSchemaMapper.describeFeatureType(f));
+                    sb.append("- `").append(f.getName()).append("`");
+                    String label = SchemaHints.get(f, SchemaHints.LABEL);
+                    if (label != null) {
+                        sb.append(" (").append(label).append(")");
+                    }
+                    sb.append(": ").append(ExtensionSchemaMapper.describeFeatureType(f));
                     if (f.isRequired()) {
                         sb.append(" *(required)*");
                     }
-                    String featDoc = genModelDoc(f);
+                    String featDoc = SchemaHints.help(f);
                     if (!featDoc.isEmpty()) {
                         sb.append(" — ").append(featDoc);
                     }
@@ -88,7 +121,7 @@ public class RosExtensionDocumentationProvider extends MultiLineCommentDocumenta
         }
         EStructuralFeature resolvedFeature = ctx.feature();
         StringBuilder sb = new StringBuilder();
-        sb.append("**").append(resolvedFeature.getName()).append("** (`@")
+        sb.append("**").append(SchemaHints.label(resolvedFeature)).append("** (`@")
                 .append(ctx.block().getName()).append("` — `")
                 .append(ctx.registered().plugin().id()).append("`)\n\n");
         sb.append("**Type:** ").append(ExtensionSchemaMapper.describeFeatureType(resolvedFeature));
@@ -97,24 +130,14 @@ public class RosExtensionDocumentationProvider extends MultiLineCommentDocumenta
                 && !resolvedFeature.getDefaultValueLiteral().isBlank()) {
             sb.append("\n\n**Default:** `").append(resolvedFeature.getDefaultValueLiteral()).append("`");
         }
-        String doc = genModelDoc(resolvedFeature);
+        String doc = SchemaHints.help(resolvedFeature);
         if (!doc.isEmpty()) {
             sb.append("\n\n").append(doc);
         }
+        if (SchemaHints.get(resolvedFeature, SchemaHints.CHOICES) != null) {
+            sb.append("\n\n**Suggested values:** ").append(String.join(", ",
+                    SchemaHints.choices(resolvedFeature).stream().map(c -> "`" + c + "`").toList()));
+        }
         return sb.toString().trim();
-    }
-
-    private static String genModelDoc(final EStructuralFeature feature) {
-        if (feature == null) {
-            return "";
-        }
-        EAnnotation ann = feature.getEAnnotation(GENMODEL_SOURCE);
-        if (ann != null && ann.getDetails() != null) {
-            String doc = ann.getDetails().get("documentation");
-            if (doc != null && !doc.isBlank()) {
-                return doc.trim();
-            }
-        }
-        return "";
     }
 }

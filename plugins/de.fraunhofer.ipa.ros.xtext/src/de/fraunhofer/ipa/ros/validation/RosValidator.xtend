@@ -11,6 +11,8 @@ import ros.Node
 import ros.Package
 import ros.Parameter
 import ros.PluginBase
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry
 import ros.PluginSlot
 import ros.Publisher
 import ros.QualityOfService
@@ -170,6 +172,7 @@ class RosValidator extends AbstractRosValidator {
   public static val SLOT_DUPLICATE = 'slot.duplicate'
   public static val SLOT_PARAM_CONFLICT = 'slot.parameterConflict'
   public static val SLOT_DEFAULT_WRONG_BASE = 'slot.defaultWrongBase'
+  public static val PLUGIN_UNKNOWN_LOADER = 'plugin.unknownLoader'
 
   @Check
   def void checkPluginBase(PluginBase base) {
@@ -182,6 +185,28 @@ class RosValidator extends AbstractRosValidator {
         PLUGIN_INVALID_IMPLEMENTS
       )
     }
+  }
+
+  /**
+   * A base's loader is pluginlib, built into core, or a loader registered by exactly one enabled
+   * plugin.
+   */
+  @Check
+  def void checkPluginBaseLoader(PluginBase base) {
+    val loader = base.loader?.trim
+    if (loader === null || loader.empty || loader == PluginBases.PLUGINLIB) {
+      return
+    }
+    val owners = PluginRegistry.INSTANCE.loaderRegistrations(loader).map[plugin.id]
+    if (owners.size == 1) {
+      return
+    }
+    val known = (#[PluginBases.PLUGINLIB] + PluginRegistry.INSTANCE.activeLoaders.filter[k, v | v.size == 1].keySet).join(", ")
+    val message = if (owners.empty)
+        "Plugin base '" + base.name + "' uses loader '" + loader + "', which no enabled plugin registers. Known loaders: " + known
+      else
+        "Plugin base '" + base.name + "' uses loader '" + loader + "', which is registered by several plugins: " + owners.join(", ")
+    error(message, base, RosPackage.Literals.PLUGIN_BASE__LOADER, PLUGIN_UNKNOWN_LOADER)
   }
 
   /**

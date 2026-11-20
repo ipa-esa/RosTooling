@@ -24,10 +24,13 @@ public interface RosToolingPlugin {
     }
 
     /**
-     * Supported core SPI version range in Maven/OSGi interval notation, e.g. {@code "[3.6.0,4.0.0)"}.
+     * Optional core version range in Maven/OSGi interval notation, e.g. {@code "[3.6.0,4.0.0)"}, for a
+     * plugin that needs a language feature added in a later core. Empty means any core. Whether the
+     * plugin understands this interface is decided by {@code pluginApiVersionRange} in the JAR's
+     * {@value PluginRegistry#METADATA_ENTRY}, checked against {@link PluginRegistry#PLUGIN_API_VERSION}.
      */
     default String supportedCoreVersionRange() {
-        return "[3.6.0,4.0.0)";
+        return "";
     }
 
     /**
@@ -48,6 +51,14 @@ public interface RosToolingPlugin {
      * {@code @<name>:} extension blocks owned by this plugin.
      */
     List<BlockDescriptor> blocks();
+
+    /**
+     * Plugin loaders this plugin provides. Plugins whose base names one of these loaders are routed
+     * to this plugin's {@link #generatePackage(PackageGenerationContext)}.
+     */
+    default List<LoaderDescriptor> loaders() {
+        return List.of();
+    }
 
     /**
      * Semantic validation hook invoked after core generic schema validation succeeds.

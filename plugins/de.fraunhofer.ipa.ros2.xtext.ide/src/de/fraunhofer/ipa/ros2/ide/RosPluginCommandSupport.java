@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.fraunhofer.ipa.ros.generator.IPluginAwareGenerator;
 import de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor;
+import de.fraunhofer.ipa.ros.plugin.spi.LoaderDescriptor;
 import de.fraunhofer.ipa.ros.plugin.spi.ExtensionBlockMerger;
 import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
 import de.fraunhofer.ipa.ros.plugin.spi.HookLocation;
@@ -102,6 +103,13 @@ public final class RosPluginCommandSupport {
                 }
             }
             pMap.put("blocks", blockList);
+            List<Map<String, Object>> loaderList = new ArrayList<>();
+            for (LoaderDescriptor loader : plugin.loaders()) {
+                if (loader != null) {
+                    loaderList.add(new LinkedHashMap<>(Map.of("id", loader.id(), "summary", loader.summary())));
+                }
+            }
+            pMap.put("loaders", loaderList);
             pluginsOut.add(pMap);
 
             if (plugin.tools() != null) {

@@ -1,8 +1,9 @@
 package de.fraunhofer.ipa.ros.plugin.spi;
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
 import de.fraunhofer.ipa.ros2.distro.Ros2Distro;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -19,7 +20,6 @@ public final class PackageGenerationContext extends GenerationContext {
 
     private final ros.Package packageModel;
     private final PackageBuild packageBuild;
-    private final Map<Plugin, String> externalRegistrations;
 
     public PackageGenerationContext(
             final String pluginId,
@@ -29,7 +29,6 @@ public final class PackageGenerationContext extends GenerationContext {
             final List<String> existingFiles,
             final Set<String> coreOwnedPaths,
             final Map<String, String> allPluginOwnedFiles,
-            final Map<Plugin, String> externalRegistrations,
             final PackageBuild packageBuild,
             final List<String> errors,
             final PluginRegistry registry) {
@@ -42,7 +41,6 @@ public final class PackageGenerationContext extends GenerationContext {
                 existingFiles,
                 coreOwnedPaths,
                 allPluginOwnedFiles,
-                externalRegistrations,
                 packageBuild,
                 errors,
                 registry);
@@ -57,7 +55,6 @@ public final class PackageGenerationContext extends GenerationContext {
             final List<String> existingFiles,
             final Set<String> coreOwnedPaths,
             final Map<String, String> allPluginOwnedFiles,
-            final Map<Plugin, String> externalRegistrations,
             final PackageBuild packageBuild,
             final List<String> errors,
             final PluginRegistry registry) {
@@ -74,9 +71,6 @@ public final class PackageGenerationContext extends GenerationContext {
                 registry);
         this.packageModel = packageModel;
         this.packageBuild = Objects.requireNonNull(packageBuild, "packageBuild");
-        this.externalRegistrations = externalRegistrations != null
-                ? externalRegistrations
-                : new LinkedHashMap<>();
     }
 
     public ros.Package packageModel() {
@@ -88,20 +82,24 @@ public final class PackageGenerationContext extends GenerationContext {
     }
 
     /**
-     * Claims responsibility for supplying registration code for a {@code loader: external}
-     * {@link Plugin}. Raises a conflict error naming both plugins if already claimed by another
-     * plugin.
+     * The plugins of this package whose base names a loader registered by this plugin through
+     * {@link RosToolingPlugin#loaders()}. Core builds their library; this plugin generates their
+     * loading or registration code.
      */
-    public void claimExternalPluginRegistration(final Plugin plugin) {
-        if (plugin == null) {
-            return;
+    public List<Plugin> loaderPlugins() {
+        List<Plugin> out = new ArrayList<>();
+        if (registry == null) {
+            return out;
         }
-        String previousOwner = externalRegistrations.get(plugin);
-        if (previousOwner != null && !previousOwner.equals(pluginId())) {
-            recordError("Plugin conflict between '" + previousOwner + "' and '" + pluginId()
-                    + "' on external registration for plugin '" + plugin.getName() + "'");
-            return;
+        for (ros.Artifact artifact : packageModel.getArtifact()) {
+            for (Plugin plugin : artifact.getPlugins()) {
+                String loader = PluginBases.loaderOf(plugin);
+                RosToolingPlugin owner = loader == null ? null : registry.loaderOwner(loader);
+                if (owner != null && owner.id().equals(pluginId())) {
+                    out.add(plugin);
+                }
+            }
         }
-        externalRegistrations.put(plugin, pluginId());
+        return out;
     }
 }

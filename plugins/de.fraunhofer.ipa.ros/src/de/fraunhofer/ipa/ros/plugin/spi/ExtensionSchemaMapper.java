@@ -722,33 +722,63 @@ public final class ExtensionSchemaMapper {
             schema.put("properties", Map.of());
             return schema;
         }
+        String classLabel = SchemaHints.get(eClass, SchemaHints.LABEL);
+        if (classLabel != null) {
+            schema.put("title", classLabel);
+        }
+        String classHelp = SchemaHints.help(eClass);
+        if (!classHelp.isEmpty()) {
+            schema.put("description", classHelp);
+        }
         Map<String, Object> properties = new LinkedHashMap<>();
         List<String> required = new ArrayList<>();
-        for (EStructuralFeature feature : eClass.getEAllStructuralFeatures()) {
-            if (!feature.isChangeable()) {
-                continue;
-            }
+        for (EStructuralFeature feature : SchemaHints.orderedFeatures(eClass)) {
             if (feature.isRequired()) {
                 required.add(feature.getName());
             }
             Map<String, Object> itemSchema = singleFeatureSchema(feature);
+            Map<String, Object> propertySchema;
             if (feature.isMany()) {
-                Map<String, Object> arraySchema = new LinkedHashMap<>();
-                arraySchema.put("type", "array");
-                arraySchema.put("items", itemSchema);
+                propertySchema = new LinkedHashMap<>();
+                propertySchema.put("type", "array");
+                propertySchema.put("items", itemSchema);
                 if (isNamedContainmentMany(feature)) {
-                    arraySchema.put("description", "Array of items (or object map keyed by 'name')");
+                    propertySchema.put("description", "Array of items (or object map keyed by 'name')");
                 }
-                properties.put(feature.getName(), arraySchema);
             } else {
-                properties.put(feature.getName(), itemSchema);
+                propertySchema = new LinkedHashMap<>(itemSchema);
             }
+            addHints(propertySchema, feature);
+            properties.put(feature.getName(), propertySchema);
         }
         schema.put("properties", properties);
         if (!required.isEmpty()) {
             schema.put("required", required);
         }
         return schema;
+    }
+
+    /**
+     * Adds the schema hints of {@code feature}: {@code title}, {@code description},
+     * {@code x-order} and, for values offered but not enforced, {@code x-choices}.
+     */
+    private static void addHints(final Map<String, Object> schema, final EStructuralFeature feature) {
+        String label = SchemaHints.get(feature, SchemaHints.LABEL);
+        if (label != null) {
+            schema.put("title", label);
+        }
+        String help = SchemaHints.help(feature);
+        if (!help.isEmpty()) {
+            Object existing = schema.get("description");
+            schema.put("description", existing == null ? help : help + " " + existing);
+        }
+        int order = SchemaHints.order(feature);
+        if (order != Integer.MAX_VALUE) {
+            schema.put("x-order", order);
+        }
+        if (SchemaHints.get(feature, SchemaHints.CHOICES) != null) {
+            schema.put("x-choices", SchemaHints.choices(feature));
+        }
     }
 
     private static Map<String, Object> singleFeatureSchema(final EStructuralFeature feature) {

@@ -21,14 +21,39 @@
  *       {@link RosToolingPlugin} via {@link java.util.ServiceLoader} or as an OSGi service.</li>
  * </ul>
  *
+ * <h2>The plugin interface</h2>
+ * The types a plugin implements, constructs or receives form the plugin interface, versioned by
+ * {@link PluginRegistry#PLUGIN_API_VERSION}: {@link RosToolingPlugin}, {@link BlockDescriptor},
+ * {@link LoaderDescriptor}, {@link PluginToolDescriptor}, {@link HookLocation},
+ * {@link MergeStrategy}, {@link SchemaHints}, {@link GenerationContext},
+ * {@link PackageGenerationContext}, {@link SystemGenerationContext}, {@link PackageBuild},
+ * {@link ValidationContext}, {@link ValidationIssue}, {@link ToolExecutionContext},
+ * {@link ToolResult} and {@link de.fraunhofer.ipa.ros.plugin.model.PluginBases}. A build test
+ * keeps a snapshot of their public methods and fails when they change without a version bump.
+ * {@link PluginRegistry}, {@link ExtensionSchemaMapper}, {@link ExtensionBlockMerger} and
+ * {@link TrustedPluginsStore} are core's own and not part of it.
+ *
+ * <ul>
+ *   <li><b>Named loaders:</b> a plugin base names its loader. {@code pluginlib} is built into
+ *       core; any other id must be registered by exactly one enabled plugin through
+ *       {@link RosToolingPlugin#loaders()}, which then receives the plugins of such bases in
+ *       {@link PackageGenerationContext#loaderPlugins()} and generates their loading code.</li>
+ *   <li><b>Schema hints:</b> labels, help text, field order and choice lists are Ecore annotations
+ *       on the block's classes and features (see {@link SchemaHints}); they never change what
+ *       validates.</li>
+ * </ul>
+ *
  * <h2>Design Rules &amp; Contracts</h2>
  * <ul>
  *   <li>Discovery stays passive until enabled via {@code -Dros.plugins.enabled} /
  *       {@code ROS_PLUGINS_ENABLED} or explicit programmatic registration.</li>
  *   <li><b>Passive JAR Metadata ({@code META-INF/rostooling-plugin.properties}):</b> External
- *       plugin JARs should bundle {@code META-INF/rostooling-plugin.properties} with required keys
- *       {@code id}, {@code version}, {@code supportedCoreVersionRange}, and {@code summary}, plus
- *       an optional {@code documentation} key naming a Markdown resource path inside the JAR.
+ *       plugin JARs must bundle {@code META-INF/rostooling-plugin.properties} with required keys
+ *       {@code id}, {@code version}, {@code summary} and {@code pluginApiVersionRange} (for example
+ *       {@code [1.0.0,2.0.0)}, checked against {@link PluginRegistry#PLUGIN_API_VERSION}), plus an
+ *       optional {@code supportedCoreVersionRange} for plugins that need a newer language feature
+ *       and an optional {@code documentation} key naming a Markdown resource path inside the JAR.
+ *       A JAR without the file, or whose ranges do not match, is not loaded.
  *       Core reads only those entries via {@link java.util.jar.JarFile} (capped at 16 KB for
  *       properties and 256 KB for documentation, never unpacked or loaded via classloaders) so
  *       IDEs can list plugins without running any plugin code. When an enabled plugin activates,

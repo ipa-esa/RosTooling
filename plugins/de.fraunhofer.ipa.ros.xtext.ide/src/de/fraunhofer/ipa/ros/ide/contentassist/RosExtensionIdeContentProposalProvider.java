@@ -5,6 +5,7 @@ import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
 import de.fraunhofer.ipa.ros.plugin.spi.HookLocation;
 import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
 import de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin;
+import de.fraunhofer.ipa.ros.plugin.spi.SchemaHints;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -147,13 +148,14 @@ public class RosExtensionIdeContentProposalProvider extends IdeContentProposalPr
         }
         EClass containerClass = ctx.containerClass();
         List<ExtensionCompletionCandidate> out = new ArrayList<>();
-        for (EStructuralFeature feature : containerClass.getEAllStructuralFeatures()) {
-            if (!feature.isChangeable()) {
-                continue;
-            }
+        for (EStructuralFeature feature : SchemaHints.orderedFeatures(containerClass)) {
             String insert = includeColon ? feature.getName() + ": " : feature.getName();
-            String desc = ExtensionSchemaMapper.describeFeatureType(feature)
-                    + (feature.isRequired() ? " (required)" : " (optional)");
+            String help = SchemaHints.help(feature);
+            String label = SchemaHints.get(feature, SchemaHints.LABEL);
+            String desc = (label != null ? label + ": " : "")
+                    + ExtensionSchemaMapper.describeFeatureType(feature)
+                    + (feature.isRequired() ? " (required)" : " (optional)")
+                    + (help.isEmpty() ? "" : " — " + help);
             out.add(new ExtensionCompletionCandidate(
                     insert,
                     feature.getName(),
@@ -172,7 +174,15 @@ public class RosExtensionIdeContentProposalProvider extends IdeContentProposalPr
         List<ExtensionCompletionCandidate> out = new ArrayList<>();
         if (feature instanceof EAttribute attr) {
             EDataType dt = attr.getEAttributeType();
-            if (dt instanceof EEnum eEnum) {
+            if (SchemaHints.get(feature, SchemaHints.CHOICES) != null) {
+                for (String choice : SchemaHints.choices(feature)) {
+                    out.add(new ExtensionCompletionCandidate(
+                            choice,
+                            choice,
+                            "Suggested value of " + SchemaHints.label(feature),
+                            ContentAssistEntry.KIND_VALUE));
+                }
+            } else if (dt instanceof EEnum eEnum) {
                 for (EEnumLiteral lit : eEnum.getELiterals()) {
                     out.add(new ExtensionCompletionCandidate(
                             lit.getLiteral(),

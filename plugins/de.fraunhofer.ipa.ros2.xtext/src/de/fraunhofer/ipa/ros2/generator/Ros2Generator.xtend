@@ -9,7 +9,6 @@ import de.fraunhofer.ipa.ros2.distro.Ros2Distros
 import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target
 import java.nio.file.Path
 import java.util.ArrayList
-import java.util.IdentityHashMap
 import java.util.LinkedHashMap
 import java.util.LinkedHashSet
 import java.util.List
@@ -337,7 +336,6 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
                     populateCorePackageBuild(pkg, cppNodes, pythonNodes, pluginBuild)
 
                     val Map<String, String> allPluginOwnedFiles = new LinkedHashMap()
-                    val Map<Plugin, String> externalRegistrations = new IdentityHashMap()
                     val List<PackageGenerationContext> contexts = new ArrayList()
 
                     for (plugin : activePlugins) {
@@ -351,7 +349,6 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
                             existingList,
                             coreOwnedPaths,
                             allPluginOwnedFiles,
-                            externalRegistrations,
                             pluginBuild,
                             outcome.pluginConflictErrors,
                             PluginRegistry.INSTANCE
@@ -368,8 +365,8 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
                             targetNodes.contains(art?.name) ||
                             targetNodes.contains(ep.name) ||
                             targetNodes.contains(pluginClassName(ep))
-                        if (matchesTarget && !externalRegistrations.containsKey(ep)) {
-                            outcome.errors.add("External plugin '" + ep.name + "' (loader: external) in package '" + pkg.name + "' is not claimed by any active RosToolingPlugin.")
+                        if (matchesTarget && PluginRegistry.INSTANCE.loaderOwner(PluginBases.loaderOf(ep)) === null) {
+                            outcome.errors.add(unloadedPluginError(ep, pkg))
                         }
                     }
 
@@ -392,7 +389,7 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
                     }
                 } else if (generatePlugins && !extPlugins.empty) {
                     for (ep : extPlugins) {
-                        outcome.errors.add("External plugin '" + ep.name + "' (loader: external) in package '" + pkg.name + "' is not claimed by any active RosToolingPlugin.")
+                        outcome.errors.add(unloadedPluginError(ep, pkg))
                     }
                 }
 
@@ -434,6 +431,21 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
         coreGeneratedFiles.put(relativePath, content)
         outcome.coreFiles.put(relativePath, content)
         fsa.generateFile(relativePath, content)
+    }
+
+    /** A plugin whose base names a loader that is not pluginlib and that no active plugin owns. */
+    private def String unloadedPluginError(Plugin plugin, Package pkg) {
+        val loader = PluginBases.loaderOf(plugin)
+        if (loader === null) {
+            return "Plugin '" + plugin.name + "' in package '" + pkg.name + "' has no resolved base, so it has no loader."
+        }
+        val owners = PluginRegistry.INSTANCE.loaderRegistrations(loader).map[it.plugin.id]
+        if (owners.size > 1) {
+            return "Plugin '" + plugin.name + "' in package '" + pkg.name + "' uses loader '" + loader
+                + "', which is registered by several plugins: " + owners.join(", ")
+        }
+        return "Plugin '" + plugin.name + "' in package '" + pkg.name + "' uses loader '" + loader
+            + "', which no enabled plugin registers."
     }
 
     private def void deleteCoreFile(IFileSystemAccess2 fsa, PluginGenerationOutcome outcome, String relativePath) {
