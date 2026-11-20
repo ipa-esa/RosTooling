@@ -36,6 +36,11 @@ public final class PluginBases {
         return PLUGINLIB.equals(loaderOf(plugin));
     }
 
+    /** Whether plugins of {@code base} are loaded with pluginlib; false if it is missing or unresolved. */
+    public static boolean isPluginlib(PluginBase base) {
+        return base != null && !base.eIsProxy() && PLUGINLIB.equals(trimToNull(base.getLoader()));
+    }
+
     /** The C++ class of the base {@code plugin} implements, for example {@code nav2_core::GlobalPlanner}, or {@code null}. */
     public static String baseClassOf(Plugin plugin) {
         PluginBase base = baseOf(plugin);

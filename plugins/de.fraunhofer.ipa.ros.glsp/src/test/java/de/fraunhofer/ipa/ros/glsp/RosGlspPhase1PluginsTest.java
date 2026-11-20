@@ -157,8 +157,8 @@ class RosGlspPhase1PluginsTest {
                     orch_bin:
                       node: orch_node
                       parameters:
-                        leaf_libraries:
-                          type: Array [ String ]
+                        rate:
+                          type: Double
                 """);
 
         Session s = open(pkgFile, "phase1-slot-format");
@@ -205,9 +205,6 @@ class RosGlspPhase1PluginsTest {
                   artifacts:
                     host_bin:
                       node: host_node
-                      parameters:
-                        active_plugin:
-                          type: String
                       pluginslots:
                         planner:
                           base: nav2_core.GlobalPlanner

@@ -10,10 +10,6 @@ import ros.Artifact
 import ros.Node
 import ros.Package
 import ros.Parameter
-import ros.ParameterArrayType
-import ros.ParameterListType
-import ros.ParameterStringType
-import ros.ParameterType
 import ros.PluginBase
 import ros.PluginSlot
 import ros.Publisher
@@ -172,8 +168,8 @@ class RosValidator extends AbstractRosValidator {
 
   public static val PLUGIN_INVALID_IMPLEMENTS = 'plugin.invalidImplements'
   public static val SLOT_DUPLICATE = 'slot.duplicate'
-  public static val SLOT_MISSING_PARAM = 'slot.missingParameter'
-  public static val SLOT_INVALID_PARAM_TYPE = 'slot.invalidParameterType'
+  public static val SLOT_PARAM_CONFLICT = 'slot.parameterConflict'
+  public static val SLOT_DEFAULT_WRONG_BASE = 'slot.defaultWrongBase'
 
   @Check
   def void checkPluginBase(PluginBase base) {
@@ -188,9 +184,15 @@ class RosValidator extends AbstractRosValidator {
     }
   }
 
+  /**
+   * A slot owns its parameter: the name must not also be a node parameter or another slot's
+   * parameter. A default plugin must implement the slot's base.
+   */
   @Check
   def void checkNodePluginSlots(Node node) {
     val seenSlotNames = newHashSet
+    val seenSlotParams = newHashSet
+    val nodeParams = node.parameter.map[name].filterNull.toSet
     for (PluginSlot slot : node.pluginSlots) {
       if (slot.name !== null && !seenSlotNames.add(slot.name)) {
         error(
@@ -201,21 +203,39 @@ class RosValidator extends AbstractRosValidator {
         )
       }
       val paramName = slot.parameter?.trim
-      val declaredParam = node.parameter.findFirst[p | p.name == paramName]
-      if (declaredParam === null) {
-        error(
-          "PluginSlot '" + slot.name + "' references parameter '" + slot.parameter + "', which is not declared on node '" + node.name + "'",
-          slot,
-          RosPackage.Literals.PLUGIN_SLOT__PARAMETER,
-          SLOT_MISSING_PARAM
-        )
-      } else if (!isStringOrStringArrayType(declaredParam.type)) {
-        error(
-          "PluginSlot '" + slot.name + "' parameter '" + slot.parameter + "' must have type String or Array[String]",
-          slot,
-          RosPackage.Literals.PLUGIN_SLOT__PARAMETER,
-          SLOT_INVALID_PARAM_TYPE
-        )
+      if (paramName !== null && !paramName.empty) {
+        if (nodeParams.contains(paramName)) {
+          error(
+            "PluginSlot '" + slot.name + "' declares parameter '" + paramName
+              + "', which is also listed under the parameters of node '" + node.name + "'; remove it there, the slot declares it",
+            slot,
+            RosPackage.Literals.PLUGIN_SLOT__PARAMETER,
+            SLOT_PARAM_CONFLICT
+          )
+        } else if (!seenSlotParams.add(paramName)) {
+          error(
+            "PluginSlot '" + slot.name + "' declares parameter '" + paramName
+              + "', which another slot of node '" + node.name + "' already declares",
+            slot,
+            RosPackage.Literals.PLUGIN_SLOT__PARAMETER,
+            SLOT_PARAM_CONFLICT
+          )
+        }
+      }
+      val defaultPlugin = slot.defaultPlugin
+      val base = slot.base
+      // Unresolved references are already reported by the linker.
+      if (defaultPlugin !== null && !defaultPlugin.eIsProxy && base !== null && !base.eIsProxy) {
+        val implemented = defaultPlugin.implements
+        if (implemented !== null && !implemented.eIsProxy && implemented !== base) {
+          error(
+            "Default plugin '" + defaultPlugin.name + "' implements '" + implemented.name + "', but slot '" + slot.name
+              + "' takes '" + base.name + "'",
+            slot,
+            RosPackage.Literals.PLUGIN_SLOT__DEFAULT_PLUGIN,
+            SLOT_DEFAULT_WRONG_BASE
+          )
+        }
       }
     }
   }
@@ -224,17 +244,6 @@ class RosValidator extends AbstractRosValidator {
     return fqn !== null && fqn.contains("::") && !fqn.startsWith("::") && !fqn.endsWith("::")
   }
 
-  def private boolean isStringOrStringArrayType(ParameterType paramType) {
-    if (paramType instanceof ParameterStringType) {
-      return true
-    }
-    if (paramType instanceof ParameterArrayType) {
-      return paramType.type instanceof ParameterStringType
-    }
-    if (paramType instanceof ParameterListType) {
-      return !paramType.sequence.empty && paramType.sequence.forall[it instanceof ParameterStringType]
-    }
-    return false
-  }
+
 
 }

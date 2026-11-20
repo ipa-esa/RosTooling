@@ -153,8 +153,6 @@ public class PluginArchitecturePhase1Test {
                         status:
                           type: "std_msgs/msg/String"
                       parameters:
-                        planner_plugin:
-                          type: String
                         extra_plugins:
                           type: Array [ String ]
                       pluginslots:
@@ -280,9 +278,6 @@ public class PluginArchitecturePhase1Test {
                           implements: "nav2_core.GlobalPlanner"
                     host:
                       node: host
-                      parameters:
-                        planners:
-                          type: Array [ String ]
                       pluginslots:
                         planners:
                           base: nav2_core.GlobalPlanner
@@ -335,9 +330,6 @@ public class PluginArchitecturePhase1Test {
                       pluginslots:
                         s1:
                           base: nav2_core.GlobalPlanner
-                          parameter: missing_param
-                        s2:
-                          base: nav2_core.GlobalPlanner
                           parameter: count
                 """);
         EcoreUtil.resolveAll(rs);
@@ -347,8 +339,7 @@ public class PluginArchitecturePhase1Test {
                 i.getSeverity() == Severity.ERROR && RosValidator.PLUGIN_INVALID_IMPLEMENTS.equals(i.getCode())));
 
         List<Issue> slotIssues = validate(ros2Injector, badSlotRes);
-        assertTrue(slotIssues.stream().anyMatch(i -> RosValidator.SLOT_MISSING_PARAM.equals(i.getCode())));
-        assertTrue(slotIssues.stream().anyMatch(i -> RosValidator.SLOT_INVALID_PARAM_TYPE.equals(i.getCode())));
+        assertTrue(slotIssues.stream().anyMatch(i -> RosValidator.SLOT_PARAM_CONFLICT.equals(i.getCode())));
 
         // In .rossystem, a plugin must implement the base of the slot it is attached to, and the
         // slot must exist on the host node.
@@ -615,10 +606,6 @@ public class PluginArchitecturePhase1Test {
                     host_orchestrator:
                       node: host_orchestrator
                       parameters:
-                        leaf_libraries:
-                          type: Array [ String ]
-                        strategy_plugin:
-                          type: String
                         extra_cfg:
                           type: Struct [ mode String ]
                       pluginslots:

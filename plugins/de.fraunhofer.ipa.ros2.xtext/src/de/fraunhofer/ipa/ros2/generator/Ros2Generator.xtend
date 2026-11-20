@@ -260,6 +260,10 @@ class Ros2Generator extends AbstractGenerator implements IPluginAwareGenerator {
                         if (!pythonNodes.contains(node)) {
                             pythonNodes.add(node)
                         }
+                        for (slot : node.pluginSlots.filter[PluginBases.isPluginlib(base)]) {
+                            outcome.notices.add("Node '" + node.name + "' is generated in Python, but its slot '" + slot.name
+                                + "' uses pluginlib, which loads C++ plugins only.")
+                        }
 
                         cppNodes.removeIf[it == node || it.name == node.name || it.artifactName == node.artifactName]
                         val artCamel = toCamelCase(node.artifactName)

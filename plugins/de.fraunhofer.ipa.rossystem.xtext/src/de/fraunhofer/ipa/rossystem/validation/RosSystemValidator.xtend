@@ -166,6 +166,9 @@ class RosSystemValidator extends AbstractRosSystemValidator {
   }
 
   public static val INCOMPATIBLE_PLUGIN = 'rosnode.incompatiblePlugin'
+  public static val SLOT_TOO_MANY_PLUGINS = 'rosnode.slotTooManyPlugins'
+  public static val SLOT_DUPLICATE_PLUGIN = 'rosnode.slotDuplicatePlugin'
+  public static val SLOT_ATTACHED_TWICE = 'rosnode.slotAttachedTwice'
   public static val EXTENSION_MERGE_CONFLICT = 'extension.mergeConflict'
 
   @Check
@@ -174,8 +177,40 @@ class RosSystemValidator extends AbstractRosSystemValidator {
     if (fromNode !== null && fromNode.eIsProxy) {
         fromNode = EcoreUtil.resolve(fromNode, rosNode) as Node
     }
+    val seenSlots = newHashSet
     for (attachment : rosNode.slots) {
         val slot = attachment.slot
+        if (slot !== null && !slot.eIsProxy) {
+            if (!seenSlots.add(slot)) {
+                error(
+                    "Slot '" + slot.name + "' is attached twice on node '" + rosNode.name + "'; list all its plugins in one entry",
+                    attachment,
+                    RossystemPackage.Literals.SLOT_ATTACHMENT__SLOT,
+                    SLOT_ATTACHED_TWICE
+                )
+            }
+            val seenPlugins = newHashSet
+            for (var i = 0; i < attachment.plugins.size; i++) {
+                val plugin = attachment.plugins.get(i)
+                if (plugin !== null && !plugin.eIsProxy && !seenPlugins.add(plugin)) {
+                    error(
+                        "Plugin '" + plugin.name + "' is attached to slot '" + slot.name + "' more than once",
+                        attachment,
+                        RossystemPackage.Literals.SLOT_ATTACHMENT__PLUGINS,
+                        i,
+                        SLOT_DUPLICATE_PLUGIN
+                    )
+                } else if (!slot.multiple && i > 0) {
+                    error(
+                        "Slot '" + slot.name + "' takes one plugin; set 'multiple: true' on the slot to attach several",
+                        attachment,
+                        RossystemPackage.Literals.SLOT_ATTACHMENT__PLUGINS,
+                        i,
+                        SLOT_TOO_MANY_PLUGINS
+                    )
+                }
+            }
+        }
         if (slot !== null && !slot.eIsProxy && slot.base !== null && !slot.base.eIsProxy) {
             for (var i = 0; i < attachment.plugins.size; i++) {
                 val plugin = attachment.plugins.get(i)
