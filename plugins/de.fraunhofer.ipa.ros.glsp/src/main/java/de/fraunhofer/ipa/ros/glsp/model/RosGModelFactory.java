@@ -1,12 +1,7 @@
 package de.fraunhofer.ipa.ros.glsp.model;
 
-import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import de.fraunhofer.ipa.ros.glsp.RosModelTypes;
-import de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor;
-import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
-import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,13 +38,10 @@ import ros.ActionClient;
 import ros.ActionServer;
 import ros.AmentPackage;
 import ros.Artifact;
-import ros.Extensible;
-import ros.ExtensionBlock;
 import ros.InterfaceHolder;
 import ros.Node;
 import ros.Package;
 import ros.Plugin;
-import ros.PluginSlot;
 import de.fraunhofer.ipa.ros.glsp.handlers.RosPackageSetEditor;
 import primitives.MessagePart;
 import ros.ActionSpec;
@@ -157,7 +149,7 @@ public class RosGModelFactory extends EMFGModelFactory {
         ggraph.getArgs().put("modelKind", "rossystem");
         ggraph.getArgs().put("systemName", nullToEmpty(rosSystem.getName()));
         ggraph.getArgs().put("fromFile", nullToEmpty(rosSystem.getFromFile()));
-        ggraph.getArgs().put("extensionsJson", serializeExtensionsJson(rosSystem));
+        ggraph.getArgs().put(RosViewData.ARG, viewData().root("system", rosSystem));
 
         Map<RosInterface, String> interfaceToPortId = new HashMap<>();
         Map<RosInterface, String> collapsedInterfaceToSubId = new HashMap<>();
@@ -291,13 +283,10 @@ public class RosGModelFactory extends EMFGModelFactory {
                 .addArgument("namespace", namespace)
                 .addArgument("from", fromRef)
                 .addArgument("isLifecycle", isLifecycle)
-                .addArgument("plugins", String.join(", ", pluginNames))
-                .addArgument("slotsJson", serializeSlotAttachments(rosNode, isResolvedOrigin ? originNode : null))
-                .addArgument("pluginsCount", pluginNames.size())
                 .addArgument("activeParams", activeParams)
                 .addArgument("totalParams", totalParams)
                 .addArgument("parametersJson", serializeRosParameters(rosNode, originNode, resolvedPlugins))
-                .addArgument("extensionsJson", serializeExtensionsJson(rosNode));
+                .addArgument(RosViewData.ARG, viewData().forRosNode(rosNode, isResolvedOrigin ? originNode : null));
 
         // Header labels
         builder.add(new GLabelBuilder(RosModelTypes.LABEL_NAME)
@@ -831,6 +820,7 @@ public class RosGModelFactory extends EMFGModelFactory {
 
     protected void fillPackageSetGraph(final List<Package> packages, final GGraph ggraph) {
         ggraph.getArgs().put("modelKind", "ros-package-set");
+        ggraph.getArgs().put(RosViewData.ARG, viewData().root("packageSet", null));
         for (Package pkg : packages) {
             String pkgId = getElementId(pkg);
             String pkgType = (pkg instanceof AmentPackage) ? "AmentPackage" : "CatkinPackage";
@@ -843,7 +833,7 @@ public class RosGModelFactory extends EMFGModelFactory {
                     .addArgument("specsCount", pkg.getSpec().size())
                     .addArgument("artifactsCount", pkg.getArtifact().size())
                     .addArgument("specsJson", serializeSpecs(pkg))
-                    .addArgument("pluginBasesJson", serializePluginBases(pkg));
+                    .addArgument(RosViewData.ARG, viewData().forPackage(pkg));
 
             pkgBuilder.add(new GLabelBuilder(RosModelTypes.LABEL_NAME)
                     .id(pkgId + "_label")
@@ -869,11 +859,9 @@ public class RosGModelFactory extends EMFGModelFactory {
                             .addArgument("actionserversCount", node.getActionserver().size())
                             .addArgument("actionclientsCount", node.getActionclient().size())
                             .addArgument("parametersCount", node.getParameter().size())
-                            .addArgument("pluginSlotsCount", node.getPluginSlots().size())
-                            .addArgument("pluginSlotsJson", serializeNodePluginSlots(node))
                             .addArgument("interfacesJson", serializeRosNodeInterfaces(node))
                             .addArgument("parametersJson", serializeNodeParameters(node))
-                            .addArgument("extensionsJson", serializeExtensionsJson(node));
+                            .addArgument(RosViewData.ARG, viewData().forNode(artifact, node));
                     pkgBuilder.add(nodeBuilder.build());
                 }
                 for (Plugin plugin : artifact.getPlugins()) {
@@ -885,9 +873,6 @@ public class RosGModelFactory extends EMFGModelFactory {
                             .addArgument("artifactName", nullToEmpty(artifact.getName()))
                             .addArgument("artifactId", getElementId(artifact))
                             .addArgument("nodeName", nullToEmpty(plugin.getName()))
-                            .addArgument("isPlugin", true)
-                            .addArgument("implements", RosDslText.refText(null, plugin, ros.RosPackage.Literals.PLUGIN__IMPLEMENTS))
-                            .addArgument("loader", nullToEmpty(PluginBases.loaderOf(plugin)))
                             .addArgument("publishersCount", plugin.getPublisher().size())
                             .addArgument("subscribersCount", plugin.getSubscriber().size())
                             .addArgument("serviceserversCount", plugin.getServiceserver().size())
@@ -897,7 +882,7 @@ public class RosGModelFactory extends EMFGModelFactory {
                             .addArgument("parametersCount", plugin.getParameter().size())
                             .addArgument("interfacesJson", serializeRosNodeInterfaces(plugin))
                             .addArgument("parametersJson", serializeNodeParameters(plugin))
-                            .addArgument("extensionsJson", serializeExtensionsJson(plugin));
+                            .addArgument(RosViewData.ARG, viewData().forPlugin(artifact, plugin));
                     pkgBuilder.add(pluginBuilder.build());
                 }
             }
@@ -952,80 +937,6 @@ public class RosGModelFactory extends EMFGModelFactory {
                     + "\",\"ns\":\"" + escapeJson(RosDslText.renderNamespace(p.getNamespace()))
                     + "\",\"hasDefault\":" + (def != null)
                     + ",\"value\":\"" + escapeJson(formatParameterValue(p.getValue())) + "\"}");
-        }
-        return "[" + String.join(",", items) + "]";
-    }
-
-    protected String serializeExtensionsJson(final Extensible holder) {
-        if (holder == null || holder.getExtensions().isEmpty()) {
-            return "[]";
-        }
-        List<Map<String, Object>> out = new ArrayList<>();
-        for (ExtensionBlock block : holder.getExtensions()) {
-            BlockDescriptor desc = PluginRegistry.INSTANCE.blockDescriptor(block.getName());
-            Map<String, Object> item = new LinkedHashMap<>();
-            item.put("name", block.getName());
-            item.put("entries", ExtensionSchemaMapper.blockToMap(block));
-            if (desc != null) {
-                item.put("schema", ExtensionSchemaMapper.schemaToJsonMap(desc));
-            }
-            out.add(item);
-        }
-        return new Gson().toJson(out);
-    }
-
-    /** The plugin bases a package declares: {@code [{id, name, ref, class, header, loader}]}. */
-    protected String serializePluginBases(final Package pkg) {
-        List<String> items = new ArrayList<>();
-        for (ros.PluginBase base : pkg.getPluginBases()) {
-            items.add("{\"id\":\"" + escapeJson(getElementId(base))
-                    + "\",\"name\":\"" + escapeJson(nullToEmpty(base.getName()))
-                    + "\",\"ref\":\"" + escapeJson(nullToEmpty(PluginBases.qualifiedName(base)))
-                    + "\",\"class\":\"" + escapeJson(nullToEmpty(base.getClassName()))
-                    + "\",\"header\":\"" + escapeJson(nullToEmpty(base.getHeader()))
-                    + "\",\"loader\":\"" + escapeJson(nullToEmpty(base.getLoader())) + "\"}");
-        }
-        return "[" + String.join(",", items) + "]";
-    }
-
-    /**
-     * Every slot of the host node with the plugins attached to it in this system:
-     * {@code [{slot, base, multiple, plugins: ["pkg.Plugin", ...]}]}.
-     */
-    protected String serializeSlotAttachments(final RosNode rosNode, final Node host) {
-        List<String> items = new ArrayList<>();
-        if (host == null) {
-            return "[]";
-        }
-        for (PluginSlot slot : host.getPluginSlots()) {
-            List<String> refs = new ArrayList<>();
-            for (system.SlotAttachment attachment : rosNode.getSlots()) {
-                if (attachment.getSlot() == slot) {
-                    for (Plugin pl : attachment.getPlugins()) {
-                        refs.add("\"" + escapeJson(nullToEmpty(PluginBases.qualifiedName(pl))) + "\"");
-                    }
-                }
-            }
-            items.add("{\"slot\":\"" + escapeJson(nullToEmpty(slot.getName()))
-                    + "\",\"base\":\"" + escapeJson(slot.getBase() == null ? "" : nullToEmpty(PluginBases.qualifiedName(slot.getBase())))
-                    + "\",\"multiple\":" + slot.isMultiple()
-                    + ",\"plugins\":[" + String.join(",", refs) + "]}");
-        }
-        return "[" + String.join(",", items) + "]";
-    }
-
-    protected String serializeNodePluginSlots(final Node node) {
-        List<String> items = new ArrayList<>();
-        for (PluginSlot slot : node.getPluginSlots()) {
-            String fmt = slot.getValueFormat() != null ? slot.getValueFormat().getLiteral() : "class";
-            items.add("{\"id\":\"" + escapeJson(getElementId(slot))
-                    + "\",\"name\":\"" + escapeJson(nullToEmpty(slot.getName()))
-                    + "\",\"base\":\"" + escapeJson(RosDslText.refText(null, slot, ros.RosPackage.Literals.PLUGIN_SLOT__BASE))
-                    + "\",\"parameter\":\"" + escapeJson(nullToEmpty(slot.getParameter()))
-                    + "\",\"format\":\"" + escapeJson(fmt)
-                    + "\",\"multiple\":" + slot.isMultiple()
-                    + ",\"default\":\"" + escapeJson(slot.getDefaultPlugin() == null ? ""
-                            : RosDslText.refText(null, slot, ros.RosPackage.Literals.PLUGIN_SLOT__DEFAULT_PLUGIN)) + "\"}");
         }
         return "[" + String.join(",", items) + "]";
     }
@@ -1149,6 +1060,11 @@ public class RosGModelFactory extends EMFGModelFactory {
 
     /** Separator between a subsystem element id and a fragment inside the subsystem's resource. */
     public static final String SCOPE_SEPARATOR = "::";
+
+    /** View data of this model, with this factory's element ids. */
+    protected RosViewData viewData() {
+        return new RosViewData(this::getElementId);
+    }
 
     protected String getElementId(final EObject element) {
         String base = baseElementId(element);

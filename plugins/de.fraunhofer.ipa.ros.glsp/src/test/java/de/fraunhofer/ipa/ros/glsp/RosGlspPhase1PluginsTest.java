@@ -12,6 +12,7 @@ import de.fraunhofer.ipa.ros.glsp.actions.SetRosAutoConnectAction;
 import de.fraunhofer.ipa.ros.glsp.handlers.RequestRosAutoConnectActionHandler;
 import de.fraunhofer.ipa.ros.glsp.model.RosAstNodeModelSerializer;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
+import de.fraunhofer.ipa.ros.glsp.model.RosViewData;
 import de.fraunhofer.ipa.ros.glsp.operations.ApplyRosAutoConnectOperation;
 import de.fraunhofer.ipa.ros.glsp.operations.EditRosPropertyOperation;
 import java.nio.file.Files;
@@ -87,6 +88,15 @@ class RosGlspPhase1PluginsTest {
         s.state.execute(cmd);
     }
 
+    /** The element's view data; asserts the format version. */
+    private static com.google.gson.JsonObject viewData(final GModelElement el) {
+        Object raw = el.getArgs().get(RosViewData.ARG);
+        assertNotNull(raw, "No view data on " + el.getId());
+        com.google.gson.JsonObject obj = com.google.gson.JsonParser.parseString(String.valueOf(raw)).getAsJsonObject();
+        assertEquals(RosViewData.VERSION, obj.get("version").getAsInt());
+        return obj;
+    }
+
     private static List<GModelElement> findNodesByName(final GModelElement el, final String type) {
         List<GModelElement> out = new java.util.ArrayList<>();
         if (type.equals(el.getType())) {
@@ -132,7 +142,8 @@ class RosGlspPhase1PluginsTest {
         GModelRoot root = s.state.getRoot();
         List<GModelElement> cards = findNodesByName(root, RosModelTypes.ROS_NODE);
         assertEquals(1, cards.size());
-        assertEquals(true, cards.get(0).getArgs().get("isPlugin"));
+        assertEquals("plugin", viewData(cards.get(0)).get("kind").getAsString());
+        assertEquals("my_plugins.GlobalPlanner", viewData(cards.get(0)).get("implements").getAsString());
         assertEquals("StraightLine", cards.get(0).getArgs().get("nodeName"));
 
         // Add a second plugin to the same library artifact via GLSP edit operation
@@ -181,8 +192,8 @@ class RosGlspPhase1PluginsTest {
         Files.writeString(pkgFile, updated);
         Session reopened = open(pkgFile, "phase1-slot-format-2");
         GModelElement card = findNodesByName(reopened.state.getRoot(), RosModelTypes.ROS_NODE).get(0);
-        String slotsJson = String.valueOf(card.getArgs().get("pluginSlotsJson"));
-        assertTrue(slotsJson.contains("\"format\":\"library\""), "Expected format in pluginSlotsJson: " + slotsJson);
+        String slotsJson = viewData(card).get("pluginSlots").toString();
+        assertTrue(slotsJson.contains("\"format\":\"library\""), "Expected format in pluginSlots: " + slotsJson);
         assertTrue(slotsJson.contains("\"multiple\":true"), slotsJson);
 
         // Editing an existing slot rewrites that slot only.
@@ -272,8 +283,8 @@ class RosGlspPhase1PluginsTest {
                 .filter(n -> "host_inst".equals(n.getArgs().get("nodeName")))
                 .findFirst().orElseThrow();
 
-        assertEquals(1, hostCard.getArgs().get("pluginsCount"));
-        assertEquals("MyPlanner", hostCard.getArgs().get("plugins"));
+        String hostSlots = viewData(hostCard).get("slots").toString();
+        assertTrue(hostSlots.contains("\"plugins\":[\"plugin_pkg.MyPlanner\"]"), hostSlots);
         assertTrue(findNodesByName(hostCard, RosModelTypes.PORT_PUB).stream()
                 .anyMatch(p -> "plugin_debug".equals(p.getArgs().get("interfaceName"))));
 
@@ -320,7 +331,7 @@ class RosGlspPhase1PluginsTest {
         AmentPackage pkg = (AmentPackage) reopened.state.getSemanticModel();
         assertEquals(2, pkg.getPluginBases().size());
         GModelElement pkgCard = findNodesByName(reopened.state.getRoot(), RosModelTypes.PACKAGE_NODE).get(0);
-        String basesJson = String.valueOf(pkgCard.getArgs().get("pluginBasesJson"));
+        String basesJson = viewData(pkgCard).get("pluginBases").toString();
         assertTrue(basesJson.contains("\"ref\":\"my_core.Planner\""), basesJson);
         assertTrue(basesJson.contains("\"loader\":\"pluginlib\""), basesJson);
     }
@@ -372,7 +383,7 @@ class RosGlspPhase1PluginsTest {
 
         Session s = open(sysFile, "phase4-slots");
         GModelElement card = findNodesByName(s.state.getRoot(), RosModelTypes.ROS_NODE).get(0);
-        String slotsJson = String.valueOf(card.getArgs().get("slotsJson"));
+        String slotsJson = viewData(card).get("slots").toString();
         assertTrue(slotsJson.contains("{\"slot\":\"planner\",\"base\":\"core.Planner\",\"multiple\":false,\"plugins\":[\"core.Straight\"]}"), slotsJson);
         assertTrue(slotsJson.contains("{\"slot\":\"critics\",\"base\":\"core.Critic\",\"multiple\":true,\"plugins\":[]}"), slotsJson);
 
@@ -410,12 +421,155 @@ class RosGlspPhase1PluginsTest {
         Files.writeString(pkgFile, updated);
         Session reopened = open(pkgFile, "phase2-ext-pkg-2");
         GModelElement nodeCard = findNodesByName(reopened.state.getRoot(), RosModelTypes.ROS_NODE).get(0);
-        String extsJson = String.valueOf(nodeCard.getArgs().get("extensionsJson"));
+        String extsJson = viewData(nodeCard).get("blocks").toString();
         assertTrue(extsJson.contains("\"name\":\"meta\""), extsJson);
+        assertEquals(0, viewData(nodeCard).getAsJsonArray("contributions").size(), "A block no plugin owns gets no badge");
         assertTrue(extsJson.contains("\"mode\":\"fast\""), extsJson);
 
         exec(reopened, new EditRosPropertyOperation("app_node", "removeExtensionBlock", "meta", "", null));
         String removed = RosAstNodeModelSerializer.computeAndCommit(reopened.state).newText;
         assertFalse(removed.contains("@meta:"), removed);
+    }
+
+    /** A neutral test plugin with a hinted block {@code probe} and a loader {@code probe_loader}. */
+    private static de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin probePlugin() {
+        org.eclipse.emf.ecore.EcoreFactory ef = org.eclipse.emf.ecore.EcoreFactory.eINSTANCE;
+        org.eclipse.emf.ecore.EPackage ePkg = ef.createEPackage();
+        ePkg.setName("probeview");
+        ePkg.setNsPrefix("probeview");
+        ePkg.setNsURI("http://example.org/probeview");
+        org.eclipse.emf.ecore.EClass cls = ef.createEClass();
+        cls.setName("ProbeBlock");
+        org.eclipse.emf.ecore.EAttribute mode = ef.createEAttribute();
+        mode.setName("mode");
+        mode.setEType(org.eclipse.emf.ecore.EcorePackage.Literals.ESTRING);
+        de.fraunhofer.ipa.ros.plugin.spi.SchemaHints.set(mode, de.fraunhofer.ipa.ros.plugin.spi.SchemaHints.LABEL, "Mode");
+        de.fraunhofer.ipa.ros.plugin.spi.SchemaHints.set(mode, de.fraunhofer.ipa.ros.plugin.spi.SchemaHints.HELP, "How the probe runs.");
+        de.fraunhofer.ipa.ros.plugin.spi.SchemaHints.set(mode, de.fraunhofer.ipa.ros.plugin.spi.SchemaHints.CHOICES, "fast, thorough");
+        cls.getEStructuralFeatures().add(mode);
+        ePkg.getEClassifiers().add(cls);
+        de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor block = new de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor(
+                "probe", cls, java.util.EnumSet.of(
+                        de.fraunhofer.ipa.ros.plugin.spi.HookLocation.NODE,
+                        de.fraunhofer.ipa.ros.plugin.spi.HookLocation.ROS_NODE));
+        return new de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin() {
+            @Override public String id() { return "test.viewdata.probe"; }
+            @Override public List<de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor> blocks() { return List.of(block); }
+            @Override public List<de.fraunhofer.ipa.ros.plugin.spi.LoaderDescriptor> loaders() {
+                return List.of(new de.fraunhofer.ipa.ros.plugin.spi.LoaderDescriptor("probe_loader", ""));
+            }
+            @Override public void validate(final de.fraunhofer.ipa.ros.plugin.spi.ValidationContext context) { }
+        };
+    }
+
+    private static List<String> badgePlugins(final com.google.gson.JsonObject owner) {
+        List<String> out = new java.util.ArrayList<>();
+        for (com.google.gson.JsonElement c : owner.getAsJsonArray("contributions")) {
+            com.google.gson.JsonObject o = c.getAsJsonObject();
+            assertEquals(RosViewData.BADGE, o.get("kind").getAsString());
+            out.add(o.get("plugin").getAsString());
+        }
+        return out;
+    }
+
+    @Test
+    void viewDataBadgesWhatAPluginAddedAndCarriesBlockSchemas() throws Exception {
+        de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry.INSTANCE.clearRegistered();
+        de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry.INSTANCE.register(probePlugin());
+        try {
+            Path pkgFile = tempDir.resolve("probe_pkg.ros2");
+            Files.writeString(pkgFile, """
+                    probe_pkg:
+                      pluginbases:
+                        Probe:
+                          class: "probe::Probe"
+                          header: "probe/probe.hpp"
+                          loader: probe_loader
+                        Plain:
+                          class: "probe::Plain"
+                          header: "probe/plain.hpp"
+                          loader: pluginlib
+                      artifacts:
+                        probes:
+                          plugins:
+                            Fast:
+                              implements: probe_pkg.Probe
+                        plain_lib:
+                          plugins:
+                            Simple:
+                              implements: probe_pkg.Plain
+                        app_bin:
+                          node: app_node
+                          pluginslots:
+                            probes:
+                              base: probe_pkg.Probe
+                              parameter: probe_plugins
+                              multiple: true
+                    """);
+            Session s = open(pkgFile, "viewdata-pkg");
+            exec(s, new EditRosPropertyOperation("app_node", "setExtensionBlock", "probe", "{\"mode\":\"fast\"}", null));
+            Files.writeString(pkgFile, RosAstNodeModelSerializer.computeAndCommit(s.state).newText);
+            Session pkg = open(pkgFile, "viewdata-pkg-2");
+
+            com.google.gson.JsonObject root = viewData(pkg.state.getRoot());
+            assertEquals("packageSet", root.get("kind").getAsString());
+            assertTrue(root.get("availableBlocks").toString().contains("\"name\":\"probe\""), root.toString());
+            assertTrue(root.get("availableBlocks").toString().contains("\"plugin\":\"test.viewdata.probe\""), root.toString());
+            assertTrue(root.get("loaders").toString().contains("{\"id\":\"probe_loader\",\"plugin\":\"test.viewdata.probe\""),
+                    root.toString());
+
+            com.google.gson.JsonObject pkgView = viewData(findNodesByName(pkg.state.getRoot(), RosModelTypes.PACKAGE_NODE).get(0));
+            assertEquals("package", pkgView.get("kind").getAsString());
+            com.google.gson.JsonArray bases = pkgView.getAsJsonArray("pluginBases");
+            assertEquals(List.of("test.viewdata.probe"), badgePlugins(bases.get(0).getAsJsonObject()), "Base on a plugin's loader");
+            assertEquals(List.of(), badgePlugins(bases.get(1).getAsJsonObject()), "pluginlib is core's");
+
+            Map<String, com.google.gson.JsonObject> cards = new HashMap<>();
+            for (GModelElement el : findNodesByName(pkg.state.getRoot(), RosModelTypes.ROS_NODE)) {
+                cards.put(String.valueOf(el.getArgs().get("nodeName")), viewData(el));
+            }
+            assertEquals("plugin", cards.get("Fast").get("kind").getAsString());
+            assertEquals("probes", cards.get("Fast").getAsJsonObject("artifact").get("name").getAsString());
+            assertEquals("probe_loader", cards.get("Fast").get("loader").getAsString());
+            assertEquals(List.of("test.viewdata.probe"), badgePlugins(cards.get("Fast")));
+            assertEquals(List.of(), badgePlugins(cards.get("Simple")));
+
+            com.google.gson.JsonObject node = cards.get("app_node");
+            assertEquals("node", node.get("kind").getAsString());
+            assertEquals(List.of("test.viewdata.probe"), badgePlugins(node), "Node holding the plugin's block");
+            assertEquals("probe_plugins", node.getAsJsonArray("pluginSlots").get(0).getAsJsonObject().get("parameter").getAsString());
+            com.google.gson.JsonObject block = node.getAsJsonArray("blocks").get(0).getAsJsonObject();
+            assertEquals("probe", block.get("name").getAsString());
+            assertEquals("test.viewdata.probe", block.get("plugin").getAsString());
+            assertEquals("fast", block.getAsJsonObject("entries").get("mode").getAsString());
+            com.google.gson.JsonObject modeSchema = block.getAsJsonObject("schema").getAsJsonObject("schema")
+                    .getAsJsonObject("properties").getAsJsonObject("mode");
+            assertEquals("Mode", modeSchema.get("title").getAsString());
+            assertEquals("How the probe runs.", modeSchema.get("description").getAsString());
+            assertTrue(modeSchema.get("x-choices").toString().contains("thorough"), modeSchema.toString());
+
+            Path sysFile = tempDir.resolve("probe_sys.rossystem");
+            Files.writeString(sysFile, """
+                    probe_sys:
+                      nodes:
+                        app_inst:
+                          from: "probe_pkg.app_node"
+                          slots:
+                            probes: [probe_pkg.Fast]
+                    """);
+            Session sys = open(sysFile, "viewdata-sys");
+            exec(sys, new EditRosPropertyOperation("app_inst", "setExtensionBlock", "probe", "{\"mode\":\"thorough\"}", null));
+            Files.writeString(sysFile, RosAstNodeModelSerializer.computeAndCommit(sys.state).newText);
+            Session sys2 = open(sysFile, "viewdata-sys-2");
+            assertEquals("system", viewData(sys2.state.getRoot()).get("kind").getAsString());
+            com.google.gson.JsonObject host = viewData(findNodesByName(sys2.state.getRoot(), RosModelTypes.ROS_NODE).get(0));
+            assertEquals("rosNode", host.get("kind").getAsString());
+            assertEquals(List.of("test.viewdata.probe"), badgePlugins(host));
+            assertTrue(host.get("slots").toString().contains(
+                    "{\"slot\":\"probes\",\"base\":\"probe_pkg.Probe\",\"multiple\":true,\"plugins\":[\"probe_pkg.Fast\"]}"),
+                    host.toString());
+        } finally {
+            de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry.INSTANCE.clearRegistered();
+        }
     }
 }
