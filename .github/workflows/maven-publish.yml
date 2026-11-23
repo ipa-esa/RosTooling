@@ -6,6 +6,21 @@ name: Publish RosTooling to GitHub Packages
 on:
   release:
     types: [created]
+  # Beta channel: publishes <major>.<minor+1>.0-SNAPSHOT (e.g. 3.7.0-SNAPSHOT) from the branch
+  # the run is started on. GitHub Packages keeps every SNAPSHOT upload, timestamped, and Maven and
+  # Gradle resolve the newest one, so the extension's pre-release job always gets the latest
+  # beta. Release versions are never touched: the version change exists only in this run.
+  workflow_dispatch:
+    inputs:
+      beta:
+        description: 'Publish a beta SNAPSHOT of this branch (unchecked: deploy the version in the POMs, as a release does)'
+        required: true
+        type: boolean
+        default: true
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   publish:
@@ -31,6 +46,19 @@ jobs:
       with:
         maven-version: '3.9.9'
         
+    # Tycho's version tool changes the POMs and the bundle manifests together (3.7.0-SNAPSHOT /
+    # 3.7.0.qualifier), which Tycho requires to match.
+    - name: Set beta SNAPSHOT version
+      if: github.event_name == 'workflow_dispatch' && inputs.beta
+      run: |
+        base=$(sed -n '0,/<version>/s:.*<version>\(.*\)</version>.*:\1:p' plugins/de.fraunhofer.ipa.ros.parent/pom.xml)
+        major=${base%%.*}; rest=${base#*.}; minor=${rest%%.*}
+        snapshot="${major}.$((minor + 1)).0-SNAPSHOT"
+        tycho=$(sed -n 's:.*<tycho-version>\(.*\)</tycho-version>.*:\1:p' plugins/de.fraunhofer.ipa.ros.parent/pom.xml)
+        ./mvnw -B -f plugins/de.fraunhofer.ipa.ros.parent/pom.xml \
+          org.eclipse.tycho:tycho-versions-plugin:${tycho}:set-version -DnewVersion="$snapshot"
+        echo "Beta version $snapshot (from $base, commit ${GITHUB_SHA::8})" >> "$GITHUB_STEP_SUMMARY"
+
     - name: Publish to GitHub Packages Apache Maven
       run: ./mvnw deploy -B -f plugins/de.fraunhofer.ipa.ros.parent/pom.xml
       env:
