@@ -25379,6 +25379,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
             // InternalRos2Parser.g:9752:2: (this_ExtensionListValue_0= ruleExtensionListValue | this_ExtensionBraceMapValue_1= ruleExtensionBraceMapValue | this_ExtensionIndentedMapValue_2= ruleExtensionIndentedMapValue | this_ExtensionRefValue_3= ruleExtensionRefValue | this_ExtensionScalarValue_4= ruleExtensionScalarValue )
             int alt196=5;
             switch ( input.LA(1) ) {
+            case LeftSquareBracketRightSquareBracket:
             case LeftSquareBracket:
                 {
                 alt196=1;
@@ -25611,27 +25612,28 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExtensionListValue"
-    // InternalRos2Parser.g:9808:1: ruleExtensionListValue returns [EObject current=null] : ( () otherlv_1= LeftSquareBracket ( ( (lv_items_2_0= ruleExtensionValue ) ) ( (otherlv_3= Comma )? ( (lv_items_4_0= ruleExtensionValue ) ) )* )? otherlv_5= RightSquareBracket ) ;
+    // InternalRos2Parser.g:9808:1: ruleExtensionListValue returns [EObject current=null] : ( () (otherlv_1= LeftSquareBracketRightSquareBracket | (otherlv_2= LeftSquareBracket ( ( (lv_items_3_0= ruleExtensionValue ) ) ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )* )? otherlv_6= RightSquareBracket ) ) ) ;
     public final EObject ruleExtensionListValue() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_1=null;
-        Token otherlv_3=null;
-        Token otherlv_5=null;
-        EObject lv_items_2_0 = null;
+        Token otherlv_2=null;
+        Token otherlv_4=null;
+        Token otherlv_6=null;
+        EObject lv_items_3_0 = null;
 
-        EObject lv_items_4_0 = null;
+        EObject lv_items_5_0 = null;
 
 
 
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:9814:2: ( ( () otherlv_1= LeftSquareBracket ( ( (lv_items_2_0= ruleExtensionValue ) ) ( (otherlv_3= Comma )? ( (lv_items_4_0= ruleExtensionValue ) ) )* )? otherlv_5= RightSquareBracket ) )
-            // InternalRos2Parser.g:9815:2: ( () otherlv_1= LeftSquareBracket ( ( (lv_items_2_0= ruleExtensionValue ) ) ( (otherlv_3= Comma )? ( (lv_items_4_0= ruleExtensionValue ) ) )* )? otherlv_5= RightSquareBracket )
+            // InternalRos2Parser.g:9814:2: ( ( () (otherlv_1= LeftSquareBracketRightSquareBracket | (otherlv_2= LeftSquareBracket ( ( (lv_items_3_0= ruleExtensionValue ) ) ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )* )? otherlv_6= RightSquareBracket ) ) ) )
+            // InternalRos2Parser.g:9815:2: ( () (otherlv_1= LeftSquareBracketRightSquareBracket | (otherlv_2= LeftSquareBracket ( ( (lv_items_3_0= ruleExtensionValue ) ) ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )* )? otherlv_6= RightSquareBracket ) ) )
             {
-            // InternalRos2Parser.g:9815:2: ( () otherlv_1= LeftSquareBracket ( ( (lv_items_2_0= ruleExtensionValue ) ) ( (otherlv_3= Comma )? ( (lv_items_4_0= ruleExtensionValue ) ) )* )? otherlv_5= RightSquareBracket )
-            // InternalRos2Parser.g:9816:3: () otherlv_1= LeftSquareBracket ( ( (lv_items_2_0= ruleExtensionValue ) ) ( (otherlv_3= Comma )? ( (lv_items_4_0= ruleExtensionValue ) ) )* )? otherlv_5= RightSquareBracket
+            // InternalRos2Parser.g:9815:2: ( () (otherlv_1= LeftSquareBracketRightSquareBracket | (otherlv_2= LeftSquareBracket ( ( (lv_items_3_0= ruleExtensionValue ) ) ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )* )? otherlv_6= RightSquareBracket ) ) )
+            // InternalRos2Parser.g:9816:3: () (otherlv_1= LeftSquareBracketRightSquareBracket | (otherlv_2= LeftSquareBracket ( ( (lv_items_3_0= ruleExtensionValue ) ) ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )* )? otherlv_6= RightSquareBracket ) )
             {
             // InternalRos2Parser.g:9816:3: ()
             // InternalRos2Parser.g:9817:4: 
@@ -25644,127 +25646,173 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,LeftSquareBracket,FOLLOW_101); 
+            // InternalRos2Parser.g:9823:3: (otherlv_1= LeftSquareBracketRightSquareBracket | (otherlv_2= LeftSquareBracket ( ( (lv_items_3_0= ruleExtensionValue ) ) ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )* )? otherlv_6= RightSquareBracket ) )
+            int alt200=2;
+            int LA200_0 = input.LA(1);
 
-            			newLeafNode(otherlv_1, grammarAccess.getExtensionListValueAccess().getLeftSquareBracketKeyword_1());
-            		
-            // InternalRos2Parser.g:9827:3: ( ( (lv_items_2_0= ruleExtensionValue ) ) ( (otherlv_3= Comma )? ( (lv_items_4_0= ruleExtensionValue ) ) )* )?
-            int alt199=2;
-            int LA199_0 = input.LA(1);
-
-            if ( ((LA199_0>=Duration && LA199_0<=Feedback)||(LA199_0>=Boolean && LA199_0<=Float64)||LA199_0==Library||(LA199_0>=Message && LA199_0<=Param)||LA199_0==Service||(LA199_0>=Base64 && LA199_0<=Action)||(LA199_0>=Result && LA199_0<=Uint64)||LA199_0==Array||(LA199_0>=Class && LA199_0<=Int64)||LA199_0==Pub||LA199_0==Sub||(LA199_0>=Uint8 && LA199_0<=Node)||(LA199_0>=Sc && LA199_0<=Any)||LA199_0==LeftSquareBracket||LA199_0==LeftCurlyBracket||(LA199_0>=RULE_BOOLEAN && LA199_0<=RULE_DOUBLE)||(LA199_0>=RULE_ID && LA199_0<=RULE_INT)||LA199_0==RULE_BEGIN) ) {
-                alt199=1;
+            if ( (LA200_0==LeftSquareBracketRightSquareBracket) ) {
+                alt200=1;
             }
-            switch (alt199) {
+            else if ( (LA200_0==LeftSquareBracket) ) {
+                alt200=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("", 200, 0, input);
+
+                throw nvae;
+            }
+            switch (alt200) {
                 case 1 :
-                    // InternalRos2Parser.g:9828:4: ( (lv_items_2_0= ruleExtensionValue ) ) ( (otherlv_3= Comma )? ( (lv_items_4_0= ruleExtensionValue ) ) )*
+                    // InternalRos2Parser.g:9824:4: otherlv_1= LeftSquareBracketRightSquareBracket
                     {
-                    // InternalRos2Parser.g:9828:4: ( (lv_items_2_0= ruleExtensionValue ) )
-                    // InternalRos2Parser.g:9829:5: (lv_items_2_0= ruleExtensionValue )
+                    otherlv_1=(Token)match(input,LeftSquareBracketRightSquareBracket,FOLLOW_2); 
+
+                    				newLeafNode(otherlv_1, grammarAccess.getExtensionListValueAccess().getLeftSquareBracketRightSquareBracketKeyword_1_0());
+                    			
+
+                    }
+                    break;
+                case 2 :
+                    // InternalRos2Parser.g:9829:4: (otherlv_2= LeftSquareBracket ( ( (lv_items_3_0= ruleExtensionValue ) ) ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )* )? otherlv_6= RightSquareBracket )
                     {
-                    // InternalRos2Parser.g:9829:5: (lv_items_2_0= ruleExtensionValue )
-                    // InternalRos2Parser.g:9830:6: lv_items_2_0= ruleExtensionValue
+                    // InternalRos2Parser.g:9829:4: (otherlv_2= LeftSquareBracket ( ( (lv_items_3_0= ruleExtensionValue ) ) ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )* )? otherlv_6= RightSquareBracket )
+                    // InternalRos2Parser.g:9830:5: otherlv_2= LeftSquareBracket ( ( (lv_items_3_0= ruleExtensionValue ) ) ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )* )? otherlv_6= RightSquareBracket
                     {
+                    otherlv_2=(Token)match(input,LeftSquareBracket,FOLLOW_101); 
 
-                    						newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_2_0_0());
-                    					
-                    pushFollow(FOLLOW_102);
-                    lv_items_2_0=ruleExtensionValue();
+                    					newLeafNode(otherlv_2, grammarAccess.getExtensionListValueAccess().getLeftSquareBracketKeyword_1_1_0());
+                    				
+                    // InternalRos2Parser.g:9834:5: ( ( (lv_items_3_0= ruleExtensionValue ) ) ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )* )?
+                    int alt199=2;
+                    int LA199_0 = input.LA(1);
 
-                    state._fsp--;
+                    if ( ((LA199_0>=Duration && LA199_0<=Feedback)||(LA199_0>=Boolean && LA199_0<=Float64)||LA199_0==Library||(LA199_0>=Message && LA199_0<=Param)||LA199_0==Service||(LA199_0>=Base64 && LA199_0<=Action)||(LA199_0>=Result && LA199_0<=Uint64)||LA199_0==Array||(LA199_0>=Class && LA199_0<=Int64)||LA199_0==Pub||LA199_0==Sub||(LA199_0>=Uint8 && LA199_0<=Node)||(LA199_0>=Sc && LA199_0<=Any)||LA199_0==LeftSquareBracketRightSquareBracket||LA199_0==LeftSquareBracket||LA199_0==LeftCurlyBracket||(LA199_0>=RULE_BOOLEAN && LA199_0<=RULE_DOUBLE)||(LA199_0>=RULE_ID && LA199_0<=RULE_INT)||LA199_0==RULE_BEGIN) ) {
+                        alt199=1;
+                    }
+                    switch (alt199) {
+                        case 1 :
+                            // InternalRos2Parser.g:9835:6: ( (lv_items_3_0= ruleExtensionValue ) ) ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )*
+                            {
+                            // InternalRos2Parser.g:9835:6: ( (lv_items_3_0= ruleExtensionValue ) )
+                            // InternalRos2Parser.g:9836:7: (lv_items_3_0= ruleExtensionValue )
+                            {
+                            // InternalRos2Parser.g:9836:7: (lv_items_3_0= ruleExtensionValue )
+                            // InternalRos2Parser.g:9837:8: lv_items_3_0= ruleExtensionValue
+                            {
+
+                            								newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_1_1_1_0_0());
+                            							
+                            pushFollow(FOLLOW_102);
+                            lv_items_3_0=ruleExtensionValue();
+
+                            state._fsp--;
 
 
-                    						if (current==null) {
-                    							current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
-                    						}
-                    						add(
-                    							current,
-                    							"items",
-                    							lv_items_2_0,
-                    							"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
-                    						afterParserOrEnumRuleCall();
-                    					
+                            								if (current==null) {
+                            									current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
+                            								}
+                            								add(
+                            									current,
+                            									"items",
+                            									lv_items_3_0,
+                            									"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
+                            								afterParserOrEnumRuleCall();
+                            							
+
+                            }
+
+
+                            }
+
+                            // InternalRos2Parser.g:9854:6: ( (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) ) )*
+                            loop198:
+                            do {
+                                int alt198=2;
+                                int LA198_0 = input.LA(1);
+
+                                if ( ((LA198_0>=Duration && LA198_0<=Feedback)||(LA198_0>=Boolean && LA198_0<=Float64)||LA198_0==Library||(LA198_0>=Message && LA198_0<=Param)||LA198_0==Service||(LA198_0>=Base64 && LA198_0<=Action)||(LA198_0>=Result && LA198_0<=Uint64)||LA198_0==Array||(LA198_0>=Class && LA198_0<=Int64)||LA198_0==Pub||LA198_0==Sub||(LA198_0>=Uint8 && LA198_0<=Node)||(LA198_0>=Sc && LA198_0<=Any)||(LA198_0>=LeftSquareBracketRightSquareBracket && LA198_0<=Comma)||LA198_0==LeftSquareBracket||LA198_0==LeftCurlyBracket||(LA198_0>=RULE_BOOLEAN && LA198_0<=RULE_DOUBLE)||(LA198_0>=RULE_ID && LA198_0<=RULE_INT)||LA198_0==RULE_BEGIN) ) {
+                                    alt198=1;
+                                }
+
+
+                                switch (alt198) {
+                            	case 1 :
+                            	    // InternalRos2Parser.g:9855:7: (otherlv_4= Comma )? ( (lv_items_5_0= ruleExtensionValue ) )
+                            	    {
+                            	    // InternalRos2Parser.g:9855:7: (otherlv_4= Comma )?
+                            	    int alt197=2;
+                            	    int LA197_0 = input.LA(1);
+
+                            	    if ( (LA197_0==Comma) ) {
+                            	        alt197=1;
+                            	    }
+                            	    switch (alt197) {
+                            	        case 1 :
+                            	            // InternalRos2Parser.g:9856:8: otherlv_4= Comma
+                            	            {
+                            	            otherlv_4=(Token)match(input,Comma,FOLLOW_100); 
+
+                            	            								newLeafNode(otherlv_4, grammarAccess.getExtensionListValueAccess().getCommaKeyword_1_1_1_1_0());
+                            	            							
+
+                            	            }
+                            	            break;
+
+                            	    }
+
+                            	    // InternalRos2Parser.g:9861:7: ( (lv_items_5_0= ruleExtensionValue ) )
+                            	    // InternalRos2Parser.g:9862:8: (lv_items_5_0= ruleExtensionValue )
+                            	    {
+                            	    // InternalRos2Parser.g:9862:8: (lv_items_5_0= ruleExtensionValue )
+                            	    // InternalRos2Parser.g:9863:9: lv_items_5_0= ruleExtensionValue
+                            	    {
+
+                            	    									newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_1_1_1_1_1_0());
+                            	    								
+                            	    pushFollow(FOLLOW_102);
+                            	    lv_items_5_0=ruleExtensionValue();
+
+                            	    state._fsp--;
+
+
+                            	    									if (current==null) {
+                            	    										current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
+                            	    									}
+                            	    									add(
+                            	    										current,
+                            	    										"items",
+                            	    										lv_items_5_0,
+                            	    										"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
+                            	    									afterParserOrEnumRuleCall();
+                            	    								
+
+                            	    }
+
+
+                            	    }
+
+
+                            	    }
+                            	    break;
+
+                            	default :
+                            	    break loop198;
+                                }
+                            } while (true);
+
+
+                            }
+                            break;
 
                     }
 
+                    otherlv_6=(Token)match(input,RightSquareBracket,FOLLOW_2); 
+
+                    					newLeafNode(otherlv_6, grammarAccess.getExtensionListValueAccess().getRightSquareBracketKeyword_1_1_2());
+                    				
 
                     }
-
-                    // InternalRos2Parser.g:9847:4: ( (otherlv_3= Comma )? ( (lv_items_4_0= ruleExtensionValue ) ) )*
-                    loop198:
-                    do {
-                        int alt198=2;
-                        int LA198_0 = input.LA(1);
-
-                        if ( ((LA198_0>=Duration && LA198_0<=Feedback)||(LA198_0>=Boolean && LA198_0<=Float64)||LA198_0==Library||(LA198_0>=Message && LA198_0<=Param)||LA198_0==Service||(LA198_0>=Base64 && LA198_0<=Action)||(LA198_0>=Result && LA198_0<=Uint64)||LA198_0==Array||(LA198_0>=Class && LA198_0<=Int64)||LA198_0==Pub||LA198_0==Sub||(LA198_0>=Uint8 && LA198_0<=Node)||(LA198_0>=Sc && LA198_0<=Any)||LA198_0==Comma||LA198_0==LeftSquareBracket||LA198_0==LeftCurlyBracket||(LA198_0>=RULE_BOOLEAN && LA198_0<=RULE_DOUBLE)||(LA198_0>=RULE_ID && LA198_0<=RULE_INT)||LA198_0==RULE_BEGIN) ) {
-                            alt198=1;
-                        }
-
-
-                        switch (alt198) {
-                    	case 1 :
-                    	    // InternalRos2Parser.g:9848:5: (otherlv_3= Comma )? ( (lv_items_4_0= ruleExtensionValue ) )
-                    	    {
-                    	    // InternalRos2Parser.g:9848:5: (otherlv_3= Comma )?
-                    	    int alt197=2;
-                    	    int LA197_0 = input.LA(1);
-
-                    	    if ( (LA197_0==Comma) ) {
-                    	        alt197=1;
-                    	    }
-                    	    switch (alt197) {
-                    	        case 1 :
-                    	            // InternalRos2Parser.g:9849:6: otherlv_3= Comma
-                    	            {
-                    	            otherlv_3=(Token)match(input,Comma,FOLLOW_100); 
-
-                    	            						newLeafNode(otherlv_3, grammarAccess.getExtensionListValueAccess().getCommaKeyword_2_1_0());
-                    	            					
-
-                    	            }
-                    	            break;
-
-                    	    }
-
-                    	    // InternalRos2Parser.g:9854:5: ( (lv_items_4_0= ruleExtensionValue ) )
-                    	    // InternalRos2Parser.g:9855:6: (lv_items_4_0= ruleExtensionValue )
-                    	    {
-                    	    // InternalRos2Parser.g:9855:6: (lv_items_4_0= ruleExtensionValue )
-                    	    // InternalRos2Parser.g:9856:7: lv_items_4_0= ruleExtensionValue
-                    	    {
-
-                    	    							newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_2_1_1_0());
-                    	    						
-                    	    pushFollow(FOLLOW_102);
-                    	    lv_items_4_0=ruleExtensionValue();
-
-                    	    state._fsp--;
-
-
-                    	    							if (current==null) {
-                    	    								current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
-                    	    							}
-                    	    							add(
-                    	    								current,
-                    	    								"items",
-                    	    								lv_items_4_0,
-                    	    								"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
-                    	    							afterParserOrEnumRuleCall();
-                    	    						
-
-                    	    }
-
-
-                    	    }
-
-
-                    	    }
-                    	    break;
-
-                    	default :
-                    	    break loop198;
-                        }
-                    } while (true);
 
 
                     }
@@ -25772,10 +25820,6 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_5=(Token)match(input,RightSquareBracket,FOLLOW_2); 
-
-            			newLeafNode(otherlv_5, grammarAccess.getExtensionListValueAccess().getRightSquareBracketKeyword_3());
-            		
 
             }
 
@@ -25799,7 +25843,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleExtensionBraceMapValue"
-    // InternalRos2Parser.g:9883:1: entryRuleExtensionBraceMapValue returns [EObject current=null] : iv_ruleExtensionBraceMapValue= ruleExtensionBraceMapValue EOF ;
+    // InternalRos2Parser.g:9892:1: entryRuleExtensionBraceMapValue returns [EObject current=null] : iv_ruleExtensionBraceMapValue= ruleExtensionBraceMapValue EOF ;
     public final EObject entryRuleExtensionBraceMapValue() throws RecognitionException {
         EObject current = null;
 
@@ -25807,8 +25851,8 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalRos2Parser.g:9883:63: (iv_ruleExtensionBraceMapValue= ruleExtensionBraceMapValue EOF )
-            // InternalRos2Parser.g:9884:2: iv_ruleExtensionBraceMapValue= ruleExtensionBraceMapValue EOF
+            // InternalRos2Parser.g:9892:63: (iv_ruleExtensionBraceMapValue= ruleExtensionBraceMapValue EOF )
+            // InternalRos2Parser.g:9893:2: iv_ruleExtensionBraceMapValue= ruleExtensionBraceMapValue EOF
             {
              newCompositeNode(grammarAccess.getExtensionBraceMapValueRule()); 
             pushFollow(FOLLOW_1);
@@ -25835,7 +25879,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExtensionBraceMapValue"
-    // InternalRos2Parser.g:9890:1: ruleExtensionBraceMapValue returns [EObject current=null] : ( () otherlv_1= LeftCurlyBracket ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )? otherlv_5= RightCurlyBracket ) ;
+    // InternalRos2Parser.g:9899:1: ruleExtensionBraceMapValue returns [EObject current=null] : ( () otherlv_1= LeftCurlyBracket ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )? otherlv_5= RightCurlyBracket ) ;
     public final EObject ruleExtensionBraceMapValue() throws RecognitionException {
         EObject current = null;
 
@@ -25851,14 +25895,14 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:9896:2: ( ( () otherlv_1= LeftCurlyBracket ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )? otherlv_5= RightCurlyBracket ) )
-            // InternalRos2Parser.g:9897:2: ( () otherlv_1= LeftCurlyBracket ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )? otherlv_5= RightCurlyBracket )
+            // InternalRos2Parser.g:9905:2: ( ( () otherlv_1= LeftCurlyBracket ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )? otherlv_5= RightCurlyBracket ) )
+            // InternalRos2Parser.g:9906:2: ( () otherlv_1= LeftCurlyBracket ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )? otherlv_5= RightCurlyBracket )
             {
-            // InternalRos2Parser.g:9897:2: ( () otherlv_1= LeftCurlyBracket ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )? otherlv_5= RightCurlyBracket )
-            // InternalRos2Parser.g:9898:3: () otherlv_1= LeftCurlyBracket ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )? otherlv_5= RightCurlyBracket
+            // InternalRos2Parser.g:9906:2: ( () otherlv_1= LeftCurlyBracket ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )? otherlv_5= RightCurlyBracket )
+            // InternalRos2Parser.g:9907:3: () otherlv_1= LeftCurlyBracket ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )? otherlv_5= RightCurlyBracket
             {
-            // InternalRos2Parser.g:9898:3: ()
-            // InternalRos2Parser.g:9899:4: 
+            // InternalRos2Parser.g:9907:3: ()
+            // InternalRos2Parser.g:9908:4: 
             {
 
             				current = forceCreateModelElement(
@@ -25872,22 +25916,22 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getExtensionBraceMapValueAccess().getLeftCurlyBracketKeyword_1());
             		
-            // InternalRos2Parser.g:9909:3: ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )?
-            int alt202=2;
-            int LA202_0 = input.LA(1);
+            // InternalRos2Parser.g:9918:3: ( ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )* )?
+            int alt203=2;
+            int LA203_0 = input.LA(1);
 
-            if ( ((LA202_0>=Lease_duration && LA202_0<=Serviceservers)||(LA202_0>=Actionclients && LA202_0<=Dependencies)||(LA202_0>=FromGitRepo && LA202_0<=Reliability)||LA202_0==Subscribers||(LA202_0>=Durability && LA202_0<=Parameter)||LA202_0==Deadline||(LA202_0>=Lifespan && LA202_0<=Multiple)||(LA202_0>=Actions && LA202_0<=History)||(LA202_0>=Plugins && LA202_0<=Profile)||(LA202_0>=Boolean && LA202_0<=Header_1)||(LA202_0>=Library && LA202_0<=Message)||LA202_0==Service||(LA202_0>=Base64 && LA202_0<=Action)||(LA202_0>=Class_1 && LA202_0<=Depth)||(LA202_0>=Result && LA202_0<=Node_1)||LA202_0==Srvs||(LA202_0>=Type_1 && LA202_0<=List)||(LA202_0>=Bool && LA202_0<=Qos)||(LA202_0>=Time && LA202_0<=Ns)||(LA202_0>=RULE_ID && LA202_0<=RULE_STRING)) ) {
-                alt202=1;
+            if ( ((LA203_0>=Lease_duration && LA203_0<=Serviceservers)||(LA203_0>=Actionclients && LA203_0<=Dependencies)||(LA203_0>=FromGitRepo && LA203_0<=Reliability)||LA203_0==Subscribers||(LA203_0>=Durability && LA203_0<=Parameter)||LA203_0==Deadline||(LA203_0>=Lifespan && LA203_0<=Multiple)||(LA203_0>=Actions && LA203_0<=History)||(LA203_0>=Plugins && LA203_0<=Profile)||(LA203_0>=Boolean && LA203_0<=Header_1)||(LA203_0>=Library && LA203_0<=Message)||LA203_0==Service||(LA203_0>=Base64 && LA203_0<=Action)||(LA203_0>=Class_1 && LA203_0<=Depth)||(LA203_0>=Result && LA203_0<=Node_1)||LA203_0==Srvs||(LA203_0>=Type_1 && LA203_0<=List)||(LA203_0>=Bool && LA203_0<=Qos)||(LA203_0>=Time && LA203_0<=Ns)||(LA203_0>=RULE_ID && LA203_0<=RULE_STRING)) ) {
+                alt203=1;
             }
-            switch (alt202) {
+            switch (alt203) {
                 case 1 :
-                    // InternalRos2Parser.g:9910:4: ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )*
+                    // InternalRos2Parser.g:9919:4: ( (lv_entries_2_0= ruleExtensionEntry ) ) ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )*
                     {
-                    // InternalRos2Parser.g:9910:4: ( (lv_entries_2_0= ruleExtensionEntry ) )
-                    // InternalRos2Parser.g:9911:5: (lv_entries_2_0= ruleExtensionEntry )
+                    // InternalRos2Parser.g:9919:4: ( (lv_entries_2_0= ruleExtensionEntry ) )
+                    // InternalRos2Parser.g:9920:5: (lv_entries_2_0= ruleExtensionEntry )
                     {
-                    // InternalRos2Parser.g:9911:5: (lv_entries_2_0= ruleExtensionEntry )
-                    // InternalRos2Parser.g:9912:6: lv_entries_2_0= ruleExtensionEntry
+                    // InternalRos2Parser.g:9920:5: (lv_entries_2_0= ruleExtensionEntry )
+                    // InternalRos2Parser.g:9921:6: lv_entries_2_0= ruleExtensionEntry
                     {
 
                     						newCompositeNode(grammarAccess.getExtensionBraceMapValueAccess().getEntriesExtensionEntryParserRuleCall_2_0_0());
@@ -25914,31 +25958,31 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalRos2Parser.g:9929:4: ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )*
-                    loop201:
+                    // InternalRos2Parser.g:9938:4: ( (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) ) )*
+                    loop202:
                     do {
-                        int alt201=2;
-                        int LA201_0 = input.LA(1);
+                        int alt202=2;
+                        int LA202_0 = input.LA(1);
 
-                        if ( ((LA201_0>=Lease_duration && LA201_0<=Serviceservers)||(LA201_0>=Actionclients && LA201_0<=Dependencies)||(LA201_0>=FromGitRepo && LA201_0<=Reliability)||LA201_0==Subscribers||(LA201_0>=Durability && LA201_0<=Parameter)||LA201_0==Deadline||(LA201_0>=Lifespan && LA201_0<=Multiple)||(LA201_0>=Actions && LA201_0<=History)||(LA201_0>=Plugins && LA201_0<=Profile)||(LA201_0>=Boolean && LA201_0<=Header_1)||(LA201_0>=Library && LA201_0<=Message)||LA201_0==Service||(LA201_0>=Base64 && LA201_0<=Action)||(LA201_0>=Class_1 && LA201_0<=Depth)||(LA201_0>=Result && LA201_0<=Node_1)||LA201_0==Srvs||(LA201_0>=Type_1 && LA201_0<=List)||(LA201_0>=Bool && LA201_0<=Qos)||(LA201_0>=Time && LA201_0<=Ns)||LA201_0==Comma||(LA201_0>=RULE_ID && LA201_0<=RULE_STRING)) ) {
-                            alt201=1;
+                        if ( ((LA202_0>=Lease_duration && LA202_0<=Serviceservers)||(LA202_0>=Actionclients && LA202_0<=Dependencies)||(LA202_0>=FromGitRepo && LA202_0<=Reliability)||LA202_0==Subscribers||(LA202_0>=Durability && LA202_0<=Parameter)||LA202_0==Deadline||(LA202_0>=Lifespan && LA202_0<=Multiple)||(LA202_0>=Actions && LA202_0<=History)||(LA202_0>=Plugins && LA202_0<=Profile)||(LA202_0>=Boolean && LA202_0<=Header_1)||(LA202_0>=Library && LA202_0<=Message)||LA202_0==Service||(LA202_0>=Base64 && LA202_0<=Action)||(LA202_0>=Class_1 && LA202_0<=Depth)||(LA202_0>=Result && LA202_0<=Node_1)||LA202_0==Srvs||(LA202_0>=Type_1 && LA202_0<=List)||(LA202_0>=Bool && LA202_0<=Qos)||(LA202_0>=Time && LA202_0<=Ns)||LA202_0==Comma||(LA202_0>=RULE_ID && LA202_0<=RULE_STRING)) ) {
+                            alt202=1;
                         }
 
 
-                        switch (alt201) {
+                        switch (alt202) {
                     	case 1 :
-                    	    // InternalRos2Parser.g:9930:5: (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) )
+                    	    // InternalRos2Parser.g:9939:5: (otherlv_3= Comma )? ( (lv_entries_4_0= ruleExtensionEntry ) )
                     	    {
-                    	    // InternalRos2Parser.g:9930:5: (otherlv_3= Comma )?
-                    	    int alt200=2;
-                    	    int LA200_0 = input.LA(1);
+                    	    // InternalRos2Parser.g:9939:5: (otherlv_3= Comma )?
+                    	    int alt201=2;
+                    	    int LA201_0 = input.LA(1);
 
-                    	    if ( (LA200_0==Comma) ) {
-                    	        alt200=1;
+                    	    if ( (LA201_0==Comma) ) {
+                    	        alt201=1;
                     	    }
-                    	    switch (alt200) {
+                    	    switch (alt201) {
                     	        case 1 :
-                    	            // InternalRos2Parser.g:9931:6: otherlv_3= Comma
+                    	            // InternalRos2Parser.g:9940:6: otherlv_3= Comma
                     	            {
                     	            otherlv_3=(Token)match(input,Comma,FOLLOW_95); 
 
@@ -25950,11 +25994,11 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
                     	    }
 
-                    	    // InternalRos2Parser.g:9936:5: ( (lv_entries_4_0= ruleExtensionEntry ) )
-                    	    // InternalRos2Parser.g:9937:6: (lv_entries_4_0= ruleExtensionEntry )
+                    	    // InternalRos2Parser.g:9945:5: ( (lv_entries_4_0= ruleExtensionEntry ) )
+                    	    // InternalRos2Parser.g:9946:6: (lv_entries_4_0= ruleExtensionEntry )
                     	    {
-                    	    // InternalRos2Parser.g:9937:6: (lv_entries_4_0= ruleExtensionEntry )
-                    	    // InternalRos2Parser.g:9938:7: lv_entries_4_0= ruleExtensionEntry
+                    	    // InternalRos2Parser.g:9946:6: (lv_entries_4_0= ruleExtensionEntry )
+                    	    // InternalRos2Parser.g:9947:7: lv_entries_4_0= ruleExtensionEntry
                     	    {
 
                     	    							newCompositeNode(grammarAccess.getExtensionBraceMapValueAccess().getEntriesExtensionEntryParserRuleCall_2_1_1_0());
@@ -25986,7 +26030,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop201;
+                    	    break loop202;
                         }
                     } while (true);
 
@@ -26023,7 +26067,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleExtensionIndentedMapValue"
-    // InternalRos2Parser.g:9965:1: entryRuleExtensionIndentedMapValue returns [EObject current=null] : iv_ruleExtensionIndentedMapValue= ruleExtensionIndentedMapValue EOF ;
+    // InternalRos2Parser.g:9974:1: entryRuleExtensionIndentedMapValue returns [EObject current=null] : iv_ruleExtensionIndentedMapValue= ruleExtensionIndentedMapValue EOF ;
     public final EObject entryRuleExtensionIndentedMapValue() throws RecognitionException {
         EObject current = null;
 
@@ -26031,8 +26075,8 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalRos2Parser.g:9965:66: (iv_ruleExtensionIndentedMapValue= ruleExtensionIndentedMapValue EOF )
-            // InternalRos2Parser.g:9966:2: iv_ruleExtensionIndentedMapValue= ruleExtensionIndentedMapValue EOF
+            // InternalRos2Parser.g:9974:66: (iv_ruleExtensionIndentedMapValue= ruleExtensionIndentedMapValue EOF )
+            // InternalRos2Parser.g:9975:2: iv_ruleExtensionIndentedMapValue= ruleExtensionIndentedMapValue EOF
             {
              newCompositeNode(grammarAccess.getExtensionIndentedMapValueRule()); 
             pushFollow(FOLLOW_1);
@@ -26059,7 +26103,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExtensionIndentedMapValue"
-    // InternalRos2Parser.g:9972:1: ruleExtensionIndentedMapValue returns [EObject current=null] : ( () this_BEGIN_1= RULE_BEGIN ( (lv_entries_2_0= ruleExtensionEntry ) )+ this_END_3= RULE_END ) ;
+    // InternalRos2Parser.g:9981:1: ruleExtensionIndentedMapValue returns [EObject current=null] : ( () this_BEGIN_1= RULE_BEGIN ( (lv_entries_2_0= ruleExtensionEntry ) )+ this_END_3= RULE_END ) ;
     public final EObject ruleExtensionIndentedMapValue() throws RecognitionException {
         EObject current = null;
 
@@ -26072,14 +26116,14 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:9978:2: ( ( () this_BEGIN_1= RULE_BEGIN ( (lv_entries_2_0= ruleExtensionEntry ) )+ this_END_3= RULE_END ) )
-            // InternalRos2Parser.g:9979:2: ( () this_BEGIN_1= RULE_BEGIN ( (lv_entries_2_0= ruleExtensionEntry ) )+ this_END_3= RULE_END )
+            // InternalRos2Parser.g:9987:2: ( ( () this_BEGIN_1= RULE_BEGIN ( (lv_entries_2_0= ruleExtensionEntry ) )+ this_END_3= RULE_END ) )
+            // InternalRos2Parser.g:9988:2: ( () this_BEGIN_1= RULE_BEGIN ( (lv_entries_2_0= ruleExtensionEntry ) )+ this_END_3= RULE_END )
             {
-            // InternalRos2Parser.g:9979:2: ( () this_BEGIN_1= RULE_BEGIN ( (lv_entries_2_0= ruleExtensionEntry ) )+ this_END_3= RULE_END )
-            // InternalRos2Parser.g:9980:3: () this_BEGIN_1= RULE_BEGIN ( (lv_entries_2_0= ruleExtensionEntry ) )+ this_END_3= RULE_END
+            // InternalRos2Parser.g:9988:2: ( () this_BEGIN_1= RULE_BEGIN ( (lv_entries_2_0= ruleExtensionEntry ) )+ this_END_3= RULE_END )
+            // InternalRos2Parser.g:9989:3: () this_BEGIN_1= RULE_BEGIN ( (lv_entries_2_0= ruleExtensionEntry ) )+ this_END_3= RULE_END
             {
-            // InternalRos2Parser.g:9980:3: ()
-            // InternalRos2Parser.g:9981:4: 
+            // InternalRos2Parser.g:9989:3: ()
+            // InternalRos2Parser.g:9990:4: 
             {
 
             				current = forceCreateModelElement(
@@ -26093,24 +26137,24 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             			newLeafNode(this_BEGIN_1, grammarAccess.getExtensionIndentedMapValueAccess().getBEGINTerminalRuleCall_1());
             		
-            // InternalRos2Parser.g:9991:3: ( (lv_entries_2_0= ruleExtensionEntry ) )+
-            int cnt203=0;
-            loop203:
+            // InternalRos2Parser.g:10000:3: ( (lv_entries_2_0= ruleExtensionEntry ) )+
+            int cnt204=0;
+            loop204:
             do {
-                int alt203=2;
-                int LA203_0 = input.LA(1);
+                int alt204=2;
+                int LA204_0 = input.LA(1);
 
-                if ( ((LA203_0>=Lease_duration && LA203_0<=Serviceservers)||(LA203_0>=Actionclients && LA203_0<=Dependencies)||(LA203_0>=FromGitRepo && LA203_0<=Reliability)||LA203_0==Subscribers||(LA203_0>=Durability && LA203_0<=Parameter)||LA203_0==Deadline||(LA203_0>=Lifespan && LA203_0<=Multiple)||(LA203_0>=Actions && LA203_0<=History)||(LA203_0>=Plugins && LA203_0<=Profile)||(LA203_0>=Boolean && LA203_0<=Header_1)||(LA203_0>=Library && LA203_0<=Message)||LA203_0==Service||(LA203_0>=Base64 && LA203_0<=Action)||(LA203_0>=Class_1 && LA203_0<=Depth)||(LA203_0>=Result && LA203_0<=Node_1)||LA203_0==Srvs||(LA203_0>=Type_1 && LA203_0<=List)||(LA203_0>=Bool && LA203_0<=Qos)||(LA203_0>=Time && LA203_0<=Ns)||(LA203_0>=RULE_ID && LA203_0<=RULE_STRING)) ) {
-                    alt203=1;
+                if ( ((LA204_0>=Lease_duration && LA204_0<=Serviceservers)||(LA204_0>=Actionclients && LA204_0<=Dependencies)||(LA204_0>=FromGitRepo && LA204_0<=Reliability)||LA204_0==Subscribers||(LA204_0>=Durability && LA204_0<=Parameter)||LA204_0==Deadline||(LA204_0>=Lifespan && LA204_0<=Multiple)||(LA204_0>=Actions && LA204_0<=History)||(LA204_0>=Plugins && LA204_0<=Profile)||(LA204_0>=Boolean && LA204_0<=Header_1)||(LA204_0>=Library && LA204_0<=Message)||LA204_0==Service||(LA204_0>=Base64 && LA204_0<=Action)||(LA204_0>=Class_1 && LA204_0<=Depth)||(LA204_0>=Result && LA204_0<=Node_1)||LA204_0==Srvs||(LA204_0>=Type_1 && LA204_0<=List)||(LA204_0>=Bool && LA204_0<=Qos)||(LA204_0>=Time && LA204_0<=Ns)||(LA204_0>=RULE_ID && LA204_0<=RULE_STRING)) ) {
+                    alt204=1;
                 }
 
 
-                switch (alt203) {
+                switch (alt204) {
             	case 1 :
-            	    // InternalRos2Parser.g:9992:4: (lv_entries_2_0= ruleExtensionEntry )
+            	    // InternalRos2Parser.g:10001:4: (lv_entries_2_0= ruleExtensionEntry )
             	    {
-            	    // InternalRos2Parser.g:9992:4: (lv_entries_2_0= ruleExtensionEntry )
-            	    // InternalRos2Parser.g:9993:5: lv_entries_2_0= ruleExtensionEntry
+            	    // InternalRos2Parser.g:10001:4: (lv_entries_2_0= ruleExtensionEntry )
+            	    // InternalRos2Parser.g:10002:5: lv_entries_2_0= ruleExtensionEntry
             	    {
 
             	    					newCompositeNode(grammarAccess.getExtensionIndentedMapValueAccess().getEntriesExtensionEntryParserRuleCall_2_0());
@@ -26139,12 +26183,12 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    if ( cnt203 >= 1 ) break loop203;
+            	    if ( cnt204 >= 1 ) break loop204;
                         EarlyExitException eee =
-                            new EarlyExitException(203, input);
+                            new EarlyExitException(204, input);
                         throw eee;
                 }
-                cnt203++;
+                cnt204++;
             } while (true);
 
             this_END_3=(Token)match(input,RULE_END,FOLLOW_2); 
@@ -26174,7 +26218,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleExtensionRefValue"
-    // InternalRos2Parser.g:10018:1: entryRuleExtensionRefValue returns [EObject current=null] : iv_ruleExtensionRefValue= ruleExtensionRefValue EOF ;
+    // InternalRos2Parser.g:10027:1: entryRuleExtensionRefValue returns [EObject current=null] : iv_ruleExtensionRefValue= ruleExtensionRefValue EOF ;
     public final EObject entryRuleExtensionRefValue() throws RecognitionException {
         EObject current = null;
 
@@ -26182,8 +26226,8 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalRos2Parser.g:10018:58: (iv_ruleExtensionRefValue= ruleExtensionRefValue EOF )
-            // InternalRos2Parser.g:10019:2: iv_ruleExtensionRefValue= ruleExtensionRefValue EOF
+            // InternalRos2Parser.g:10027:58: (iv_ruleExtensionRefValue= ruleExtensionRefValue EOF )
+            // InternalRos2Parser.g:10028:2: iv_ruleExtensionRefValue= ruleExtensionRefValue EOF
             {
              newCompositeNode(grammarAccess.getExtensionRefValueRule()); 
             pushFollow(FOLLOW_1);
@@ -26210,7 +26254,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExtensionRefValue"
-    // InternalRos2Parser.g:10025:1: ruleExtensionRefValue returns [EObject current=null] : ( () ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) ) ( ( ruleEString ) ) ) ;
+    // InternalRos2Parser.g:10034:1: ruleExtensionRefValue returns [EObject current=null] : ( () ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) ) ( ( ruleEString ) ) ) ;
     public final EObject ruleExtensionRefValue() throws RecognitionException {
         EObject current = null;
 
@@ -26226,14 +26270,14 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:10031:2: ( ( () ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) ) ( ( ruleEString ) ) ) )
-            // InternalRos2Parser.g:10032:2: ( () ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) ) ( ( ruleEString ) ) )
+            // InternalRos2Parser.g:10040:2: ( ( () ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) ) ( ( ruleEString ) ) ) )
+            // InternalRos2Parser.g:10041:2: ( () ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) ) ( ( ruleEString ) ) )
             {
-            // InternalRos2Parser.g:10032:2: ( () ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) ) ( ( ruleEString ) ) )
-            // InternalRos2Parser.g:10033:3: () ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) ) ( ( ruleEString ) )
+            // InternalRos2Parser.g:10041:2: ( () ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) ) ( ( ruleEString ) ) )
+            // InternalRos2Parser.g:10042:3: () ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) ) ( ( ruleEString ) )
             {
-            // InternalRos2Parser.g:10033:3: ()
-            // InternalRos2Parser.g:10034:4: 
+            // InternalRos2Parser.g:10042:3: ()
+            // InternalRos2Parser.g:10043:4: 
             {
 
             				current = forceCreateModelElement(
@@ -26243,60 +26287,60 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalRos2Parser.g:10040:3: ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) )
-            // InternalRos2Parser.g:10041:4: ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) )
+            // InternalRos2Parser.g:10049:3: ( ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) ) )
+            // InternalRos2Parser.g:10050:4: ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) )
             {
-            // InternalRos2Parser.g:10041:4: ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) )
-            // InternalRos2Parser.g:10042:5: (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param )
+            // InternalRos2Parser.g:10050:4: ( (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param ) )
+            // InternalRos2Parser.g:10051:5: (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param )
             {
-            // InternalRos2Parser.g:10042:5: (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param )
-            int alt204=7;
+            // InternalRos2Parser.g:10051:5: (lv_refKind_1_1= Pub | lv_refKind_1_2= Sub | lv_refKind_1_3= Ss | lv_refKind_1_4= Sc | lv_refKind_1_5= As | lv_refKind_1_6= Ac | lv_refKind_1_7= Param )
+            int alt205=7;
             switch ( input.LA(1) ) {
             case Pub:
                 {
-                alt204=1;
+                alt205=1;
                 }
                 break;
             case Sub:
                 {
-                alt204=2;
+                alt205=2;
                 }
                 break;
             case Ss:
                 {
-                alt204=3;
+                alt205=3;
                 }
                 break;
             case Sc:
                 {
-                alt204=4;
+                alt205=4;
                 }
                 break;
             case As:
                 {
-                alt204=5;
+                alt205=5;
                 }
                 break;
             case Ac:
                 {
-                alt204=6;
+                alt205=6;
                 }
                 break;
             case Param:
                 {
-                alt204=7;
+                alt205=7;
                 }
                 break;
             default:
                 NoViableAltException nvae =
-                    new NoViableAltException("", 204, 0, input);
+                    new NoViableAltException("", 205, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt204) {
+            switch (alt205) {
                 case 1 :
-                    // InternalRos2Parser.g:10043:6: lv_refKind_1_1= Pub
+                    // InternalRos2Parser.g:10052:6: lv_refKind_1_1= Pub
                     {
                     lv_refKind_1_1=(Token)match(input,Pub,FOLLOW_6); 
 
@@ -26312,7 +26356,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalRos2Parser.g:10054:6: lv_refKind_1_2= Sub
+                    // InternalRos2Parser.g:10063:6: lv_refKind_1_2= Sub
                     {
                     lv_refKind_1_2=(Token)match(input,Sub,FOLLOW_6); 
 
@@ -26328,7 +26372,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalRos2Parser.g:10065:6: lv_refKind_1_3= Ss
+                    // InternalRos2Parser.g:10074:6: lv_refKind_1_3= Ss
                     {
                     lv_refKind_1_3=(Token)match(input,Ss,FOLLOW_6); 
 
@@ -26344,7 +26388,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalRos2Parser.g:10076:6: lv_refKind_1_4= Sc
+                    // InternalRos2Parser.g:10085:6: lv_refKind_1_4= Sc
                     {
                     lv_refKind_1_4=(Token)match(input,Sc,FOLLOW_6); 
 
@@ -26360,7 +26404,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalRos2Parser.g:10087:6: lv_refKind_1_5= As
+                    // InternalRos2Parser.g:10096:6: lv_refKind_1_5= As
                     {
                     lv_refKind_1_5=(Token)match(input,As,FOLLOW_6); 
 
@@ -26376,7 +26420,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // InternalRos2Parser.g:10098:6: lv_refKind_1_6= Ac
+                    // InternalRos2Parser.g:10107:6: lv_refKind_1_6= Ac
                     {
                     lv_refKind_1_6=(Token)match(input,Ac,FOLLOW_6); 
 
@@ -26392,7 +26436,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // InternalRos2Parser.g:10109:6: lv_refKind_1_7= Param
+                    // InternalRos2Parser.g:10118:6: lv_refKind_1_7= Param
                     {
                     lv_refKind_1_7=(Token)match(input,Param,FOLLOW_6); 
 
@@ -26416,11 +26460,11 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalRos2Parser.g:10122:3: ( ( ruleEString ) )
-            // InternalRos2Parser.g:10123:4: ( ruleEString )
+            // InternalRos2Parser.g:10131:3: ( ( ruleEString ) )
+            // InternalRos2Parser.g:10132:4: ( ruleEString )
             {
-            // InternalRos2Parser.g:10123:4: ( ruleEString )
-            // InternalRos2Parser.g:10124:5: ruleEString
+            // InternalRos2Parser.g:10132:4: ( ruleEString )
+            // InternalRos2Parser.g:10133:5: ruleEString
             {
 
             					if (current==null) {
@@ -26467,7 +26511,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleExtensionScalarValue"
-    // InternalRos2Parser.g:10142:1: entryRuleExtensionScalarValue returns [EObject current=null] : iv_ruleExtensionScalarValue= ruleExtensionScalarValue EOF ;
+    // InternalRos2Parser.g:10151:1: entryRuleExtensionScalarValue returns [EObject current=null] : iv_ruleExtensionScalarValue= ruleExtensionScalarValue EOF ;
     public final EObject entryRuleExtensionScalarValue() throws RecognitionException {
         EObject current = null;
 
@@ -26475,8 +26519,8 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalRos2Parser.g:10142:61: (iv_ruleExtensionScalarValue= ruleExtensionScalarValue EOF )
-            // InternalRos2Parser.g:10143:2: iv_ruleExtensionScalarValue= ruleExtensionScalarValue EOF
+            // InternalRos2Parser.g:10151:61: (iv_ruleExtensionScalarValue= ruleExtensionScalarValue EOF )
+            // InternalRos2Parser.g:10152:2: iv_ruleExtensionScalarValue= ruleExtensionScalarValue EOF
             {
              newCompositeNode(grammarAccess.getExtensionScalarValueRule()); 
             pushFollow(FOLLOW_1);
@@ -26503,7 +26547,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExtensionScalarValue"
-    // InternalRos2Parser.g:10149:1: ruleExtensionScalarValue returns [EObject current=null] : ( () ( (lv_value_1_0= ruleExtensionScalarLiteral ) ) ) ;
+    // InternalRos2Parser.g:10158:1: ruleExtensionScalarValue returns [EObject current=null] : ( () ( (lv_value_1_0= ruleExtensionScalarLiteral ) ) ) ;
     public final EObject ruleExtensionScalarValue() throws RecognitionException {
         EObject current = null;
 
@@ -26514,14 +26558,14 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:10155:2: ( ( () ( (lv_value_1_0= ruleExtensionScalarLiteral ) ) ) )
-            // InternalRos2Parser.g:10156:2: ( () ( (lv_value_1_0= ruleExtensionScalarLiteral ) ) )
+            // InternalRos2Parser.g:10164:2: ( ( () ( (lv_value_1_0= ruleExtensionScalarLiteral ) ) ) )
+            // InternalRos2Parser.g:10165:2: ( () ( (lv_value_1_0= ruleExtensionScalarLiteral ) ) )
             {
-            // InternalRos2Parser.g:10156:2: ( () ( (lv_value_1_0= ruleExtensionScalarLiteral ) ) )
-            // InternalRos2Parser.g:10157:3: () ( (lv_value_1_0= ruleExtensionScalarLiteral ) )
+            // InternalRos2Parser.g:10165:2: ( () ( (lv_value_1_0= ruleExtensionScalarLiteral ) ) )
+            // InternalRos2Parser.g:10166:3: () ( (lv_value_1_0= ruleExtensionScalarLiteral ) )
             {
-            // InternalRos2Parser.g:10157:3: ()
-            // InternalRos2Parser.g:10158:4: 
+            // InternalRos2Parser.g:10166:3: ()
+            // InternalRos2Parser.g:10167:4: 
             {
 
             				current = forceCreateModelElement(
@@ -26531,11 +26575,11 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalRos2Parser.g:10164:3: ( (lv_value_1_0= ruleExtensionScalarLiteral ) )
-            // InternalRos2Parser.g:10165:4: (lv_value_1_0= ruleExtensionScalarLiteral )
+            // InternalRos2Parser.g:10173:3: ( (lv_value_1_0= ruleExtensionScalarLiteral ) )
+            // InternalRos2Parser.g:10174:4: (lv_value_1_0= ruleExtensionScalarLiteral )
             {
-            // InternalRos2Parser.g:10165:4: (lv_value_1_0= ruleExtensionScalarLiteral )
-            // InternalRos2Parser.g:10166:5: lv_value_1_0= ruleExtensionScalarLiteral
+            // InternalRos2Parser.g:10174:4: (lv_value_1_0= ruleExtensionScalarLiteral )
+            // InternalRos2Parser.g:10175:5: lv_value_1_0= ruleExtensionScalarLiteral
             {
 
             					newCompositeNode(grammarAccess.getExtensionScalarValueAccess().getValueExtensionScalarLiteralParserRuleCall_1_0());
@@ -26585,7 +26629,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleExtensionScalarLiteral"
-    // InternalRos2Parser.g:10187:1: entryRuleExtensionScalarLiteral returns [String current=null] : iv_ruleExtensionScalarLiteral= ruleExtensionScalarLiteral EOF ;
+    // InternalRos2Parser.g:10196:1: entryRuleExtensionScalarLiteral returns [String current=null] : iv_ruleExtensionScalarLiteral= ruleExtensionScalarLiteral EOF ;
     public final String entryRuleExtensionScalarLiteral() throws RecognitionException {
         String current = null;
 
@@ -26593,8 +26637,8 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalRos2Parser.g:10187:62: (iv_ruleExtensionScalarLiteral= ruleExtensionScalarLiteral EOF )
-            // InternalRos2Parser.g:10188:2: iv_ruleExtensionScalarLiteral= ruleExtensionScalarLiteral EOF
+            // InternalRos2Parser.g:10196:62: (iv_ruleExtensionScalarLiteral= ruleExtensionScalarLiteral EOF )
+            // InternalRos2Parser.g:10197:2: iv_ruleExtensionScalarLiteral= ruleExtensionScalarLiteral EOF
             {
              newCompositeNode(grammarAccess.getExtensionScalarLiteralRule()); 
             pushFollow(FOLLOW_1);
@@ -26621,7 +26665,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExtensionScalarLiteral"
-    // InternalRos2Parser.g:10194:1: ruleExtensionScalarLiteral returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_BOOLEAN_0= RULE_BOOLEAN | this_DOUBLE_1= RULE_DOUBLE | this_DECINT_2= RULE_DECINT | this_INT_3= RULE_INT | this_ExtensionKey_4= ruleExtensionKey ) ;
+    // InternalRos2Parser.g:10203:1: ruleExtensionScalarLiteral returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_BOOLEAN_0= RULE_BOOLEAN | this_DOUBLE_1= RULE_DOUBLE | this_DECINT_2= RULE_DECINT | this_INT_3= RULE_INT | this_ExtensionKey_4= ruleExtensionKey ) ;
     public final AntlrDatatypeRuleToken ruleExtensionScalarLiteral() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -26636,30 +26680,30 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:10200:2: ( (this_BOOLEAN_0= RULE_BOOLEAN | this_DOUBLE_1= RULE_DOUBLE | this_DECINT_2= RULE_DECINT | this_INT_3= RULE_INT | this_ExtensionKey_4= ruleExtensionKey ) )
-            // InternalRos2Parser.g:10201:2: (this_BOOLEAN_0= RULE_BOOLEAN | this_DOUBLE_1= RULE_DOUBLE | this_DECINT_2= RULE_DECINT | this_INT_3= RULE_INT | this_ExtensionKey_4= ruleExtensionKey )
+            // InternalRos2Parser.g:10209:2: ( (this_BOOLEAN_0= RULE_BOOLEAN | this_DOUBLE_1= RULE_DOUBLE | this_DECINT_2= RULE_DECINT | this_INT_3= RULE_INT | this_ExtensionKey_4= ruleExtensionKey ) )
+            // InternalRos2Parser.g:10210:2: (this_BOOLEAN_0= RULE_BOOLEAN | this_DOUBLE_1= RULE_DOUBLE | this_DECINT_2= RULE_DECINT | this_INT_3= RULE_INT | this_ExtensionKey_4= ruleExtensionKey )
             {
-            // InternalRos2Parser.g:10201:2: (this_BOOLEAN_0= RULE_BOOLEAN | this_DOUBLE_1= RULE_DOUBLE | this_DECINT_2= RULE_DECINT | this_INT_3= RULE_INT | this_ExtensionKey_4= ruleExtensionKey )
-            int alt205=5;
+            // InternalRos2Parser.g:10210:2: (this_BOOLEAN_0= RULE_BOOLEAN | this_DOUBLE_1= RULE_DOUBLE | this_DECINT_2= RULE_DECINT | this_INT_3= RULE_INT | this_ExtensionKey_4= ruleExtensionKey )
+            int alt206=5;
             switch ( input.LA(1) ) {
             case RULE_BOOLEAN:
                 {
-                alt205=1;
+                alt206=1;
                 }
                 break;
             case RULE_DOUBLE:
                 {
-                alt205=2;
+                alt206=2;
                 }
                 break;
             case RULE_DECINT:
                 {
-                alt205=3;
+                alt206=3;
                 }
                 break;
             case RULE_INT:
                 {
-                alt205=4;
+                alt206=4;
                 }
                 break;
             case Duration:
@@ -26704,19 +26748,19 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
             case RULE_ID:
             case RULE_STRING:
                 {
-                alt205=5;
+                alt206=5;
                 }
                 break;
             default:
                 NoViableAltException nvae =
-                    new NoViableAltException("", 205, 0, input);
+                    new NoViableAltException("", 206, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt205) {
+            switch (alt206) {
                 case 1 :
-                    // InternalRos2Parser.g:10202:3: this_BOOLEAN_0= RULE_BOOLEAN
+                    // InternalRos2Parser.g:10211:3: this_BOOLEAN_0= RULE_BOOLEAN
                     {
                     this_BOOLEAN_0=(Token)match(input,RULE_BOOLEAN,FOLLOW_2); 
 
@@ -26729,7 +26773,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalRos2Parser.g:10210:3: this_DOUBLE_1= RULE_DOUBLE
+                    // InternalRos2Parser.g:10219:3: this_DOUBLE_1= RULE_DOUBLE
                     {
                     this_DOUBLE_1=(Token)match(input,RULE_DOUBLE,FOLLOW_2); 
 
@@ -26742,7 +26786,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalRos2Parser.g:10218:3: this_DECINT_2= RULE_DECINT
+                    // InternalRos2Parser.g:10227:3: this_DECINT_2= RULE_DECINT
                     {
                     this_DECINT_2=(Token)match(input,RULE_DECINT,FOLLOW_2); 
 
@@ -26755,7 +26799,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalRos2Parser.g:10226:3: this_INT_3= RULE_INT
+                    // InternalRos2Parser.g:10235:3: this_INT_3= RULE_INT
                     {
                     this_INT_3=(Token)match(input,RULE_INT,FOLLOW_2); 
 
@@ -26768,7 +26812,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalRos2Parser.g:10234:3: this_ExtensionKey_4= ruleExtensionKey
+                    // InternalRos2Parser.g:10243:3: this_ExtensionKey_4= ruleExtensionKey
                     {
 
                     			newCompositeNode(grammarAccess.getExtensionScalarLiteralAccess().getExtensionKeyParserRuleCall_4());
@@ -26810,7 +26854,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleLifecycleState"
-    // InternalRos2Parser.g:10248:1: ruleLifecycleState returns [Enumerator current=null] : ( (enumLiteral_0= Unconfigured ) | (enumLiteral_1= Inactive ) | (enumLiteral_2= Active ) | (enumLiteral_3= Finalized ) ) ;
+    // InternalRos2Parser.g:10257:1: ruleLifecycleState returns [Enumerator current=null] : ( (enumLiteral_0= Unconfigured ) | (enumLiteral_1= Inactive ) | (enumLiteral_2= Active ) | (enumLiteral_3= Finalized ) ) ;
     public final Enumerator ruleLifecycleState() throws RecognitionException {
         Enumerator current = null;
 
@@ -26823,45 +26867,45 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:10254:2: ( ( (enumLiteral_0= Unconfigured ) | (enumLiteral_1= Inactive ) | (enumLiteral_2= Active ) | (enumLiteral_3= Finalized ) ) )
-            // InternalRos2Parser.g:10255:2: ( (enumLiteral_0= Unconfigured ) | (enumLiteral_1= Inactive ) | (enumLiteral_2= Active ) | (enumLiteral_3= Finalized ) )
+            // InternalRos2Parser.g:10263:2: ( ( (enumLiteral_0= Unconfigured ) | (enumLiteral_1= Inactive ) | (enumLiteral_2= Active ) | (enumLiteral_3= Finalized ) ) )
+            // InternalRos2Parser.g:10264:2: ( (enumLiteral_0= Unconfigured ) | (enumLiteral_1= Inactive ) | (enumLiteral_2= Active ) | (enumLiteral_3= Finalized ) )
             {
-            // InternalRos2Parser.g:10255:2: ( (enumLiteral_0= Unconfigured ) | (enumLiteral_1= Inactive ) | (enumLiteral_2= Active ) | (enumLiteral_3= Finalized ) )
-            int alt206=4;
+            // InternalRos2Parser.g:10264:2: ( (enumLiteral_0= Unconfigured ) | (enumLiteral_1= Inactive ) | (enumLiteral_2= Active ) | (enumLiteral_3= Finalized ) )
+            int alt207=4;
             switch ( input.LA(1) ) {
             case Unconfigured:
                 {
-                alt206=1;
+                alt207=1;
                 }
                 break;
             case Inactive:
                 {
-                alt206=2;
+                alt207=2;
                 }
                 break;
             case Active:
                 {
-                alt206=3;
+                alt207=3;
                 }
                 break;
             case Finalized:
                 {
-                alt206=4;
+                alt207=4;
                 }
                 break;
             default:
                 NoViableAltException nvae =
-                    new NoViableAltException("", 206, 0, input);
+                    new NoViableAltException("", 207, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt206) {
+            switch (alt207) {
                 case 1 :
-                    // InternalRos2Parser.g:10256:3: (enumLiteral_0= Unconfigured )
+                    // InternalRos2Parser.g:10265:3: (enumLiteral_0= Unconfigured )
                     {
-                    // InternalRos2Parser.g:10256:3: (enumLiteral_0= Unconfigured )
-                    // InternalRos2Parser.g:10257:4: enumLiteral_0= Unconfigured
+                    // InternalRos2Parser.g:10265:3: (enumLiteral_0= Unconfigured )
+                    // InternalRos2Parser.g:10266:4: enumLiteral_0= Unconfigured
                     {
                     enumLiteral_0=(Token)match(input,Unconfigured,FOLLOW_2); 
 
@@ -26875,10 +26919,10 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalRos2Parser.g:10264:3: (enumLiteral_1= Inactive )
+                    // InternalRos2Parser.g:10273:3: (enumLiteral_1= Inactive )
                     {
-                    // InternalRos2Parser.g:10264:3: (enumLiteral_1= Inactive )
-                    // InternalRos2Parser.g:10265:4: enumLiteral_1= Inactive
+                    // InternalRos2Parser.g:10273:3: (enumLiteral_1= Inactive )
+                    // InternalRos2Parser.g:10274:4: enumLiteral_1= Inactive
                     {
                     enumLiteral_1=(Token)match(input,Inactive,FOLLOW_2); 
 
@@ -26892,10 +26936,10 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalRos2Parser.g:10272:3: (enumLiteral_2= Active )
+                    // InternalRos2Parser.g:10281:3: (enumLiteral_2= Active )
                     {
-                    // InternalRos2Parser.g:10272:3: (enumLiteral_2= Active )
-                    // InternalRos2Parser.g:10273:4: enumLiteral_2= Active
+                    // InternalRos2Parser.g:10281:3: (enumLiteral_2= Active )
+                    // InternalRos2Parser.g:10282:4: enumLiteral_2= Active
                     {
                     enumLiteral_2=(Token)match(input,Active,FOLLOW_2); 
 
@@ -26909,10 +26953,10 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalRos2Parser.g:10280:3: (enumLiteral_3= Finalized )
+                    // InternalRos2Parser.g:10289:3: (enumLiteral_3= Finalized )
                     {
-                    // InternalRos2Parser.g:10280:3: (enumLiteral_3= Finalized )
-                    // InternalRos2Parser.g:10281:4: enumLiteral_3= Finalized
+                    // InternalRos2Parser.g:10289:3: (enumLiteral_3= Finalized )
+                    // InternalRos2Parser.g:10290:4: enumLiteral_3= Finalized
                     {
                     enumLiteral_3=(Token)match(input,Finalized,FOLLOW_2); 
 
@@ -26948,7 +26992,7 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePluginSlotValueFormat"
-    // InternalRos2Parser.g:10291:1: rulePluginSlotValueFormat returns [Enumerator current=null] : ( (enumLiteral_0= Class ) | (enumLiteral_1= Library ) ) ;
+    // InternalRos2Parser.g:10300:1: rulePluginSlotValueFormat returns [Enumerator current=null] : ( (enumLiteral_0= Class ) | (enumLiteral_1= Library ) ) ;
     public final Enumerator rulePluginSlotValueFormat() throws RecognitionException {
         Enumerator current = null;
 
@@ -26959,31 +27003,31 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalRos2Parser.g:10297:2: ( ( (enumLiteral_0= Class ) | (enumLiteral_1= Library ) ) )
-            // InternalRos2Parser.g:10298:2: ( (enumLiteral_0= Class ) | (enumLiteral_1= Library ) )
+            // InternalRos2Parser.g:10306:2: ( ( (enumLiteral_0= Class ) | (enumLiteral_1= Library ) ) )
+            // InternalRos2Parser.g:10307:2: ( (enumLiteral_0= Class ) | (enumLiteral_1= Library ) )
             {
-            // InternalRos2Parser.g:10298:2: ( (enumLiteral_0= Class ) | (enumLiteral_1= Library ) )
-            int alt207=2;
-            int LA207_0 = input.LA(1);
+            // InternalRos2Parser.g:10307:2: ( (enumLiteral_0= Class ) | (enumLiteral_1= Library ) )
+            int alt208=2;
+            int LA208_0 = input.LA(1);
 
-            if ( (LA207_0==Class) ) {
-                alt207=1;
+            if ( (LA208_0==Class) ) {
+                alt208=1;
             }
-            else if ( (LA207_0==Library) ) {
-                alt207=2;
+            else if ( (LA208_0==Library) ) {
+                alt208=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("", 207, 0, input);
+                    new NoViableAltException("", 208, 0, input);
 
                 throw nvae;
             }
-            switch (alt207) {
+            switch (alt208) {
                 case 1 :
-                    // InternalRos2Parser.g:10299:3: (enumLiteral_0= Class )
+                    // InternalRos2Parser.g:10308:3: (enumLiteral_0= Class )
                     {
-                    // InternalRos2Parser.g:10299:3: (enumLiteral_0= Class )
-                    // InternalRos2Parser.g:10300:4: enumLiteral_0= Class
+                    // InternalRos2Parser.g:10308:3: (enumLiteral_0= Class )
+                    // InternalRos2Parser.g:10309:4: enumLiteral_0= Class
                     {
                     enumLiteral_0=(Token)match(input,Class,FOLLOW_2); 
 
@@ -26997,10 +27041,10 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalRos2Parser.g:10307:3: (enumLiteral_1= Library )
+                    // InternalRos2Parser.g:10316:3: (enumLiteral_1= Library )
                     {
-                    // InternalRos2Parser.g:10307:3: (enumLiteral_1= Library )
-                    // InternalRos2Parser.g:10308:4: enumLiteral_1= Library
+                    // InternalRos2Parser.g:10316:3: (enumLiteral_1= Library )
+                    // InternalRos2Parser.g:10317:4: enumLiteral_1= Library
                     {
                     enumLiteral_1=(Token)match(input,Library,FOLLOW_2); 
 
@@ -27344,8 +27388,8 @@ public class InternalRos2Parser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_97 = new BitSet(new long[]{0xC067D887FCBC7700L,0xCFF3EBFFF31F938FL,0x0000000000C00403L});
     public static final BitSet FOLLOW_98 = new BitSet(new long[]{0xC067D887FCBC7700L,0xCFF3EBFFF31F938FL,0x0000000000C0040BL});
     public static final BitSet FOLLOW_99 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000000L,0x0000000000000010L});
-    public static final BitSet FOLLOW_100 = new BitSet(new long[]{0xC003000000000000L,0xF7FFD4F5F01F9683L,0x0000000005C0E281L});
-    public static final BitSet FOLLOW_101 = new BitSet(new long[]{0xC003000000000000L,0xF7FFD4F5F01F9683L,0x0000000005C0E381L});
-    public static final BitSet FOLLOW_102 = new BitSet(new long[]{0xC003000000000000L,0xF7FFD4F5F01F9683L,0x0000000005C0E389L});
+    public static final BitSet FOLLOW_100 = new BitSet(new long[]{0xC003000000000000L,0xF7FFD4F5F01F9683L,0x0000000005C0E285L});
+    public static final BitSet FOLLOW_101 = new BitSet(new long[]{0xC003000000000000L,0xF7FFD4F5F01F9683L,0x0000000005C0E385L});
+    public static final BitSet FOLLOW_102 = new BitSet(new long[]{0xC003000000000000L,0xF7FFD4F5F01F9683L,0x0000000005C0E38DL});
 
 }

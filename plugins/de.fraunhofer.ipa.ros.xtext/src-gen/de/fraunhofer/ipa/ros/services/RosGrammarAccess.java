@@ -4500,9 +4500,11 @@ public class RosGrammarAccess extends AbstractElementFinder.AbstractGrammarEleme
 		return getExtensionValueAccess().getRule();
 	}
 	
+	//// "[]" is a keyword (ArraySpecRef), so the lexer reads an empty list written without a space as
+	//// that one token; accept it as an empty list.
 	//ExtensionListValue returns ExtensionListValue:
 	//    {ExtensionListValue}
-	//    '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']';
+	//    ('[]' | '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']');
 	public BasicsGrammarAccess.ExtensionListValueElements getExtensionListValueAccess() {
 		return gaBasics.getExtensionListValueAccess();
 	}

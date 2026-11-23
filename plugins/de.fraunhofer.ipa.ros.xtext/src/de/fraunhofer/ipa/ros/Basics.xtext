@@ -449,9 +449,11 @@ ExtensionValue returns ExtensionValue:
     ExtensionRefValue |
     ExtensionScalarValue;
 
+// "[]" is a keyword (ArraySpecRef), so the lexer reads an empty list written without a space as
+// that one token; accept it as an empty list.
 ExtensionListValue returns ExtensionListValue:
     {ExtensionListValue}
-    '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']';
+    ('[]' | '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']');
 
 ExtensionBraceMapValue returns ExtensionMapValue:
     {ExtensionMapValue}

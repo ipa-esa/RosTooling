@@ -708,27 +708,32 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		private final Assignment cSlotAssignment_0_1 = (Assignment)cAlternatives_0.eContents().get(1);
 		private final CrossReference cSlotPluginSlotCrossReference_0_1_0 = (CrossReference)cSlotAssignment_0_1.eContents().get(0);
 		private final RuleCall cSlotPluginSlotAddedKeywordNameParserRuleCall_0_1_0_1 = (RuleCall)cSlotPluginSlotCrossReference_0_1_0.eContents().get(1);
-		private final Keyword cLeftSquareBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
-		private final Assignment cPluginsAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
-		private final CrossReference cPluginsPluginCrossReference_2_0_0 = (CrossReference)cPluginsAssignment_2_0.eContents().get(0);
-		private final RuleCall cPluginsPluginQualifiedRefParserRuleCall_2_0_0_1 = (RuleCall)cPluginsPluginCrossReference_2_0_0.eContents().get(1);
-		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
-		private final Keyword cCommaKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
-		private final Assignment cPluginsAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
-		private final CrossReference cPluginsPluginCrossReference_2_1_1_0 = (CrossReference)cPluginsAssignment_2_1_1.eContents().get(0);
-		private final RuleCall cPluginsPluginQualifiedRefParserRuleCall_2_1_1_0_1 = (RuleCall)cPluginsPluginCrossReference_2_1_1_0.eContents().get(1);
-		private final Keyword cRightSquareBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Keyword cLeftSquareBracketRightSquareBracketKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
+		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
+		private final Keyword cLeftSquareBracketKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
+		private final Group cGroup_1_1_1 = (Group)cGroup_1_1.eContents().get(1);
+		private final Assignment cPluginsAssignment_1_1_1_0 = (Assignment)cGroup_1_1_1.eContents().get(0);
+		private final CrossReference cPluginsPluginCrossReference_1_1_1_0_0 = (CrossReference)cPluginsAssignment_1_1_1_0.eContents().get(0);
+		private final RuleCall cPluginsPluginQualifiedRefParserRuleCall_1_1_1_0_0_1 = (RuleCall)cPluginsPluginCrossReference_1_1_1_0_0.eContents().get(1);
+		private final Group cGroup_1_1_1_1 = (Group)cGroup_1_1_1.eContents().get(1);
+		private final Keyword cCommaKeyword_1_1_1_1_0 = (Keyword)cGroup_1_1_1_1.eContents().get(0);
+		private final Assignment cPluginsAssignment_1_1_1_1_1 = (Assignment)cGroup_1_1_1_1.eContents().get(1);
+		private final CrossReference cPluginsPluginCrossReference_1_1_1_1_1_0 = (CrossReference)cPluginsAssignment_1_1_1_1_1.eContents().get(0);
+		private final RuleCall cPluginsPluginQualifiedRefParserRuleCall_1_1_1_1_1_0_1 = (RuleCall)cPluginsPluginCrossReference_1_1_1_1_1_0.eContents().get(1);
+		private final Keyword cRightSquareBracketKeyword_1_1_2 = (Keyword)cGroup_1_1.eContents().get(2);
 		
 		//// Attaches plugins to a slot of the node in from:. The slot name is resolved on that node.
+		//// "[]" is a keyword (Basics ArraySpecRef), so an empty list written without a space arrives as
+		//// that one token; accept it as an empty list.
 		//SlotAttachment returns SlotAttachment:
 		//    (slot=[ros::PluginSlot|EString] ':' | slot=[ros::PluginSlot|AddedKeywordName])
-		//    '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']'
+		//    ('[]' | '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']')
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//(slot=[ros::PluginSlot|EString] ':' | slot=[ros::PluginSlot|AddedKeywordName])
-		//'[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']'
+		//('[]' | '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']')
 		public Group getGroup() { return cGroup; }
 		
 		//(slot=[ros::PluginSlot|EString] ':' | slot=[ros::PluginSlot|AddedKeywordName])
@@ -758,38 +763,47 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		//AddedKeywordName
 		public RuleCall getSlotPluginSlotAddedKeywordNameParserRuleCall_0_1_0_1() { return cSlotPluginSlotAddedKeywordNameParserRuleCall_0_1_0_1; }
 		
+		//('[]' | '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']')
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//'[]'
+		public Keyword getLeftSquareBracketRightSquareBracketKeyword_1_0() { return cLeftSquareBracketRightSquareBracketKeyword_1_0; }
+		
+		//'[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']'
+		public Group getGroup_1_1() { return cGroup_1_1; }
+		
 		//'['
-		public Keyword getLeftSquareBracketKeyword_1() { return cLeftSquareBracketKeyword_1; }
+		public Keyword getLeftSquareBracketKeyword_1_1_0() { return cLeftSquareBracketKeyword_1_1_0; }
 		
 		//(plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)?
-		public Group getGroup_2() { return cGroup_2; }
+		public Group getGroup_1_1_1() { return cGroup_1_1_1; }
 		
 		//plugins+=[ros::Plugin|QualifiedRef]
-		public Assignment getPluginsAssignment_2_0() { return cPluginsAssignment_2_0; }
+		public Assignment getPluginsAssignment_1_1_1_0() { return cPluginsAssignment_1_1_1_0; }
 		
 		//[ros::Plugin|QualifiedRef]
-		public CrossReference getPluginsPluginCrossReference_2_0_0() { return cPluginsPluginCrossReference_2_0_0; }
+		public CrossReference getPluginsPluginCrossReference_1_1_1_0_0() { return cPluginsPluginCrossReference_1_1_1_0_0; }
 		
 		//QualifiedRef
-		public RuleCall getPluginsPluginQualifiedRefParserRuleCall_2_0_0_1() { return cPluginsPluginQualifiedRefParserRuleCall_2_0_0_1; }
+		public RuleCall getPluginsPluginQualifiedRefParserRuleCall_1_1_1_0_0_1() { return cPluginsPluginQualifiedRefParserRuleCall_1_1_1_0_0_1; }
 		
 		//(',' plugins+=[ros::Plugin|QualifiedRef])*
-		public Group getGroup_2_1() { return cGroup_2_1; }
+		public Group getGroup_1_1_1_1() { return cGroup_1_1_1_1; }
 		
 		//','
-		public Keyword getCommaKeyword_2_1_0() { return cCommaKeyword_2_1_0; }
+		public Keyword getCommaKeyword_1_1_1_1_0() { return cCommaKeyword_1_1_1_1_0; }
 		
 		//plugins+=[ros::Plugin|QualifiedRef]
-		public Assignment getPluginsAssignment_2_1_1() { return cPluginsAssignment_2_1_1; }
+		public Assignment getPluginsAssignment_1_1_1_1_1() { return cPluginsAssignment_1_1_1_1_1; }
 		
 		//[ros::Plugin|QualifiedRef]
-		public CrossReference getPluginsPluginCrossReference_2_1_1_0() { return cPluginsPluginCrossReference_2_1_1_0; }
+		public CrossReference getPluginsPluginCrossReference_1_1_1_1_1_0() { return cPluginsPluginCrossReference_1_1_1_1_1_0; }
 		
 		//QualifiedRef
-		public RuleCall getPluginsPluginQualifiedRefParserRuleCall_2_1_1_0_1() { return cPluginsPluginQualifiedRefParserRuleCall_2_1_1_0_1; }
+		public RuleCall getPluginsPluginQualifiedRefParserRuleCall_1_1_1_1_1_0_1() { return cPluginsPluginQualifiedRefParserRuleCall_1_1_1_1_1_0_1; }
 		
 		//']'
-		public Keyword getRightSquareBracketKeyword_3() { return cRightSquareBracketKeyword_3; }
+		public Keyword getRightSquareBracketKeyword_1_1_2() { return cRightSquareBracketKeyword_1_1_2; }
 	}
 	public class RosInterfaceElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.rossystem.RosSystem.RosInterface");
@@ -1726,9 +1740,11 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	}
 	
 	//// Attaches plugins to a slot of the node in from:. The slot name is resolved on that node.
+	//// "[]" is a keyword (Basics ArraySpecRef), so an empty list written without a space arrives as
+	//// that one token; accept it as an empty list.
 	//SlotAttachment returns SlotAttachment:
 	//    (slot=[ros::PluginSlot|EString] ':' | slot=[ros::PluginSlot|AddedKeywordName])
-	//    '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']'
+	//    ('[]' | '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']')
 	//;
 	public SlotAttachmentElements getSlotAttachmentAccess() {
 		return pSlotAttachment;
@@ -2981,9 +2997,11 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		return getExtensionValueAccess().getRule();
 	}
 	
+	//// "[]" is a keyword (ArraySpecRef), so the lexer reads an empty list written without a space as
+	//// that one token; accept it as an empty list.
 	//ExtensionListValue returns ExtensionListValue:
 	//    {ExtensionListValue}
-	//    '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']';
+	//    ('[]' | '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']');
 	public BasicsGrammarAccess.ExtensionListValueElements getExtensionListValueAccess() {
 		return gaBasics.getExtensionListValueAccess();
 	}

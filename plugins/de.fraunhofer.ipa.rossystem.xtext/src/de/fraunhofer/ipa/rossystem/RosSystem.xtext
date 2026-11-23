@@ -81,9 +81,11 @@ RosNode returns RosNode:
 ;
 
 // Attaches plugins to a slot of the node in from:. The slot name is resolved on that node.
+// "[]" is a keyword (Basics ArraySpecRef), so an empty list written without a space arrives as
+// that one token; accept it as an empty list.
 SlotAttachment returns SlotAttachment:
     (slot=[ros::PluginSlot|EString] ':' | slot=[ros::PluginSlot|AddedKeywordName])
-    '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']'
+    ('[]' | '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']')
 ;
 
 RosInterface returns RosInterface:

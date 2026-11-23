@@ -2821,54 +2821,68 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.ExtensionListValue");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cExtensionListValueAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cLeftSquareBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
-		private final Assignment cItemsAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
-		private final RuleCall cItemsExtensionValueParserRuleCall_2_0_0 = (RuleCall)cItemsAssignment_2_0.eContents().get(0);
-		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
-		private final Keyword cCommaKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
-		private final Assignment cItemsAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
-		private final RuleCall cItemsExtensionValueParserRuleCall_2_1_1_0 = (RuleCall)cItemsAssignment_2_1_1.eContents().get(0);
-		private final Keyword cRightSquareBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Keyword cLeftSquareBracketRightSquareBracketKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
+		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
+		private final Keyword cLeftSquareBracketKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
+		private final Group cGroup_1_1_1 = (Group)cGroup_1_1.eContents().get(1);
+		private final Assignment cItemsAssignment_1_1_1_0 = (Assignment)cGroup_1_1_1.eContents().get(0);
+		private final RuleCall cItemsExtensionValueParserRuleCall_1_1_1_0_0 = (RuleCall)cItemsAssignment_1_1_1_0.eContents().get(0);
+		private final Group cGroup_1_1_1_1 = (Group)cGroup_1_1_1.eContents().get(1);
+		private final Keyword cCommaKeyword_1_1_1_1_0 = (Keyword)cGroup_1_1_1_1.eContents().get(0);
+		private final Assignment cItemsAssignment_1_1_1_1_1 = (Assignment)cGroup_1_1_1_1.eContents().get(1);
+		private final RuleCall cItemsExtensionValueParserRuleCall_1_1_1_1_1_0 = (RuleCall)cItemsAssignment_1_1_1_1_1.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_1_1_2 = (Keyword)cGroup_1_1.eContents().get(2);
 		
+		//// "[]" is a keyword (ArraySpecRef), so the lexer reads an empty list written without a space as
+		//// that one token; accept it as an empty list.
 		//ExtensionListValue returns ExtensionListValue:
 		//    {ExtensionListValue}
-		//    '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']';
+		//    ('[]' | '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']');
 		@Override public ParserRule getRule() { return rule; }
 		
 		//{ExtensionListValue}
-		//'[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']'
+		//('[]' | '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']')
 		public Group getGroup() { return cGroup; }
 		
 		//{ExtensionListValue}
 		public Action getExtensionListValueAction_0() { return cExtensionListValueAction_0; }
 		
+		//('[]' | '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']')
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//'[]'
+		public Keyword getLeftSquareBracketRightSquareBracketKeyword_1_0() { return cLeftSquareBracketRightSquareBracketKeyword_1_0; }
+		
+		//'[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']'
+		public Group getGroup_1_1() { return cGroup_1_1; }
+		
 		//'['
-		public Keyword getLeftSquareBracketKeyword_1() { return cLeftSquareBracketKeyword_1; }
+		public Keyword getLeftSquareBracketKeyword_1_1_0() { return cLeftSquareBracketKeyword_1_1_0; }
 		
 		//(items+=ExtensionValue (','? items+=ExtensionValue)*)?
-		public Group getGroup_2() { return cGroup_2; }
+		public Group getGroup_1_1_1() { return cGroup_1_1_1; }
 		
 		//items+=ExtensionValue
-		public Assignment getItemsAssignment_2_0() { return cItemsAssignment_2_0; }
+		public Assignment getItemsAssignment_1_1_1_0() { return cItemsAssignment_1_1_1_0; }
 		
 		//ExtensionValue
-		public RuleCall getItemsExtensionValueParserRuleCall_2_0_0() { return cItemsExtensionValueParserRuleCall_2_0_0; }
+		public RuleCall getItemsExtensionValueParserRuleCall_1_1_1_0_0() { return cItemsExtensionValueParserRuleCall_1_1_1_0_0; }
 		
 		//(','? items+=ExtensionValue)*
-		public Group getGroup_2_1() { return cGroup_2_1; }
+		public Group getGroup_1_1_1_1() { return cGroup_1_1_1_1; }
 		
 		//','?
-		public Keyword getCommaKeyword_2_1_0() { return cCommaKeyword_2_1_0; }
+		public Keyword getCommaKeyword_1_1_1_1_0() { return cCommaKeyword_1_1_1_1_0; }
 		
 		//items+=ExtensionValue
-		public Assignment getItemsAssignment_2_1_1() { return cItemsAssignment_2_1_1; }
+		public Assignment getItemsAssignment_1_1_1_1_1() { return cItemsAssignment_1_1_1_1_1; }
 		
 		//ExtensionValue
-		public RuleCall getItemsExtensionValueParserRuleCall_2_1_1_0() { return cItemsExtensionValueParserRuleCall_2_1_1_0; }
+		public RuleCall getItemsExtensionValueParserRuleCall_1_1_1_1_1_0() { return cItemsExtensionValueParserRuleCall_1_1_1_1_1_0; }
 		
 		//']'
-		public Keyword getRightSquareBracketKeyword_3() { return cRightSquareBracketKeyword_3; }
+		public Keyword getRightSquareBracketKeyword_1_1_2() { return cRightSquareBracketKeyword_1_1_2; }
 	}
 	public class ExtensionBraceMapValueElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.ExtensionBraceMapValue");
@@ -4398,9 +4412,11 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return getExtensionValueAccess().getRule();
 	}
 	
+	//// "[]" is a keyword (ArraySpecRef), so the lexer reads an empty list written without a space as
+	//// that one token; accept it as an empty list.
 	//ExtensionListValue returns ExtensionListValue:
 	//    {ExtensionListValue}
-	//    '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']';
+	//    ('[]' | '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']');
 	public ExtensionListValueElements getExtensionListValueAccess() {
 		return pExtensionListValue;
 	}
