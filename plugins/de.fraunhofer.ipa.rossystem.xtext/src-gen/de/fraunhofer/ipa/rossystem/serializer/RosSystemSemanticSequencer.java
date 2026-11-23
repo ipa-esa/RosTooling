@@ -48,6 +48,12 @@ import primitives.uint64Array;
 import primitives.uint8;
 import primitives.uint8Array;
 import ros.ArrayTopicSpecMsgRef;
+import ros.ExtensionBlock;
+import ros.ExtensionEntry;
+import ros.ExtensionListValue;
+import ros.ExtensionMapValue;
+import ros.ExtensionRefValue;
+import ros.ExtensionScalarValue;
 import ros.GlobalNamespace;
 import ros.ParameterAny;
 import ros.ParameterAnyType;
@@ -88,6 +94,7 @@ import system.RosSubscriberReference;
 import system.RosSystemConnection;
 import system.RosTopicConnection;
 import system.RossystemPackage;
+import system.SlotAttachment;
 import system.SubSystem;
 
 @SuppressWarnings("all")
@@ -205,6 +212,35 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 			switch (semanticObject.eClass().getClassifierID()) {
 			case RosPackage.ARRAY_TOPIC_SPEC_MSG_REF:
 				sequence_ArraySpecRef(context, (ArrayTopicSpecMsgRef) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_BLOCK:
+				sequence_ExtensionBlock(context, (ExtensionBlock) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_ENTRY:
+				sequence_ExtensionEntry(context, (ExtensionEntry) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_LIST_VALUE:
+				sequence_ExtensionListValue(context, (ExtensionListValue) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_MAP_VALUE:
+				if (rule == grammarAccess.getExtensionValueRule()) {
+					sequence_ExtensionBraceMapValue_ExtensionIndentedMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getExtensionBraceMapValueRule()) {
+					sequence_ExtensionBraceMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getExtensionIndentedMapValueRule()) {
+					sequence_ExtensionIndentedMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else break;
+			case RosPackage.EXTENSION_REF_VALUE:
+				sequence_ExtensionRefValue(context, (ExtensionRefValue) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_SCALAR_VALUE:
+				sequence_ExtensionScalarValue(context, (ExtensionScalarValue) semanticObject); 
 				return; 
 			case RosPackage.GLOBAL_NAMESPACE:
 				sequence_GlobalNamespace(context, (GlobalNamespace) semanticObject); 
@@ -329,6 +365,9 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 			case RossystemPackage.ROS_TOPIC_CONNECTION:
 				sequence_RosTopicConnection(context, (RosTopicConnection) semanticObject); 
 				return; 
+			case RossystemPackage.SLOT_ATTACHMENT:
+				sequence_SlotAttachment(context, (SlotAttachment) semanticObject); 
+				return; 
 			case RossystemPackage.SUB_SYSTEM:
 				sequence_SubSystem(context, (SubSystem) semanticObject); 
 				return; 
@@ -346,7 +385,7 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 *     Process returns Process
 	 *
 	 * Constraint:
-	 *     (name=EString (components+=[RosNode|EString] components+=[RosNode|EString]*)? threads=Integer0?)
+	 *     ((name=EString | name=AddedKeywordName) (components+=[RosNode|EString] components+=[RosNode|EString]*)? threads=Integer0?)
 	 * </pre>
 	 */
 	protected void sequence_Process(ISerializationContext context, system.Process semanticObject) {
@@ -427,20 +466,11 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 *     RosInterface returns RosInterface
 	 *
 	 * Constraint:
-	 *     (name=EString reference=InterfaceReference)
+	 *     ((name=EString | name=AddedKeywordName) reference=InterfaceReference extensions+=ExtensionBlock*)
 	 * </pre>
 	 */
 	protected void sequence_RosInterface(ISerializationContext context, RosInterface semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, RossystemPackage.Literals.ROS_INTERFACE__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RossystemPackage.Literals.ROS_INTERFACE__NAME));
-			if (transientValues.isValueTransient(semanticObject, RossystemPackage.Literals.ROS_INTERFACE__REFERENCE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RossystemPackage.Literals.ROS_INTERFACE__REFERENCE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getRosInterfaceAccess().getNameEStringParserRuleCall_1_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getRosInterfaceAccess().getReferenceInterfaceReferenceParserRuleCall_3_0(), semanticObject.getReference());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -450,7 +480,15 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 *     RosNode returns RosNode
 	 *
 	 * Constraint:
-	 *     (name=EString from=[Node|EString] namespace=EString? rosinterfaces+=RosInterface* rosparameters+=RosParameter*)
+	 *     (
+	 *         (name=EString | name=AddedKeywordName) 
+	 *         from=[Node|EString] 
+	 *         namespace=EString? 
+	 *         slots+=SlotAttachment* 
+	 *         rosinterfaces+=RosInterface* 
+	 *         rosparameters+=RosParameter* 
+	 *         extensions+=ExtensionBlock*
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_RosNode(ISerializationContext context, RosNode semanticObject) {
@@ -464,23 +502,11 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 *     RosParameter returns RosParameter
 	 *
 	 * Constraint:
-	 *     (name=EString from=[Parameter|EString] value=ParameterValue)
+	 *     ((name=EString | name=AddedKeywordName) from=[Parameter|EString] value=ParameterValue)
 	 * </pre>
 	 */
 	protected void sequence_RosParameter(ISerializationContext context, RosParameter semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__NAME));
-			if (transientValues.isValueTransient(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__FROM) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__FROM));
-			if (transientValues.isValueTransient(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RossystemPackage.Literals.ROS_PARAMETER__VALUE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getRosParameterAccess().getNameEStringParserRuleCall_1_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getRosParameterAccess().getFromParameterEStringParserRuleCall_3_0_1(), semanticObject.eGet(RossystemPackage.Literals.ROS_PARAMETER__FROM, false));
-		feeder.accept(grammarAccess.getRosParameterAccess().getValueParameterValueParserRuleCall_6_0(), semanticObject.getValue());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -625,9 +651,13 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=EString 
+	 *         (name=EString | name=AddedKeywordName) 
 	 *         fromFile=EString? 
-	 *         (components+=SubSystem | processes+=Process | components+=RosNode | parameter+=Parameter | connections+=Connection)*
+	 *         components+=SubSystem? 
+	 *         (
+	 *             (processes+=Process | components+=RosNode | parameter+=Parameter | connections+=Connection | extensions+=ExtensionBlock)? 
+	 *             components+=SubSystem?
+	 *         )*
 	 *     )
 	 * </pre>
 	 */
@@ -658,6 +688,20 @@ public class RosSystemSemanticSequencer extends BasicsSemanticSequencer {
 		feeder.accept(grammarAccess.getRosTopicConnectionAccess().getFromPublisherEStringParserRuleCall_2_0_1(), semanticObject.eGet(RossystemPackage.Literals.ROS_TOPIC_CONNECTION__FROM, false));
 		feeder.accept(grammarAccess.getRosTopicConnectionAccess().getToSubscriberEStringParserRuleCall_4_0_1(), semanticObject.eGet(RossystemPackage.Literals.ROS_TOPIC_CONNECTION__TO, false));
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     SlotAttachment returns SlotAttachment
+	 *
+	 * Constraint:
+	 *     ((slot=[PluginSlot|EString] | slot=[PluginSlot|AddedKeywordName]) (plugins+=[Plugin|QualifiedRef] plugins+=[Plugin|QualifiedRef]*)?)
+	 * </pre>
+	 */
+	protected void sequence_SlotAttachment(ISerializationContext context, SlotAttachment semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

@@ -1,6 +1,9 @@
 package de.fraunhofer.ipa.rossystem.generator
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases
+import de.fraunhofer.ipa.rossystem.scoping.RosSystemScopeProvider
 import java.util.ArrayList
+import java.util.LinkedHashSet
 import java.util.List
 import java.util.HashSet
 import java.util.Set
@@ -8,9 +11,14 @@ import ros.Artifact
 import ros.Node
 import ros.Package
 import ros.Parameter
+import ros.ParameterArrayType
+import ros.ParameterListType
 import ros.ParameterValue
 import ros.ParameterStringType
 import ros.ParameterString
+import ros.Plugin
+import ros.PluginSlot
+import ros.PluginSlotValueFormat
 import ros.impl.AmentPackageImpl
 import system.Process
 import system.RosParameter
@@ -473,8 +481,14 @@ class GeneratorHelpers {
                 init_pkg()
                 node = component as RosNode
                 Pkg = node.compile_pkg.toString()
-                if (!PkgsList.contains(Pkg)){
+                if (!Pkg.nullOrEmpty && !PkgsList.contains(Pkg)){
                     PkgsList.add(Pkg)
+                }
+                for (pl : RosSystemScopeProvider.attachedPlugins(node)) {
+                    val CharSequence plPkg = getPluginPackageName(pl)
+                    if (plPkg !== null && plPkg.length > 0 && !PkgsList.contains(plPkg)) {
+                        PkgsList.add(plPkg)
+                    }
                 }
            }
            for (component: getSubsystems(rossystem)){
@@ -607,6 +621,93 @@ class GeneratorHelpers {
     def getPackage_node (Node node){
         package_impl = node.eContainer.eContainer as AmentPackageImpl;
         return package_impl;
+    }
+
+    static class SlotParamEntry {
+        public val String paramName
+        public val List<String> values
+        public val boolean array
+
+        new(String paramName, List<String> values, boolean array) {
+            this.paramName = paramName
+            this.values = values
+            this.array = array
+        }
+    }
+
+    def String getPluginPackageName(Plugin plugin) {
+        if (plugin?.eContainer?.eContainer instanceof Package) {
+            return (plugin.eContainer.eContainer as Package).name?.toLowerCase
+        }
+        return null
+    }
+
+    /**
+     * Resolves auto-populated parameter entries for host {@link PluginSlot}s strictly from the
+     * {@code .ros2}/{@code .rossystem} model:
+     * <ul>
+     *   <li>Each slot takes the plugins attached to it under {@code slots:}, or its {@code default:}.</li>
+     *   <li>{@code format: class} (default) emits {@code pkg::Plugin}; {@code format: library}
+     *       emits the owning {@link Artifact} name deduplicated in attachment order.</li>
+     * </ul>
+     *
+     * <p>Known limits (out of scope for core slot emission):
+     * <ul>
+     *   <li>Plain upstream {@code TreeExecutionServer} expects {@code package_name/subfolder}
+     *       entries in its {@code plugins} parameter, which users configure explicitly in
+     *       {@code .rossystem} {@code parameters:}.</li>
+     *   <li>Nav2-style nested {@code <name>.plugin} parameter maps are out of scope.</li>
+     * </ul>
+     */
+    def List<SlotParamEntry> getSlotParameterEntries(RosNode component) {
+        val result = new ArrayList<SlotParamEntry>()
+        if (component === null || component.from === null || component.from.pluginSlots.empty) {
+            return result
+        }
+        if (component.slots.forall[plugins.empty] && !component.from.pluginSlots.exists[defaultPlugin !== null]) {
+            return result
+        }
+
+        val explicitParamNames = new HashSet<String>()
+        if (component.rosparameters !== null) {
+            for (rp : component.rosparameters) {
+                if (rp.from !== null && rp.from.name !== null) {
+                    explicitParamNames.add(rp.from.name)
+                } else if (rp.name !== null) {
+                    explicitParamNames.add(rp.name)
+                }
+            }
+        }
+
+        for (PluginSlot slot : component.from.pluginSlots) {
+            val paramName = slot.parameter
+            if (paramName !== null && !paramName.empty && !explicitParamNames.contains(paramName)) {
+                val matchedSet = new LinkedHashSet<String>()
+                for (attachment : component.slots.filter[it.slot === slot]) {
+                    for (Plugin pl : attachment.plugins) {
+                        if (!pl.eIsProxy) {
+                            matchedSet.add(resolveSlotValueForPlugin(pl, slot))
+                        }
+                    }
+                }
+                val matchedValues = new ArrayList<String>(matchedSet)
+                if (matchedValues.empty && slot.defaultPlugin !== null && !slot.defaultPlugin.eIsProxy) {
+                    matchedValues.add(resolveSlotValueForPlugin(slot.defaultPlugin, slot))
+                }
+                if (!matchedValues.empty) {
+                    result.add(new SlotParamEntry(paramName, matchedValues, slot.multiple))
+                }
+            }
+        }
+        return result
+    }
+
+    def private String resolveSlotValueForPlugin(Plugin plugin, PluginSlot slot) {
+        return PluginBases.slotValue(plugin, slot)
+    }
+
+    def boolean hasAutoSlotParameters(RosNode component) {
+        return !getSlotParameterEntries(component).empty
     }
     def static String removeLeadingSlash(String input) {
         if (input !== null && input.startsWith("/")) {

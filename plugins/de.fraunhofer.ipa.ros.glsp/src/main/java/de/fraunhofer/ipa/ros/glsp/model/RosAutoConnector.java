@@ -16,9 +16,12 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.Node;
+import ros.Plugin;
 import ros.SpecBase;
 import system.Component;
 import system.Connection;
@@ -532,16 +535,30 @@ public final class RosAutoConnector {
                         portId != null ? portId : nodeId));
             }
             Node from = rn.getFrom();
-            if (from == null || from.eIsProxy()) {
-                continue;
+            if (from != null && !from.eIsProxy()) {
+                addInheritedHolder(out, wrapped, rn, nodeId, isDrawn, from);
             }
-            addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_PUB, from.getPublisher());
-            addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_SUB, from.getSubscriber());
-            addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_SS, from.getServiceserver());
-            addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_SC, from.getServiceclient());
-            addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_AS, from.getActionserver());
-            addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_AC, from.getActionclient());
+            for (Plugin pl : SlotAttachments.plugins(rn)) {
+                Plugin resolved = pl;
+                if (resolved != null && resolved.eIsProxy()) {
+                    EObject resObj = EcoreUtil.resolve(resolved, root);
+                    resolved = resObj instanceof Plugin p ? p : null;
+                }
+                if (resolved != null && !resolved.eIsProxy()) {
+                    addInheritedHolder(out, wrapped, rn, nodeId, isDrawn, resolved);
+                }
+            }
         }
+    }
+
+    private static void addInheritedHolder(final List<Endpoint> out, final Set<EObject> wrapped, final RosNode rn,
+            final String nodeId, final Predicate<String> isDrawn, final InterfaceHolder holder) {
+        addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_PUB, holder.getPublisher());
+        addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_SUB, holder.getSubscriber());
+        addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_SS, holder.getServiceserver());
+        addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_SC, holder.getServiceclient());
+        addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_AS, holder.getActionserver());
+        addInherited(out, wrapped, rn, nodeId, isDrawn, RosModelTypes.PORT_AC, holder.getActionclient());
     }
 
     private static void addInherited(final List<Endpoint> out, final Set<EObject> wrapped, final RosNode rn,
@@ -599,17 +616,21 @@ public final class RosAutoConnector {
                         nodeRef + "::" + ri.getName(), nodeRef, topSub, drawn ? portId : null,
                         drawn ? portId : subId));
             }
-            Node from = rn.getFrom();
-            if (from == null || from.eIsProxy()) {
-                continue;
-            }
             List<InterfaceType> origins = new ArrayList<>();
-            origins.addAll(from.getPublisher());
-            origins.addAll(from.getSubscriber());
-            origins.addAll(from.getServiceserver());
-            origins.addAll(from.getServiceclient());
-            origins.addAll(from.getActionserver());
-            origins.addAll(from.getActionclient());
+            Node from = rn.getFrom();
+            if (from != null && !from.eIsProxy()) {
+                collectHolderOrigins(from, origins);
+            }
+            for (Plugin pl : SlotAttachments.plugins(rn)) {
+                Plugin resolved = pl;
+                if (resolved != null && resolved.eIsProxy()) {
+                    EObject resObj = EcoreUtil.resolve(resolved, sys);
+                    resolved = resObj instanceof Plugin p ? p : null;
+                }
+                if (resolved != null && !resolved.eIsProxy()) {
+                    collectHolderOrigins(resolved, origins);
+                }
+            }
             for (InterfaceType it : origins) {
                 if (declared.contains(it) || it.getName() == null) {
                     continue;
@@ -618,6 +639,15 @@ public final class RosAutoConnector {
                         nodeRef + "::" + it.getName(), nodeRef, topSub, null, subId));
             }
         }
+    }
+
+    private static void collectHolderOrigins(final InterfaceHolder holder, final List<InterfaceType> out) {
+        out.addAll(holder.getPublisher());
+        out.addAll(holder.getSubscriber());
+        out.addAll(holder.getServiceserver());
+        out.addAll(holder.getServiceclient());
+        out.addAll(holder.getActionserver());
+        out.addAll(holder.getActionclient());
     }
 
     private static String portTypeOf(final InterfaceType it) {

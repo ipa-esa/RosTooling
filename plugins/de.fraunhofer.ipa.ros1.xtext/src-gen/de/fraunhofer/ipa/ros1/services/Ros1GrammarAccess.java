@@ -9,7 +9,9 @@ import de.fraunhofer.ipa.ros.services.BasicsGrammarAccess;
 import de.fraunhofer.ipa.ros.services.RosGrammarAccess;
 import java.util.List;
 import org.eclipse.xtext.Action;
+import org.eclipse.xtext.Alternatives;
 import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.EnumRule;
 import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.Group;
@@ -41,35 +43,39 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros1.Ros1.CatkinPackage");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cCatkinPackageAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameRosNamesParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Keyword cColonKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final RuleCall cBEGINTerminalRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
+		private final Assignment cNameAssignment_1_0_0 = (Assignment)cGroup_1_0.eContents().get(0);
+		private final RuleCall cNameRosNamesParserRuleCall_1_0_0_0 = (RuleCall)cNameAssignment_1_0_0.eContents().get(0);
+		private final Keyword cColonKeyword_1_0_1 = (Keyword)cGroup_1_0.eContents().get(1);
+		private final Assignment cNameAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
+		private final RuleCall cNameAddedKeywordNameParserRuleCall_1_1_0 = (RuleCall)cNameAssignment_1_1.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
+		private final Keyword cFromGitRepoKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
+		private final Assignment cFromGitRepoAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
+		private final RuleCall cFromGitRepoEStringParserRuleCall_3_1_0 = (RuleCall)cFromGitRepoAssignment_3_1.eContents().get(0);
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
-		private final Keyword cFromGitRepoKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
-		private final Assignment cFromGitRepoAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cFromGitRepoEStringParserRuleCall_4_1_0 = (RuleCall)cFromGitRepoAssignment_4_1.eContents().get(0);
+		private final Keyword cArtifactsKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
+		private final RuleCall cBEGINTerminalRuleCall_4_1 = (RuleCall)cGroup_4.eContents().get(1);
+		private final Assignment cArtifactAssignment_4_2 = (Assignment)cGroup_4.eContents().get(2);
+		private final RuleCall cArtifactArtifactParserRuleCall_4_2_0 = (RuleCall)cArtifactAssignment_4_2.eContents().get(0);
+		private final RuleCall cENDTerminalRuleCall_4_3 = (RuleCall)cGroup_4.eContents().get(3);
 		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
-		private final Keyword cArtifactsKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
-		private final RuleCall cBEGINTerminalRuleCall_5_1 = (RuleCall)cGroup_5.eContents().get(1);
-		private final Assignment cArtifactAssignment_5_2 = (Assignment)cGroup_5.eContents().get(2);
-		private final RuleCall cArtifactArtifactParserRuleCall_5_2_0 = (RuleCall)cArtifactAssignment_5_2.eContents().get(0);
-		private final RuleCall cENDTerminalRuleCall_5_3 = (RuleCall)cGroup_5.eContents().get(3);
-		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
-		private final Keyword cDependenciesKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
-		private final Keyword cLeftSquareBracketKeyword_6_1 = (Keyword)cGroup_6.eContents().get(1);
-		private final Assignment cDependencyAssignment_6_2 = (Assignment)cGroup_6.eContents().get(2);
-		private final RuleCall cDependencyDependencyParserRuleCall_6_2_0 = (RuleCall)cDependencyAssignment_6_2.eContents().get(0);
-		private final Group cGroup_6_3 = (Group)cGroup_6.eContents().get(3);
-		private final Keyword cCommaKeyword_6_3_0 = (Keyword)cGroup_6_3.eContents().get(0);
-		private final Assignment cDependencyAssignment_6_3_1 = (Assignment)cGroup_6_3.eContents().get(1);
-		private final RuleCall cDependencyDependencyParserRuleCall_6_3_1_0 = (RuleCall)cDependencyAssignment_6_3_1.eContents().get(0);
-		private final Keyword cRightSquareBracketKeyword_6_4 = (Keyword)cGroup_6.eContents().get(4);
-		private final RuleCall cENDTerminalRuleCall_7 = (RuleCall)cGroup.eContents().get(7);
+		private final Keyword cDependenciesKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Keyword cLeftSquareBracketKeyword_5_1 = (Keyword)cGroup_5.eContents().get(1);
+		private final Assignment cDependencyAssignment_5_2 = (Assignment)cGroup_5.eContents().get(2);
+		private final RuleCall cDependencyDependencyParserRuleCall_5_2_0 = (RuleCall)cDependencyAssignment_5_2.eContents().get(0);
+		private final Group cGroup_5_3 = (Group)cGroup_5.eContents().get(3);
+		private final Keyword cCommaKeyword_5_3_0 = (Keyword)cGroup_5_3.eContents().get(0);
+		private final Assignment cDependencyAssignment_5_3_1 = (Assignment)cGroup_5_3.eContents().get(1);
+		private final RuleCall cDependencyDependencyParserRuleCall_5_3_1_0 = (RuleCall)cDependencyAssignment_5_3_1.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_5_4 = (Keyword)cGroup_5.eContents().get(4);
+		private final RuleCall cENDTerminalRuleCall_6 = (RuleCall)cGroup.eContents().get(6);
 		
 		//CatkinPackage returns CatkinPackage:
 		//    {CatkinPackage}
-		//    name=RosNames':'
+		//    (name=RosNames':' | name=AddedKeywordName)
 		//    BEGIN
 		//        ('fromGitRepo:' fromGitRepo=EString)?
 		//        ('artifacts:'
@@ -82,7 +88,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		@Override public ParserRule getRule() { return rule; }
 		
 		//{CatkinPackage}
-		//name=RosNames':'
+		//(name=RosNames':' | name=AddedKeywordName)
 		//BEGIN
 		//    ('fromGitRepo:' fromGitRepo=EString)?
 		//    ('artifacts:'
@@ -97,84 +103,96 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//{CatkinPackage}
 		public Action getCatkinPackageAction_0() { return cCatkinPackageAction_0; }
 		
+		//(name=RosNames':' | name=AddedKeywordName)
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//name=RosNames':'
+		public Group getGroup_1_0() { return cGroup_1_0; }
+		
 		//name=RosNames
-		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		public Assignment getNameAssignment_1_0_0() { return cNameAssignment_1_0_0; }
 		
 		//RosNames
-		public RuleCall getNameRosNamesParserRuleCall_1_0() { return cNameRosNamesParserRuleCall_1_0; }
+		public RuleCall getNameRosNamesParserRuleCall_1_0_0_0() { return cNameRosNamesParserRuleCall_1_0_0_0; }
 		
 		//':'
-		public Keyword getColonKeyword_2() { return cColonKeyword_2; }
+		public Keyword getColonKeyword_1_0_1() { return cColonKeyword_1_0_1; }
+		
+		//name=AddedKeywordName
+		public Assignment getNameAssignment_1_1() { return cNameAssignment_1_1; }
+		
+		//AddedKeywordName
+		public RuleCall getNameAddedKeywordNameParserRuleCall_1_1_0() { return cNameAddedKeywordNameParserRuleCall_1_1_0; }
 		
 		//BEGIN
-		public RuleCall getBEGINTerminalRuleCall_3() { return cBEGINTerminalRuleCall_3; }
+		public RuleCall getBEGINTerminalRuleCall_2() { return cBEGINTerminalRuleCall_2; }
 		
 		//('fromGitRepo:' fromGitRepo=EString)?
-		public Group getGroup_4() { return cGroup_4; }
+		public Group getGroup_3() { return cGroup_3; }
 		
 		//'fromGitRepo:'
-		public Keyword getFromGitRepoKeyword_4_0() { return cFromGitRepoKeyword_4_0; }
+		public Keyword getFromGitRepoKeyword_3_0() { return cFromGitRepoKeyword_3_0; }
 		
 		//fromGitRepo=EString
-		public Assignment getFromGitRepoAssignment_4_1() { return cFromGitRepoAssignment_4_1; }
+		public Assignment getFromGitRepoAssignment_3_1() { return cFromGitRepoAssignment_3_1; }
 		
 		//EString
-		public RuleCall getFromGitRepoEStringParserRuleCall_4_1_0() { return cFromGitRepoEStringParserRuleCall_4_1_0; }
+		public RuleCall getFromGitRepoEStringParserRuleCall_3_1_0() { return cFromGitRepoEStringParserRuleCall_3_1_0; }
 		
 		//('artifacts:'
 		//    BEGIN
 		//    artifact+=Artifact*
 		//    END
 		//)?
-		public Group getGroup_5() { return cGroup_5; }
+		public Group getGroup_4() { return cGroup_4; }
 		
 		//'artifacts:'
-		public Keyword getArtifactsKeyword_5_0() { return cArtifactsKeyword_5_0; }
+		public Keyword getArtifactsKeyword_4_0() { return cArtifactsKeyword_4_0; }
 		
 		//BEGIN
-		public RuleCall getBEGINTerminalRuleCall_5_1() { return cBEGINTerminalRuleCall_5_1; }
+		public RuleCall getBEGINTerminalRuleCall_4_1() { return cBEGINTerminalRuleCall_4_1; }
 		
 		//artifact+=Artifact*
-		public Assignment getArtifactAssignment_5_2() { return cArtifactAssignment_5_2; }
+		public Assignment getArtifactAssignment_4_2() { return cArtifactAssignment_4_2; }
 		
 		//Artifact
-		public RuleCall getArtifactArtifactParserRuleCall_5_2_0() { return cArtifactArtifactParserRuleCall_5_2_0; }
+		public RuleCall getArtifactArtifactParserRuleCall_4_2_0() { return cArtifactArtifactParserRuleCall_4_2_0; }
 		
 		//END
-		public RuleCall getENDTerminalRuleCall_5_3() { return cENDTerminalRuleCall_5_3; }
+		public RuleCall getENDTerminalRuleCall_4_3() { return cENDTerminalRuleCall_4_3; }
 		
 		//('dependencies:' '[' dependency+=Dependency (',' dependency+=Dependency)* ']' )?
-		public Group getGroup_6() { return cGroup_6; }
+		public Group getGroup_5() { return cGroup_5; }
 		
 		//'dependencies:'
-		public Keyword getDependenciesKeyword_6_0() { return cDependenciesKeyword_6_0; }
+		public Keyword getDependenciesKeyword_5_0() { return cDependenciesKeyword_5_0; }
 		
 		//'['
-		public Keyword getLeftSquareBracketKeyword_6_1() { return cLeftSquareBracketKeyword_6_1; }
+		public Keyword getLeftSquareBracketKeyword_5_1() { return cLeftSquareBracketKeyword_5_1; }
 		
 		//dependency+=Dependency
-		public Assignment getDependencyAssignment_6_2() { return cDependencyAssignment_6_2; }
+		public Assignment getDependencyAssignment_5_2() { return cDependencyAssignment_5_2; }
 		
 		//Dependency
-		public RuleCall getDependencyDependencyParserRuleCall_6_2_0() { return cDependencyDependencyParserRuleCall_6_2_0; }
+		public RuleCall getDependencyDependencyParserRuleCall_5_2_0() { return cDependencyDependencyParserRuleCall_5_2_0; }
 		
 		//(',' dependency+=Dependency)*
-		public Group getGroup_6_3() { return cGroup_6_3; }
+		public Group getGroup_5_3() { return cGroup_5_3; }
 		
 		//','
-		public Keyword getCommaKeyword_6_3_0() { return cCommaKeyword_6_3_0; }
+		public Keyword getCommaKeyword_5_3_0() { return cCommaKeyword_5_3_0; }
 		
 		//dependency+=Dependency
-		public Assignment getDependencyAssignment_6_3_1() { return cDependencyAssignment_6_3_1; }
+		public Assignment getDependencyAssignment_5_3_1() { return cDependencyAssignment_5_3_1; }
 		
 		//Dependency
-		public RuleCall getDependencyDependencyParserRuleCall_6_3_1_0() { return cDependencyDependencyParserRuleCall_6_3_1_0; }
+		public RuleCall getDependencyDependencyParserRuleCall_5_3_1_0() { return cDependencyDependencyParserRuleCall_5_3_1_0; }
 		
 		//']'
-		public Keyword getRightSquareBracketKeyword_6_4() { return cRightSquareBracketKeyword_6_4; }
+		public Keyword getRightSquareBracketKeyword_5_4() { return cRightSquareBracketKeyword_5_4; }
 		
 		//END
-		public RuleCall getENDTerminalRuleCall_7() { return cENDTerminalRuleCall_7; }
+		public RuleCall getENDTerminalRuleCall_6() { return cENDTerminalRuleCall_6; }
 	}
 	
 	
@@ -251,7 +269,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//CatkinPackage returns CatkinPackage:
 	//    {CatkinPackage}
-	//    name=RosNames':'
+	//    (name=RosNames':' | name=AddedKeywordName)
 	//    BEGIN
 	//        ('fromGitRepo:' fromGitRepo=EString)?
 	//        ('artifacts:'
@@ -283,7 +301,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//Package_Impl returns Package:
 	//    {Package}
-	//    name=RosNames':'
+	//    (name=RosNames':' | name=AddedKeywordName)
 	//    BEGIN
 	//     ('fromGitRepo:' fromGitRepo=EString)?
 	//     ('dependencies:' '[' dependency+=Dependency (',' dependency+=Dependency)* ']' )?
@@ -399,13 +417,20 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	/////////////////////
-	////ARTIFACT AND NODE
+	////ARTIFACT, NODE AND PLUGINS
 	/////////////////////
+	//// An artifact holds a node or plugins, never both. An artifact with plugins is built as a
+	//// shared library.
 	//Artifact returns Artifact:
 	//    {Artifact}
-	//        name=RosNames':'
+	//        (name=RosNames':' | name=AddedKeywordName)
 	//        BEGIN
-	//        (node=Node)?
+	//        (node=Node |
+	//        ('plugins:'
+	//            BEGIN
+	//            plugins+=Plugin*
+	//            END
+	//        ))?
 	//        END;
 	public RosGrammarAccess.ArtifactElements getArtifactAccess() {
 		return gaRos.getArtifactAccess();
@@ -452,7 +477,13 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//        BEGIN
 	//        parameter+=Parameter*
 	//        END
-	//    )
+	//    )|
+	//    ('pluginslots:'
+	//        BEGIN
+	//        pluginSlots+=PluginSlot*
+	//        END
+	//    )|
+	//    (extensions+=ExtensionBlock)
 	//    )*
 	//    ;
 	public RosGrammarAccess.NodeElements getNodeAccess() {
@@ -463,12 +494,165 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getNodeAccess().getRule();
 	}
 	
+	//enum PluginSlotValueFormat returns PluginSlotValueFormat:
+	//    CLASS = 'class' |
+	//    LIBRARY = 'library'
+	//;
+	public RosGrammarAccess.PluginSlotValueFormatElements getPluginSlotValueFormatAccess() {
+		return gaRos.getPluginSlotValueFormatAccess();
+	}
+	
+	public EnumRule getPluginSlotValueFormatRule() {
+		return getPluginSlotValueFormatAccess().getRule();
+	}
+	
+	//Plugin returns Plugin:
+	//    {Plugin}
+	//    (name=RosNames':' | name=AddedKeywordName)
+	//    BEGIN
+	//    'implements:' implements=[PluginBase|QualifiedRef]
+	//    (
+	//    ('publishers:'
+	//        BEGIN
+	//        publisher+=Publisher*
+	//        END
+	//    )|
+	//    ('subscribers:'
+	//        BEGIN
+	//        subscriber+=Subscriber*
+	//        END
+	//    )|
+	//    ('serviceservers:'
+	//        BEGIN
+	//        serviceserver+=ServiceServer*
+	//        END
+	//    )|
+	//    ('serviceclients:'
+	//        BEGIN
+	//        serviceclient+=ServiceClient*
+	//        END
+	//    )|
+	//    ('actionservers:'
+	//        BEGIN
+	//        actionserver+=ActionServer*
+	//        END
+	//    )|
+	//    ('actionclients:'
+	//        BEGIN
+	//        actionclient+=ActionClient*
+	//        END
+	//    )|
+	//    ('parameters:'
+	//        BEGIN
+	//        parameter+=Parameter*
+	//        END
+	//    )|
+	//    (extensions+=ExtensionBlock)
+	//    )*
+	//    END;
+	public RosGrammarAccess.PluginElements getPluginAccess() {
+		return gaRos.getPluginAccess();
+	}
+	
+	public ParserRule getPluginRule() {
+		return getPluginAccess().getRule();
+	}
+	
+	//// A slot owns its parameter. With multiple: true the parameter is a string list and any number
+	//// of plugins may attach; otherwise at most one.
+	//PluginSlot returns PluginSlot:
+	//    {PluginSlot}
+	//    (name=EString':' | name=AddedKeywordName)
+	//    (
+	//    (BEGIN
+	//        (('base:' base=[PluginBase|QualifiedRef]) &
+	//         ('parameter:' parameter=EString) &
+	//         ('format:' valueFormat=PluginSlotValueFormat)? &
+	//         ('multiple:' multiple=boolean0)? &
+	//         ('default:' defaultPlugin=[Plugin|QualifiedRef])?)
+	//    END) |
+	//    ('{'
+	//        'base:' base=[PluginBase|QualifiedRef]
+	//        ','? 'parameter:' parameter=EString
+	//        (','? 'format:' valueFormat=PluginSlotValueFormat)?
+	//        (','? 'multiple:' multiple=boolean0)?
+	//        (','? 'default:' defaultPlugin=[Plugin|QualifiedRef])?
+	//    '}')
+	//    );
+	public RosGrammarAccess.PluginSlotElements getPluginSlotAccess() {
+		return gaRos.getPluginSlotAccess();
+	}
+	
+	public ParserRule getPluginSlotRule() {
+		return getPluginSlotAccess().getRule();
+	}
+	
+	//@Override
+	//AddedKeywordName returns ecore::EString:
+	//    'plugins:' | 'implements:' | 'pluginslots:' | 'base:' | 'parameter:' | 'format:' | 'multiple:';
+	public RosGrammarAccess.AddedKeywordNameElements getAddedKeywordNameAccess() {
+		return gaRos.getAddedKeywordNameAccess();
+	}
+	
+	public ParserRule getAddedKeywordNameRule() {
+		return getAddedKeywordNameAccess().getRule();
+	}
+	
+	//@Override
+	//EString returns ecore::EString:
+	//    STRING | ID | 'class' | 'library';
+	public RosGrammarAccess.EStringElements getEStringAccess() {
+		return gaRos.getEStringAccess();
+	}
+	
+	public ParserRule getEStringRule() {
+		return getEStringAccess().getRule();
+	}
+	
+	//@Override
+	//RosNames returns ecore::EString:
+	//    ROS_CONVENTION_A | ID | 'node' | 'class' | 'library';
+	public RosGrammarAccess.RosNamesElements getRosNamesAccess() {
+		return gaRos.getRosNamesAccess();
+	}
+	
+	public ParserRule getRosNamesRule() {
+		return getRosNamesAccess().getRule();
+	}
+	
+	//@Override
+	//ExtensionKey returns ecore::EString:
+	//    ID | STRING | KEYWORD | 'node' | 'class' | 'library' |
+	//    'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
+	//    'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
+	public RosGrammarAccess.ExtensionKeyElements getExtensionKeyAccess() {
+		return gaRos.getExtensionKeyAccess();
+	}
+	
+	public ParserRule getExtensionKeyRule() {
+		return getExtensionKeyAccess().getRule();
+	}
+	
+	//@Override
+	//ExtensionColonKey returns ecore::EString:
+	//    'ns:' | 'type:' | 'value:' | 'default:' |
+	//    'fromGitRepo:' | 'dependencies:' | 'msgs:' | 'srvs:' | 'actions:' |
+	//    'node:' | 'publishers:' | 'subscribers:' | 'serviceservers:' | 'serviceclients:' |
+	//    'actionservers:' | 'actionclients:' | 'parameters:';
+	public RosGrammarAccess.ExtensionColonKeyElements getExtensionColonKeyAccess() {
+		return gaRos.getExtensionColonKeyAccess();
+	}
+	
+	public ParserRule getExtensionColonKeyRule() {
+		return getExtensionColonKeyAccess().getRule();
+	}
+	
 	/////////////////////
 	////INTERFACES
 	/////////////////////
 	//Publisher returns Publisher:
 	//    {Publisher}
-	//        name=EString':'
+	//        (name=EString':' | name=AddedKeywordName)
 	//        BEGIN
 	//            'type:' message=[TopicSpec|EString]
 	//            ('ns:' namespace=Namespace)?
@@ -484,7 +668,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//Subscriber returns Subscriber:
 	//    {Subscriber}
-	//        name=EString':'
+	//        (name=EString':' | name=AddedKeywordName)
 	//        BEGIN
 	//            'type:' message=[TopicSpec|EString]
 	//            ('ns:' namespace=Namespace)?
@@ -500,7 +684,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//ServiceServer returns ServiceServer:
 	//    {ServiceServer}
-	//        name=EString':'
+	//        (name=EString':' | name=AddedKeywordName)
 	//        BEGIN
 	//            'type:' service=[ServiceSpec|EString]
 	//            ('ns:' namespace=Namespace)?
@@ -516,7 +700,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//ServiceClient returns ServiceClient:
 	//    {ServiceClient}
-	//        name=EString':'
+	//        (name=EString':' | name=AddedKeywordName)
 	//        BEGIN
 	//            'type:' service=[ServiceSpec|EString]
 	//            ('ns:' namespace=Namespace)?
@@ -532,7 +716,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//ActionServer returns ActionServer:
 	//    {ActionServer}
-	//        name=EString':'
+	//        (name=EString':' | name=AddedKeywordName)
 	//        BEGIN
 	//            'type:' action=[ActionSpec|EString]
 	//            ('ns:' namespace=Namespace)?
@@ -548,7 +732,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//ActionClient returns ActionClient:
 	//    {ActionClient}
-	//        name=EString':'
+	//        (name=EString':' | name=AddedKeywordName)
 	//        BEGIN
 	//            'type:' action=[ActionSpec|EString]
 	//            ('ns:' namespace=Namespace)?
@@ -672,7 +856,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//Parameter returns Parameter:
 	//    {Parameter}
-	//        name=EString':'
+	//        (name=EString':' | name=AddedKeywordName)
 	//        BEGIN
 	//        ('ns:' namespace=Namespace)?
 	//        'type:' type=ParameterType
@@ -941,7 +1125,7 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//ParameterStructMember returns ParameterStructMember:
-	//    name=EString':'value=ParameterValue;
+	//    (name=EString':' | name=AddedKeywordName) value=ParameterValue;
 	public BasicsGrammarAccess.ParameterStructMemberElements getParameterStructMemberAccess() {
 		return gaBasics.getParameterStructMemberAccess();
 	}
@@ -1527,28 +1711,17 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return gaBasics.getSL_COMMENTRule();
 	}
 	
-	/////////////////////
-	//// CONVENTIONS AND NAMES
-	/////////////////////
-	//EString returns ecore::EString:
-	//    STRING | ID;
-	public BasicsGrammarAccess.EStringElements getEStringAccess() {
-		return gaBasics.getEStringAccess();
+	//// A reference to a plugin base or plugin by its qualified name, package.Name, quoted or not.
+	//// The DOUBLE terminal lexes ".E" or ".e" (an exponent without digits), so a segment that starts
+	//// with E or e arrives as DOUBLE followed by the rest of the name.
+	//QualifiedRef returns ecore::EString:
+	//    STRING | ID (('.' ID) | (DOUBLE ID?))*;
+	public BasicsGrammarAccess.QualifiedRefElements getQualifiedRefAccess() {
+		return gaBasics.getQualifiedRefAccess();
 	}
 	
-	public ParserRule getEStringRule() {
-		return getEStringAccess().getRule();
-	}
-	
-	//RosNames returns ecore::EString:
-	//    ROS_CONVENTION_A | ID | 'node'
-	//;
-	public BasicsGrammarAccess.RosNamesElements getRosNamesAccess() {
-		return gaBasics.getRosNamesAccess();
-	}
-	
-	public ParserRule getRosNamesRule() {
-		return getRosNamesAccess().getRule();
+	public ParserRule getQualifiedRefRule() {
+		return getQualifiedRefAccess().getRule();
 	}
 	
 	//terminal ROS_CONVENTION_A:
@@ -1561,6 +1734,128 @@ public class Ros1GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    ( ('/' STRING ) | ( STRING '/' ) | ('~' STRING ) )* ;
 	public TerminalRule getROS_CONVENTION_PARAMRule() {
 		return gaBasics.getROS_CONVENTION_PARAMRule();
+	}
+	
+	/////////////////////
+	//// EXTENSION BLOCKS
+	/////////////////////
+	//ExtensionBlock returns ExtensionBlock:
+	//    {ExtensionBlock}
+	//    '@' name=ExtensionBlockName ':'
+	//    (
+	//        (BEGIN entries+=ExtensionEntry+ END) |
+	//        ('{' (entries+=ExtensionEntry (','? entries+=ExtensionEntry)*)? '}')
+	//    )?;
+	public BasicsGrammarAccess.ExtensionBlockElements getExtensionBlockAccess() {
+		return gaBasics.getExtensionBlockAccess();
+	}
+	
+	public ParserRule getExtensionBlockRule() {
+		return getExtensionBlockAccess().getRule();
+	}
+	
+	//ExtensionBlockName returns ecore::EString:
+	//    ID ('.' ID)*;
+	public BasicsGrammarAccess.ExtensionBlockNameElements getExtensionBlockNameAccess() {
+		return gaBasics.getExtensionBlockNameAccess();
+	}
+	
+	public ParserRule getExtensionBlockNameRule() {
+		return getExtensionBlockNameAccess().getRule();
+	}
+	
+	//ExtensionEntry returns ExtensionEntry:
+	//    {ExtensionEntry}
+	//    (key=ExtensionKey ':' | key=ExtensionColonKey | key=AddedKeywordName)
+	//    value=ExtensionValue;
+	public BasicsGrammarAccess.ExtensionEntryElements getExtensionEntryAccess() {
+		return gaBasics.getExtensionEntryAccess();
+	}
+	
+	public ParserRule getExtensionEntryRule() {
+		return getExtensionEntryAccess().getRule();
+	}
+	
+	//ExtensionValue returns ExtensionValue:
+	//    ExtensionListValue |
+	//    ExtensionBraceMapValue |
+	//    ExtensionIndentedMapValue |
+	//    ExtensionRefValue |
+	//    ExtensionScalarValue;
+	public BasicsGrammarAccess.ExtensionValueElements getExtensionValueAccess() {
+		return gaBasics.getExtensionValueAccess();
+	}
+	
+	public ParserRule getExtensionValueRule() {
+		return getExtensionValueAccess().getRule();
+	}
+	
+	//// "[]" is a keyword (ArraySpecRef), so the lexer reads an empty list written without a space as
+	//// that one token; accept it as an empty list.
+	//ExtensionListValue returns ExtensionListValue:
+	//    {ExtensionListValue}
+	//    ('[]' | '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']');
+	public BasicsGrammarAccess.ExtensionListValueElements getExtensionListValueAccess() {
+		return gaBasics.getExtensionListValueAccess();
+	}
+	
+	public ParserRule getExtensionListValueRule() {
+		return getExtensionListValueAccess().getRule();
+	}
+	
+	//ExtensionBraceMapValue returns ExtensionMapValue:
+	//    {ExtensionMapValue}
+	//    '{' (entries+=ExtensionEntry (','? entries+=ExtensionEntry)*)? '}';
+	public BasicsGrammarAccess.ExtensionBraceMapValueElements getExtensionBraceMapValueAccess() {
+		return gaBasics.getExtensionBraceMapValueAccess();
+	}
+	
+	public ParserRule getExtensionBraceMapValueRule() {
+		return getExtensionBraceMapValueAccess().getRule();
+	}
+	
+	//ExtensionIndentedMapValue returns ExtensionMapValue:
+	//    {ExtensionMapValue}
+	//    BEGIN entries+=ExtensionEntry+ END;
+	public BasicsGrammarAccess.ExtensionIndentedMapValueElements getExtensionIndentedMapValueAccess() {
+		return gaBasics.getExtensionIndentedMapValueAccess();
+	}
+	
+	public ParserRule getExtensionIndentedMapValueRule() {
+		return getExtensionIndentedMapValueAccess().getRule();
+	}
+	
+	//ExtensionRefValue returns ExtensionRefValue:
+	//    {ExtensionRefValue}
+	//    refKind=('pub->' | 'sub->' | 'ss->' | 'sc->' | 'as->' | 'ac->' | 'param->')
+	//    target=[ecore::EObject|EString];
+	public BasicsGrammarAccess.ExtensionRefValueElements getExtensionRefValueAccess() {
+		return gaBasics.getExtensionRefValueAccess();
+	}
+	
+	public ParserRule getExtensionRefValueRule() {
+		return getExtensionRefValueAccess().getRule();
+	}
+	
+	//ExtensionScalarValue returns ExtensionScalarValue:
+	//    {ExtensionScalarValue}
+	//    value=ExtensionScalarLiteral;
+	public BasicsGrammarAccess.ExtensionScalarValueElements getExtensionScalarValueAccess() {
+		return gaBasics.getExtensionScalarValueAccess();
+	}
+	
+	public ParserRule getExtensionScalarValueRule() {
+		return getExtensionScalarValueAccess().getRule();
+	}
+	
+	//ExtensionScalarLiteral returns ecore::EString:
+	//    BOOLEAN | DOUBLE | DECINT | INT | ExtensionKey;
+	public BasicsGrammarAccess.ExtensionScalarLiteralElements getExtensionScalarLiteralAccess() {
+		return gaBasics.getExtensionScalarLiteralAccess();
+	}
+	
+	public ParserRule getExtensionScalarLiteralRule() {
+		return getExtensionScalarLiteralAccess().getRule();
 	}
 	
 	//terminal ID: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;

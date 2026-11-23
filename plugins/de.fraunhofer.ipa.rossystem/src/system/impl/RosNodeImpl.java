@@ -23,6 +23,7 @@ import system.RosInterface;
 import system.RosNode;
 import system.RosParameter;
 import system.RossystemPackage;
+import system.SlotAttachment;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,346 +38,383 @@ import system.RossystemPackage;
  *   <li>{@link system.impl.RosNodeImpl#getFrom <em>From</em>}</li>
  *   <li>{@link system.impl.RosNodeImpl#getRosinterfaces <em>Rosinterfaces</em>}</li>
  *   <li>{@link system.impl.RosNodeImpl#getRosparameters <em>Rosparameters</em>}</li>
+ *   <li>{@link system.impl.RosNodeImpl#getSlots <em>Slots</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class RosNodeImpl extends ComponentImpl implements RosNode {
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getNamespace() <em>Namespace</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getNamespace() <em>Namespace</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getNamespace()
-     * @generated
-     * @ordered
-     */
+	 * @see #getNamespace()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String NAMESPACE_EDEFAULT = null;
 
                 /**
-     * The cached value of the '{@link #getNamespace() <em>Namespace</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getNamespace() <em>Namespace</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getNamespace()
-     * @generated
-     * @ordered
-     */
+	 * @see #getNamespace()
+	 * @generated
+	 * @ordered
+	 */
     protected String namespace = NAMESPACE_EDEFAULT;
 
                 /**
-     * The cached value of the '{@link #getFrom() <em>From</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getFrom() <em>From</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getFrom()
-     * @generated
-     * @ordered
-     */
+	 * @see #getFrom()
+	 * @generated
+	 * @ordered
+	 */
     protected Node from;
 
     /**
-     * The cached value of the '{@link #getRosinterfaces() <em>Rosinterfaces</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRosinterfaces() <em>Rosinterfaces</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getRosinterfaces()
-     * @generated
-     * @ordered
-     */
+	 * @see #getRosinterfaces()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<RosInterface> rosinterfaces;
 
     /**
-     * The cached value of the '{@link #getRosparameters() <em>Rosparameters</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRosparameters() <em>Rosparameters</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getRosparameters()
-     * @generated
-     * @ordered
-     */
+	 * @see #getRosparameters()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<RosParameter> rosparameters;
 
     /**
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getSlots() <em>Slots</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSlots()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<SlotAttachment> slots;
+
+				/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RosNodeImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RossystemPackage.Literals.ROS_NODE;
-    }
+		return RossystemPackage.Literals.ROS_NODE;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String getName() {
-        return name;
-    }
+		return name;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setName(String newName) {
-        String oldName = name;
-        name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.ROS_NODE__NAME, oldName, name));
-    }
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.ROS_NODE__NAME, oldName, name));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String getNamespace() {
-        return namespace;
-    }
+		return namespace;
+	}
 
                 /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setNamespace(String newNamespace) {
-        String oldNamespace = namespace;
-        namespace = newNamespace;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.ROS_NODE__NAMESPACE, oldNamespace, namespace));
-    }
+		String oldNamespace = namespace;
+		namespace = newNamespace;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.ROS_NODE__NAMESPACE, oldNamespace, namespace));
+	}
 
                 /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Node getFrom() {
-        if (from != null && from.eIsProxy()) {
-            InternalEObject oldFrom = (InternalEObject)from;
-            from = (Node)eResolveProxy(oldFrom);
-            if (from != oldFrom) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RossystemPackage.ROS_NODE__FROM, oldFrom, from));
-            }
-        }
-        return from;
-    }
+		if (from != null && from.eIsProxy()) {
+			InternalEObject oldFrom = (InternalEObject)from;
+			from = (Node)eResolveProxy(oldFrom);
+			if (from != oldFrom) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RossystemPackage.ROS_NODE__FROM, oldFrom, from));
+			}
+		}
+		return from;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Node basicGetFrom() {
-        return from;
-    }
+		return from;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setFrom(Node newFrom) {
-        Node oldFrom = from;
-        from = newFrom;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.ROS_NODE__FROM, oldFrom, from));
-    }
+		Node oldFrom = from;
+		from = newFrom;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.ROS_NODE__FROM, oldFrom, from));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EList<RosInterface> getRosinterfaces() {
-        if (rosinterfaces == null) {
-            rosinterfaces = new EObjectContainmentEList<RosInterface>(RosInterface.class, this, RossystemPackage.ROS_NODE__ROSINTERFACES);
-        }
-        return rosinterfaces;
-    }
+		if (rosinterfaces == null) {
+			rosinterfaces = new EObjectContainmentEList<RosInterface>(RosInterface.class, this, RossystemPackage.ROS_NODE__ROSINTERFACES);
+		}
+		return rosinterfaces;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EList<RosParameter> getRosparameters() {
-        if (rosparameters == null) {
-            rosparameters = new EObjectContainmentEList<RosParameter>(RosParameter.class, this, RossystemPackage.ROS_NODE__ROSPARAMETERS);
-        }
-        return rosparameters;
-    }
+		if (rosparameters == null) {
+			rosparameters = new EObjectContainmentEList<RosParameter>(RosParameter.class, this, RossystemPackage.ROS_NODE__ROSPARAMETERS);
+		}
+		return rosparameters;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<SlotAttachment> getSlots() {
+		if (slots == null) {
+			slots = new EObjectContainmentEList<SlotAttachment>(SlotAttachment.class, this, RossystemPackage.ROS_NODE__SLOTS);
+		}
+		return slots;
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case RossystemPackage.ROS_NODE__ROSINTERFACES:
-                return ((InternalEList<?>)getRosinterfaces()).basicRemove(otherEnd, msgs);
-            case RossystemPackage.ROS_NODE__ROSPARAMETERS:
-                return ((InternalEList<?>)getRosparameters()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_NODE__ROSINTERFACES:
+				return ((InternalEList<?>)getRosinterfaces()).basicRemove(otherEnd, msgs);
+			case RossystemPackage.ROS_NODE__ROSPARAMETERS:
+				return ((InternalEList<?>)getRosparameters()).basicRemove(otherEnd, msgs);
+			case RossystemPackage.ROS_NODE__SLOTS:
+				return ((InternalEList<?>)getSlots()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case RossystemPackage.ROS_NODE__NAME:
-                return getName();
-            case RossystemPackage.ROS_NODE__NAMESPACE:
-                return getNamespace();
-            case RossystemPackage.ROS_NODE__FROM:
-                if (resolve) return getFrom();
-                return basicGetFrom();
-            case RossystemPackage.ROS_NODE__ROSINTERFACES:
-                return getRosinterfaces();
-            case RossystemPackage.ROS_NODE__ROSPARAMETERS:
-                return getRosparameters();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_NODE__NAME:
+				return getName();
+			case RossystemPackage.ROS_NODE__NAMESPACE:
+				return getNamespace();
+			case RossystemPackage.ROS_NODE__FROM:
+				if (resolve) return getFrom();
+				return basicGetFrom();
+			case RossystemPackage.ROS_NODE__ROSINTERFACES:
+				return getRosinterfaces();
+			case RossystemPackage.ROS_NODE__ROSPARAMETERS:
+				return getRosparameters();
+			case RossystemPackage.ROS_NODE__SLOTS:
+				return getSlots();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case RossystemPackage.ROS_NODE__NAME:
-                setName((String)newValue);
-                return;
-            case RossystemPackage.ROS_NODE__NAMESPACE:
-                setNamespace((String)newValue);
-                return;
-            case RossystemPackage.ROS_NODE__FROM:
-                setFrom((Node)newValue);
-                return;
-            case RossystemPackage.ROS_NODE__ROSINTERFACES:
-                getRosinterfaces().clear();
-                getRosinterfaces().addAll((Collection<? extends RosInterface>)newValue);
-                return;
-            case RossystemPackage.ROS_NODE__ROSPARAMETERS:
-                getRosparameters().clear();
-                getRosparameters().addAll((Collection<? extends RosParameter>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_NODE__NAME:
+				setName((String)newValue);
+				return;
+			case RossystemPackage.ROS_NODE__NAMESPACE:
+				setNamespace((String)newValue);
+				return;
+			case RossystemPackage.ROS_NODE__FROM:
+				setFrom((Node)newValue);
+				return;
+			case RossystemPackage.ROS_NODE__ROSINTERFACES:
+				getRosinterfaces().clear();
+				getRosinterfaces().addAll((Collection<? extends RosInterface>)newValue);
+				return;
+			case RossystemPackage.ROS_NODE__ROSPARAMETERS:
+				getRosparameters().clear();
+				getRosparameters().addAll((Collection<? extends RosParameter>)newValue);
+				return;
+			case RossystemPackage.ROS_NODE__SLOTS:
+				getSlots().clear();
+				getSlots().addAll((Collection<? extends SlotAttachment>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.ROS_NODE__NAME:
-                setName(NAME_EDEFAULT);
-                return;
-            case RossystemPackage.ROS_NODE__NAMESPACE:
-                setNamespace(NAMESPACE_EDEFAULT);
-                return;
-            case RossystemPackage.ROS_NODE__FROM:
-                setFrom((Node)null);
-                return;
-            case RossystemPackage.ROS_NODE__ROSINTERFACES:
-                getRosinterfaces().clear();
-                return;
-            case RossystemPackage.ROS_NODE__ROSPARAMETERS:
-                getRosparameters().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_NODE__NAME:
+				setName(NAME_EDEFAULT);
+				return;
+			case RossystemPackage.ROS_NODE__NAMESPACE:
+				setNamespace(NAMESPACE_EDEFAULT);
+				return;
+			case RossystemPackage.ROS_NODE__FROM:
+				setFrom((Node)null);
+				return;
+			case RossystemPackage.ROS_NODE__ROSINTERFACES:
+				getRosinterfaces().clear();
+				return;
+			case RossystemPackage.ROS_NODE__ROSPARAMETERS:
+				getRosparameters().clear();
+				return;
+			case RossystemPackage.ROS_NODE__SLOTS:
+				getSlots().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.ROS_NODE__NAME:
-                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-            case RossystemPackage.ROS_NODE__NAMESPACE:
-                return NAMESPACE_EDEFAULT == null ? namespace != null : !NAMESPACE_EDEFAULT.equals(namespace);
-            case RossystemPackage.ROS_NODE__FROM:
-                return from != null;
-            case RossystemPackage.ROS_NODE__ROSINTERFACES:
-                return rosinterfaces != null && !rosinterfaces.isEmpty();
-            case RossystemPackage.ROS_NODE__ROSPARAMETERS:
-                return rosparameters != null && !rosparameters.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.ROS_NODE__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case RossystemPackage.ROS_NODE__NAMESPACE:
+				return NAMESPACE_EDEFAULT == null ? namespace != null : !NAMESPACE_EDEFAULT.equals(namespace);
+			case RossystemPackage.ROS_NODE__FROM:
+				return from != null;
+			case RossystemPackage.ROS_NODE__ROSINTERFACES:
+				return rosinterfaces != null && !rosinterfaces.isEmpty();
+			case RossystemPackage.ROS_NODE__ROSPARAMETERS:
+				return rosparameters != null && !rosparameters.isEmpty();
+			case RossystemPackage.ROS_NODE__SLOTS:
+				return slots != null && !slots.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuilder result = new StringBuilder(super.toString());
-        result.append(" (name: ");
-        result.append(name);
-        result.append(", namespace: ");
-        result.append(namespace);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (name: ");
+		result.append(name);
+		result.append(", namespace: ");
+		result.append(namespace);
+		result.append(')');
+		return result.toString();
+	}
 
 } //RosNodeImpl

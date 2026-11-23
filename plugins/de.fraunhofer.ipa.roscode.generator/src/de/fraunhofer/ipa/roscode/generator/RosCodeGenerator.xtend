@@ -65,10 +65,11 @@ class RosCodeGenerator extends AbstractGenerator {
                 fsa.generateFile(pkg.getName().toLowerCase+"/package.xml",pkg.compile_package_xml)
                 fsa.generateFile(pkg.getName().toLowerCase+"/CMakeLists.txt",pkg.compile_CMakeLists)
                  for (art : pkg.artifact){
-                    node = art.node
-                    fsa.generateFile(pkg.getName().toLowerCase+"/src/"+node.name+".cpp",node.compile_node)
-
+                    if (art.node !== null) {
+                        node = art.node
+                        fsa.generateFile(pkg.getName().toLowerCase+"/src/"+node.name+".cpp",node.compile_node)
                     }
+                 }
                  }
                 }
         }
@@ -81,7 +82,7 @@ def compile_package_xml(Package pkg)'''
 <package format="3">
  <name>«pkg.name»</name>
  <version>0.0.0</version>
- <description>This package contains the implementation of the node «pkg.artifact.get(0).node.name»</description>
+ <description>This package contains the implementation of the node «pkg.artifact.map[node].filterNull.head?.name ?: pkg.name»</description>
   <maintainer email="jane.doe@example.com">Jane Doe</maintainer>
   <author email="jane.doe@example.com">Jane Doe</author>
   <license>Apache 2.0</license>
@@ -112,13 +113,15 @@ catkin_package(
 include_directories(${catkin_INCLUDE_DIRS})
 
 «FOR art:pkg.artifact»
+«IF art.node !== null»
 add_executable(«art.name» src/«art.node.name».cpp)
 add_dependencies(«art.name» ${catkin_EXPORTED_TARGETS})
 target_link_libraries(«art.name» ${catkin_LIBRARIES})
+«ENDIF»
 
 «ENDFOR»
 ### Install ###
-install(TARGETS «FOR art:pkg.artifact»«art.name»«ENDFOR»
+install(TARGETS «FOR art:pkg.artifact»«IF art.node !== null»«art.name»«ENDIF»«ENDFOR»
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -198,11 +201,13 @@ def compile(ServiceClient srvclient)
     set=new HashSet<String>()
     PkgsList = new ArrayList()
     for (art:pkg.artifact){
-        node=art.node
-        for (pub:node.publisher){set.add(pub.message.package.name)}
-        for (sub:node.subscriber){set.add(sub.message.package.name)}
-        for (srvserver:node.serviceserver){set.add(srvserver.service.package.name)}
-        for (srvclient:node.serviceclient){set.add(srvclient.service.package.name)}
+        if (art.node !== null) {
+            node=art.node
+            for (pub:node.publisher){set.add(pub.message.package.name)}
+            for (sub:node.subscriber){set.add(sub.message.package.name)}
+            for (srvserver:node.serviceserver){set.add(srvserver.service.package.name)}
+            for (srvclient:node.serviceclient){set.add(srvclient.service.package.name)}
+        }
     }
     PkgsList.addAll(set)
     return PkgsList

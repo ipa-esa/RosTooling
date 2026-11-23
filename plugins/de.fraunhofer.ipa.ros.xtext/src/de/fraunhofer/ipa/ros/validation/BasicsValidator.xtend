@@ -3,6 +3,18 @@
  */
 package de.fraunhofer.ipa.ros.validation
 
+import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper
+import de.fraunhofer.ipa.ros.plugin.spi.HookLocation
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry
+import de.fraunhofer.ipa.ros.plugin.spi.ValidationContext
+import de.fraunhofer.ipa.ros.plugin.spi.ValidationIssue
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.validation.Check
+import ros.ExtensionBlock
+import ros.RosPackage
 
 /**
  * This class contains custom validation rules.
@@ -11,15 +23,88 @@ package de.fraunhofer.ipa.ros.validation
  */
 class BasicsValidator extends AbstractBasicsValidator {
 
-//  public static val INVALID_NAME = 'invalidName'
-//
-//  @Check
-//  def checkGreetingStartsWithCapital(Greeting greeting) {
-//      if (!Character.isUpperCase(greeting.name.charAt(0))) {
-//          warning('Name should start with a capital',
-//                  BasicsPackage.Literals.GREETING__NAME,
-//                  INVALID_NAME)
-//      }
-//  }
+    public static val UNKNOWN_EXTENSION_BLOCK = 'extension.unknownBlock'
+    public static val COLLIDING_EXTENSION_BLOCK = 'extension.blockCollision'
+
+    @Check
+    def void checkExtensionBlock(ExtensionBlock block) {
+        if (block === null || block.name === null || block.name.trim.empty) {
+            return
+        }
+        if (PluginRegistry.INSTANCE.isCollidingBlockName(block.name)) {
+            error(
+                "Extension block '@" + block.name + "' is claimed by multiple active plugins ("
+                    + PluginRegistry.INSTANCE.collisionOwners(block.name).join(", ")
+                    + "); qualify as '@<pluginId>." + block.name + "'",
+                block,
+                RosPackage.Literals.EXTENSION_BLOCK__NAME,
+                COLLIDING_EXTENSION_BLOCK
+            )
+            return
+        }
+        val registered = PluginRegistry.INSTANCE.resolveBlock(block.name)
+        if (registered === null) {
+            warning(
+                "Unknown extension block '@" + block.name + "' (no active plugin registered for this block)",
+                block,
+                RosPackage.Literals.EXTENSION_BLOCK__NAME,
+                UNKNOWN_EXTENSION_BLOCK
+            )
+            return
+        }
+
+        val schemaIssues = ExtensionSchemaMapper.validateBlock(block, registered.descriptor(), block.eContainer)
+        var hasSchemaError = false
+        for (issue : schemaIssues) {
+            reportIssue(issue, block)
+            if (issue.severity == ValidationIssue.Severity.ERROR) {
+                hasSchemaError = true
+            }
+        }
+        if (!hasSchemaError) {
+            val typedBlock = ExtensionSchemaMapper.toTypedObject(block, registered.descriptor())
+            val ctx = new ValidationContext(
+                block.eContainer,
+                block,
+                typedBlock,
+                HookLocation.fromElement(block.eContainer),
+                block.eResource,
+                resolveWorkspaceDir(block)
+            )
+            registered.plugin().validate(ctx)
+            for (issue : ctx.issues) {
+                reportIssue(issue, block)
+            }
+        }
+    }
+
+    def protected void reportIssue(ValidationIssue issue, EObject fallbackSource) {
+        val targetObj = issue.source !== null ? issue.source : fallbackSource
+        switch (issue.severity) {
+            case ERROR: error(issue.message, targetObj, issue.feature, issue.code)
+            case WARNING: warning(issue.message, targetObj, issue.feature, issue.code)
+            case INFO: info(issue.message, targetObj, issue.feature, issue.code)
+        }
+    }
+
+    def protected Path resolveWorkspaceDir(EObject obj) {
+        val res = obj?.eResource
+        val uri = res?.URI
+        if (uri !== null && uri.isFile) {
+            var dir = Paths.get(uri.toFileString).parent
+            var probe = dir
+            while (probe !== null) {
+                if (probe.fileName !== null && probe.fileName.toString == "src") {
+                    return probe.parent ?: probe
+                }
+                if (Files.exists(probe.resolve("package.xml")) && probe.parent !== null) {
+                    dir = probe.parent
+                }
+                probe = probe.parent
+            }
+            return dir
+        }
+        return null
+    }
 
 }

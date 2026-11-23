@@ -16,22 +16,22 @@ import primitives.bool;
  */
 public class boolImpl extends AbstractTypeImpl implements bool {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected boolImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.BOOL;
-    }
+		return PrimitivesPackage.Literals.BOOL;
+	}
 
 } //boolImpl

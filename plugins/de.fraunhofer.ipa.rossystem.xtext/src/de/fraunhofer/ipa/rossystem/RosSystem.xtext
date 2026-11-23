@@ -11,7 +11,7 @@ System returns System:
 ;
 
 RosSystem returns System:
-    name=EString':'
+    (name=EString':' | name=AddedKeywordName)
     BEGIN
         ('fromFile:' fromFile=EString)?
         (
@@ -40,7 +40,8 @@ RosSystem returns System:
             BEGIN
             connections+=Connection*
             END
-        )
+        ) |
+        (extensions+=ExtensionBlock)
         )*
     END;
 
@@ -50,7 +51,7 @@ SubSystem returns SubSystem:
 
 Process returns Process:
     {Process}
-      name=EString':'
+      (name=EString':' | name=AddedKeywordName)
       BEGIN
       ('nodes:' '['components+=[RosNode|EString] (',' components+=[RosNode|EString])*']')?
       ('threads:'threads=Integer0)?
@@ -59,10 +60,14 @@ Process returns Process:
 
 RosNode returns RosNode:
     {RosNode}
-    name=EString':'
+    (name=EString':' | name=AddedKeywordName)
     BEGIN
     'from:'from=[ros::Node|EString]
     ('namespace:' namespace=EString)?
+    ('slots:'
+        BEGIN
+            slots+=SlotAttachment*
+        END)?
     ('interfaces:'
         BEGIN
             rosinterfaces+=RosInterface*
@@ -71,11 +76,21 @@ RosNode returns RosNode:
         BEGIN
             rosparameters+=RosParameter*
         END)?
+    (extensions+=ExtensionBlock)*
     END
 ;
 
+// Attaches plugins to a slot of the node in from:. The slot name is resolved on that node.
+// "[]" is a keyword (Basics ArraySpecRef), so an empty list written without a space arrives as
+// that one token; accept it as an empty list.
+SlotAttachment returns SlotAttachment:
+    (slot=[ros::PluginSlot|EString] ':' | slot=[ros::PluginSlot|AddedKeywordName])
+    ('[]' | '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']')
+;
+
 RosInterface returns RosInterface:
-    '-'name=EString':' (reference=InterfaceReference)
+    '-'(name=EString':' | name=AddedKeywordName) (reference=InterfaceReference)
+    (BEGIN extensions+=ExtensionBlock+ END)?
 ;
 
 InterfaceReference returns InterfaceReference:
@@ -112,7 +127,7 @@ RosActionClientReference returns RosActionClientReference:
 ;
 
 RosParameter returns RosParameter:
-    '-' name=EString':' from=[ros::Parameter|EString]
+    '-' (name=EString':' | name=AddedKeywordName) from=[ros::Parameter|EString]
     BEGIN
     'value:'value=ParameterValue
     END
@@ -143,6 +158,16 @@ RosServiceConnection returns RosServiceConnection:
 RosActionConnection returns RosActionConnection:
     '-''['from=[ros::ActionServer|EString]','to=[ros::ActionClient|EString]']'
 ;
+
+@Override
+AddedKeywordName returns ecore::EString:
+    'slots:';
+
+@Override
+ExtensionColonKey returns ecore::EString:
+    'ns:' | 'type:' | 'value:' | 'default:' |
+    'fromFile:' | 'subSystems:' | 'processes:' | 'nodes:' | 'parameters:' |
+    'connections:' | 'threads:' | 'from:' | 'namespace:' | 'interfaces:';
 
 
 ///////////////////

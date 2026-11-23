@@ -19,17 +19,33 @@ GlobalNamespace : 'GlobalNamespace';
 
 ParameterAny : 'ParameterAny';
 
+Pluginbases : 'pluginbases:';
+
+Pluginslots : 'pluginslots:';
+
+Implements : 'implements:';
+
+Active_in : 'active_in:';
+
+Lifecycle : 'lifecycle:';
+
+Parameter : 'parameter:';
+
 GraphName : 'GraphName';
 
 Float32_1 : 'float32[]';
 
 Float64_1 : 'float64[]';
 
+Multiple : 'multiple:';
+
 Default : 'default:';
 
 Duration : 'duration';
 
 Feedback : 'feedback';
+
+Plugins : 'plugins:';
 
 String_2 : 'string[]';
 
@@ -47,13 +63,21 @@ Float32 : 'float32';
 
 Float64 : 'float64';
 
+Format : 'format:';
+
+Header_1 : 'header:';
+
 Int16_1 : 'int16[]';
 
 Int32_1 : 'int32[]';
 
 Int64_1 : 'int64[]';
 
+Loader : 'loader:';
+
 Message : 'message';
+
+Param : 'param->';
 
 Service : 'service';
 
@@ -77,9 +101,13 @@ Byte_1 : 'byte[]';
 
 Char_1 : 'char[]';
 
+Class : 'class:';
+
 Int8_1 : 'int8[]';
 
 Result : 'result';
+
+Slots : 'slots:';
 
 String_1 : 'string';
 
@@ -93,11 +121,17 @@ Value_1 : 'value:';
 
 Array : 'Array';
 
+Base : 'base:';
+
 Int16 : 'int16';
 
 Int32 : 'int32';
 
 Int64 : 'int64';
+
+Pub : 'pub->';
+
+Sub : 'sub->';
 
 Type_1 : 'type:';
 
@@ -108,6 +142,10 @@ Value : 'value';
 Date : 'Date';
 
 List : 'List';
+
+Ac : 'ac->';
+
+As : 'as->';
 
 Bool : 'bool';
 
@@ -123,6 +161,10 @@ Name : 'name';
 
 Node : 'node';
 
+Sc : 'sc->';
+
+Ss : 'ss->';
+
 Time : 'time';
 
 Type : 'type';
@@ -135,11 +177,19 @@ LeftSquareBracketRightSquareBracket : '[]';
 
 Comma : ',';
 
+FullStop : '.';
+
 Colon : ':';
+
+CommercialAt : '@';
 
 LeftSquareBracket : '[';
 
 RightSquareBracket : ']';
+
+LeftCurlyBracket : '{';
+
+RightCurlyBracket : '}';
 
 fragment RULE_DIGIT : '0'..'9';
 
@@ -177,7 +227,7 @@ RULE_ROS_CONVENTION_PARAM : ('/' RULE_STRING|RULE_STRING '/'|'~' RULE_STRING)*;
 
 RULE_ID : '^'? ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
-fragment RULE_INT : ('0'..'9')+;
+RULE_INT : ('0'..'9')+;
 
 RULE_STRING : ('"' ('\\' .|~(('\\'|'"')))* '"'|'\'' ('\\' .|~(('\\'|'\'')))* '\'');
 

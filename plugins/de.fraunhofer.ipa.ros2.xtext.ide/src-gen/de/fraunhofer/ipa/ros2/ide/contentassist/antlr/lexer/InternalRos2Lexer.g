@@ -41,6 +41,10 @@ Unconfigured : 'Unconfigured';
 
 FromGitRepo : 'fromGitRepo:';
 
+Pluginbases : 'pluginbases:';
+
+Pluginslots : 'pluginslots:';
+
 Reliability : 'reliability:';
 
 Services_qos : 'services_qos';
@@ -53,6 +57,8 @@ Default_qos : 'default_qos';
 
 Durability : 'durability:';
 
+Implements : 'implements:';
+
 Liveliness : 'liveliness:';
 
 Parameters : 'parameters:';
@@ -64,6 +70,8 @@ Active_in : 'active_in:';
 Artifacts : 'artifacts:';
 
 Lifecycle : 'lifecycle:';
+
+Parameter : 'parameter:';
 
 Sensor_qos : 'sensor_qos';
 
@@ -83,6 +91,8 @@ Keep_last : 'keep_last';
 
 Lifespan : 'lifespan:';
 
+Multiple : 'multiple:';
+
 Inactive : 'Inactive';
 
 Actions : 'actions:';
@@ -98,6 +108,8 @@ History : 'history:';
 Infinite : 'infinite';
 
 Keep_all : 'keep_all';
+
+Plugins : 'plugins:';
 
 Profile : 'profile:';
 
@@ -123,13 +135,23 @@ Float32 : 'float32';
 
 Float64 : 'float64';
 
+Format : 'format:';
+
+Header_1 : 'header:';
+
 Int16_1 : 'int16[]';
 
 Int32_1 : 'int32[]';
 
 Int64_1 : 'int64[]';
 
+Library : 'library';
+
+Loader : 'loader:';
+
 Message : 'message';
+
+Param : 'param->';
 
 Request : 'request';
 
@@ -157,6 +179,8 @@ Byte_1 : 'byte[]';
 
 Char_1 : 'char[]';
 
+Class_1 : 'class:';
+
 Depth : 'depth:';
 
 Int8_1 : 'int8[]';
@@ -177,6 +201,10 @@ Value_1 : 'value:';
 
 Array : 'Array';
 
+Base : 'base:';
+
+Class : 'class';
+
 Int16 : 'int16';
 
 Int32 : 'int32';
@@ -187,7 +215,11 @@ Msgs : 'msgs:';
 
 Node_1 : 'node:';
 
+Pub : 'pub->';
+
 Srvs : 'srvs:';
+
+Sub : 'sub->';
 
 Type_1 : 'type:';
 
@@ -198,6 +230,10 @@ Value : 'value';
 Date : 'Date';
 
 List : 'List';
+
+Ac : 'ac->';
+
+As : 'as->';
 
 Bool : 'bool';
 
@@ -215,6 +251,10 @@ Node : 'node';
 
 Qos : 'qos:';
 
+Sc : 'sc->';
+
+Ss : 'ss->';
+
 Time : 'time';
 
 Type : 'type';
@@ -227,11 +267,19 @@ LeftSquareBracketRightSquareBracket : '[]';
 
 Comma : ',';
 
+FullStop : '.';
+
 Colon : ':';
+
+CommercialAt : '@';
 
 LeftSquareBracket : '[';
 
 RightSquareBracket : ']';
+
+LeftCurlyBracket : '{';
+
+RightCurlyBracket : '}';
 
 fragment RULE_DIGIT : '0'..'9';
 
@@ -269,7 +317,7 @@ RULE_ROS_CONVENTION_PARAM : ('/' RULE_STRING|RULE_STRING '/'|'~' RULE_STRING)*;
 
 RULE_ID : '^'? ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
-fragment RULE_INT : ('0'..'9')+;
+RULE_INT : ('0'..'9')+;
 
 RULE_STRING : ('"' ('\\' .|~(('\\'|'"')))* '"'|'\'' ('\\' .|~(('\\'|'\'')))* '\'');
 

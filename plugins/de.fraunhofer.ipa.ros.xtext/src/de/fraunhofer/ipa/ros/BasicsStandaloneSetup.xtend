@@ -3,6 +3,10 @@
  */
 package de.fraunhofer.ipa.ros
 
+import com.google.inject.Injector
+import org.eclipse.emf.ecore.EPackage
+import primitives.PrimitivesPackage
+import ros.RosPackage
 
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
@@ -11,5 +15,15 @@ class BasicsStandaloneSetup extends BasicsStandaloneSetupGenerated {
 
     def static void doSetup() {
         new BasicsStandaloneSetup().createInjectorAndDoEMFRegistration()
+    }
+
+    override Injector createInjectorAndDoEMFRegistration() {
+        if (!EPackage.Registry.INSTANCE.containsKey(PrimitivesPackage.eNS_URI)) {
+            EPackage.Registry.INSTANCE.put(PrimitivesPackage.eNS_URI, PrimitivesPackage.eINSTANCE)
+        }
+        if (!EPackage.Registry.INSTANCE.containsKey(RosPackage.eNS_URI)) {
+            EPackage.Registry.INSTANCE.put(RosPackage.eNS_URI, RosPackage.eINSTANCE)
+        }
+        return super.createInjectorAndDoEMFRegistration()
     }
 }

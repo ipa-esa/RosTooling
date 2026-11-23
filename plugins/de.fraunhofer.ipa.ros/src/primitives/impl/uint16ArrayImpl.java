@@ -16,22 +16,22 @@ import primitives.uint16Array;
  */
 public class uint16ArrayImpl extends AbstractTypeImpl implements uint16Array {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint16ArrayImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.UINT16_ARRAY;
-    }
+		return PrimitivesPackage.Literals.UINT16_ARRAY;
+	}
 
 } //uint16ArrayImpl

@@ -3,9 +3,11 @@
  */
 package de.fraunhofer.ipa.ros2.ide
 
-import org.eclipse.xtext.resource.ILocationInFileProvider
-import org.eclipse.xtext.ide.server.commands.IExecutableCommandService
 import de.fraunhofer.ipa.ros.SafeLocationInFileProvider
+import de.fraunhofer.ipa.ros.ide.contentassist.RosExtensionIdeContentProposalProvider
+import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider
+import org.eclipse.xtext.ide.server.commands.IExecutableCommandService
+import org.eclipse.xtext.resource.ILocationInFileProvider
 
 /**
  * Use this class to register ide components.
@@ -17,5 +19,9 @@ class Ros2IdeModule extends AbstractRos2IdeModule {
 
     def Class<? extends IExecutableCommandService> bindIExecutableCommandService() {
         Ros2GeneratorCommandService
+    }
+
+    def Class<? extends IdeContentProposalProvider> bindIdeContentProposalProvider() {
+        return RosExtensionIdeContentProposalProvider
     }
 }

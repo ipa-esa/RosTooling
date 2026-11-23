@@ -2,7 +2,7 @@
  */
 package system;
 
-import org.eclipse.emf.ecore.EObject;
+import ros.Extensible;
 
 /**
  * <!-- begin-user-doc -->
@@ -21,49 +21,49 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface RosInterface extends EObject {
+public interface RosInterface extends Extensible {
     /**
-     * Returns the value of the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Name</em>' attribute.
-     * @see #setName(String)
-     * @see system.RossystemPackage#getRosInterface_Name()
-     * @model required="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see system.RossystemPackage#getRosInterface_Name()
+	 * @model required="true"
+	 * @generated
+	 */
     String getName();
 
     /**
-     * Sets the value of the '{@link system.RosInterface#getName <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link system.RosInterface#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Name</em>' attribute.
-     * @see #getName()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
+	 * @generated
+	 */
     void setName(String value);
 
     /**
-     * Returns the value of the '<em><b>Reference</b></em>' containment reference.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Reference</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Reference</em>' containment reference.
-     * @see #setReference(InterfaceReference)
-     * @see system.RossystemPackage#getRosInterface_Reference()
-     * @model containment="true" required="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Reference</em>' containment reference.
+	 * @see #setReference(InterfaceReference)
+	 * @see system.RossystemPackage#getRosInterface_Reference()
+	 * @model containment="true" required="true"
+	 * @generated
+	 */
     InterfaceReference getReference();
 
     /**
-     * Sets the value of the '{@link system.RosInterface#getReference <em>Reference</em>}' containment reference.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link system.RosInterface#getReference <em>Reference</em>}' containment reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Reference</em>' containment reference.
-     * @see #getReference()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Reference</em>' containment reference.
+	 * @see #getReference()
+	 * @generated
+	 */
     void setReference(InterfaceReference value);
 
 } // RosInterface

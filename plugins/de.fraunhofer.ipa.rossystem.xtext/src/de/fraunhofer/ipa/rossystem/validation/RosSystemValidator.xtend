@@ -3,38 +3,43 @@
  */
 package de.fraunhofer.ipa.rossystem.validation
 
-import org.eclipse.xtext.validation.Check
-import system.Process
-import system.System
-import system.RosNode
-import system.Component
-import system.impl.RosNodeImpl
-import system.Connection
-import system.RosInterface
-import system.impl.ConnectionImpl
-import system.RosConnection
-import system.RosSystemConnection
-import system.impl.RosSystemConnectionImpl
-import java.util.List
-import system.RosPublisherReference
-import system.RosServiceServerReference
-import system.RosServiceClientReference
-import system.RosActionServerReference
-import system.RosSubscriberReference
-import system.RosActionClientReference
-import system.InterfaceReference
-import system.SubSystem
-import system.RossystemFactory
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.util.EcoreUtil
+import de.fraunhofer.ipa.ros.plugin.spi.ExtensionBlockMerger
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry
+import de.fraunhofer.ipa.rossystem.scoping.RosSystemScopeProvider
 import java.util.ArrayList
 import java.util.HashSet
+import java.util.List
 import java.util.Set
-import system.RosParameter
+import java.util.regex.Pattern
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.xtext.validation.Check
+import ros.Node
 import ros.Parameter
 import ros.ParameterString
 import ros.ParameterStringType
-import java.util.regex.Pattern
+import system.Component
+import system.Connection
+import system.InterfaceReference
+import system.Process
+import system.RosActionClientReference
+import system.RosActionServerReference
+import system.RosConnection
+import system.RosInterface
+import system.RosNode
+import system.RosParameter
+import system.RosPublisherReference
+import system.RosServiceClientReference
+import system.RosServiceServerReference
+import system.RosSubscriberReference
+import system.RosSystemConnection
+import system.RossystemFactory
+import system.RossystemPackage
+import system.SubSystem
+import system.System
+import system.impl.ConnectionImpl
+import system.impl.RosNodeImpl
+import system.impl.RosSystemConnectionImpl
 
 /**
  * This class contains custom validation rules.
@@ -123,9 +128,12 @@ class RosSystemValidator extends AbstractRosSystemValidator {
       }
   }
 
+  // A system without fromFile: is valid: the generator then writes its own bringup package.
+  // The null test comes first; the reverse order threw on every such system (Xtext logs and
+  // swallows exceptions thrown inside a check, so nothing showed).
   @Check
   def fromFileHelper(System system ) {
-      if (!system.fromFile.empty && system.fromFile !== null){
+      if (system.fromFile !== null && !system.fromFile.empty){
         if (!system.fromFile.toString.contains("/")){
                 error('Path not valid, the format for the FromFile attribute is: "NameOfThePackage/Path/to/ExecutableLaunchFile.launch.py"'
                     ,null,FROM_FILE_PATH)
@@ -135,98 +143,16 @@ class RosSystemValidator extends AbstractRosSystemValidator {
   
   def List<RosInterface> getAllInterfaces(System system) {
     val List<RosInterface> interfaces = newArrayList
-    if (system === null) {
+    if (system === null || system.components === null) {
         return interfaces
     }
-    if (system.components === null) return interfaces
     for (Component component : system.components) {
         if (component instanceof RosNode) {
             val rosNode = component as RosNode
             if (rosNode.rosinterfaces !== null && !rosNode.rosinterfaces.empty) {
                 interfaces.addAll(rosNode.rosinterfaces)
             } else {
-                var fromNode = rosNode.from
-                if (fromNode !== null && fromNode.eIsProxy) {
-                    fromNode = EcoreUtil.resolve(fromNode, system) as ros.Node
-                }
-                if (fromNode !== null && !fromNode.eIsProxy) {
-                    val existing = newHashSet
-                    for (ex : rosNode.rosinterfaces) {
-                        if (ex.name !== null) existing.add(ex.name)
-                    }
-                    if (fromNode.publisher !== null) {
-                        for (pub : fromNode.publisher) {
-                            if (pub.name !== null && existing.add(pub.name)) {
-                                val iface = RossystemFactory.eINSTANCE.createRosInterface
-                                iface.name = pub.name
-                                val ref = RossystemFactory.eINSTANCE.createRosPublisherReference
-                                ref.from = pub
-                                iface.reference = ref
-                                rosNode.rosinterfaces.add(iface)
-                            }
-                        }
-                    }
-                    if (fromNode.subscriber !== null) {
-                        for (sub : fromNode.subscriber) {
-                            if (sub.name !== null && existing.add(sub.name)) {
-                                val iface = RossystemFactory.eINSTANCE.createRosInterface
-                                iface.name = sub.name
-                                val ref = RossystemFactory.eINSTANCE.createRosSubscriberReference
-                                ref.from = sub
-                                iface.reference = ref
-                                rosNode.rosinterfaces.add(iface)
-                            }
-                        }
-                    }
-                    if (fromNode.serviceserver !== null) {
-                        for (ss : fromNode.serviceserver) {
-                            if (ss.name !== null && existing.add(ss.name)) {
-                                val iface = RossystemFactory.eINSTANCE.createRosInterface
-                                iface.name = ss.name
-                                val ref = RossystemFactory.eINSTANCE.createRosServiceServerReference
-                                ref.from = ss
-                                iface.reference = ref
-                                rosNode.rosinterfaces.add(iface)
-                            }
-                        }
-                    }
-                    if (fromNode.serviceclient !== null) {
-                        for (sc : fromNode.serviceclient) {
-                            if (sc.name !== null && existing.add(sc.name)) {
-                                val iface = RossystemFactory.eINSTANCE.createRosInterface
-                                iface.name = sc.name
-                                val ref = RossystemFactory.eINSTANCE.createRosServiceClientReference
-                                ref.from = sc
-                                iface.reference = ref
-                                rosNode.rosinterfaces.add(iface)
-                            }
-                        }
-                    }
-                    if (fromNode.actionserver !== null) {
-                        for (actServer : fromNode.actionserver) {
-                            if (actServer.name !== null && existing.add(actServer.name)) {
-                                val iface = RossystemFactory.eINSTANCE.createRosInterface
-                                iface.name = actServer.name
-                                val ref = RossystemFactory.eINSTANCE.createRosActionServerReference
-                                ref.from = actServer
-                                iface.reference = ref
-                                rosNode.rosinterfaces.add(iface)
-                            }
-                        }
-                    }
-                    if (fromNode.actionclient !== null) {
-                        for (ac : fromNode.actionclient) {
-                            if (ac.name !== null && existing.add(ac.name)) {
-                                val iface = RossystemFactory.eINSTANCE.createRosInterface
-                                iface.name = ac.name
-                                val ref = RossystemFactory.eINSTANCE.createRosActionClientReference
-                                ref.from = ac
-                                iface.reference = ref
-                                rosNode.rosinterfaces.add(iface)
-                            }
-                        }
-                    }
-                }
+                RosSystemScopeProvider.ensureDefaultInterfacesSynthesized(rosNode, system)
                 interfaces.addAll(rosNode.rosinterfaces)
             }
         } else if (component instanceof SubSystem) {
@@ -240,6 +166,105 @@ class RosSystemValidator extends AbstractRosSystemValidator {
         }
     }
     return interfaces
+  }
+
+  public static val DUPLICATE_INTERFACE_NAME = 'rosnode.duplicateInterfaceName'
+
+  /**
+   * Connections refer to a node's interfaces by name, so two interfaces of one node with the same
+   * name leave the second one unreachable and make a connection silently use the first.
+   */
+  @Check
+  def checkUniqueInterfaceNames(RosNode rosNode) {
+    val seen = newHashSet
+    for (RosInterface iface : rosNode.rosinterfaces) {
+      if (iface.name !== null && !seen.add(iface.name)) {
+        error(
+          "Node '" + rosNode.name + "' declares the interface name '" + iface.name
+            + "' more than once; connections refer to interfaces by name, so give each one its own",
+          iface,
+          RossystemPackage.Literals.ROS_INTERFACE__NAME,
+          DUPLICATE_INTERFACE_NAME
+        )
+      }
+    }
+  }
+
+  public static val INCOMPATIBLE_PLUGIN = 'rosnode.incompatiblePlugin'
+  public static val SLOT_TOO_MANY_PLUGINS = 'rosnode.slotTooManyPlugins'
+  public static val SLOT_DUPLICATE_PLUGIN = 'rosnode.slotDuplicatePlugin'
+  public static val SLOT_ATTACHED_TWICE = 'rosnode.slotAttachedTwice'
+  public static val EXTENSION_MERGE_CONFLICT = 'extension.mergeConflict'
+
+  @Check
+  def void checkRosNodePlugins(RosNode rosNode) {
+    var fromNode = rosNode.from
+    if (fromNode !== null && fromNode.eIsProxy) {
+        fromNode = EcoreUtil.resolve(fromNode, rosNode) as Node
+    }
+    val seenSlots = newHashSet
+    for (attachment : rosNode.slots) {
+        val slot = attachment.slot
+        if (slot !== null && !slot.eIsProxy) {
+            if (!seenSlots.add(slot)) {
+                error(
+                    "Slot '" + slot.name + "' is attached twice on node '" + rosNode.name + "'; list all its plugins in one entry",
+                    attachment,
+                    RossystemPackage.Literals.SLOT_ATTACHMENT__SLOT,
+                    SLOT_ATTACHED_TWICE
+                )
+            }
+            val seenPlugins = newHashSet
+            for (var i = 0; i < attachment.plugins.size; i++) {
+                val plugin = attachment.plugins.get(i)
+                if (plugin !== null && !plugin.eIsProxy && !seenPlugins.add(plugin)) {
+                    error(
+                        "Plugin '" + plugin.name + "' is attached to slot '" + slot.name + "' more than once",
+                        attachment,
+                        RossystemPackage.Literals.SLOT_ATTACHMENT__PLUGINS,
+                        i,
+                        SLOT_DUPLICATE_PLUGIN
+                    )
+                } else if (!slot.multiple && i > 0) {
+                    error(
+                        "Slot '" + slot.name + "' takes one plugin; set 'multiple: true' on the slot to attach several",
+                        attachment,
+                        RossystemPackage.Literals.SLOT_ATTACHMENT__PLUGINS,
+                        i,
+                        SLOT_TOO_MANY_PLUGINS
+                    )
+                }
+            }
+        }
+        if (slot !== null && !slot.eIsProxy && slot.base !== null && !slot.base.eIsProxy) {
+            for (var i = 0; i < attachment.plugins.size; i++) {
+                val plugin = attachment.plugins.get(i)
+                val base = plugin?.implements
+                // Unresolved links are already flagged by the Xtext linker.
+                if (plugin !== null && !plugin.eIsProxy && base !== null && !base.eIsProxy && base !== slot.base) {
+                    error(
+                        "Plugin '" + plugin.name + "' implements '" + base.name + "', but slot '" + slot.name
+                            + "' on host node '" + (if (fromNode !== null && !fromNode.eIsProxy) fromNode.name else "?")
+                            + "' takes '" + slot.base.name + "'",
+                        attachment,
+                        RossystemPackage.Literals.SLOT_ATTACHMENT__PLUGINS,
+                        i,
+                        INCOMPATIBLE_PLUGIN
+                    )
+                }
+            }
+        }
+    }
+
+    if (fromNode !== null && !fromNode.eIsProxy) {
+        for (block : rosNode.extensions) {
+            val desc = PluginRegistry.INSTANCE.blockDescriptor(block.name)
+            val result = ExtensionBlockMerger.mergeWithConflicts(fromNode, rosNode, block.name, desc)
+            for (conflict : result.conflictErrors) {
+                error(conflict, block, null, EXTENSION_MERGE_CONFLICT)
+            }
+        }
+    }
   }
   
 

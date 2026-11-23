@@ -1,10 +1,19 @@
 package de.fraunhofer.ipa.ros.glsp.handlers;
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import de.fraunhofer.ipa.ros.glsp.model.RosDslText;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
+import de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor;
+import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
+import de.fraunhofer.ipa.ros2.ide.RosPluginCommandSupport;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -17,6 +26,9 @@ import primitives.MessagePart;
 import primitives.PrimitivesFactory;
 import ros.ActionSpec;
 import ros.Artifact;
+import ros.Extensible;
+import ros.ExtensionBlock;
+import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.LifecycleState;
 import ros.MessageDefinition;
@@ -25,6 +37,10 @@ import ros.Package;
 import ros.Parameter;
 import ros.ParameterType;
 import ros.ParameterValue;
+import ros.Plugin;
+import ros.PluginBase;
+import ros.PluginSlot;
+import ros.PluginSlotValueFormat;
 import ros.QualityOfService;
 import ros.RosFactory;
 import ros.ServiceSpec;
@@ -69,26 +85,55 @@ public final class RosPackageSetEditor {
             final String val,
             final String valType) {
         if (target instanceof Package pkg) {
-            return applyPackage(state, pkg, prop, key, val);
+            return applyPackage(state, pkg, prop, key, val, valType);
         }
         if (target instanceof Artifact art) {
             if (is(prop, "name", "artifactName")) {
                 art.setName(val);
                 return true;
             }
+            if (is(prop, "addPlugin")) {
+                return applyAddPlugin(art, key, val, valType);
+            }
             if (art.getNode() != null) {
                 return applyNode(state, art.getNode(), prop, key, val, valType);
+            }
+            if (!art.getPlugins().isEmpty()) {
+                return applyPlugin(state, art.getPlugins().get(0), prop, key, val, valType);
             }
             return false;
         }
         if (target instanceof Node node) {
             return applyNode(state, node, prop, key, val, valType);
         }
+        if (target instanceof Plugin pl) {
+            return applyPlugin(state, pl, prop, key, val, valType);
+        }
+        if (target instanceof PluginSlot slot) {
+            boolean applied = applyPluginSlot(slot, prop, val);
+            if (applied && state != null) {
+                state.markDirty(slot, "block");
+            }
+            return applied;
+        }
+        if (target instanceof PluginBase base) {
+            boolean applied = applyPluginBase(base, prop, val);
+            if (applied && state != null) {
+                state.markDirty(base, "block");
+            }
+            return applied;
+        }
         if (target instanceof Parameter param) {
             return applyParameter(state, param, prop, val, valType);
         }
         if (target instanceof InterfaceType iface) {
             return applyInterface(state, iface, prop, key, val);
+        }
+        if (target instanceof Extensible ext) {
+            ResourceSet rs = state != null && state.getSemanticResource() != null
+                    ? state.getSemanticResource().getResourceSet()
+                    : null;
+            return applyExtensibleEdit(ext, prop, key, val, rs);
         }
         if (target instanceof SpecBase spec) {
             return applySpec(state, spec, prop, key, val, valType);
@@ -102,7 +147,7 @@ public final class RosPackageSetEditor {
     // ---------------------------------------------------------------------------------------
 
     private static boolean applyPackage(
-            final RosModelState state, final Package pkg, final String prop, final String key, final String val) {
+            final RosModelState state, final Package pkg, final String prop, final String key, final String val, final String valType) {
         if (is(prop, "name", "packageName")) {
             pkg.setName(val);
             state.markDirty(pkg, "name");
@@ -113,10 +158,55 @@ public final class RosPackageSetEditor {
             String artName = nonBlank(key, uniqueName(namesOf(pkg.getArtifact()), "node"));
             Artifact art = RosFactory.eINSTANCE.createArtifact();
             art.setName(artName);
-            Node node = RosFactory.eINSTANCE.createNode();
-            node.setName(nonBlank(val, artName));
-            art.setNode(node);
+            if (!"library".equalsIgnoreCase(valType)) {
+                Node node = RosFactory.eINSTANCE.createNode();
+                node.setName(nonBlank(val, artName));
+                art.setNode(node);
+            }
             pkg.getArtifact().add(art);
+        } else if (is(prop, "addPlugin")) {
+            String artName = nonBlank(key, "plugin_lib");
+            String plName = nonBlank(key, "Plugin");
+            if (key != null && key.contains("::")) {
+                int idx = key.indexOf("::");
+                artName = key.substring(0, idx).trim();
+                plName = key.substring(idx + 2).trim();
+            }
+            Artifact art = findArtifact(state, pkg, artName);
+            if (art == null) {
+                art = RosFactory.eINSTANCE.createArtifact();
+                art.setName(artName);
+                pkg.getArtifact().add(art);
+            }
+            applyAddPlugin(art, plName, val, valType);
+        } else if (is(prop, "addPluginBase")) {
+            // key = base name, value = {"class", "header", "loader"} (loader defaults to pluginlib)
+            List<String> existing = new ArrayList<>();
+            for (PluginBase b : pkg.getPluginBases()) {
+                existing.add(b.getName());
+            }
+            String name = nonBlank(key, uniqueName(existing, "Base"));
+            if (existing.contains(name)) {
+                return true;
+            }
+            PluginBase base = RosFactory.eINSTANCE.createPluginBase();
+            base.setName(name);
+            base.setLoader(PluginBases.PLUGINLIB);
+            if (val != null && val.trim().startsWith("{")) {
+                try {
+                    JsonObject obj = JsonParser.parseString(val).getAsJsonObject();
+                    base.setClassName(blankToNull(jsonStr(obj, "class", jsonStr(obj, "className", ""))));
+                    base.setHeader(blankToNull(jsonStr(obj, "header", "")));
+                    String loader = jsonStr(obj, "loader", "");
+                    if (!blank(loader)) {
+                        base.setLoader(loader.trim());
+                    }
+                } catch (Exception ignored) {
+                    // Keep the defaults
+                }
+            }
+            pkg.getPluginBases().add(base);
+            state.markDirty(pkg, "pluginBases");
         } else if (is(prop, "duplicateArtifact")) {
             Artifact source = findArtifact(state, pkg, key);
             if (source == null) {
@@ -156,9 +246,7 @@ public final class RosPackageSetEditor {
             final String key,
             final String val,
             final String valType) {
-        if (is(prop, "name", "nodeName")) {
-            node.setName(val);
-        } else if (is(prop, "isLifecycle", "lifecycle")) {
+        if (is(prop, "isLifecycle", "lifecycle")) {
             boolean lc = Boolean.parseBoolean(val == null ? "" : val.trim());
             node.setIsLifecycle(lc);
             state.markDirty(node, "isLifecycle");
@@ -170,6 +258,237 @@ public final class RosPackageSetEditor {
                     }
                 }
             }
+            return true;
+        }
+        if (is(prop, "addPluginSlot")) {
+            PluginSlot slot = RosFactory.eINSTANCE.createPluginSlot();
+            slot.setName(nonBlank(key, uniqueName(namesOfSlots(node), "slot")));
+            String base = nonBlank(val, "");
+            String param = nonBlank(valType, "");
+            String def = "";
+            String formatStr = "";
+            if (val != null && val.trim().startsWith("{")) {
+                try {
+                    JsonObject obj = JsonParser.parseString(val).getAsJsonObject();
+                    base = jsonStr(obj, "base", base);
+                    param = jsonStr(obj, "parameter", param);
+                    def = jsonStr(obj, "default", def);
+                    formatStr = jsonStr(obj, "format", jsonStr(obj, "valueFormat", formatStr));
+                    slot.setMultiple(Boolean.parseBoolean(jsonStr(obj, "multiple", "false")));
+                } catch (Exception ignored) {
+                    // Fall back to literal values
+                }
+            }
+            slot.setBase(blank(base) ? null : PluginRefs.base(node, base));
+            slot.setParameter(param);
+            if ("library".equalsIgnoreCase(formatStr.trim())) {
+                slot.setValueFormat(PluginSlotValueFormat.LIBRARY);
+            }
+            if (!blank(def)) {
+                slot.setDefaultPlugin(PluginRefs.plugin(node, def));
+            }
+            node.getPluginSlots().add(slot);
+            state.markDirty(node, "pluginSlots");
+            return true;
+        }
+        if (is(prop, "setExtensionBlock", "removeExtensionBlock")) {
+            ResourceSet rs = state != null && state.getSemanticResource() != null
+                    ? state.getSemanticResource().getResourceSet()
+                    : null;
+            return applyExtensibleEdit(node, prop, key, val, rs);
+        }
+        return applyHolder(state, node, prop, key, val, valType);
+    }
+
+    /** Applies {@code setExtensionBlock} or {@code removeExtensionBlock} on any {@link Extensible} element. */
+    @SuppressWarnings("unchecked")
+    public static boolean applyExtensibleEdit(
+            final Extensible target,
+            final String prop,
+            final String key,
+            final String val,
+            final ResourceSet rs) {
+        if (target == null) {
+            return false;
+        }
+        if (is(prop, "removeExtensionBlock")) {
+            String blockName = normalizeExtensionBlockName(nonBlank(key, val));
+            if (blockName.isEmpty()) {
+                return true;
+            }
+            target.getExtensions().removeIf(b -> blockName.equals(b.getName()));
+            return true;
+        }
+        if (!is(prop, "setExtensionBlock")) {
+            return false;
+        }
+        String blockName = normalizeExtensionBlockName(key);
+        Map<String, Object> entries = Map.of();
+        if (val != null && !val.isBlank()) {
+            try {
+                JsonElement parsed = JsonParser.parseString(val.trim());
+                if (parsed != null && parsed.isJsonObject()) {
+                    Map<String, Object> rawMap = RosPluginCommandSupport.toJavaMap(parsed.getAsJsonObject());
+                    if (rawMap.containsKey("blockName") && rawMap.get("entries") instanceof Map<?, ?>) {
+                        blockName = normalizeExtensionBlockName(String.valueOf(rawMap.get("blockName")));
+                        entries = (Map<String, Object>) rawMap.get("entries");
+                    } else if (rawMap.containsKey("name") && rawMap.get("entries") instanceof Map<?, ?>) {
+                        blockName = normalizeExtensionBlockName(String.valueOf(rawMap.get("name")));
+                        entries = (Map<String, Object>) rawMap.get("entries");
+                    } else {
+                        entries = rawMap;
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        if (blockName.isEmpty()) {
+            return true;
+        }
+        BlockDescriptor desc = PluginRegistry.INSTANCE.blockDescriptor(blockName);
+        ExtensionBlock replacement = ExtensionSchemaMapper.fromMap(blockName, entries, desc, rs);
+        int existingIdx = -1;
+        for (int i = 0; i < target.getExtensions().size(); i++) {
+            if (blockName.equals(target.getExtensions().get(i).getName())) {
+                existingIdx = i;
+                break;
+            }
+        }
+        if (existingIdx >= 0) {
+            target.getExtensions().set(existingIdx, replacement);
+        } else {
+            target.getExtensions().add(replacement);
+        }
+        return true;
+    }
+
+    private static String normalizeExtensionBlockName(final String raw) {
+        if (raw == null) {
+            return "";
+        }
+        String t = raw.trim();
+        if (t.startsWith("@")) {
+            t = t.substring(1);
+        }
+        if (t.endsWith(":")) {
+            t = t.substring(0, t.length() - 1);
+        }
+        return t.trim();
+    }
+
+    private static boolean applyPluginSlot(final PluginSlot slot, final String prop, final String val) {
+        if (is(prop, "name")) {
+            slot.setName(val == null ? "" : val.trim());
+            return true;
+        }
+        if (is(prop, "base")) {
+            slot.setBase(PluginRefs.base(slot, val));
+            return true;
+        }
+        if (is(prop, "parameter")) {
+            slot.setParameter(val == null ? "" : val.trim());
+            return true;
+        }
+        if (is(prop, "default", "defaultPlugin")) {
+            slot.setDefaultPlugin(PluginRefs.plugin(slot, val));
+            return true;
+        }
+        if (is(prop, "multiple")) {
+            slot.setMultiple(Boolean.parseBoolean(val == null ? "" : val.trim()));
+            return true;
+        }
+        if (is(prop, "format", "valueFormat")) {
+            slot.setValueFormat("library".equalsIgnoreCase(val == null ? "" : val.trim())
+                    ? PluginSlotValueFormat.LIBRARY
+                    : PluginSlotValueFormat.CLASS);
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean applyPluginBase(final PluginBase base, final String prop, final String val) {
+        String v = val == null ? "" : val.trim();
+        if (is(prop, "name")) {
+            base.setName(v);
+        } else if (is(prop, "class", "className")) {
+            base.setClassName(blankToNull(v));
+        } else if (is(prop, "header")) {
+            base.setHeader(blankToNull(v));
+        } else if (is(prop, "loader")) {
+            base.setLoader(v.isEmpty() ? PluginBases.PLUGINLIB : v);
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    private static String blankToNull(final String value) {
+        return value == null || value.isBlank() ? null : value.trim();
+    }
+
+    private static boolean applyPlugin(
+            final RosModelState state,
+            final Plugin plugin,
+            final String prop,
+            final String key,
+            final String val,
+            final String valType) {
+        if (is(prop, "implements")) {
+            plugin.setImplements(PluginRefs.base(plugin, val));
+            if (state != null) {
+                state.markDirty(plugin, "implements");
+            }
+            return true;
+        }
+        if (is(prop, "setExtensionBlock", "removeExtensionBlock")) {
+            ResourceSet rs = state != null && state.getSemanticResource() != null
+                    ? state.getSemanticResource().getResourceSet()
+                    : null;
+            return applyExtensibleEdit(plugin, prop, key, val, rs);
+        }
+        return applyHolder(state, plugin, prop, key, val, valType);
+    }
+
+    private static boolean applyAddPlugin(
+            final Artifact art,
+            final String key,
+            final String val,
+            final String valType) {
+        if (art.getNode() != null) {
+            // An artifact holds a node or plugins, never both.
+            return false;
+        }
+        Plugin pl = RosFactory.eINSTANCE.createPlugin();
+        List<String> existing = new ArrayList<>();
+        for (Plugin p : art.getPlugins()) {
+            existing.add(p.getName());
+        }
+        pl.setName(nonBlank(key, uniqueName(existing, "Plugin")));
+        String impl = val != null ? val.trim() : "";
+        if (val != null && val.trim().startsWith("{")) {
+            try {
+                JsonObject obj = JsonParser.parseString(val).getAsJsonObject();
+                impl = jsonStr(obj, "implements", impl);
+            } catch (Exception ignored) {
+                // Fall back to literal values
+            }
+        }
+        if (!impl.isEmpty()) {
+            pl.setImplements(PluginRefs.base(art, impl));
+        }
+        art.getPlugins().add(pl);
+        return true;
+    }
+
+    private static boolean applyHolder(
+            final RosModelState state,
+            final InterfaceHolder node,
+            final String prop,
+            final String key,
+            final String val,
+            final String valType) {
+        if (is(prop, "name", "nodeName", "pluginName")) {
+            node.setName(val);
         } else if (is(prop, "addInterface")) {
             InterfaceType iface = RosDslText.createInterface(valType);
             if (iface == null) {
@@ -479,26 +798,29 @@ public final class RosPackageSetEditor {
     }
 
     @SuppressWarnings("unchecked")
-    public static EList<InterfaceType> listFor(final Node node, final EObject iface) {
+    public static EList<InterfaceType> listFor(final InterfaceHolder holder, final EObject iface) {
         EStructuralFeature f;
-        if (iface instanceof ros.Publisher) f = ros.RosPackage.Literals.NODE__PUBLISHER;
-        else if (iface instanceof ros.Subscriber) f = ros.RosPackage.Literals.NODE__SUBSCRIBER;
-        else if (iface instanceof ros.ServiceServer) f = ros.RosPackage.Literals.NODE__SERVICESERVER;
-        else if (iface instanceof ros.ServiceClient) f = ros.RosPackage.Literals.NODE__SERVICECLIENT;
-        else if (iface instanceof ros.ActionServer) f = ros.RosPackage.Literals.NODE__ACTIONSERVER;
-        else if (iface instanceof ros.ActionClient) f = ros.RosPackage.Literals.NODE__ACTIONCLIENT;
-        else f = ros.RosPackage.Literals.NODE__PARAMETER;
-        return (EList<InterfaceType>) node.eGet(f);
+        if (iface instanceof ros.Publisher) f = ros.RosPackage.Literals.INTERFACE_HOLDER__PUBLISHER;
+        else if (iface instanceof ros.Subscriber) f = ros.RosPackage.Literals.INTERFACE_HOLDER__SUBSCRIBER;
+        else if (iface instanceof ros.ServiceServer) f = ros.RosPackage.Literals.INTERFACE_HOLDER__SERVICESERVER;
+        else if (iface instanceof ros.ServiceClient) f = ros.RosPackage.Literals.INTERFACE_HOLDER__SERVICECLIENT;
+        else if (iface instanceof ros.ActionServer) f = ros.RosPackage.Literals.INTERFACE_HOLDER__ACTIONSERVER;
+        else if (iface instanceof ros.ActionClient) f = ros.RosPackage.Literals.INTERFACE_HOLDER__ACTIONCLIENT;
+        else f = ros.RosPackage.Literals.INTERFACE_HOLDER__PARAMETER;
+        return (EList<InterfaceType>) holder.eGet(f);
     }
 
-    public static List<InterfaceType> allInterfaces(final Node node) {
+    public static List<InterfaceType> allInterfaces(final InterfaceHolder holder) {
         List<InterfaceType> all = new ArrayList<>();
-        all.addAll(node.getPublisher());
-        all.addAll(node.getSubscriber());
-        all.addAll(node.getServiceserver());
-        all.addAll(node.getServiceclient());
-        all.addAll(node.getActionserver());
-        all.addAll(node.getActionclient());
+        if (holder == null) {
+            return all;
+        }
+        all.addAll(holder.getPublisher());
+        all.addAll(holder.getSubscriber());
+        all.addAll(holder.getServiceserver());
+        all.addAll(holder.getServiceclient());
+        all.addAll(holder.getActionserver());
+        all.addAll(holder.getActionclient());
         return all;
     }
 
@@ -553,12 +875,25 @@ public final class RosPackageSetEditor {
         return names;
     }
 
-    private static List<String> namesOfParams(final Node node) {
+    private static List<String> namesOfParams(final InterfaceHolder node) {
         List<String> names = new ArrayList<>();
         for (Parameter p : node.getParameter()) {
             names.add(p.getName());
         }
         return names;
+    }
+
+    private static List<String> namesOfSlots(final Node node) {
+        List<String> names = new ArrayList<>();
+        for (PluginSlot s : node.getPluginSlots()) {
+            names.add(s.getName());
+        }
+        return names;
+    }
+
+    private static String jsonStr(final JsonObject obj, final String field, final String fallback) {
+        JsonElement el = obj.get(field);
+        return (el != null && el.isJsonPrimitive()) ? el.getAsString() : fallback;
     }
 
     private static String uniqueName(final List<String> existing, final String prefix) {

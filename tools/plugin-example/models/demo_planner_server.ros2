@@ -1,0 +1,13 @@
+demo_planner_server:
+  artifacts:
+    planner_server:
+      node: planner_server
+      pluginslots:
+        planner:
+          base: demo_core.Planner
+          parameter: planner_plugin
+          default: demo_planners.StraightLine
+        critics:
+          base: demo_core.Critic
+          parameter: critic_plugins
+          multiple: true

@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.glsp.model;
 
+import de.fraunhofer.ipa.ros.plugin.spi.ExtensionSchemaMapper;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -20,6 +21,9 @@ import org.eclipse.xtext.resource.XtextResource;
 import ros.ActionClient;
 import ros.ActionServer;
 import ros.Artifact;
+import ros.Extensible;
+import ros.ExtensionBlock;
+import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.Node;
 import ros.Package;
@@ -33,6 +37,8 @@ import ros.ParameterString;
 import ros.ParameterStruct;
 import ros.ParameterStructMember;
 import ros.ParameterValue;
+import ros.Plugin;
+import ros.PluginSlot;
 import ros.Publisher;
 import ros.RosPackage;
 import ros.ServiceClient;
@@ -52,6 +58,7 @@ import system.RosServiceServerReference;
 import system.RosSubscriberReference;
 import system.RosSystemConnection;
 import system.RossystemPackage;
+import system.SlotAttachment;
 
 /**
  * Node-model-guided AST serializer for Xtext RosTooling resources (.rossystem, .ros2, .ros1, .ros).
@@ -227,7 +234,9 @@ public final class RosAstNodeModelSerializer {
                                 || sem instanceof system.Process
                                 || sem instanceof RosInterface
                                 || sem instanceof RosParameter
-                                || sem instanceof RosSystemConnection)
+                                || sem instanceof RosSystemConnection
+                                || sem instanceof SlotAttachment
+                                || sem instanceof ExtensionBlock)
                         && !liveObjects.contains(sem)) {
                     // Skip if an ancestor is already marked for deletion
                     boolean ancestorDeleted = false;
@@ -377,6 +386,10 @@ public final class RosAstNodeModelSerializer {
                 edits.add(new SpanEdit(insertPos, 0, section));
             }
         }
+
+        ICompositeNode sysComp = NodeModelUtils.findActualNodeFor(sys);
+        int sysAnchor = sysComp != null ? findElementBlockEndOffset(text, sysComp) : text.length();
+        collectExtensionBlockEdits(sys, 2, sysAnchor, text, edits);
     }
 
     private static void collectExistingRosNodeEdits(
@@ -398,6 +411,7 @@ public final class RosAstNodeModelSerializer {
                 }
             }
         }
+        collectSlotAttachmentEdits(rosNode, nodeComp, text, edits);
 
         // Check existing RosInterfaces & collect new RosInterfaces. A new interface is only written
         // when a connection uses it: GLSP creates interfaces solely to connect inherited ports, while
@@ -415,6 +429,8 @@ public final class RosAstNodeModelSerializer {
             } else {
                 lastExistingIfComp = ifComp;
                 checkFeatureTokenEdit(ri, RossystemPackage.Literals.ROS_INTERFACE__NAME, ri.getName(), false, text, edits);
+                int ifCol = Math.max(0, firstNonHiddenOffset(ifComp) - lineStartOf(text, firstNonHiddenOffset(ifComp)));
+                collectExtensionBlockEdits(ri, ifCol + 2, findElementBlockEndOffset(text, ifComp), text, edits);
             }
         }
 
@@ -444,7 +460,9 @@ public final class RosAstNodeModelSerializer {
             } else {
                 lastExistingParamComp = paramComp;
                 checkFeatureTokenEdit(rp, RossystemPackage.Literals.ROS_PARAMETER__NAME, rp.getName(), false, text, edits);
-                if (rp.getValue() != null) {
+                if (rp.getValue() instanceof ParameterString ps) {
+                    checkStringLiteralEdit(rp, RossystemPackage.Literals.ROS_PARAMETER__VALUE, ps.getValue(), text, edits);
+                } else if (rp.getValue() != null) {
                     String formattedVal = formatDslParameterValue(rp.getValue());
                     checkFeatureRawSpanEdit(rp, RossystemPackage.Literals.ROS_PARAMETER__VALUE, formattedVal, text, edits);
                 }
@@ -464,6 +482,37 @@ public final class RosAstNodeModelSerializer {
                 String section = "\n      parameters:\n" + stripTrailingNewline(paramBlock.toString());
                 edits.add(new SpanEdit(insertPos, 0, section));
             }
+        }
+
+        int rnCol = Math.max(0, firstNonHiddenOffset(nodeComp) - lineStartOf(text, firstNonHiddenOffset(nodeComp)));
+        collectExtensionBlockEdits(rosNode, rnCol + 2, findElementBlockEndOffset(text, nodeComp), text, edits);
+    }
+
+    static void collectExtensionBlockEdits(
+            final Extensible holder,
+            final int indentCol,
+            final int fallbackAnchor,
+            final String text,
+            final List<SpanEdit> edits) {
+        if (holder == null || holder.getExtensions().isEmpty()) {
+            return;
+        }
+        String indent = " ".repeat(Math.max(0, indentCol));
+        ICompositeNode lastExistingBlock = null;
+        StringBuilder fresh = new StringBuilder();
+        for (ExtensionBlock block : holder.getExtensions()) {
+            ICompositeNode blockComp = NodeModelUtils.findActualNodeFor(block);
+            if (blockComp != null) {
+                lastExistingBlock = blockComp;
+            } else {
+                fresh.append(ExtensionSchemaMapper.renderBlockDsl(block, indent));
+            }
+        }
+        if (fresh.length() > 0) {
+            int anchor = lastExistingBlock != null
+                    ? findElementBlockEndOffset(text, lastExistingBlock)
+                    : fallbackAnchor;
+            edits.add(new SpanEdit(Math.max(0, anchor), 0, "\n" + stripTrailingNewline(fresh.toString())));
         }
     }
 
@@ -611,6 +660,7 @@ public final class RosAstNodeModelSerializer {
                 if (rnComp == null) continue;
                 if (rn.getRosinterfaces().isEmpty()) removeKeywordLine(rn, rnComp, "interfaces:", text, edits);
                 if (rn.getRosparameters().isEmpty()) removeKeywordLine(rn, rnComp, "parameters:", text, edits);
+                if (rn.getSlots().isEmpty()) removeKeywordLine(rn, rnComp, "slots:", text, edits);
             }
         }
     }
@@ -679,6 +729,12 @@ public final class RosAstNodeModelSerializer {
             return;
         }
         String currentRaw = text.substring(start, end);
+        if (isAddedKeywordName(fNode) && currentRaw.endsWith(":")) {
+            // The name lexed as a keyword such as "base:", whose one token includes the colon:
+            // replace only the name and keep the colon.
+            end--;
+            currentRaw = currentRaw.substring(0, currentRaw.length() - 1);
+        }
         boolean wasQuoted = currentRaw.length() >= 2
                 && ((currentRaw.startsWith("\"") && currentRaw.endsWith("\""))
                         || (currentRaw.startsWith("'") && currentRaw.endsWith("'")));
@@ -690,6 +746,12 @@ public final class RosAstNodeModelSerializer {
         char quoteChar = wasQuoted && currentRaw.startsWith("'") ? '\'' : '"';
         String replacement = needsQuotes ? quoteChar + newValue + quoteChar : newValue;
         edits.add(new SpanEdit(start, end - start, replacement));
+    }
+
+    /** Whether {@code node} is a name parsed by the AddedKeywordName rule (a keyword token ending in ':'). */
+    static boolean isAddedKeywordName(final INode node) {
+        return node.getGrammarElement() instanceof org.eclipse.xtext.RuleCall call
+                && call.getRule() != null && "AddedKeywordName".equals(call.getRule().getName());
     }
 
     /**
@@ -795,6 +857,74 @@ public final class RosAstNodeModelSerializer {
         }
     }
 
+    /**
+     * Rewrites the string literal of {@code feature} only when its value changed. The existing
+     * literal is compared by its decoded value, not its text, so a single-quoted or escaped literal
+     * the user wrote is left byte-identical; a changed literal keeps its quote character.
+     */
+    static void checkStringLiteralEdit(
+            final EObject holder,
+            final EStructuralFeature feature,
+            final String newValue,
+            final String text,
+            final List<SpanEdit> edits) {
+        List<INode> nodes = NodeModelUtils.findNodesForFeature(holder, feature);
+        if (nodes.isEmpty()) {
+            return;
+        }
+        INode fNode = nodes.get(0);
+        int start = firstNonHiddenOffset(fNode);
+        int end = lastNonHiddenOffset(fNode);
+        if (start < 0 || end < start || end > text.length()) {
+            return;
+        }
+        String value = newValue != null ? newValue : "";
+        String currentRaw = text.substring(start, end);
+        char q = currentRaw.length() >= 2 && currentRaw.charAt(0) == '\''
+                && currentRaw.charAt(currentRaw.length() - 1) == '\'' ? '\'' : '"';
+        if (value.equals(decodeDslString(currentRaw))) {
+            return;
+        }
+        edits.add(new SpanEdit(start, end - start, quoteDslString(value, q)));
+    }
+
+    /**
+     * {@code value} as an Xtext {@code STRING} literal delimited by {@code quote} ({@code "} or
+     * {@code '}): backslash, the delimiter and control characters are escaped; the other quote
+     * character is kept as is, so {@code $(command 'xacro ...')} stays readable.
+     */
+    public static String quoteDslString(final String value, final char quote) {
+        String v = value != null ? value : "";
+        StringBuilder sb = new StringBuilder(v.length() + 2).append(quote);
+        for (int i = 0; i < v.length(); i++) {
+            char c = v.charAt(i);
+            switch (c) {
+                case '\\' -> sb.append("\\\\");
+                case '\n' -> sb.append("\\n");
+                case '\r' -> sb.append("\\r");
+                case '\t' -> sb.append("\\t");
+                case '\b' -> sb.append("\\b");
+                case '\f' -> sb.append("\\f");
+                default -> {
+                    if (c == quote) {
+                        sb.append('\\');
+                    }
+                    sb.append(c);
+                }
+            }
+        }
+        return sb.append(quote).toString();
+    }
+
+    /** Value of a DSL string token: a quoted {@code STRING} literal is unescaped, anything else (ID) is taken as is. */
+    static String decodeDslString(final String raw) {
+        if (raw.length() >= 2 && (raw.charAt(0) == '"' || raw.charAt(0) == '\'')
+                && raw.charAt(raw.length() - 1) == raw.charAt(0)) {
+            return org.eclipse.xtext.util.Strings.convertFromJavaString(raw.substring(1, raw.length() - 1), true);
+        }
+        return raw;
+    }
+
     private static TextChange commitNewModelText(
             final RosModelState modelState, final XtextResource res, final String created) throws IOException {
         res.reparse(created);
@@ -809,13 +939,17 @@ public final class RosAstNodeModelSerializer {
     }
 
     private static boolean hasContent(final system.System sys) {
-        return !sys.getComponents().isEmpty() || !sys.getProcesses().isEmpty() || !sys.getConnections().isEmpty();
+        return !sys.getComponents().isEmpty()
+                || !sys.getProcesses().isEmpty()
+                || !sys.getConnections().isEmpty()
+                || !sys.getExtensions().isEmpty();
     }
 
     private static boolean hasPackageContent(final RosModelState modelState) {
         for (ros.Package pkg : modelState.getPackageModelPackages()) {
             if (!pkg.getArtifact().isEmpty()
                     || !pkg.getSpec().isEmpty()
+                    || !pkg.getPluginBases().isEmpty()
                     || (pkg.getFromGitRepo() != null && !pkg.getFromGitRepo().isBlank())
                     || modelState.isDirty(pkg, "name")) {
                 return true;
@@ -874,6 +1008,9 @@ public final class RosAstNodeModelSerializer {
                 }
             }
         }
+        for (ExtensionBlock ext : sys.getExtensions()) {
+            sb.append(ExtensionSchemaMapper.renderBlockDsl(ext, "  "));
+        }
         return sb.toString();
     }
 
@@ -883,6 +1020,12 @@ public final class RosAstNodeModelSerializer {
         sb.append(indent).append("  from: \"").append(formatNodeFromCrossRef(rn)).append("\"\n");
         if (rn.getNamespace() != null && !rn.getNamespace().isEmpty()) {
             sb.append(indent).append("  namespace: \"").append(rn.getNamespace()).append("\"\n");
+        }
+        if (!rn.getSlots().isEmpty()) {
+            sb.append(indent).append("  slots:\n");
+            for (SlotAttachment attachment : rn.getSlots()) {
+                sb.append(indent).append("    ").append(slotAttachmentLine(attachment)).append('\n');
+            }
         }
         // Interfaces from the text or used by a connection; not ones synthesized by linking/validation.
         Set<RosInterface> connected = connectedInterfaces(rn);
@@ -903,6 +1046,9 @@ public final class RosAstNodeModelSerializer {
             for (RosParameter rp : rn.getRosparameters()) {
                 sb.append(serializeRosParameter(rp, rn, indent + "    "));
             }
+        }
+        for (ExtensionBlock ext : rn.getExtensions()) {
+            sb.append(ExtensionSchemaMapper.renderBlockDsl(ext, indent + "  "));
         }
         return sb.toString();
     }
@@ -930,7 +1076,15 @@ public final class RosAstNodeModelSerializer {
             prefix = "ac->";
             targetRef = formatInterfaceTargetCrossRef(acRef.getFrom());
         }
-        return indent + "- " + ri.getName() + ": " + prefix + " \"" + targetRef + "\"\n";
+        String line = indent + "- " + ri.getName() + ": " + prefix + " \"" + targetRef + "\"\n";
+        if (ri.getExtensions().isEmpty()) {
+            return line;
+        }
+        StringBuilder sb = new StringBuilder(line);
+        for (ExtensionBlock ext : ri.getExtensions()) {
+            sb.append(ExtensionSchemaMapper.renderBlockDsl(ext, indent + "  "));
+        }
+        return sb.toString();
     }
 
     public static String serializeRosParameter(
@@ -972,11 +1126,95 @@ public final class RosAstNodeModelSerializer {
         return "";
     }
 
+    /**
+     * Writes slot attachments that are new or whose plugin list changed. New attachments go after
+     * the last existing one, or into a new {@code slots:} section after {@code from:}/{@code namespace:}.
+     */
+    private static void collectSlotAttachmentEdits(
+            final RosNode rosNode,
+            final ICompositeNode nodeComp,
+            final String text,
+            final List<SpanEdit> edits) {
+        List<SlotAttachment> fresh = new ArrayList<>();
+        ICompositeNode lastExisting = null;
+        for (SlotAttachment attachment : rosNode.getSlots()) {
+            ICompositeNode comp = NodeModelUtils.findActualNodeFor(attachment);
+            if (comp == null) {
+                fresh.add(attachment);
+                continue;
+            }
+            lastExisting = comp;
+            int start = firstNonHiddenOffset(comp);
+            int end = lastNonHiddenOffset(comp);
+            int bracketStart = text.indexOf('[', start);
+            int bracketEnd = text.lastIndexOf(']', end);
+            String listText = "[" + String.join(", ", pluginRefs(attachment)) + "]";
+            if (bracketStart >= 0 && bracketEnd >= bracketStart && bracketEnd <= end
+                    && !text.substring(bracketStart, bracketEnd + 1).equals(listText)) {
+                edits.add(new SpanEdit(bracketStart, bracketEnd + 1 - bracketStart, listText));
+            }
+        }
+        if (fresh.isEmpty()) {
+            return;
+        }
+        StringBuilder lines = new StringBuilder();
+        if (lastExisting != null) {
+            String indent = " ".repeat(Math.max(0, firstNonHiddenOffset(lastExisting)
+                    - (text.lastIndexOf('\n', firstNonHiddenOffset(lastExisting) - 1) + 1)));
+            for (SlotAttachment attachment : fresh) {
+                lines.append('\n').append(indent).append(slotAttachmentLine(attachment));
+            }
+            edits.add(new SpanEdit(findLineEndOffsetWithoutNewline(text, lastNonHiddenOffset(lastExisting)), 0,
+                    lines.toString()));
+        } else {
+            lines.append("\n      slots:");
+            for (SlotAttachment attachment : fresh) {
+                lines.append("\n        ").append(slotAttachmentLine(attachment));
+            }
+            edits.add(new SpanEdit(findAfterFromOrNamespaceOffset(rosNode, nodeComp, text), 0, lines.toString()));
+        }
+    }
+
+    /** {@code slot_name: [pkg.Plugin, ...]} */
+    static String slotAttachmentLine(final SlotAttachment attachment) {
+        return slotName(attachment) + ": [" + String.join(", ", pluginRefs(attachment)) + "]";
+    }
+
+    private static String slotName(final SlotAttachment attachment) {
+        Object slot = attachment.eGet(RossystemPackage.Literals.SLOT_ATTACHMENT__SLOT, false);
+        if (slot instanceof PluginSlot resolved && !resolved.eIsProxy() && resolved.getName() != null) {
+            return resolved.getName();
+        }
+        List<INode> nodes = NodeModelUtils.findNodesForFeature(attachment, RossystemPackage.Literals.SLOT_ATTACHMENT__SLOT);
+        return nodes.isEmpty() ? "" : NodeModelUtils.getTokenText(nodes.get(0)).trim().replaceAll(":$", "");
+    }
+
+    private static List<String> pluginRefs(final SlotAttachment attachment) {
+        List<String> refs = new ArrayList<>();
+        for (Plugin pl : attachment.getPlugins()) {
+            String ref = formatPluginCrossRef(pl);
+            if (!ref.isEmpty()) {
+                refs.add(RosDslText.qualifiedRefLiteral(ref));
+            }
+        }
+        return refs;
+    }
+
+    public static String formatPluginCrossRef(final Plugin pl) {
+        if (pl == null || pl.eIsProxy() || pl.getName() == null) {
+            return "";
+        }
+        if (pl.eContainer() instanceof Artifact art && art.eContainer() instanceof Package pkg) {
+            return pkg.getName() + "." + pl.getName();
+        }
+        return pl.getName();
+    }
+
     public static String formatInterfaceTargetCrossRef(final InterfaceType ifType) {
         if (ifType == null || ifType.eIsProxy()) {
             return "";
         }
-        if (ifType.eContainer() instanceof Node node && node.eContainer() instanceof Artifact art) {
+        if (ifType.eContainer() instanceof InterfaceHolder holder && holder.eContainer() instanceof Artifact art) {
             return art.getName() + "::" + ifType.getName();
         }
         return ifType.getName();
@@ -987,7 +1225,7 @@ public final class RosAstNodeModelSerializer {
             return "\"\"";
         }
         if (val instanceof ParameterString ps) {
-            return "\"" + (ps.getValue() != null ? ps.getValue() : "") + "\"";
+            return quoteDslString(ps.getValue(), '"');
         } else if (val instanceof ParameterInteger pi) {
             return String.valueOf(pi.getValue());
         } else if (val instanceof ParameterDouble pd) {

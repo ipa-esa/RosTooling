@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.glsp.model;
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -82,6 +83,9 @@ public final class RosDslText {
         if (element instanceof ActionClient) return "actionclients:";
         if (element instanceof Parameter) return "parameters:";
         if (element instanceof ros.Artifact) return "artifacts:";
+        if (element instanceof ros.PluginBase) return "pluginbases:";
+        if (element instanceof ros.PluginSlot) return "pluginslots:";
+        if (element instanceof ros.Plugin) return "plugins:";
         if (element instanceof TopicSpec) return "msgs:";
         if (element instanceof ServiceSpec) return "srvs:";
         if (element instanceof ActionSpec) return "actions:";
@@ -153,6 +157,12 @@ public final class RosDslText {
         if (val instanceof EObject target && !target.eIsProxy()) {
             if (target instanceof SpecBase spec) {
                 return specFullName(spec);
+            }
+            if (target instanceof ros.PluginBase base) {
+                return PluginBases.qualifiedName(base);
+            }
+            if (target instanceof ros.Plugin plugin) {
+                return PluginBases.qualifiedName(plugin);
             }
         }
         List<INode> nodes = NodeModelUtils.findNodesForFeature(holder, feature);
@@ -439,6 +449,12 @@ public final class RosDslText {
 
     public static String nullToEmpty(final String s) {
         return s == null ? "" : s;
+    }
+
+    /** A plugin base or plugin reference as written: bare if it is a dotted name, quoted otherwise. */
+    public static String qualifiedRefLiteral(final String ref) {
+        String r = nullToEmpty(ref);
+        return r.matches("[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)*") ? r : quote(r);
     }
 
     /** Quotes a DSL string literal with double quotes, escaping embedded quotes. */

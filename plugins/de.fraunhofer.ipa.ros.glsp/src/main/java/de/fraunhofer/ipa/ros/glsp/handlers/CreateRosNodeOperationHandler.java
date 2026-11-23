@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.glsp.handlers;
 
+import de.fraunhofer.ipa.ros.glsp.model.SlotAttachments;
 import com.google.inject.Inject;
 import de.fraunhofer.ipa.ros.glsp.RosModelTypes;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
@@ -12,6 +13,7 @@ import org.eclipse.glsp.graph.util.GraphUtil;
 import org.eclipse.glsp.server.emf.EMFCreateOperationHandler;
 import org.eclipse.glsp.server.operations.CreateNodeOperation;
 import ros.Node;
+import ros.Plugin;
 import system.Process;
 import system.RosNode;
 import system.RossystemFactory;
@@ -68,6 +70,17 @@ public class CreateRosNodeOperationHandler extends EMFCreateOperationHandler<Cre
                             return;
                         }
                         newNode.setFrom(originOpt.get());
+                    }
+                    String pluginsCsv = args != null ? args.get("plugins") : null;
+                    if (pluginsCsv != null && !pluginsCsv.isBlank() && rosModelState.getSemanticResource() != null) {
+                        var rs = rosModelState.getSemanticResource().getResourceSet();
+                        for (String rawRef : pluginsCsv.split(",")) {
+                            String trimmed = rawRef.trim();
+                            if (!trimmed.isEmpty()) {
+                                RosElementResolver.resolveOriginPlugin(rs, trimmed)
+                                        .ifPresent(pl -> SlotAttachments.attach(newNode, pl));
+                            }
+                        }
                     }
                     sys.getComponents().add(newNode);
 

@@ -40,351 +40,351 @@ import system.RossystemPackage;
  */
 public class SystemImpl extends ComponentImpl implements system.System {
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getFromFile() <em>From File</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getFromFile() <em>From File</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getFromFile()
-     * @generated
-     * @ordered
-     */
+	 * @see #getFromFile()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String FROM_FILE_EDEFAULT = null;
 
                 /**
-     * The cached value of the '{@link #getFromFile() <em>From File</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getFromFile() <em>From File</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getFromFile()
-     * @generated
-     * @ordered
-     */
+	 * @see #getFromFile()
+	 * @generated
+	 * @ordered
+	 */
     protected String fromFile = FROM_FILE_EDEFAULT;
 
                 /**
-     * The cached value of the '{@link #getProcesses() <em>Processes</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getProcesses() <em>Processes</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getProcesses()
-     * @generated
-     * @ordered
-     */
+	 * @see #getProcesses()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<system.Process> processes;
 
     /**
-     * The cached value of the '{@link #getComponents() <em>Components</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getComponents() <em>Components</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getComponents()
-     * @generated
-     * @ordered
-     */
+	 * @see #getComponents()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<Component> components;
 
     /**
-     * The cached value of the '{@link #getConnections() <em>Connections</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getConnections() <em>Connections</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getConnections()
-     * @generated
-     * @ordered
-     */
+	 * @see #getConnections()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<Connection> connections;
 
     /**
-     * The cached value of the '{@link #getParameter() <em>Parameter</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getParameter() <em>Parameter</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getParameter()
-     * @generated
-     * @ordered
-     */
+	 * @see #getParameter()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<Parameter> parameter;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected SystemImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RossystemPackage.Literals.SYSTEM;
-    }
+		return RossystemPackage.Literals.SYSTEM;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String getName() {
-        return name;
-    }
+		return name;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setName(String newName) {
-        String oldName = name;
-        name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.SYSTEM__NAME, oldName, name));
-    }
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.SYSTEM__NAME, oldName, name));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String getFromFile() {
-        return fromFile;
-    }
+		return fromFile;
+	}
 
                 /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setFromFile(String newFromFile) {
-        String oldFromFile = fromFile;
-        fromFile = newFromFile;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.SYSTEM__FROM_FILE, oldFromFile, fromFile));
-    }
+		String oldFromFile = fromFile;
+		fromFile = newFromFile;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.SYSTEM__FROM_FILE, oldFromFile, fromFile));
+	}
 
                 /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EList<system.Process> getProcesses() {
-        if (processes == null) {
-            processes = new EObjectContainmentEList<system.Process>(system.Process.class, this, RossystemPackage.SYSTEM__PROCESSES);
-        }
-        return processes;
-    }
+		if (processes == null) {
+			processes = new EObjectContainmentEList<system.Process>(system.Process.class, this, RossystemPackage.SYSTEM__PROCESSES);
+		}
+		return processes;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EList<Component> getComponents() {
-        if (components == null) {
-            components = new EObjectContainmentEList<Component>(Component.class, this, RossystemPackage.SYSTEM__COMPONENTS);
-        }
-        return components;
-    }
+		if (components == null) {
+			components = new EObjectContainmentEList<Component>(Component.class, this, RossystemPackage.SYSTEM__COMPONENTS);
+		}
+		return components;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EList<Connection> getConnections() {
-        if (connections == null) {
-            connections = new EObjectContainmentEList<Connection>(Connection.class, this, RossystemPackage.SYSTEM__CONNECTIONS);
-        }
-        return connections;
-    }
+		if (connections == null) {
+			connections = new EObjectContainmentEList<Connection>(Connection.class, this, RossystemPackage.SYSTEM__CONNECTIONS);
+		}
+		return connections;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EList<Parameter> getParameter() {
-        if (parameter == null) {
-            parameter = new EObjectContainmentEList<Parameter>(Parameter.class, this, RossystemPackage.SYSTEM__PARAMETER);
-        }
-        return parameter;
-    }
+		if (parameter == null) {
+			parameter = new EObjectContainmentEList<Parameter>(Parameter.class, this, RossystemPackage.SYSTEM__PARAMETER);
+		}
+		return parameter;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case RossystemPackage.SYSTEM__PROCESSES:
-                return ((InternalEList<?>)getProcesses()).basicRemove(otherEnd, msgs);
-            case RossystemPackage.SYSTEM__COMPONENTS:
-                return ((InternalEList<?>)getComponents()).basicRemove(otherEnd, msgs);
-            case RossystemPackage.SYSTEM__CONNECTIONS:
-                return ((InternalEList<?>)getConnections()).basicRemove(otherEnd, msgs);
-            case RossystemPackage.SYSTEM__PARAMETER:
-                return ((InternalEList<?>)getParameter()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case RossystemPackage.SYSTEM__PROCESSES:
+				return ((InternalEList<?>)getProcesses()).basicRemove(otherEnd, msgs);
+			case RossystemPackage.SYSTEM__COMPONENTS:
+				return ((InternalEList<?>)getComponents()).basicRemove(otherEnd, msgs);
+			case RossystemPackage.SYSTEM__CONNECTIONS:
+				return ((InternalEList<?>)getConnections()).basicRemove(otherEnd, msgs);
+			case RossystemPackage.SYSTEM__PARAMETER:
+				return ((InternalEList<?>)getParameter()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case RossystemPackage.SYSTEM__NAME:
-                return getName();
-            case RossystemPackage.SYSTEM__FROM_FILE:
-                return getFromFile();
-            case RossystemPackage.SYSTEM__PROCESSES:
-                return getProcesses();
-            case RossystemPackage.SYSTEM__COMPONENTS:
-                return getComponents();
-            case RossystemPackage.SYSTEM__CONNECTIONS:
-                return getConnections();
-            case RossystemPackage.SYSTEM__PARAMETER:
-                return getParameter();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case RossystemPackage.SYSTEM__NAME:
+				return getName();
+			case RossystemPackage.SYSTEM__FROM_FILE:
+				return getFromFile();
+			case RossystemPackage.SYSTEM__PROCESSES:
+				return getProcesses();
+			case RossystemPackage.SYSTEM__COMPONENTS:
+				return getComponents();
+			case RossystemPackage.SYSTEM__CONNECTIONS:
+				return getConnections();
+			case RossystemPackage.SYSTEM__PARAMETER:
+				return getParameter();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case RossystemPackage.SYSTEM__NAME:
-                setName((String)newValue);
-                return;
-            case RossystemPackage.SYSTEM__FROM_FILE:
-                setFromFile((String)newValue);
-                return;
-            case RossystemPackage.SYSTEM__PROCESSES:
-                getProcesses().clear();
-                getProcesses().addAll((Collection<? extends system.Process>)newValue);
-                return;
-            case RossystemPackage.SYSTEM__COMPONENTS:
-                getComponents().clear();
-                getComponents().addAll((Collection<? extends Component>)newValue);
-                return;
-            case RossystemPackage.SYSTEM__CONNECTIONS:
-                getConnections().clear();
-                getConnections().addAll((Collection<? extends Connection>)newValue);
-                return;
-            case RossystemPackage.SYSTEM__PARAMETER:
-                getParameter().clear();
-                getParameter().addAll((Collection<? extends Parameter>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case RossystemPackage.SYSTEM__NAME:
+				setName((String)newValue);
+				return;
+			case RossystemPackage.SYSTEM__FROM_FILE:
+				setFromFile((String)newValue);
+				return;
+			case RossystemPackage.SYSTEM__PROCESSES:
+				getProcesses().clear();
+				getProcesses().addAll((Collection<? extends system.Process>)newValue);
+				return;
+			case RossystemPackage.SYSTEM__COMPONENTS:
+				getComponents().clear();
+				getComponents().addAll((Collection<? extends Component>)newValue);
+				return;
+			case RossystemPackage.SYSTEM__CONNECTIONS:
+				getConnections().clear();
+				getConnections().addAll((Collection<? extends Connection>)newValue);
+				return;
+			case RossystemPackage.SYSTEM__PARAMETER:
+				getParameter().clear();
+				getParameter().addAll((Collection<? extends Parameter>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.SYSTEM__NAME:
-                setName(NAME_EDEFAULT);
-                return;
-            case RossystemPackage.SYSTEM__FROM_FILE:
-                setFromFile(FROM_FILE_EDEFAULT);
-                return;
-            case RossystemPackage.SYSTEM__PROCESSES:
-                getProcesses().clear();
-                return;
-            case RossystemPackage.SYSTEM__COMPONENTS:
-                getComponents().clear();
-                return;
-            case RossystemPackage.SYSTEM__CONNECTIONS:
-                getConnections().clear();
-                return;
-            case RossystemPackage.SYSTEM__PARAMETER:
-                getParameter().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.SYSTEM__NAME:
+				setName(NAME_EDEFAULT);
+				return;
+			case RossystemPackage.SYSTEM__FROM_FILE:
+				setFromFile(FROM_FILE_EDEFAULT);
+				return;
+			case RossystemPackage.SYSTEM__PROCESSES:
+				getProcesses().clear();
+				return;
+			case RossystemPackage.SYSTEM__COMPONENTS:
+				getComponents().clear();
+				return;
+			case RossystemPackage.SYSTEM__CONNECTIONS:
+				getConnections().clear();
+				return;
+			case RossystemPackage.SYSTEM__PARAMETER:
+				getParameter().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.SYSTEM__NAME:
-                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-            case RossystemPackage.SYSTEM__FROM_FILE:
-                return FROM_FILE_EDEFAULT == null ? fromFile != null : !FROM_FILE_EDEFAULT.equals(fromFile);
-            case RossystemPackage.SYSTEM__PROCESSES:
-                return processes != null && !processes.isEmpty();
-            case RossystemPackage.SYSTEM__COMPONENTS:
-                return components != null && !components.isEmpty();
-            case RossystemPackage.SYSTEM__CONNECTIONS:
-                return connections != null && !connections.isEmpty();
-            case RossystemPackage.SYSTEM__PARAMETER:
-                return parameter != null && !parameter.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.SYSTEM__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case RossystemPackage.SYSTEM__FROM_FILE:
+				return FROM_FILE_EDEFAULT == null ? fromFile != null : !FROM_FILE_EDEFAULT.equals(fromFile);
+			case RossystemPackage.SYSTEM__PROCESSES:
+				return processes != null && !processes.isEmpty();
+			case RossystemPackage.SYSTEM__COMPONENTS:
+				return components != null && !components.isEmpty();
+			case RossystemPackage.SYSTEM__CONNECTIONS:
+				return connections != null && !connections.isEmpty();
+			case RossystemPackage.SYSTEM__PARAMETER:
+				return parameter != null && !parameter.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuilder result = new StringBuilder(super.toString());
-        result.append(" (name: ");
-        result.append(name);
-        result.append(", fromFile: ");
-        result.append(fromFile);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (name: ");
+		result.append(name);
+		result.append(", fromFile: ");
+		result.append(fromFile);
+		result.append(')');
+		return result.toString();
+	}
 
 } //SystemImpl

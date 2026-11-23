@@ -16,22 +16,22 @@ import primitives.int16;
  */
 public class int16Impl extends AbstractTypeImpl implements int16 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected int16Impl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.INT16;
-    }
+		return PrimitivesPackage.Literals.INT16;
+	}
 
 } //int16Impl

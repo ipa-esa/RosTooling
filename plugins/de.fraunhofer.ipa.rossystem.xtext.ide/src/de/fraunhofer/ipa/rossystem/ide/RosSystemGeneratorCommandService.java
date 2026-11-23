@@ -2,9 +2,11 @@ package de.fraunhofer.ipa.rossystem.ide; // Or your specific package
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,6 +39,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
+import de.fraunhofer.ipa.ros2.distro.Ros2Distros;
+import de.fraunhofer.ipa.ros2.distro.UnknownDistroException;
 import de.fraunhofer.ipa.rossystem.generator.RosSystemGenerator;
 
 public class RosSystemGeneratorCommandService implements IExecutableCommandService {
@@ -91,9 +96,33 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
                     existingFiles = parseStringList(params.getArguments().get(1));
                 }
                 final List<String> finalExistingFiles = existingFiles;
-                
+                String targetDistro = Ros2Distros.AUTO;
+                if (params.getArguments().size() > 2 && params.getArguments().get(2) != null) {
+                    String rawDistro = parseStringArg(params.getArguments().get(2));
+                    if (!rawDistro.isBlank()) {
+                        targetDistro = rawDistro;
+                    }
+                }
+                final String finalDistro;
+                try {
+                    finalDistro = Ros2Distros.resolve(targetDistro).name();
+                } catch (UnknownDistroException e) {
+                    return Map.of("error", e.getMessage());
+                }
+
+                Path outputRoot = null;
+                if (params.getArguments().size() > 3 && params.getArguments().get(3) != null) {
+                    String rawRoot = parseStringArg(params.getArguments().get(3));
+                    if (!rawRoot.isBlank()) {
+                        outputRoot = Path.of(rawRoot.trim());
+                    }
+                }
+                final Path finalOutputRoot = outputRoot;
+
+                PluginRegistry.INSTANCE.ensureLoadedFromEnvironment();
+
                 forceLog("Requesting workspace-aware document from LSP ...");
-                
+
                 CompletableFuture<Map<String, Object>> futureResult = access.doRead(fileUriStr, (context) -> {
                 	try {
 						Resource resource = context.getResource();
@@ -123,17 +152,40 @@ public class RosSystemGeneratorCommandService implements IExecutableCommandServi
 						var fsa = new InMemoryFileSystemAccess();
 						var context1 = new GeneratorContext();
 						context1.setCancelIndicator(CancelIndicator.NullImpl);
-						if (generator instanceof RosSystemGenerator) {
-							((RosSystemGenerator) generator).generateSystemTargeted(resource, fsa, finalExistingFiles);
-						} else {
-							generator.doGenerate(resource, fsa, context1);
+						if (generator instanceof RosSystemGenerator sysGen) {
+							RosSystemGenerator.SystemGenerationOutcome outcome =
+								sysGen.generateSystemWithPlugins(resource, fsa, finalExistingFiles, finalDistro, finalOutputRoot);
+							if (!outcome.errors.isEmpty()) {
+								String errMsg = String.join("; ", outcome.errors);
+								forceLog("PLUGIN ERROR: " + errMsg);
+								Map<String, Object> errOut = new LinkedHashMap<>();
+								errOut.put("success", false);
+								errOut.put("error", errMsg);
+								errOut.put("errors", outcome.errors);
+								errOut.put("conflictErrors", outcome.pluginConflictErrors);
+								errOut.put("notices", outcome.notices);
+								return errOut;
+							}
+							Map<String, String> files = fsa.getAllFiles().entrySet().stream()
+								.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
+							forceLog("SUCCESS: Generated " + files.size() + " files.");
+							Map<String, Object> out = new LinkedHashMap<>();
+							out.put("success", true);
+							out.put("files", files);
+							out.put("pluginFiles", outcome.pluginFiles);
+							out.put("prunedFiles", new ArrayList<>(outcome.pluginDeletedFiles));
+							out.put("warnings", new ArrayList<>(outcome.warnings));
+							out.put("notices", new ArrayList<>(outcome.notices));
+							out.put("count", files.size());
+							return out;
 						}
-						
+						generator.doGenerate(resource, fsa, context1);
+
 						Map<String, String> files = fsa.getAllFiles().entrySet().stream()
 		                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
-		                
+
 		                forceLog("SUCCESS: Generated " + files.size() + " files.");
-		                return Map.of("success", true, "files", files, "count", files.size());
+		                return Map.of("success", true, "files", files, "notices", List.of(), "count", files.size());
 					} catch (Exception e) {
 						forceLog("GENERATION ERROR: " + e.getMessage());
 						e.printStackTrace();

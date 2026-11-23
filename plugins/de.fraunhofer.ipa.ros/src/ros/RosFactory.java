@@ -22,6 +22,60 @@ public interface RosFactory extends EFactory {
 	RosFactory eINSTANCE = ros.impl.RosFactoryImpl.init();
 
 	/**
+	 * Returns a new object of class '<em>Extension Block</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Extension Block</em>'.
+	 * @generated
+	 */
+	ExtensionBlock createExtensionBlock();
+
+	/**
+	 * Returns a new object of class '<em>Extension Entry</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Extension Entry</em>'.
+	 * @generated
+	 */
+	ExtensionEntry createExtensionEntry();
+
+	/**
+	 * Returns a new object of class '<em>Extension Scalar Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Extension Scalar Value</em>'.
+	 * @generated
+	 */
+	ExtensionScalarValue createExtensionScalarValue();
+
+	/**
+	 * Returns a new object of class '<em>Extension List Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Extension List Value</em>'.
+	 * @generated
+	 */
+	ExtensionListValue createExtensionListValue();
+
+	/**
+	 * Returns a new object of class '<em>Extension Map Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Extension Map Value</em>'.
+	 * @generated
+	 */
+	ExtensionMapValue createExtensionMapValue();
+
+	/**
+	 * Returns a new object of class '<em>Extension Ref Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Extension Ref Value</em>'.
+	 * @generated
+	 */
+	ExtensionRefValue createExtensionRefValue();
+
+	/**
 	 * Returns a new object of class '<em>Node</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -29,6 +83,33 @@ public interface RosFactory extends EFactory {
 	 * @generated
 	 */
 	Node createNode();
+
+	/**
+	 * Returns a new object of class '<em>Plugin</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Plugin</em>'.
+	 * @generated
+	 */
+	Plugin createPlugin();
+
+	/**
+	 * Returns a new object of class '<em>Plugin Base</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Plugin Base</em>'.
+	 * @generated
+	 */
+	PluginBase createPluginBase();
+
+	/**
+	 * Returns a new object of class '<em>Plugin Slot</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Plugin Slot</em>'.
+	 * @generated
+	 */
+	PluginSlot createPluginSlot();
 
 	/**
 	 * Returns a new object of class '<em>Package</em>'.

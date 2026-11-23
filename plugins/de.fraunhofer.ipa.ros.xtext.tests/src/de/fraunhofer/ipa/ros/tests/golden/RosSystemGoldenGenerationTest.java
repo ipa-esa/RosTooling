@@ -31,6 +31,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import de.fraunhofer.ipa.ros.RosStandaloneSetup;
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
+import de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin;
 import de.fraunhofer.ipa.ros.tests.Ros2InjectorProvider;
 import de.fraunhofer.ipa.rossystem.RosSystemRuntimeModule;
 import de.fraunhofer.ipa.rossystem.RosSystemStandaloneSetup;
@@ -77,6 +79,35 @@ public class RosSystemGoldenGenerationTest {
 
     @Test
     public void generatedSystemsMatchExpectedOutput() throws IOException {
+        PluginRegistry.INSTANCE.clearRegistered();
+        compareAllSystemFixtures();
+    }
+
+    @Test
+    public void generatedSystemsMatchExpectedOutputWithNoOpPluginActive() throws IOException {
+        PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override
+            public String id() {
+                return "de.example.noop";
+            }
+
+            @Override
+            public List<de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor> blocks() {
+                return List.of();
+            }
+
+            @Override
+            public void validate(final de.fraunhofer.ipa.ros.plugin.spi.ValidationContext context) {}
+        });
+        try {
+            compareAllSystemFixtures();
+        } finally {
+            PluginRegistry.INSTANCE.clearRegistered();
+        }
+    }
+
+    private void compareAllSystemFixtures() throws IOException {
         Injector injector = rosSystemInjector();
         RosSystemGenerator generator = injector.getInstance(RosSystemGenerator.class);
 

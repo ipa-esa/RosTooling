@@ -17,8 +17,17 @@ import ros.ArrayTopicSpecMsgRef;
 import ros.Artifact;
 import ros.CatkinPackage;
 import ros.Dependency;
+import ros.Extensible;
+import ros.ExtensionBlock;
+import ros.ExtensionEntry;
+import ros.ExtensionListValue;
+import ros.ExtensionMapValue;
+import ros.ExtensionRefValue;
+import ros.ExtensionScalarValue;
+import ros.ExtensionValue;
 import ros.ExternalDependency;
 import ros.GlobalNamespace;
+import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.MessageDefinition;
 import ros.Namespace;
@@ -49,6 +58,9 @@ import ros.ParameterStructType;
 import ros.ParameterStructTypeMember;
 import ros.ParameterType;
 import ros.ParameterValue;
+import ros.Plugin;
+import ros.PluginBase;
+import ros.PluginSlot;
 import ros.PrivateNamespace;
 import ros.Publisher;
 import ros.QualityOfService;
@@ -119,9 +131,90 @@ public class RosSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
+			case RosPackage.EXTENSIBLE: {
+				Extensible extensible = (Extensible)theEObject;
+				T result = caseExtensible(extensible);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.EXTENSION_BLOCK: {
+				ExtensionBlock extensionBlock = (ExtensionBlock)theEObject;
+				T result = caseExtensionBlock(extensionBlock);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.EXTENSION_ENTRY: {
+				ExtensionEntry extensionEntry = (ExtensionEntry)theEObject;
+				T result = caseExtensionEntry(extensionEntry);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.EXTENSION_VALUE: {
+				ExtensionValue extensionValue = (ExtensionValue)theEObject;
+				T result = caseExtensionValue(extensionValue);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.EXTENSION_SCALAR_VALUE: {
+				ExtensionScalarValue extensionScalarValue = (ExtensionScalarValue)theEObject;
+				T result = caseExtensionScalarValue(extensionScalarValue);
+				if (result == null) result = caseExtensionValue(extensionScalarValue);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.EXTENSION_LIST_VALUE: {
+				ExtensionListValue extensionListValue = (ExtensionListValue)theEObject;
+				T result = caseExtensionListValue(extensionListValue);
+				if (result == null) result = caseExtensionValue(extensionListValue);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.EXTENSION_MAP_VALUE: {
+				ExtensionMapValue extensionMapValue = (ExtensionMapValue)theEObject;
+				T result = caseExtensionMapValue(extensionMapValue);
+				if (result == null) result = caseExtensionValue(extensionMapValue);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.EXTENSION_REF_VALUE: {
+				ExtensionRefValue extensionRefValue = (ExtensionRefValue)theEObject;
+				T result = caseExtensionRefValue(extensionRefValue);
+				if (result == null) result = caseExtensionValue(extensionRefValue);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.INTERFACE_HOLDER: {
+				InterfaceHolder interfaceHolder = (InterfaceHolder)theEObject;
+				T result = caseInterfaceHolder(interfaceHolder);
+				if (result == null) result = caseExtensible(interfaceHolder);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case RosPackage.NODE: {
 				Node node = (Node)theEObject;
 				T result = caseNode(node);
+				if (result == null) result = caseInterfaceHolder(node);
+				if (result == null) result = caseExtensible(node);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.PLUGIN: {
+				Plugin plugin = (Plugin)theEObject;
+				T result = casePlugin(plugin);
+				if (result == null) result = caseInterfaceHolder(plugin);
+				if (result == null) result = caseExtensible(plugin);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.PLUGIN_BASE: {
+				PluginBase pluginBase = (PluginBase)theEObject;
+				T result = casePluginBase(pluginBase);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RosPackage.PLUGIN_SLOT: {
+				PluginSlot pluginSlot = (PluginSlot)theEObject;
+				T result = casePluginSlot(pluginSlot);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -475,6 +568,141 @@ public class RosSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Extensible</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Extensible</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExtensible(Extensible object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Extension Block</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Extension Block</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExtensionBlock(ExtensionBlock object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Extension Entry</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Extension Entry</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExtensionEntry(ExtensionEntry object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Extension Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Extension Value</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExtensionValue(ExtensionValue object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Extension Scalar Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Extension Scalar Value</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExtensionScalarValue(ExtensionScalarValue object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Extension List Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Extension List Value</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExtensionListValue(ExtensionListValue object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Extension Map Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Extension Map Value</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExtensionMapValue(ExtensionMapValue object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Extension Ref Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Extension Ref Value</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExtensionRefValue(ExtensionRefValue object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Interface Holder</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Interface Holder</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInterfaceHolder(InterfaceHolder object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Node</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -486,6 +714,51 @@ public class RosSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseNode(Node object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Plugin</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Plugin</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePlugin(Plugin object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Plugin Base</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Plugin Base</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePluginBase(PluginBase object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Plugin Slot</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Plugin Slot</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePluginSlot(PluginSlot object) {
 		return null;
 	}
 

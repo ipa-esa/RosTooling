@@ -1,5 +1,6 @@
 package de.fraunhofer.ipa.ros.glsp.handlers;
 
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -22,6 +23,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import primitives.MessagePart;
 import ros.ActionSpec;
 import ros.Artifact;
+import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.MessageDefinition;
 import ros.Node;
@@ -29,6 +31,7 @@ import ros.Package;
 import ros.PackageSet;
 import ros.Parameter;
 import ros.ParameterValue;
+import ros.Plugin;
 import ros.ServiceSpec;
 import ros.SpecBase;
 import system.Component;
@@ -104,32 +107,26 @@ public class RequestRosIndexActionHandler extends AbstractActionHandler<RequestR
         JsonArray artifacts = new JsonArray();
         for (Artifact art : pkg.getArtifact()) {
             Node node = art.getNode();
-            if (node == null) {
+            if (node == null && art.getPlugins().isEmpty()) {
                 continue;
             }
             JsonObject a = new JsonObject();
             a.addProperty("artifact", RosDslText.nullToEmpty(art.getName()));
-            a.addProperty("node", RosDslText.nullToEmpty(node.getName()));
-            a.addProperty("isLifecycle", node.isIsLifecycle());
-            JsonArray ifaces = new JsonArray();
-            for (InterfaceType iface : RosPackageSetEditor.allInterfaces(node)) {
-                JsonObject i = new JsonObject();
-                i.addProperty("name", RosDslText.nullToEmpty(iface.getName()));
-                i.addProperty("kind", RosDslText.kindCode(iface));
-                i.addProperty("type", RosDslText.refText(null, iface, RosDslText.specFeature(iface)));
-                ifaces.add(i);
+            a.addProperty("node", node != null ? RosDslText.nullToEmpty(node.getName()) : "");
+            a.addProperty("isLifecycle", node != null && node.isIsLifecycle());
+            a.add("interfaces", node != null ? describeHolderInterfaces(node) : new JsonArray());
+            a.add("parameters", node != null ? describeHolderParameters(node) : new JsonArray());
+            JsonArray pluginsJson = new JsonArray();
+            for (Plugin pl : art.getPlugins()) {
+                JsonObject plObj = new JsonObject();
+                plObj.addProperty("name", RosDslText.nullToEmpty(pl.getName()));
+                plObj.addProperty("implements", RosDslText.refText(null, pl, ros.RosPackage.Literals.PLUGIN__IMPLEMENTS));
+                plObj.addProperty("loader", RosDslText.nullToEmpty(PluginBases.loaderOf(pl)));
+                plObj.add("interfaces", describeHolderInterfaces(pl));
+                plObj.add("parameters", describeHolderParameters(pl));
+                pluginsJson.add(plObj);
             }
-            a.add("interfaces", ifaces);
-            JsonArray params = new JsonArray();
-            for (Parameter param : node.getParameter()) {
-                JsonObject pj = new JsonObject();
-                pj.addProperty("name", RosDslText.nullToEmpty(param.getName()));
-                pj.addProperty("type", RosDslText.parameterTypeKeyword(param.getType()));
-                ParameterValue def = RosDslText.parameterTypeDefault(param.getType());
-                pj.addProperty("default", def == null ? "" : RosGModelFactory.formatParameterValue(def));
-                params.add(pj);
-            }
-            a.add("parameters", params);
+            a.add("plugins", pluginsJson);
             artifacts.add(a);
         }
         p.add("artifacts", artifacts);
@@ -160,6 +157,31 @@ public class RequestRosIndexActionHandler extends AbstractActionHandler<RequestR
         }
         p.add("specs", specs);
         return p;
+    }
+
+    private JsonArray describeHolderInterfaces(final InterfaceHolder holder) {
+        JsonArray ifaces = new JsonArray();
+        for (InterfaceType iface : RosPackageSetEditor.allInterfaces(holder)) {
+            JsonObject i = new JsonObject();
+            i.addProperty("name", RosDslText.nullToEmpty(iface.getName()));
+            i.addProperty("kind", RosDslText.kindCode(iface));
+            i.addProperty("type", RosDslText.refText(null, iface, RosDslText.specFeature(iface)));
+            ifaces.add(i);
+        }
+        return ifaces;
+    }
+
+    private JsonArray describeHolderParameters(final InterfaceHolder holder) {
+        JsonArray params = new JsonArray();
+        for (Parameter param : holder.getParameter()) {
+            JsonObject pj = new JsonObject();
+            pj.addProperty("name", RosDslText.nullToEmpty(param.getName()));
+            pj.addProperty("type", RosDslText.parameterTypeKeyword(param.getType()));
+            ParameterValue def = RosDslText.parameterTypeDefault(param.getType());
+            pj.addProperty("default", def == null ? "" : RosGModelFactory.formatParameterValue(def));
+            params.add(pj);
+        }
+        return params;
     }
 
     private JsonObject describeSystem(final system.System sys) {

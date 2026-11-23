@@ -3,10 +3,16 @@
  */
 package de.fraunhofer.ipa.ros2
 
+import de.fraunhofer.ipa.ros.RosBasicsValueConverterService
 import de.fraunhofer.ipa.ros.RosQNP
+import de.fraunhofer.ipa.ros.documentation.RosExtensionDocumentationProvider
+import de.fraunhofer.ipa.ros.linking.RosLinkingDiagnosticMessageProvider
+import de.fraunhofer.ipa.ros.scoping.RosSP
+import org.eclipse.xtext.conversion.IValueConverterService
+import org.eclipse.xtext.documentation.IEObjectDocumentationProvider
+import org.eclipse.xtext.linking.ILinkingDiagnosticMessageProvider
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.scoping.IScopeProvider
-import de.fraunhofer.ipa.ros.scoping.RosSP
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -19,6 +25,18 @@ class Ros2RuntimeModule extends AbstractRos2RuntimeModule {
 
     override Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
         return RosQNP
+    }
+
+    override Class<? extends IValueConverterService> bindIValueConverterService() {
+        return RosBasicsValueConverterService
+    }
+
+    def Class<? extends ILinkingDiagnosticMessageProvider> bindILinkingDiagnosticMessageProvider() {
+        return RosLinkingDiagnosticMessageProvider
+    }
+
+    def Class<? extends IEObjectDocumentationProvider> bindIEObjectDocumentationProvider() {
+        return RosExtensionDocumentationProvider
     }
 
 }

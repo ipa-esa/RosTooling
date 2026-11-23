@@ -22,25 +22,25 @@ import ros.ActionServer;
  */
 public interface RosActionServerReference extends InterfaceReference {
     /**
-     * Returns the value of the '<em><b>From</b></em>' reference.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>From</b></em>' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the value of the '<em>From</em>' reference.
-     * @see #setFrom(ActionServer)
-     * @see system.RossystemPackage#getRosActionServerReference_From()
-     * @model required="true"
-     * @generated
-     */
+	 * @return the value of the '<em>From</em>' reference.
+	 * @see #setFrom(ActionServer)
+	 * @see system.RossystemPackage#getRosActionServerReference_From()
+	 * @model required="true"
+	 * @generated
+	 */
     ActionServer getFrom();
 
     /**
-     * Sets the value of the '{@link system.RosActionServerReference#getFrom <em>From</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link system.RosActionServerReference#getFrom <em>From</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>From</em>' reference.
-     * @see #getFrom()
-     * @generated
-     */
+	 * @param value the new value of the '<em>From</em>' reference.
+	 * @see #getFrom()
+	 * @generated
+	 */
     void setFrom(ActionServer value);
 
 } // RosActionServerReference

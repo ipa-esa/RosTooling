@@ -31,229 +31,229 @@ import system.RossystemPackage;
  */
 public class ProcessImpl extends MinimalEObjectImpl.Container implements system.Process {
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getThreads() <em>Threads</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getThreads() <em>Threads</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getThreads()
-     * @generated
-     * @ordered
-     */
+	 * @see #getThreads()
+	 * @generated
+	 * @ordered
+	 */
     protected static final int THREADS_EDEFAULT = 0;
 
     /**
-     * The cached value of the '{@link #getThreads() <em>Threads</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getThreads() <em>Threads</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getThreads()
-     * @generated
-     * @ordered
-     */
+	 * @see #getThreads()
+	 * @generated
+	 * @ordered
+	 */
     protected int threads = THREADS_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getComponents() <em>Components</em>}' reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getComponents() <em>Components</em>}' reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getComponents()
-     * @generated
-     * @ordered
-     */
+	 * @see #getComponents()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<Component> components;
 
                 /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ProcessImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RossystemPackage.Literals.PROCESS;
-    }
+		return RossystemPackage.Literals.PROCESS;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String getName() {
-        return name;
-    }
+		return name;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setName(String newName) {
-        String oldName = name;
-        name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.PROCESS__NAME, oldName, name));
-    }
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.PROCESS__NAME, oldName, name));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public int getThreads() {
-        return threads;
-    }
+		return threads;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setThreads(int newThreads) {
-        int oldThreads = threads;
-        threads = newThreads;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.PROCESS__THREADS, oldThreads, threads));
-    }
+		int oldThreads = threads;
+		threads = newThreads;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RossystemPackage.PROCESS__THREADS, oldThreads, threads));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EList<Component> getComponents() {
-        if (components == null) {
-            components = new EObjectResolvingEList<Component>(Component.class, this, RossystemPackage.PROCESS__COMPONENTS);
-        }
-        return components;
-    }
+		if (components == null) {
+			components = new EObjectResolvingEList<Component>(Component.class, this, RossystemPackage.PROCESS__COMPONENTS);
+		}
+		return components;
+	}
 
                 /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case RossystemPackage.PROCESS__NAME:
-                return getName();
-            case RossystemPackage.PROCESS__THREADS:
-                return getThreads();
-            case RossystemPackage.PROCESS__COMPONENTS:
-                return getComponents();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case RossystemPackage.PROCESS__NAME:
+				return getName();
+			case RossystemPackage.PROCESS__THREADS:
+				return getThreads();
+			case RossystemPackage.PROCESS__COMPONENTS:
+				return getComponents();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case RossystemPackage.PROCESS__NAME:
-                setName((String)newValue);
-                return;
-            case RossystemPackage.PROCESS__THREADS:
-                setThreads((Integer)newValue);
-                return;
-            case RossystemPackage.PROCESS__COMPONENTS:
-                getComponents().clear();
-                getComponents().addAll((Collection<? extends Component>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case RossystemPackage.PROCESS__NAME:
+				setName((String)newValue);
+				return;
+			case RossystemPackage.PROCESS__THREADS:
+				setThreads((Integer)newValue);
+				return;
+			case RossystemPackage.PROCESS__COMPONENTS:
+				getComponents().clear();
+				getComponents().addAll((Collection<? extends Component>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.PROCESS__NAME:
-                setName(NAME_EDEFAULT);
-                return;
-            case RossystemPackage.PROCESS__THREADS:
-                setThreads(THREADS_EDEFAULT);
-                return;
-            case RossystemPackage.PROCESS__COMPONENTS:
-                getComponents().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.PROCESS__NAME:
+				setName(NAME_EDEFAULT);
+				return;
+			case RossystemPackage.PROCESS__THREADS:
+				setThreads(THREADS_EDEFAULT);
+				return;
+			case RossystemPackage.PROCESS__COMPONENTS:
+				getComponents().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case RossystemPackage.PROCESS__NAME:
-                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-            case RossystemPackage.PROCESS__THREADS:
-                return threads != THREADS_EDEFAULT;
-            case RossystemPackage.PROCESS__COMPONENTS:
-                return components != null && !components.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case RossystemPackage.PROCESS__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case RossystemPackage.PROCESS__THREADS:
+				return threads != THREADS_EDEFAULT;
+			case RossystemPackage.PROCESS__COMPONENTS:
+				return components != null && !components.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuilder result = new StringBuilder(super.toString());
-        result.append(" (name: ");
-        result.append(name);
-        result.append(", threads: ");
-        result.append(threads);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (name: ");
+		result.append(name);
+		result.append(", threads: ");
+		result.append(threads);
+		result.append(')');
+		return result.toString();
+	}
 
 } //ProcessImpl

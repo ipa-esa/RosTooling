@@ -3,8 +3,10 @@
  */
 package de.fraunhofer.ipa.ros1.ide
 
-import org.eclipse.xtext.resource.ILocationInFileProvider
 import de.fraunhofer.ipa.ros.SafeLocationInFileProvider
+import de.fraunhofer.ipa.ros.ide.contentassist.RosExtensionIdeContentProposalProvider
+import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider
+import org.eclipse.xtext.resource.ILocationInFileProvider
 
 /**
  * Use this class to register ide components.
@@ -12,5 +14,9 @@ import de.fraunhofer.ipa.ros.SafeLocationInFileProvider
 class Ros1IdeModule extends AbstractRos1IdeModule {
 	def Class<? extends ILocationInFileProvider> bindILocationInFileProvider() {
         SafeLocationInFileProvider;
+    }
+
+    def Class<? extends IdeContentProposalProvider> bindIdeContentProposalProvider() {
+        return RosExtensionIdeContentProposalProvider
     }
 }

@@ -3,10 +3,61 @@
  */
 package de.fraunhofer.ipa.ros.ui.contentassist
 
+import de.fraunhofer.ipa.ros.ide.contentassist.RosExtensionIdeContentProposalProvider
+import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.Assignment
+import org.eclipse.xtext.RuleCall
+import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
+import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+import ros.ExtensionBlock
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#content-assist
  * on how to customize the content assistant.
  */
 class BasicsProposalProvider extends AbstractBasicsProposalProvider {
+
+    override void complete_ExtensionBlock(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+        acceptCandidates(RosExtensionIdeContentProposalProvider.blockProposalsFor(model, true), context, acceptor)
+        super.complete_ExtensionBlock(model, ruleCall, context, acceptor)
+    }
+
+    override void complete_ExtensionBlockName(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+        val owner = if (model instanceof ExtensionBlock) model.eContainer else model
+        acceptCandidates(RosExtensionIdeContentProposalProvider.blockProposalsFor(owner, false), context, acceptor)
+        super.complete_ExtensionBlockName(model, ruleCall, context, acceptor)
+    }
+
+    override void completeExtensionEntry_Key(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+        acceptCandidates(RosExtensionIdeContentProposalProvider.entryKeyProposalsFor(model, true), context, acceptor)
+        super.completeExtensionEntry_Key(model, assignment, context, acceptor)
+    }
+
+    override void complete_ExtensionKey(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+        acceptCandidates(RosExtensionIdeContentProposalProvider.entryKeyProposalsFor(model, false), context, acceptor)
+        super.complete_ExtensionKey(model, ruleCall, context, acceptor)
+    }
+
+    override void completeExtensionRefValue_RefKind(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+        acceptCandidates(RosExtensionIdeContentProposalProvider.refKindProposalsFor(model), context, acceptor)
+        super.completeExtensionRefValue_RefKind(model, assignment, context, acceptor)
+    }
+
+    override void complete_ExtensionScalarLiteral(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+        acceptCandidates(RosExtensionIdeContentProposalProvider.entryValueProposalsFor(model), context, acceptor)
+        super.complete_ExtensionScalarLiteral(model, ruleCall, context, acceptor)
+    }
+
+    private def void acceptCandidates(
+        List<RosExtensionIdeContentProposalProvider.ExtensionCompletionCandidate> candidates,
+        ContentAssistContext context,
+        ICompletionProposalAcceptor acceptor) {
+        for (c : candidates) {
+            val proposal = createCompletionProposal(c.text, c.label + " — " + c.description, null, context)
+            if (proposal !== null) {
+                acceptor.accept(proposal)
+            }
+        }
+    }
 }

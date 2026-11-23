@@ -26,6 +26,8 @@ import org.junit.Test;
 import com.google.inject.Injector;
 
 import de.fraunhofer.ipa.ros.RosStandaloneSetup;
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
+import de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin;
 import de.fraunhofer.ipa.ros.tests.Ros2InjectorProvider;
 import de.fraunhofer.ipa.ros2.distro.Ros2Distros;
 import de.fraunhofer.ipa.ros2.generator.Ros2Generator;
@@ -56,6 +58,35 @@ public class Ros2GoldenGenerationTest {
 
     @Test
     public void generatedPackagesMatchExpectedOutput() throws IOException {
+        PluginRegistry.INSTANCE.clearRegistered();
+        compareAllDistrosAndLanguages();
+    }
+
+    @Test
+    public void generatedPackagesMatchExpectedOutputWithNoOpPluginActive() throws IOException {
+        PluginRegistry.INSTANCE.clearRegistered();
+        PluginRegistry.INSTANCE.register(new RosToolingPlugin() {
+            @Override
+            public String id() {
+                return "de.example.noop";
+            }
+
+            @Override
+            public List<de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor> blocks() {
+                return List.of();
+            }
+
+            @Override
+            public void validate(final de.fraunhofer.ipa.ros.plugin.spi.ValidationContext context) {}
+        });
+        try {
+            compareAllDistrosAndLanguages();
+        } finally {
+            PluginRegistry.INSTANCE.clearRegistered();
+        }
+    }
+
+    private void compareAllDistrosAndLanguages() throws IOException {
         Injector injector = new Ros2InjectorProvider().getInjector();
         new RosStandaloneSetup().createInjectorAndDoEMFRegistration();
         Ros2Generator generator = injector.getInstance(Ros2Generator.class);

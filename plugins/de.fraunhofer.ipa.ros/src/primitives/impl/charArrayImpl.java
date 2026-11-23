@@ -16,22 +16,22 @@ import primitives.charArray;
  */
 public class charArrayImpl extends AbstractTypeImpl implements charArray {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected charArrayImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.CHAR_ARRAY;
-    }
+		return PrimitivesPackage.Literals.CHAR_ARRAY;
+	}
 
 } //charArrayImpl

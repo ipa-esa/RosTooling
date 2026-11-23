@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link ros.Package#getArtifact <em>Artifact</em>}</li>
  *   <li>{@link ros.Package#getFromGitRepo <em>From Git Repo</em>}</li>
  *   <li>{@link ros.Package#getDependency <em>Dependency</em>}</li>
+ *   <li>{@link ros.Package#getPluginBases <em>Plugin Bases</em>}</li>
  * </ul>
  *
  * @see ros.RosPackage#getPackage()
@@ -108,5 +109,17 @@ public interface Package extends EObject {
 	 * @generated
 	 */
 	EList<Dependency> getDependency();
+
+	/**
+	 * Returns the value of the '<em><b>Plugin Bases</b></em>' containment reference list.
+	 * The list contents are of type {@link ros.PluginBase}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Plugin Bases</em>' containment reference list.
+	 * @see ros.RosPackage#getPackage_PluginBases()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<PluginBase> getPluginBases();
 
 } // Package

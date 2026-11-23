@@ -16,22 +16,22 @@ import primitives.uint8Array;
  */
 public class uint8ArrayImpl extends AbstractTypeImpl implements uint8Array {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint8ArrayImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.UINT8_ARRAY;
-    }
+		return PrimitivesPackage.Literals.UINT8_ARRAY;
+	}
 
 } //uint8ArrayImpl

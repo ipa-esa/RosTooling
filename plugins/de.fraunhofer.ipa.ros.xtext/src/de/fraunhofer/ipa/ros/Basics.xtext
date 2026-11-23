@@ -40,7 +40,7 @@ RosParamNames returns ecore::EString:
 
 Parameter returns Parameter:
     {Parameter}
-        name=EString':'
+        (name=EString':' | name=AddedKeywordName)
         BEGIN
         ('ns:' namespace=Namespace)?
         'type:' type=ParameterType
@@ -155,7 +155,7 @@ ParameterDate returns ParameterDate:
 
 
 ParameterStructMember returns ParameterStructMember:
-    name=EString':'value=ParameterValue;
+    (name=EString':' | name=AddedKeywordName) value=ParameterValue;
 
 
 ParameterStructTypeMember returns ParameterStructTypeMember:
@@ -395,8 +395,82 @@ RosNames returns ecore::EString:
     ROS_CONVENTION_A | ID | 'node'
 ;
 
+// Colon keywords added after main. A name directly followed by ':' lexes as one of these, so
+// every name position also accepts them: a model on main with, for example, a parameter called
+// "format" keeps parsing. The value converter strips the colon. Each language overrides this
+// rule with the keywords it actually uses, so it reserves no others.
+AddedKeywordName returns ecore::EString:
+    'lifecycle:' | 'active_in:' |
+    'plugins:' | 'implements:' | 'pluginslots:' | 'pluginbases:' | 'base:' | 'parameter:' |
+    'format:' | 'multiple:' | 'class:' | 'header:' | 'loader:' | 'slots:';
+
+// A reference to a plugin base or plugin by its qualified name, package.Name, quoted or not.
+// The DOUBLE terminal lexes ".E" or ".e" (an exponent without digits), so a segment that starts
+// with E or e arrives as DOUBLE followed by the rest of the name.
+QualifiedRef returns ecore::EString:
+    STRING | ID (('.' ID) | (DOUBLE ID?))*;
+
 terminal ROS_CONVENTION_A:
     ( ('/' ID ) | ( ID '/' ) )* ;
 
 terminal ROS_CONVENTION_PARAM:
     ( ('/' STRING ) | ( STRING '/' ) | ('~' STRING ) )* ;
+
+///////////////////
+// EXTENSION BLOCKS
+///////////////////
+ExtensionBlock returns ExtensionBlock:
+    {ExtensionBlock}
+    '@' name=ExtensionBlockName ':'
+    (
+        (BEGIN entries+=ExtensionEntry+ END) |
+        ('{' (entries+=ExtensionEntry (','? entries+=ExtensionEntry)*)? '}')
+    )?;
+
+ExtensionBlockName returns ecore::EString:
+    ID ('.' ID)*;
+
+ExtensionEntry returns ExtensionEntry:
+    {ExtensionEntry}
+    (key=ExtensionKey ':' | key=ExtensionColonKey | key=AddedKeywordName)
+    value=ExtensionValue;
+
+ExtensionKey returns ecore::EString:
+    ID | STRING | KEYWORD | 'node' | 'String' | 'Integer' | 'Double' | 'Boolean' | 'Base64' | 'Array' | 'List' | 'Struct' | 'Date' | 'Any' |
+    'bool' | 'int8' | 'uint8' | 'int16' | 'uint16' | 'int32' | 'uint32' | 'int64' | 'uint64' | 'float32' | 'float64' | 'string' | 'char' | 'byte' | 'Header';
+
+ExtensionColonKey returns ecore::EString:
+    'ns:' | 'type:' | 'value:' | 'default:';
+
+ExtensionValue returns ExtensionValue:
+    ExtensionListValue |
+    ExtensionBraceMapValue |
+    ExtensionIndentedMapValue |
+    ExtensionRefValue |
+    ExtensionScalarValue;
+
+// "[]" is a keyword (ArraySpecRef), so the lexer reads an empty list written without a space as
+// that one token; accept it as an empty list.
+ExtensionListValue returns ExtensionListValue:
+    {ExtensionListValue}
+    ('[]' | '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']');
+
+ExtensionBraceMapValue returns ExtensionMapValue:
+    {ExtensionMapValue}
+    '{' (entries+=ExtensionEntry (','? entries+=ExtensionEntry)*)? '}';
+
+ExtensionIndentedMapValue returns ExtensionMapValue:
+    {ExtensionMapValue}
+    BEGIN entries+=ExtensionEntry+ END;
+
+ExtensionRefValue returns ExtensionRefValue:
+    {ExtensionRefValue}
+    refKind=('pub->' | 'sub->' | 'ss->' | 'sc->' | 'as->' | 'ac->' | 'param->')
+    target=[ecore::EObject|EString];
+
+ExtensionScalarValue returns ExtensionScalarValue:
+    {ExtensionScalarValue}
+    value=ExtensionScalarLiteral;
+
+ExtensionScalarLiteral returns ecore::EString:
+    BOOLEAN | DOUBLE | DECINT | INT | ExtensionKey;

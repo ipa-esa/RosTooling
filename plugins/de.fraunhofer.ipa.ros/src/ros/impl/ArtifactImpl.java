@@ -2,17 +2,22 @@
  */
 package ros.impl;
 
+import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import ros.Artifact;
 import ros.Node;
+import ros.Plugin;
 import ros.RosPackage;
 
 /**
@@ -25,6 +30,7 @@ import ros.RosPackage;
  * <ul>
  *   <li>{@link ros.impl.ArtifactImpl#getName <em>Name</em>}</li>
  *   <li>{@link ros.impl.ArtifactImpl#getNode <em>Node</em>}</li>
+ *   <li>{@link ros.impl.ArtifactImpl#getPlugins <em>Plugins</em>}</li>
  * </ul>
  *
  * @generated
@@ -59,6 +65,16 @@ public class ArtifactImpl extends MinimalEObjectImpl.Container implements Artifa
 	 * @ordered
 	 */
 	protected Node node;
+
+	/**
+	 * The cached value of the '{@link #getPlugins() <em>Plugins</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPlugins()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Plugin> plugins;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -153,10 +169,25 @@ public class ArtifactImpl extends MinimalEObjectImpl.Container implements Artifa
 	 * @generated
 	 */
 	@Override
+	public EList<Plugin> getPlugins() {
+		if (plugins == null) {
+			plugins = new EObjectContainmentEList<Plugin>(Plugin.class, this, RosPackage.ARTIFACT__PLUGINS);
+		}
+		return plugins;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case RosPackage.ARTIFACT__NODE:
 				return basicSetNode(null, msgs);
+			case RosPackage.ARTIFACT__PLUGINS:
+				return ((InternalEList<?>)getPlugins()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -173,6 +204,8 @@ public class ArtifactImpl extends MinimalEObjectImpl.Container implements Artifa
 				return getName();
 			case RosPackage.ARTIFACT__NODE:
 				return getNode();
+			case RosPackage.ARTIFACT__PLUGINS:
+				return getPlugins();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -182,6 +215,7 @@ public class ArtifactImpl extends MinimalEObjectImpl.Container implements Artifa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -190,6 +224,10 @@ public class ArtifactImpl extends MinimalEObjectImpl.Container implements Artifa
 				return;
 			case RosPackage.ARTIFACT__NODE:
 				setNode((Node)newValue);
+				return;
+			case RosPackage.ARTIFACT__PLUGINS:
+				getPlugins().clear();
+				getPlugins().addAll((Collection<? extends Plugin>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -209,6 +247,9 @@ public class ArtifactImpl extends MinimalEObjectImpl.Container implements Artifa
 			case RosPackage.ARTIFACT__NODE:
 				setNode((Node)null);
 				return;
+			case RosPackage.ARTIFACT__PLUGINS:
+				getPlugins().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -225,6 +266,8 @@ public class ArtifactImpl extends MinimalEObjectImpl.Container implements Artifa
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case RosPackage.ARTIFACT__NODE:
 				return node != null;
+			case RosPackage.ARTIFACT__PLUGINS:
+				return plugins != null && !plugins.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

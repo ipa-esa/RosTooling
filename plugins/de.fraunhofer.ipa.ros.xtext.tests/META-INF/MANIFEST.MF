@@ -3,7 +3,7 @@ Automatic-Module-Name: de.fraunhofer.ipa.ros.xtext.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: de.fraunhofer.ipa.ros.xtext.tests
 Bundle-Vendor: Fraunhofer IPA
-Bundle-Version: 3.5.1
+Bundle-Version: 3.6.0
 Bundle-SymbolicName: de.fraunhofer.ipa.ros.xtext.tests; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: de.fraunhofer.ipa.ros.xtext,
@@ -17,9 +17,16 @@ Require-Bundle: de.fraunhofer.ipa.ros.xtext,
  de.fraunhofer.ipa.ros1.xtext;bundle-version="2.0.0",
  de.fraunhofer.ipa.ros2.xtext;bundle-version="2.0.0",
  de.fraunhofer.ipa.ros2.distro;bundle-version="3.4.0",
+ de.fraunhofer.ipa.ros2.xtext.ide,
+ de.fraunhofer.ipa.ros.xtext.ide,
+ org.eclipse.lsp4j,
+ com.google.gson,
  de.fraunhofer.ipa.rossystem;bundle-version="2.0.0",
- de.fraunhofer.ipa.rossystem.xtext;bundle-version="3.4.0"
+ de.fraunhofer.ipa.rossystem.xtext;bundle-version="3.4.0",
+ de.fraunhofer.ipa.rossystem.xtext.ide
 Import-Package: org.apache.log4j,
+ org.osgi.framework,
+ javax.tools;resolution:=optional,
  org.junit;version="4.5.0",
  org.junit.runner;version="4.5.0",
  org.junit.runner.manipulation;version="4.5.0",

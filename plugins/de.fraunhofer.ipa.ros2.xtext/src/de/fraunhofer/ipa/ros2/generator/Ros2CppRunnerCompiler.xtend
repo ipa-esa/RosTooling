@@ -99,6 +99,16 @@ public:
         «FOR param : node.parameter»
         algorithm_->set_parameter("«param.name»", this->get_param_«param.name»());
         «ENDFOR»
+        «FOR slot : node.pluginSlots»
+        algorithm_->set_parameter("«slot.parameter»", this->get_param_«sanitizeName(slot.parameter)»());
+        «ENDFOR»
+        «IF !node.loadedSlots.empty»
+
+        // Inject plugins loaded for plugin slots
+        «ENDIF»
+        «FOR slot : node.loadedSlots»
+        algorithm_->set_«slotId(slot)»_plugin«IF slot.multiple»s«ENDIF»(this->get_«slotId(slot)»_plugin«IF slot.multiple»s«ENDIF»());
+        «ENDFOR»
 
         // Inject publisher delegates
         «FOR pub : node.publisher»

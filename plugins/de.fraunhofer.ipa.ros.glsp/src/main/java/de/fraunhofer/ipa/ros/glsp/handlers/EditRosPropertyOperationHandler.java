@@ -1,14 +1,18 @@
 package de.fraunhofer.ipa.ros.glsp.handlers;
 
+import de.fraunhofer.ipa.ros.glsp.model.SlotAttachments;
 import com.google.inject.Inject;
 import de.fraunhofer.ipa.ros.glsp.model.RosModelState;
 import de.fraunhofer.ipa.ros.glsp.operations.EditRosPropertyOperation;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.glsp.server.emf.EMFOperationHandler;
 import ros.Artifact;
+import ros.Extensible;
 import ros.InterfaceType;
 import ros.Node;
 import ros.Package;
@@ -22,6 +26,7 @@ import ros.ParameterIntegerType;
 import ros.ParameterString;
 import ros.ParameterType;
 import ros.ParameterValue;
+import ros.Plugin;
 import ros.RosFactory;
 import system.RosInterface;
 import system.RosNode;
@@ -55,6 +60,18 @@ public class EditRosPropertyOperationHandler extends EMFOperationHandler<EditRos
                 String key = operation.getKey() != null ? operation.getKey().trim() : null;
                 String val = operation.getValue() != null ? operation.getValue() : "";
                 String valType = operation.getValueType();
+
+                if (target instanceof Extensible ext
+                        && RosPackageSetEditor.applyExtensibleEdit(
+                                ext,
+                                prop,
+                                key,
+                                val,
+                                rosModelState.getSemanticResource() != null
+                                        ? rosModelState.getSemanticResource().getResourceSet()
+                                        : null)) {
+                    return;
+                }
 
                 if (rosModelState.isPackageModel()
                         && RosPackageSetEditor.apply(rosModelState, target, prop, key, val, valType)) {
@@ -174,6 +191,39 @@ public class EditRosPropertyOperationHandler extends EMFOperationHandler<EditRos
             RosElementResolver.resolveOriginNode(
                     rosModelState.getSemanticResource().getResourceSet(), val)
                     .ifPresent(rn::setFrom);
+        } else if ("plugins".equalsIgnoreCase(prop) && rosModelState.getSemanticResource() != null) {
+            var rs = rosModelState.getSemanticResource().getResourceSet();
+            rn.getSlots().clear();
+            for (String rawRef : val.split(",")) {
+                String trimmed = rawRef.trim();
+                if (!trimmed.isEmpty()) {
+                    RosElementResolver.resolveOriginPlugin(rs, trimmed)
+                            .ifPresent(pl -> SlotAttachments.attach(rn, pl));
+                }
+            }
+            rosModelState.markDirty(rn, "plugins");
+        } else if ("slot".equalsIgnoreCase(prop) && key != null && !key.isBlank()
+                && rosModelState.getSemanticResource() != null) {
+            // key = host slot name, value = comma-separated plugin refs ("pkg.Plugin"); empty detaches all.
+            var rs = rosModelState.getSemanticResource().getResourceSet();
+            List<ros.Plugin> plugins = new ArrayList<>();
+            for (String rawRef : (val == null ? "" : val).split(",")) {
+                String trimmed = rawRef.trim();
+                if (!trimmed.isEmpty()) {
+                    RosElementResolver.resolveOriginPlugin(rs, trimmed).ifPresent(plugins::add);
+                }
+            }
+            if (SlotAttachments.set(rn, key, plugins)) {
+                rosModelState.markDirty(rn, "plugins");
+            }
+        } else if ("addPlugin".equalsIgnoreCase(prop) && rosModelState.getSemanticResource() != null) {
+            RosElementResolver.resolveOriginPlugin(
+                    rosModelState.getSemanticResource().getResourceSet(), val)
+                    .ifPresent(pl -> {
+                        if (SlotAttachments.attach(rn, pl)) {
+                            rosModelState.markDirty(rn, "plugins");
+                        }
+                    });
         } else if ("parameter".equalsIgnoreCase(prop) && key != null && !key.isEmpty()) {
             RosParameter targetParam = null;
             for (RosParameter existing : rn.getRosparameters()) {

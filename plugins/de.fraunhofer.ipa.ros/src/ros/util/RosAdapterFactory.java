@@ -19,8 +19,17 @@ import ros.ArrayTopicSpecMsgRef;
 import ros.Artifact;
 import ros.CatkinPackage;
 import ros.Dependency;
+import ros.Extensible;
+import ros.ExtensionBlock;
+import ros.ExtensionEntry;
+import ros.ExtensionListValue;
+import ros.ExtensionMapValue;
+import ros.ExtensionRefValue;
+import ros.ExtensionScalarValue;
+import ros.ExtensionValue;
 import ros.ExternalDependency;
 import ros.GlobalNamespace;
+import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.MessageDefinition;
 import ros.Namespace;
@@ -51,6 +60,9 @@ import ros.ParameterStructType;
 import ros.ParameterStructTypeMember;
 import ros.ParameterType;
 import ros.ParameterValue;
+import ros.Plugin;
+import ros.PluginBase;
+import ros.PluginSlot;
 import ros.PrivateNamespace;
 import ros.Publisher;
 import ros.QualityOfService;
@@ -121,8 +133,56 @@ public class RosAdapterFactory extends AdapterFactoryImpl {
 	protected RosSwitch<Adapter> modelSwitch =
 		new RosSwitch<Adapter>() {
 			@Override
+			public Adapter caseExtensible(Extensible object) {
+				return createExtensibleAdapter();
+			}
+			@Override
+			public Adapter caseExtensionBlock(ExtensionBlock object) {
+				return createExtensionBlockAdapter();
+			}
+			@Override
+			public Adapter caseExtensionEntry(ExtensionEntry object) {
+				return createExtensionEntryAdapter();
+			}
+			@Override
+			public Adapter caseExtensionValue(ExtensionValue object) {
+				return createExtensionValueAdapter();
+			}
+			@Override
+			public Adapter caseExtensionScalarValue(ExtensionScalarValue object) {
+				return createExtensionScalarValueAdapter();
+			}
+			@Override
+			public Adapter caseExtensionListValue(ExtensionListValue object) {
+				return createExtensionListValueAdapter();
+			}
+			@Override
+			public Adapter caseExtensionMapValue(ExtensionMapValue object) {
+				return createExtensionMapValueAdapter();
+			}
+			@Override
+			public Adapter caseExtensionRefValue(ExtensionRefValue object) {
+				return createExtensionRefValueAdapter();
+			}
+			@Override
+			public Adapter caseInterfaceHolder(InterfaceHolder object) {
+				return createInterfaceHolderAdapter();
+			}
+			@Override
 			public Adapter caseNode(Node object) {
 				return createNodeAdapter();
+			}
+			@Override
+			public Adapter casePlugin(Plugin object) {
+				return createPluginAdapter();
+			}
+			@Override
+			public Adapter casePluginBase(PluginBase object) {
+				return createPluginBaseAdapter();
+			}
+			@Override
+			public Adapter casePluginSlot(PluginSlot object) {
+				return createPluginSlotAdapter();
 			}
 			@Override
 			public Adapter casePackage(ros.Package object) {
@@ -353,6 +413,132 @@ public class RosAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
+	 * Creates a new adapter for an object of class '{@link ros.Extensible <em>Extensible</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.Extensible
+	 * @generated
+	 */
+	public Adapter createExtensibleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.ExtensionBlock <em>Extension Block</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.ExtensionBlock
+	 * @generated
+	 */
+	public Adapter createExtensionBlockAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.ExtensionEntry <em>Extension Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.ExtensionEntry
+	 * @generated
+	 */
+	public Adapter createExtensionEntryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.ExtensionValue <em>Extension Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.ExtensionValue
+	 * @generated
+	 */
+	public Adapter createExtensionValueAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.ExtensionScalarValue <em>Extension Scalar Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.ExtensionScalarValue
+	 * @generated
+	 */
+	public Adapter createExtensionScalarValueAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.ExtensionListValue <em>Extension List Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.ExtensionListValue
+	 * @generated
+	 */
+	public Adapter createExtensionListValueAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.ExtensionMapValue <em>Extension Map Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.ExtensionMapValue
+	 * @generated
+	 */
+	public Adapter createExtensionMapValueAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.ExtensionRefValue <em>Extension Ref Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.ExtensionRefValue
+	 * @generated
+	 */
+	public Adapter createExtensionRefValueAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.InterfaceHolder <em>Interface Holder</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.InterfaceHolder
+	 * @generated
+	 */
+	public Adapter createInterfaceHolderAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link ros.Node <em>Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -363,6 +549,48 @@ public class RosAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createNodeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.Plugin <em>Plugin</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.Plugin
+	 * @generated
+	 */
+	public Adapter createPluginAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.PluginBase <em>Plugin Base</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.PluginBase
+	 * @generated
+	 */
+	public Adapter createPluginBaseAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link ros.PluginSlot <em>Plugin Slot</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see ros.PluginSlot
+	 * @generated
+	 */
+	public Adapter createPluginSlotAdapter() {
 		return null;
 	}
 

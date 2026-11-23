@@ -1,0 +1,21 @@
+subst_pkg:
+  artifacts:
+    describer:
+      node: describer
+      parameters:
+        robot_description:
+          type: String
+        config_file:
+          type: String
+        rate_hz:
+          type: Double
+          default: 10.0
+        max_count:
+          type: Integer
+          default: 5
+        enabled:
+          type: Boolean
+          default: true
+        frame_id:
+          type: String
+          default: "base_link"

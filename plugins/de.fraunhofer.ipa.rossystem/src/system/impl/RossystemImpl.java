@@ -16,22 +16,22 @@ import system.RossystemPackage;
  */
 public class RossystemImpl extends SystemImpl implements Rossystem {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RossystemImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RossystemPackage.Literals.ROSSYSTEM;
-    }
+		return RossystemPackage.Literals.ROSSYSTEM;
+	}
 
 } //RossystemImpl

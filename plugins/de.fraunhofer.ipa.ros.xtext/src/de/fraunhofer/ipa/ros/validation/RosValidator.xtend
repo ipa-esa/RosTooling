@@ -9,12 +9,17 @@ import ros.ActionServer
 import ros.Artifact
 import ros.Node
 import ros.Package
+import ros.Parameter
+import ros.PluginBase
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases
+import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry
+import ros.PluginSlot
 import ros.Publisher
+import ros.QualityOfService
+import ros.RosPackage
 import ros.ServiceClient
 import ros.ServiceServer
 import ros.Subscriber
-import ros.Parameter
-import ros.QualityOfService
 
 /**
  * This class contains custom validation rules.
@@ -162,5 +167,108 @@ class RosValidator extends AbstractRosValidator {
         }
     }
   }
+
+  public static val PLUGIN_INVALID_IMPLEMENTS = 'plugin.invalidImplements'
+  public static val SLOT_DUPLICATE = 'slot.duplicate'
+  public static val SLOT_PARAM_CONFLICT = 'slot.parameterConflict'
+  public static val SLOT_DEFAULT_WRONG_BASE = 'slot.defaultWrongBase'
+  public static val PLUGIN_UNKNOWN_LOADER = 'plugin.unknownLoader'
+
+  @Check
+  def void checkPluginBase(PluginBase base) {
+    val cls = base.className?.trim
+    if (!isValidQualifiedCppType(cls)) {
+      error(
+        "Plugin base '" + base.name + "' field 'class' must be a C++ namespace-qualified class (e.g. 'nav2_core::GlobalPlanner')",
+        base,
+        RosPackage.Literals.PLUGIN_BASE__CLASS_NAME,
+        PLUGIN_INVALID_IMPLEMENTS
+      )
+    }
+  }
+
+  /**
+   * A base's loader is pluginlib, built into core, or a loader registered by exactly one enabled
+   * plugin.
+   */
+  @Check
+  def void checkPluginBaseLoader(PluginBase base) {
+    val loader = base.loader?.trim
+    if (loader === null || loader.empty || loader == PluginBases.PLUGINLIB) {
+      return
+    }
+    val owners = PluginRegistry.INSTANCE.loaderRegistrations(loader).map[plugin.id]
+    if (owners.size == 1) {
+      return
+    }
+    val known = (#[PluginBases.PLUGINLIB] + PluginRegistry.INSTANCE.activeLoaders.filter[k, v | v.size == 1].keySet).join(", ")
+    val message = if (owners.empty)
+        "Plugin base '" + base.name + "' uses loader '" + loader + "', which no enabled plugin registers. Known loaders: " + known
+      else
+        "Plugin base '" + base.name + "' uses loader '" + loader + "', which is registered by several plugins: " + owners.join(", ")
+    error(message, base, RosPackage.Literals.PLUGIN_BASE__LOADER, PLUGIN_UNKNOWN_LOADER)
+  }
+
+  /**
+   * A slot owns its parameter: the name must not also be a node parameter or another slot's
+   * parameter. A default plugin must implement the slot's base.
+   */
+  @Check
+  def void checkNodePluginSlots(Node node) {
+    val seenSlotNames = newHashSet
+    val seenSlotParams = newHashSet
+    val nodeParams = node.parameter.map[name].filterNull.toSet
+    for (PluginSlot slot : node.pluginSlots) {
+      if (slot.name !== null && !seenSlotNames.add(slot.name)) {
+        error(
+          "Duplicate pluginslot '" + slot.name + "' on node '" + node.name + "'",
+          slot,
+          RosPackage.Literals.PLUGIN_SLOT__NAME,
+          SLOT_DUPLICATE
+        )
+      }
+      val paramName = slot.parameter?.trim
+      if (paramName !== null && !paramName.empty) {
+        if (nodeParams.contains(paramName)) {
+          error(
+            "PluginSlot '" + slot.name + "' declares parameter '" + paramName
+              + "', which is also listed under the parameters of node '" + node.name + "'; remove it there, the slot declares it",
+            slot,
+            RosPackage.Literals.PLUGIN_SLOT__PARAMETER,
+            SLOT_PARAM_CONFLICT
+          )
+        } else if (!seenSlotParams.add(paramName)) {
+          error(
+            "PluginSlot '" + slot.name + "' declares parameter '" + paramName
+              + "', which another slot of node '" + node.name + "' already declares",
+            slot,
+            RosPackage.Literals.PLUGIN_SLOT__PARAMETER,
+            SLOT_PARAM_CONFLICT
+          )
+        }
+      }
+      val defaultPlugin = slot.defaultPlugin
+      val base = slot.base
+      // Unresolved references are already reported by the linker.
+      if (defaultPlugin !== null && !defaultPlugin.eIsProxy && base !== null && !base.eIsProxy) {
+        val implemented = defaultPlugin.implements
+        if (implemented !== null && !implemented.eIsProxy && implemented !== base) {
+          error(
+            "Default plugin '" + defaultPlugin.name + "' implements '" + implemented.name + "', but slot '" + slot.name
+              + "' takes '" + base.name + "'",
+            slot,
+            RosPackage.Literals.PLUGIN_SLOT__DEFAULT_PLUGIN,
+            SLOT_DEFAULT_WRONG_BASE
+          )
+        }
+      }
+    }
+  }
+
+  def private boolean isValidQualifiedCppType(String fqn) {
+    return fqn !== null && fqn.contains("::") && !fqn.startsWith("::") && !fqn.endsWith("::")
+  }
+
+
 
 }

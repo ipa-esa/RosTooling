@@ -56,7 +56,7 @@ def compile_package_xml(Package pkg)'''
 <package format="3">
  <name>«pkg.name»</name>
  <version>0.0.0</version>
- <description>This package contains the implementation of the node «pkg.artifact.get(0).node.name»</description>
+ <description>This package contains the implementation of the node «pkg.artifact.map[node].filterNull.head?.name ?: pkg.name»</description>
   <maintainer email="jane.doe@example.com">Jane Doe</maintainer>
   <author email="jane.doe@example.com">Jane Doe</author>
   <license>Apache 2.0</license>
@@ -99,12 +99,14 @@ find_package(«depend_pkg» REQUIRED)
   «ENDFOR»
 
 «FOR art:pkg.artifact»
+«IF art.node !== null»
 add_executable(«art.name» src/«art.node.name».cpp)
 ament_target_dependencies(«art.name» rclcpp «FOR depend_pkg:pkg.getPkgDependencies»«depend_pkg» «ENDFOR»)
 
 install(TARGETS
   «art.name»
   DESTINATION lib/${PROJECT_NAME})
+«ENDIF»
 «ENDFOR»
 
 ament_package()
@@ -255,11 +257,13 @@ int main(int argc, char * argv[])
     set=new HashSet<String>()
     PkgsList = new ArrayList()
     for (art:pkg.artifact){
-        node=art.node
-        for (pub:node.publisher){set.add(pub.message.package.name)}
-        for (sub:node.subscriber){set.add(sub.message.package.name)}
-        for (srvserver:node.serviceserver){set.add(srvserver.service.package.name)}
-        for (srvclient:node.serviceclient){set.add(srvclient.service.package.name)}
+        if (art.node !== null) {
+            node=art.node
+            for (pub:node.publisher){set.add(pub.message.package.name)}
+            for (sub:node.subscriber){set.add(sub.message.package.name)}
+            for (srvserver:node.serviceserver){set.add(srvserver.service.package.name)}
+            for (srvclient:node.serviceclient){set.add(srvclient.service.package.name)}
+        }
     }
     PkgsList.addAll(set)
     return PkgsList

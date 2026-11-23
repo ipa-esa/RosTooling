@@ -1,0 +1,60 @@
+# Units for tools/compat/snapshot.sh: name|subject-dir|library-dir,library-dir
+# @ROSTOOLING@, @EXTENSION@ and @STUDIO@ are replaced with the checkouts named by
+# ROSTOOLING_REPO, ROSTOOLING_EXTENSION_REPO and ROSTOOLING_STUDIO_REPO; lines whose
+# variable is unset are skipped. Only models in syntax that exists on main belong here.
+#
+# RosTooling test resources
+rt-basic-msgs|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/basic_msgs|
+rt-golden|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/golden/models|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/basic_msgs
+rt-rosnodes|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/rosnodes|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/basic_msgs
+rt-substitution|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/substitution|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/basic_msgs
+# RosTooling_Extension demo workspace (test_system is left out: it holds plugin-syntax experiments)
+ext-minimal-action|@EXTENSION@/demo/test_ws/src/minimal_action|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/basic_msgs
+ext-minimal-publisher|@EXTENSION@/demo/test_ws/src/minimal_publisher|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/basic_msgs
+ext-minimal-service|@EXTENSION@/demo/test_ws/src/minimal_service|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/basic_msgs
+ext-minimal-subscriber|@EXTENSION@/demo/test_ws/src/minimal_subscriber|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/basic_msgs
+ext-mock-robot-system|@EXTENSION@/demo/test_ws/src/mock_robot_system|@ROSTOOLING@/plugins/de.fraunhofer.ipa.ros.xtext.tests/resources/basic_msgs
+# ipa-rostooling-studio: catalogue of common ROS packages and message models
+studio-common-objects|@STUDIO@/assets/roscommonobjects|
+studio-catalog|@STUDIO@/assets/rosmodelscatalog|@STUDIO@/assets/roscommonobjects
+studio-fixtures-comments|@STUDIO@/tests/fixtures/comments|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-fixtures-extract|@STUDIO@/tests/fixtures/extract|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-fixtures-hazards|@STUDIO@/tests/fixtures/hazards|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-fixtures-messages|@STUDIO@/tests/fixtures/messages|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-fixtures-multifile|@STUDIO@/tests/fixtures/multifile|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-fixtures-params|@STUDIO@/tests/fixtures/params|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-fixtures-sublabels|@STUDIO@/tests/fixtures/sublabels|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-fixtures-subsysgraph|@STUDIO@/tests/fixtures/subsysgraph|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-fixtures-subsystems|@STUDIO@/tests/fixtures/subsystems|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-fixtures-wrap|@STUDIO@/tests/fixtures/wrap|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-regenerated-imagesys|@STUDIO@/tests/regenerated/imagesys|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-regenerated-mani-ur|@STUDIO@/tests/regenerated/mani-ur|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-regenerated-manufact|@STUDIO@/tests/regenerated/manufact|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-regenerated-turtlesim|@STUDIO@/tests/regenerated/turtlesim|@STUDIO@/assets/roscommonobjects,@STUDIO@/assets/rosmodelscatalog
+studio-oracle-01-corpus-turtlesim|@STUDIO@/tests/oracle/cases/01-corpus-turtlesim|
+studio-oracle-02-corpus-csrsp|@STUDIO@/tests/oracle/cases/02-corpus-csrsp|
+studio-oracle-03-ours-turtlesim|@STUDIO@/tests/oracle/cases/03-ours-turtlesim|
+studio-oracle-04-neg-lease-duration|@STUDIO@/tests/oracle/cases/04-neg-lease-duration|
+studio-oracle-05-neg-msgs-block|@STUDIO@/tests/oracle/cases/05-neg-msgs-block|
+studio-oracle-06-neg-uppercase-pkg|@STUDIO@/tests/oracle/cases/06-neg-uppercase-pkg|
+studio-oracle-07-from-node-arrow-artifact|@STUDIO@/tests/oracle/cases/07-from-node-arrow-artifact|
+studio-oracle-08-neg-from-artifact|@STUDIO@/tests/oracle/cases/08-neg-from-artifact|
+studio-oracle-09-neg-arrow-node|@STUDIO@/tests/oracle/cases/09-neg-arrow-node|
+studio-oracle-10-ours-turtlesim-msgs|@STUDIO@/tests/oracle/cases/10-ours-turtlesim-msgs|
+studio-oracle-11-ours-msg-vocabulary|@STUDIO@/tests/oracle/cases/11-ours-msg-vocabulary|
+studio-oracle-12-neg-bounded-array|@STUDIO@/tests/oracle/cases/12-neg-bounded-array|
+studio-oracle-13-probe-bool-True|@STUDIO@/tests/oracle/cases/13-probe-bool-True|
+studio-oracle-14-probe-qos-duration|@STUDIO@/tests/oracle/cases/14-probe-qos-duration|
+studio-oracle-15-subsystems-fixture|@STUDIO@/tests/oracle/cases/15-subsystems-fixture|
+studio-oracle-16-subsystems-tf-ambiguity|@STUDIO@/tests/oracle/cases/16-subsystems-tf-ambiguity|
+studio-oracle-17-subsystems-multi|@STUDIO@/tests/oracle/cases/17-subsystems-multi|
+studio-oracle-18-neg-subsystems-dash|@STUDIO@/tests/oracle/cases/18-neg-subsystems-dash|
+studio-oracle-19-neg-col0-comment|@STUDIO@/tests/oracle/cases/19-neg-col0-comment|
+studio-oracle-20-subsystems-label-collision|@STUDIO@/tests/oracle/cases/20-subsystems-label-collision|
+studio-oracle-21-neg-liveliness|@STUDIO@/tests/oracle/cases/21-neg-liveliness|
+studio-oracle-22-parameters|@STUDIO@/tests/oracle/cases/22-parameters|
+studio-oracle-23-subsystem-wired|@STUDIO@/tests/oracle/cases/23-subsystem-wired|
+studio-oracle-24-neg-list-as-string|@STUDIO@/tests/oracle/cases/24-neg-list-as-string|
+studio-oracle-_deps|@STUDIO@/tests/oracle/cases/_deps|
+studio-oracle-tb3-fresh|@STUDIO@/tests/oracle/cases/tb3-fresh|
+studio-oracle-tb3-v4|@STUDIO@/tests/oracle/cases/tb3-v4|

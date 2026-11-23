@@ -16,22 +16,22 @@ import primitives.boolArray;
  */
 public class boolArrayImpl extends AbstractTypeImpl implements boolArray {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected boolArrayImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.BOOL_ARRAY;
-    }
+		return PrimitivesPackage.Literals.BOOL_ARRAY;
+	}
 
 } //boolArrayImpl

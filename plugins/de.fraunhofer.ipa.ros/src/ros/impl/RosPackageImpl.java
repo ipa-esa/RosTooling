@@ -25,8 +25,17 @@ import ros.ArrayTopicSpecMsgRef;
 import ros.Artifact;
 import ros.CatkinPackage;
 import ros.Dependency;
+import ros.Extensible;
+import ros.ExtensionBlock;
+import ros.ExtensionEntry;
+import ros.ExtensionListValue;
+import ros.ExtensionMapValue;
+import ros.ExtensionRefValue;
+import ros.ExtensionScalarValue;
+import ros.ExtensionValue;
 import ros.ExternalDependency;
 import ros.GlobalNamespace;
+import ros.InterfaceHolder;
 import ros.InterfaceType;
 import ros.LifecycleState;
 import ros.MessageDefinition;
@@ -58,6 +67,10 @@ import ros.ParameterStructType;
 import ros.ParameterStructTypeMember;
 import ros.ParameterType;
 import ros.ParameterValue;
+import ros.Plugin;
+import ros.PluginBase;
+import ros.PluginSlot;
+import ros.PluginSlotValueFormat;
 import ros.PrivateNamespace;
 import ros.Publisher;
 import ros.QualityOfService;
@@ -84,7 +97,91 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass extensibleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass extensionBlockEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass extensionEntryEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass extensionValueEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass extensionScalarValueEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass extensionListValueEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass extensionMapValueEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass extensionRefValueEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass interfaceHolderEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass nodeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass pluginEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass pluginBaseEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass pluginSlotEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -455,6 +552,13 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EEnum pluginSlotValueFormatEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EDataType graphNameEDataType = null;
 
 	/**
@@ -532,6 +636,296 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getExtensible() {
+		return extensibleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getExtensible_Extensions() {
+		return (EReference)extensibleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getExtensionBlock() {
+		return extensionBlockEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getExtensionBlock_Name() {
+		return (EAttribute)extensionBlockEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getExtensionBlock_Entries() {
+		return (EReference)extensionBlockEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getExtensionEntry() {
+		return extensionEntryEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getExtensionEntry_Key() {
+		return (EAttribute)extensionEntryEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getExtensionEntry_Value() {
+		return (EReference)extensionEntryEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getExtensionValue() {
+		return extensionValueEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getExtensionScalarValue() {
+		return extensionScalarValueEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getExtensionScalarValue_Value() {
+		return (EAttribute)extensionScalarValueEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getExtensionScalarValue_RawKind() {
+		return (EAttribute)extensionScalarValueEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getExtensionListValue() {
+		return extensionListValueEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getExtensionListValue_Items() {
+		return (EReference)extensionListValueEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getExtensionMapValue() {
+		return extensionMapValueEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getExtensionMapValue_Entries() {
+		return (EReference)extensionMapValueEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getExtensionRefValue() {
+		return extensionRefValueEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getExtensionRefValue_RefKind() {
+		return (EAttribute)extensionRefValueEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getExtensionRefValue_Target() {
+		return (EReference)extensionRefValueEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getExtensionRefValue_RawTarget() {
+		return (EAttribute)extensionRefValueEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getInterfaceHolder() {
+		return interfaceHolderEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getInterfaceHolder_Serviceserver() {
+		return (EReference)interfaceHolderEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getInterfaceHolder_Publisher() {
+		return (EReference)interfaceHolderEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getInterfaceHolder_Subscriber() {
+		return (EReference)interfaceHolderEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getInterfaceHolder_Serviceclient() {
+		return (EReference)interfaceHolderEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getInterfaceHolder_Actionserver() {
+		return (EReference)interfaceHolderEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getInterfaceHolder_Actionclient() {
+		return (EReference)interfaceHolderEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getInterfaceHolder_Name() {
+		return (EAttribute)interfaceHolderEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getInterfaceHolder_Parameter() {
+		return (EReference)interfaceHolderEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getNode() {
 		return nodeEClass;
 	}
@@ -542,8 +936,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getNode_Serviceserver() {
-		return (EReference)nodeEClass.getEStructuralFeatures().get(0);
+	public EAttribute getNode_IsLifecycle() {
+		return (EAttribute)nodeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -552,7 +946,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getNode_Publisher() {
+	public EReference getNode_PluginSlots() {
 		return (EReference)nodeEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -562,8 +956,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getNode_Subscriber() {
-		return (EReference)nodeEClass.getEStructuralFeatures().get(2);
+	public EClass getPlugin() {
+		return pluginEClass;
 	}
 
 	/**
@@ -572,8 +966,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getNode_Serviceclient() {
-		return (EReference)nodeEClass.getEStructuralFeatures().get(3);
+	public EReference getPlugin_Implements() {
+		return (EReference)pluginEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -582,8 +976,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getNode_Actionserver() {
-		return (EReference)nodeEClass.getEStructuralFeatures().get(4);
+	public EClass getPluginBase() {
+		return pluginBaseEClass;
 	}
 
 	/**
@@ -592,8 +986,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getNode_Actionclient() {
-		return (EReference)nodeEClass.getEStructuralFeatures().get(5);
+	public EAttribute getPluginBase_Name() {
+		return (EAttribute)pluginBaseEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -602,8 +996,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getNode_Name() {
-		return (EAttribute)nodeEClass.getEStructuralFeatures().get(6);
+	public EAttribute getPluginBase_ClassName() {
+		return (EAttribute)pluginBaseEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -612,8 +1006,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getNode_Parameter() {
-		return (EReference)nodeEClass.getEStructuralFeatures().get(7);
+	public EAttribute getPluginBase_Header() {
+		return (EAttribute)pluginBaseEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -622,8 +1016,78 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getNode_IsLifecycle() {
-		return (EAttribute)nodeEClass.getEStructuralFeatures().get(8);
+	public EAttribute getPluginBase_Loader() {
+		return (EAttribute)pluginBaseEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getPluginSlot() {
+		return pluginSlotEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPluginSlot_Name() {
+		return (EAttribute)pluginSlotEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getPluginSlot_Base() {
+		return (EReference)pluginSlotEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPluginSlot_Parameter() {
+		return (EAttribute)pluginSlotEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getPluginSlot_DefaultPlugin() {
+		return (EReference)pluginSlotEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPluginSlot_Multiple() {
+		return (EAttribute)pluginSlotEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPluginSlot_ValueFormat() {
+		return (EAttribute)pluginSlotEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -684,6 +1148,16 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	@Override
 	public EReference getPackage_Dependency() {
 		return (EReference)packageEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getPackage_PluginBases() {
+		return (EReference)packageEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -864,6 +1338,16 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	@Override
 	public EReference getArtifact_Node() {
 		return (EReference)artifactEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getArtifact_Plugins() {
+		return (EReference)artifactEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1852,6 +2336,16 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
+	public EEnum getPluginSlotValueFormat() {
+		return pluginSlotValueFormatEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EDataType getGraphName() {
 		return graphNameEDataType;
 	}
@@ -1885,16 +2379,64 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		isCreated = true;
 
 		// Create classes and their features
+		extensibleEClass = createEClass(EXTENSIBLE);
+		createEReference(extensibleEClass, EXTENSIBLE__EXTENSIONS);
+
+		extensionBlockEClass = createEClass(EXTENSION_BLOCK);
+		createEAttribute(extensionBlockEClass, EXTENSION_BLOCK__NAME);
+		createEReference(extensionBlockEClass, EXTENSION_BLOCK__ENTRIES);
+
+		extensionEntryEClass = createEClass(EXTENSION_ENTRY);
+		createEAttribute(extensionEntryEClass, EXTENSION_ENTRY__KEY);
+		createEReference(extensionEntryEClass, EXTENSION_ENTRY__VALUE);
+
+		extensionValueEClass = createEClass(EXTENSION_VALUE);
+
+		extensionScalarValueEClass = createEClass(EXTENSION_SCALAR_VALUE);
+		createEAttribute(extensionScalarValueEClass, EXTENSION_SCALAR_VALUE__VALUE);
+		createEAttribute(extensionScalarValueEClass, EXTENSION_SCALAR_VALUE__RAW_KIND);
+
+		extensionListValueEClass = createEClass(EXTENSION_LIST_VALUE);
+		createEReference(extensionListValueEClass, EXTENSION_LIST_VALUE__ITEMS);
+
+		extensionMapValueEClass = createEClass(EXTENSION_MAP_VALUE);
+		createEReference(extensionMapValueEClass, EXTENSION_MAP_VALUE__ENTRIES);
+
+		extensionRefValueEClass = createEClass(EXTENSION_REF_VALUE);
+		createEAttribute(extensionRefValueEClass, EXTENSION_REF_VALUE__REF_KIND);
+		createEReference(extensionRefValueEClass, EXTENSION_REF_VALUE__TARGET);
+		createEAttribute(extensionRefValueEClass, EXTENSION_REF_VALUE__RAW_TARGET);
+
+		interfaceHolderEClass = createEClass(INTERFACE_HOLDER);
+		createEReference(interfaceHolderEClass, INTERFACE_HOLDER__SERVICESERVER);
+		createEReference(interfaceHolderEClass, INTERFACE_HOLDER__PUBLISHER);
+		createEReference(interfaceHolderEClass, INTERFACE_HOLDER__SUBSCRIBER);
+		createEReference(interfaceHolderEClass, INTERFACE_HOLDER__SERVICECLIENT);
+		createEReference(interfaceHolderEClass, INTERFACE_HOLDER__ACTIONSERVER);
+		createEReference(interfaceHolderEClass, INTERFACE_HOLDER__ACTIONCLIENT);
+		createEAttribute(interfaceHolderEClass, INTERFACE_HOLDER__NAME);
+		createEReference(interfaceHolderEClass, INTERFACE_HOLDER__PARAMETER);
+
 		nodeEClass = createEClass(NODE);
-		createEReference(nodeEClass, NODE__SERVICESERVER);
-		createEReference(nodeEClass, NODE__PUBLISHER);
-		createEReference(nodeEClass, NODE__SUBSCRIBER);
-		createEReference(nodeEClass, NODE__SERVICECLIENT);
-		createEReference(nodeEClass, NODE__ACTIONSERVER);
-		createEReference(nodeEClass, NODE__ACTIONCLIENT);
-		createEAttribute(nodeEClass, NODE__NAME);
-		createEReference(nodeEClass, NODE__PARAMETER);
 		createEAttribute(nodeEClass, NODE__IS_LIFECYCLE);
+		createEReference(nodeEClass, NODE__PLUGIN_SLOTS);
+
+		pluginEClass = createEClass(PLUGIN);
+		createEReference(pluginEClass, PLUGIN__IMPLEMENTS);
+
+		pluginBaseEClass = createEClass(PLUGIN_BASE);
+		createEAttribute(pluginBaseEClass, PLUGIN_BASE__NAME);
+		createEAttribute(pluginBaseEClass, PLUGIN_BASE__CLASS_NAME);
+		createEAttribute(pluginBaseEClass, PLUGIN_BASE__HEADER);
+		createEAttribute(pluginBaseEClass, PLUGIN_BASE__LOADER);
+
+		pluginSlotEClass = createEClass(PLUGIN_SLOT);
+		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__NAME);
+		createEReference(pluginSlotEClass, PLUGIN_SLOT__BASE);
+		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__PARAMETER);
+		createEReference(pluginSlotEClass, PLUGIN_SLOT__DEFAULT_PLUGIN);
+		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__MULTIPLE);
+		createEAttribute(pluginSlotEClass, PLUGIN_SLOT__VALUE_FORMAT);
 
 		packageEClass = createEClass(PACKAGE);
 		createEAttribute(packageEClass, PACKAGE__NAME);
@@ -1902,6 +2444,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		createEReference(packageEClass, PACKAGE__ARTIFACT);
 		createEAttribute(packageEClass, PACKAGE__FROM_GIT_REPO);
 		createEReference(packageEClass, PACKAGE__DEPENDENCY);
+		createEReference(packageEClass, PACKAGE__PLUGIN_BASES);
 
 		dependencyEClass = createEClass(DEPENDENCY);
 
@@ -1929,6 +2472,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		artifactEClass = createEClass(ARTIFACT);
 		createEAttribute(artifactEClass, ARTIFACT__NAME);
 		createEReference(artifactEClass, ARTIFACT__NODE);
+		createEReference(artifactEClass, ARTIFACT__PLUGINS);
 
 		specBaseEClass = createEClass(SPEC_BASE);
 		createEAttribute(specBaseEClass, SPEC_BASE__NAME);
@@ -2070,6 +2614,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 
 		// Create enums
 		lifecycleStateEEnum = createEEnum(LIFECYCLE_STATE);
+		pluginSlotValueFormatEEnum = createEEnum(PLUGIN_SLOT_VALUE_FORMAT);
 
 		// Create data types
 		graphNameEDataType = createEDataType(GRAPH_NAME);
@@ -2107,6 +2652,13 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		extensionScalarValueEClass.getESuperTypes().add(this.getExtensionValue());
+		extensionListValueEClass.getESuperTypes().add(this.getExtensionValue());
+		extensionMapValueEClass.getESuperTypes().add(this.getExtensionValue());
+		extensionRefValueEClass.getESuperTypes().add(this.getExtensionValue());
+		interfaceHolderEClass.getESuperTypes().add(this.getExtensible());
+		nodeEClass.getESuperTypes().add(this.getInterfaceHolder());
+		pluginEClass.getESuperTypes().add(this.getInterfaceHolder());
 		serviceSpecEClass.getESuperTypes().add(this.getSpecBase());
 		serviceServerEClass.getESuperTypes().add(this.getInterfaceType());
 		topicSpecEClass.getESuperTypes().add(this.getSpecBase());
@@ -2147,16 +2699,64 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		arrayTopicSpecMsgRefEClass.getESuperTypes().add(thePrimitivesPackage.getAbstractType());
 
 		// Initialize classes, features, and operations; add parameters
+		initEClass(extensibleEClass, Extensible.class, "Extensible", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getExtensible_Extensions(), this.getExtensionBlock(), null, "extensions", null, 0, -1, Extensible.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(extensionBlockEClass, ExtensionBlock.class, "ExtensionBlock", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExtensionBlock_Name(), ecorePackage.getEString(), "name", null, 1, 1, ExtensionBlock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getExtensionBlock_Entries(), this.getExtensionEntry(), null, "entries", null, 0, -1, ExtensionBlock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(extensionEntryEClass, ExtensionEntry.class, "ExtensionEntry", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExtensionEntry_Key(), ecorePackage.getEString(), "key", null, 1, 1, ExtensionEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getExtensionEntry_Value(), this.getExtensionValue(), null, "value", null, 1, 1, ExtensionEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(extensionValueEClass, ExtensionValue.class, "ExtensionValue", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(extensionScalarValueEClass, ExtensionScalarValue.class, "ExtensionScalarValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExtensionScalarValue_Value(), ecorePackage.getEString(), "value", null, 0, 1, ExtensionScalarValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExtensionScalarValue_RawKind(), ecorePackage.getEString(), "rawKind", "string", 0, 1, ExtensionScalarValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(extensionListValueEClass, ExtensionListValue.class, "ExtensionListValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getExtensionListValue_Items(), this.getExtensionValue(), null, "items", null, 0, -1, ExtensionListValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(extensionMapValueEClass, ExtensionMapValue.class, "ExtensionMapValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getExtensionMapValue_Entries(), this.getExtensionEntry(), null, "entries", null, 0, -1, ExtensionMapValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(extensionRefValueEClass, ExtensionRefValue.class, "ExtensionRefValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExtensionRefValue_RefKind(), ecorePackage.getEString(), "refKind", null, 0, 1, ExtensionRefValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getExtensionRefValue_Target(), ecorePackage.getEObject(), null, "target", null, 0, 1, ExtensionRefValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExtensionRefValue_RawTarget(), ecorePackage.getEString(), "rawTarget", null, 0, 1, ExtensionRefValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(interfaceHolderEClass, InterfaceHolder.class, "InterfaceHolder", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getInterfaceHolder_Serviceserver(), this.getServiceServer(), null, "serviceserver", null, 0, -1, InterfaceHolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getInterfaceHolder_Publisher(), this.getPublisher(), null, "publisher", null, 0, -1, InterfaceHolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getInterfaceHolder_Subscriber(), this.getSubscriber(), null, "subscriber", null, 0, -1, InterfaceHolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getInterfaceHolder_Serviceclient(), this.getServiceClient(), null, "serviceclient", null, 0, -1, InterfaceHolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getInterfaceHolder_Actionserver(), this.getActionServer(), null, "actionserver", null, 0, -1, InterfaceHolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getInterfaceHolder_Actionclient(), this.getActionClient(), null, "actionclient", null, 0, -1, InterfaceHolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getInterfaceHolder_Name(), this.getGraphName(), "name", null, 1, 1, InterfaceHolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getInterfaceHolder_Parameter(), this.getParameter(), null, "parameter", null, 0, -1, InterfaceHolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(nodeEClass, Node.class, "Node", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getNode_Serviceserver(), this.getServiceServer(), null, "serviceserver", null, 0, -1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getNode_Publisher(), this.getPublisher(), null, "publisher", null, 0, -1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getNode_Subscriber(), this.getSubscriber(), null, "subscriber", null, 0, -1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getNode_Serviceclient(), this.getServiceClient(), null, "serviceclient", null, 0, -1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getNode_Actionserver(), this.getActionServer(), null, "actionserver", null, 0, -1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getNode_Actionclient(), this.getActionClient(), null, "actionclient", null, 0, -1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getNode_Name(), this.getGraphName(), "name", null, 1, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getNode_Parameter(), this.getParameter(), null, "parameter", null, 0, -1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNode_IsLifecycle(), ecorePackage.getEBoolean(), "isLifecycle", "false", 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getNode_PluginSlots(), this.getPluginSlot(), null, "pluginSlots", null, 0, -1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(pluginEClass, Plugin.class, "Plugin", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getPlugin_Implements(), this.getPluginBase(), null, "implements", null, 1, 1, Plugin.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(pluginBaseEClass, PluginBase.class, "PluginBase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPluginBase_Name(), ecorePackage.getEString(), "name", null, 1, 1, PluginBase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPluginBase_ClassName(), ecorePackage.getEString(), "className", null, 1, 1, PluginBase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPluginBase_Header(), ecorePackage.getEString(), "header", null, 1, 1, PluginBase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPluginBase_Loader(), ecorePackage.getEString(), "loader", null, 1, 1, PluginBase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(pluginSlotEClass, PluginSlot.class, "PluginSlot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPluginSlot_Name(), ecorePackage.getEString(), "name", null, 1, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPluginSlot_Base(), this.getPluginBase(), null, "base", null, 1, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPluginSlot_Parameter(), ecorePackage.getEString(), "parameter", null, 1, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPluginSlot_DefaultPlugin(), this.getPlugin(), null, "defaultPlugin", null, 0, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPluginSlot_Multiple(), ecorePackage.getEBoolean(), "multiple", "false", 0, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPluginSlot_ValueFormat(), this.getPluginSlotValueFormat(), "valueFormat", "class", 0, 1, PluginSlot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(packageEClass, ros.Package.class, "Package", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPackage_Name(), ecorePackage.getEString(), "name", null, 1, 1, ros.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2164,6 +2764,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		initEReference(getPackage_Artifact(), this.getArtifact(), null, "artifact", null, 0, -1, ros.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPackage_FromGitRepo(), ecorePackage.getEString(), "fromGitRepo", null, 0, 1, ros.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPackage_Dependency(), this.getDependency(), null, "dependency", null, 0, -1, ros.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPackage_PluginBases(), this.getPluginBase(), null, "pluginBases", null, 0, -1, ros.Package.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(dependencyEClass, Dependency.class, "Dependency", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -2191,6 +2792,7 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		initEClass(artifactEClass, Artifact.class, "Artifact", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getArtifact_Name(), ecorePackage.getEString(), "name", null, 1, 1, Artifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getArtifact_Node(), this.getNode(), null, "node", null, 0, 1, Artifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getArtifact_Plugins(), this.getPlugin(), null, "plugins", null, 0, -1, Artifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(specBaseEClass, SpecBase.class, "SpecBase", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSpecBase_Name(), ecorePackage.getEString(), "name", "", 1, 1, SpecBase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2336,6 +2938,10 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		addEEnumLiteral(lifecycleStateEEnum, LifecycleState.INACTIVE);
 		addEEnumLiteral(lifecycleStateEEnum, LifecycleState.ACTIVE);
 		addEEnumLiteral(lifecycleStateEEnum, LifecycleState.FINALIZED);
+
+		initEEnum(pluginSlotValueFormatEEnum, PluginSlotValueFormat.class, "PluginSlotValueFormat");
+		addEEnumLiteral(pluginSlotValueFormatEEnum, PluginSlotValueFormat.CLASS);
+		addEEnumLiteral(pluginSlotValueFormatEEnum, PluginSlotValueFormat.LIBRARY);
 
 		// Initialize data types
 		initEDataType(graphNameEDataType, String.class, "GraphName", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

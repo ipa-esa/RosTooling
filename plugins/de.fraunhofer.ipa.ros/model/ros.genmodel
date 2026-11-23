@@ -12,17 +12,68 @@
       <genEnumLiterals ecoreEnumLiteral="ros.ecore#//LifecycleState/ACTIVE"/>
       <genEnumLiterals ecoreEnumLiteral="ros.ecore#//LifecycleState/FINALIZED"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ros.ecore#//PluginSlotValueFormat">
+      <genEnumLiterals ecoreEnumLiteral="ros.ecore#//PluginSlotValueFormat/CLASS"/>
+      <genEnumLiterals ecoreEnumLiteral="ros.ecore#//PluginSlotValueFormat/LIBRARY"/>
+    </genEnums>
     <genDataTypes ecoreDataType="ros.ecore#//GraphName"/>
+    <genClasses image="false" ecoreClass="ros.ecore#//Extensible">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Extensible/extensions"/>
+    </genClasses>
+    <genClasses ecoreClass="ros.ecore#//ExtensionBlock">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//ExtensionBlock/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//ExtensionBlock/entries"/>
+    </genClasses>
+    <genClasses ecoreClass="ros.ecore#//ExtensionEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//ExtensionEntry/key"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//ExtensionEntry/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="ros.ecore#//ExtensionValue"/>
+    <genClasses ecoreClass="ros.ecore#//ExtensionScalarValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//ExtensionScalarValue/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//ExtensionScalarValue/rawKind"/>
+    </genClasses>
+    <genClasses ecoreClass="ros.ecore#//ExtensionListValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//ExtensionListValue/items"/>
+    </genClasses>
+    <genClasses ecoreClass="ros.ecore#//ExtensionMapValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//ExtensionMapValue/entries"/>
+    </genClasses>
+    <genClasses ecoreClass="ros.ecore#//ExtensionRefValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//ExtensionRefValue/refKind"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ros.ecore#//ExtensionRefValue/target"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//ExtensionRefValue/rawTarget"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="ros.ecore#//InterfaceHolder">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//InterfaceHolder/serviceserver"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//InterfaceHolder/publisher"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//InterfaceHolder/subscriber"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//InterfaceHolder/serviceclient"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//InterfaceHolder/actionserver"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//InterfaceHolder/actionclient"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//InterfaceHolder/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//InterfaceHolder/parameter"/>
+    </genClasses>
     <genClasses ecoreClass="ros.ecore#//Node">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Node/serviceserver"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Node/publisher"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Node/subscriber"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Node/serviceclient"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Node/actionserver"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Node/actionclient"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//Node/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Node/parameter"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//Node/isLifecycle"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Node/pluginSlots"/>
+    </genClasses>
+    <genClasses ecoreClass="ros.ecore#//Plugin">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ros.ecore#//Plugin/implements"/>
+    </genClasses>
+    <genClasses ecoreClass="ros.ecore#//PluginBase">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginBase/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginBase/className"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginBase/header"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginBase/loader"/>
+    </genClasses>
+    <genClasses ecoreClass="ros.ecore#//PluginSlot">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginSlot/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ros.ecore#//PluginSlot/base"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginSlot/parameter"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ros.ecore#//PluginSlot/defaultPlugin"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginSlot/valueFormat"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//PluginSlot/multiple"/>
     </genClasses>
     <genClasses ecoreClass="ros.ecore#//Package">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//Package/name"/>
@@ -30,6 +81,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Package/artifact"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//Package/fromGitRepo"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Package/dependency"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Package/pluginBases"/>
     </genClasses>
     <genClasses image="false" ecoreClass="ros.ecore#//Dependency"/>
     <genClasses ecoreClass="ros.ecore#//ServiceSpec">
@@ -55,6 +107,7 @@
     <genClasses ecoreClass="ros.ecore#//Artifact">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//Artifact/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Artifact/node"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ros.ecore#//Artifact/plugins"/>
     </genClasses>
     <genClasses image="false" ecoreClass="ros.ecore#//SpecBase">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ros.ecore#//SpecBase/name"/>

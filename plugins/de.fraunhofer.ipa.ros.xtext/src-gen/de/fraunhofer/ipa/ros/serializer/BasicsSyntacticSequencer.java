@@ -11,6 +11,7 @@ import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.AbstractElementAlias;
+import org.eclipse.xtext.serializer.analysis.GrammarAlias.AlternativeAlias;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.GroupAlias;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.TokenAlias;
 import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynNavigable;
@@ -21,11 +22,21 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public class BasicsSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected BasicsGrammarAccess grammarAccess;
+	protected AbstractElementAlias match_ExtensionBlock_CommaKeyword_4_1_1_1_0_q;
+	protected AbstractElementAlias match_ExtensionBlock___LeftCurlyBracketKeyword_4_1_0_RightCurlyBracketKeyword_4_1_2__q;
+	protected AbstractElementAlias match_ExtensionBraceMapValue_CommaKeyword_2_1_0_q;
+	protected AbstractElementAlias match_ExtensionListValue_CommaKeyword_1_1_1_1_0_q;
+	protected AbstractElementAlias match_ExtensionListValue_LeftSquareBracketRightSquareBracketKeyword_1_0_or___LeftSquareBracketKeyword_1_1_0_RightSquareBracketKeyword_1_1_2__;
 	protected AbstractElementAlias match_ParameterStruct___LeftSquareBracketKeyword_1_0_BEGINTerminalRuleCall_1_1_RightSquareBracketKeyword_1_3_ENDTerminalRuleCall_1_4__q;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (BasicsGrammarAccess) access;
+		match_ExtensionBlock_CommaKeyword_4_1_1_1_0_q = new TokenAlias(false, true, grammarAccess.getExtensionBlockAccess().getCommaKeyword_4_1_1_1_0());
+		match_ExtensionBlock___LeftCurlyBracketKeyword_4_1_0_RightCurlyBracketKeyword_4_1_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getExtensionBlockAccess().getLeftCurlyBracketKeyword_4_1_0()), new TokenAlias(false, false, grammarAccess.getExtensionBlockAccess().getRightCurlyBracketKeyword_4_1_2()));
+		match_ExtensionBraceMapValue_CommaKeyword_2_1_0_q = new TokenAlias(false, true, grammarAccess.getExtensionBraceMapValueAccess().getCommaKeyword_2_1_0());
+		match_ExtensionListValue_CommaKeyword_1_1_1_1_0_q = new TokenAlias(false, true, grammarAccess.getExtensionListValueAccess().getCommaKeyword_1_1_1_1_0());
+		match_ExtensionListValue_LeftSquareBracketRightSquareBracketKeyword_1_0_or___LeftSquareBracketKeyword_1_1_0_RightSquareBracketKeyword_1_1_2__ = new AlternativeAlias(false, false, new GroupAlias(false, false, new TokenAlias(false, false, grammarAccess.getExtensionListValueAccess().getLeftSquareBracketKeyword_1_1_0()), new TokenAlias(false, false, grammarAccess.getExtensionListValueAccess().getRightSquareBracketKeyword_1_1_2())), new TokenAlias(false, false, grammarAccess.getExtensionListValueAccess().getLeftSquareBracketRightSquareBracketKeyword_1_0()));
 		match_ParameterStruct___LeftSquareBracketKeyword_1_0_BEGINTerminalRuleCall_1_1_RightSquareBracketKeyword_1_3_ENDTerminalRuleCall_1_4__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getParameterStructAccess().getLeftSquareBracketKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getParameterStructAccess().getBEGINTerminalRuleCall_1_1()), new TokenAlias(false, false, grammarAccess.getParameterStructAccess().getRightSquareBracketKeyword_1_3()), new TokenAlias(false, false, grammarAccess.getParameterStructAccess().getENDTerminalRuleCall_1_4()));
 	}
 	
@@ -56,12 +67,92 @@ public class BasicsSyntacticSequencer extends AbstractSyntacticSequencer {
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if (match_ParameterStruct___LeftSquareBracketKeyword_1_0_BEGINTerminalRuleCall_1_1_RightSquareBracketKeyword_1_3_ENDTerminalRuleCall_1_4__q.equals(syntax))
+			if (match_ExtensionBlock_CommaKeyword_4_1_1_1_0_q.equals(syntax))
+				emit_ExtensionBlock_CommaKeyword_4_1_1_1_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ExtensionBlock___LeftCurlyBracketKeyword_4_1_0_RightCurlyBracketKeyword_4_1_2__q.equals(syntax))
+				emit_ExtensionBlock___LeftCurlyBracketKeyword_4_1_0_RightCurlyBracketKeyword_4_1_2__q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ExtensionBraceMapValue_CommaKeyword_2_1_0_q.equals(syntax))
+				emit_ExtensionBraceMapValue_CommaKeyword_2_1_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ExtensionListValue_CommaKeyword_1_1_1_1_0_q.equals(syntax))
+				emit_ExtensionListValue_CommaKeyword_1_1_1_1_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ExtensionListValue_LeftSquareBracketRightSquareBracketKeyword_1_0_or___LeftSquareBracketKeyword_1_1_0_RightSquareBracketKeyword_1_1_2__.equals(syntax))
+				emit_ExtensionListValue_LeftSquareBracketRightSquareBracketKeyword_1_0_or___LeftSquareBracketKeyword_1_1_0_RightSquareBracketKeyword_1_1_2__(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ParameterStruct___LeftSquareBracketKeyword_1_0_BEGINTerminalRuleCall_1_1_RightSquareBracketKeyword_1_3_ENDTerminalRuleCall_1_4__q.equals(syntax))
 				emit_ParameterStruct___LeftSquareBracketKeyword_1_0_BEGINTerminalRuleCall_1_1_RightSquareBracketKeyword_1_3_ENDTerminalRuleCall_1_4__q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
 
+	/**
+	 * <pre>
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     entries+=ExtensionEntry (ambiguity) entries+=ExtensionEntry
+	 
+	 * </pre>
+	 */
+	protected void emit_ExtensionBlock_CommaKeyword_4_1_1_1_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * <pre>
+	 * Ambiguous syntax:
+	 *     ('{' '}')?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     name=ExtensionBlockName ':' (ambiguity) (rule end)
+	 
+	 * </pre>
+	 */
+	protected void emit_ExtensionBlock___LeftCurlyBracketKeyword_4_1_0_RightCurlyBracketKeyword_4_1_2__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * <pre>
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     entries+=ExtensionEntry (ambiguity) entries+=ExtensionEntry
+	 
+	 * </pre>
+	 */
+	protected void emit_ExtensionBraceMapValue_CommaKeyword_2_1_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * <pre>
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     items+=ExtensionValue (ambiguity) items+=ExtensionValue
+	 
+	 * </pre>
+	 */
+	protected void emit_ExtensionListValue_CommaKeyword_1_1_1_1_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * <pre>
+	 * Ambiguous syntax:
+	 *     '[]' | ('[' ']')
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) (rule start)
+	 
+	 * </pre>
+	 */
+	protected void emit_ExtensionListValue_LeftSquareBracketRightSquareBracketKeyword_1_0_or___LeftSquareBracketKeyword_1_1_0_RightSquareBracketKeyword_1_1_2__(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
 	/**
 	 * <pre>
 	 * Ambiguous syntax:

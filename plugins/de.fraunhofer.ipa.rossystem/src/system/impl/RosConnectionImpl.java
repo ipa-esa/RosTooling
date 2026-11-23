@@ -15,22 +15,22 @@ import system.RossystemPackage;
  */
 public class RosConnectionImpl extends ConnectionImpl implements RosConnection {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RosConnectionImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RossystemPackage.Literals.ROS_CONNECTION;
-    }
+		return RossystemPackage.Literals.ROS_CONNECTION;
+	}
 
 } //RosConnectionImpl

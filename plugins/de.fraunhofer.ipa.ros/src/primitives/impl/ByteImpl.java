@@ -15,22 +15,22 @@ import primitives.PrimitivesPackage;
  */
 public class ByteImpl extends AbstractTypeImpl implements primitives.Byte {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ByteImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.BYTE;
-    }
+		return PrimitivesPackage.Literals.BYTE;
+	}
 
 } //ByteImpl

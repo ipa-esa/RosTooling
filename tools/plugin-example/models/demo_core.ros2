@@ -1,0 +1,10 @@
+demo_core:
+  pluginbases:
+    Planner:
+      class: "demo_core::Planner"
+      header: "demo_core/planner.hpp"
+      loader: pluginlib
+    Critic:
+      class: "demo_core::Critic"
+      header: "demo_core/critic.hpp"
+      loader: pluginlib

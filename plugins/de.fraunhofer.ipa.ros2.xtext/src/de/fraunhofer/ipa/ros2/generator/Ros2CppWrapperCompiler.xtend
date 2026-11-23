@@ -1,8 +1,11 @@
 package de.fraunhofer.ipa.ros2.generator
 
 import com.google.inject.Inject
+import ros.Artifact
 import ros.Node
 import ros.Package
+import ros.Plugin
+import de.fraunhofer.ipa.ros.plugin.model.PluginBases
 import de.fraunhofer.ipa.ros2.distro.dialect.Ros2Target
 
 class Ros2CppWrapperCompiler {
@@ -32,6 +35,12 @@ class Ros2CppWrapperCompiler {
 «IF node.hasActions»
 #include "rclcpp_action/rclcpp_action.hpp"
 «ENDIF»
+«IF !node.loadedSlots.empty»
+#include "pluginlib/class_loader.hpp"
+«ENDIF»
+«FOR header : node.loadedSlots.map[base.header].toSet»
+#include "«header»"
+«ENDFOR»
 
 // ROS 2 Interface Message / Service / Action headers
 «FOR pub : node.publisher»
@@ -287,6 +296,25 @@ protected:
     bool has_param_«sanitizeName(param.name)»() const { return param_«sanitizeName(param.name)»_.has_value(); }
     «ENDIF»
     «ENDFOR»
+    «FOR slot : node.pluginSlots»
+    /** @brief Plugin slot '«slot.name»': the plugin name(s) in parameter '«slot.parameter»' */
+    «slotParamCppType(slot)» get_param_«sanitizeName(slot.parameter)»() const { return param_«sanitizeName(slot.parameter)»_; }
+    «ENDFOR»
+    «IF !node.loadedSlots.empty»
+
+    // ==========================================
+    // PLUGIN SLOTS (loaded with pluginlib at construction)
+    // ==========================================
+    «FOR slot : node.loadedSlots»
+    «IF slot.multiple»
+    /** @brief Plugins loaded for slot '«slot.name»', in parameter order */
+    const std::vector<std::shared_ptr<«slot.base.className»>> & get_«slotId(slot)»_plugins() const { return slot_«slotId(slot)»_plugins_; }
+    «ELSE»
+    /** @brief Plugin loaded for slot '«slot.name»', or nullptr if none is set or it failed to load */
+    std::shared_ptr<«slot.base.className»> get_«slotId(slot)»_plugin() const { return slot_«slotId(slot)»_plugin_; }
+    «ENDIF»
+    «ENDFOR»
+    «ENDIF»
 
 private:
     rclcpp::CallbackGroup::SharedPtr client_cb_group_;
@@ -327,6 +355,18 @@ private:
     «cppType» param_«sanitizeName(param.name)»_{«defaultVal»};
     «ELSE»
     std::optional<«cppType»> param_«sanitizeName(param.name)»_;
+    «ENDIF»
+    «ENDFOR»
+    «FOR slot : node.pluginSlots»
+    «slotParamCppType(slot)» param_«sanitizeName(slot.parameter)»_;
+    «ENDFOR»
+    «FOR slot : node.loadedSlots»
+    // The loader is declared before the plugins so that it is destroyed after them.
+    std::unique_ptr<pluginlib::ClassLoader<«slot.base.className»>> slot_«slotId(slot)»_loader_;
+    «IF slot.multiple»
+    std::vector<std::shared_ptr<«slot.base.className»>> slot_«slotId(slot)»_plugins_;
+    «ELSE»
+    std::shared_ptr<«slot.base.className»> slot_«slotId(slot)»_plugin_;
     «ENDIF»
     «ENDFOR»
     «IF !node.parameter.empty»
@@ -376,6 +416,41 @@ namespace «pkg.name.toLowerCase» {
         }
         «ENDIF»
     }
+    «ENDFOR»
+    «FOR slot : node.pluginSlots»
+    {
+        // Plugin slot '«slot.name»': read-only, the plugins are chosen at startup
+        rcl_interfaces::msg::ParameterDescriptor desc;
+        desc.description = "Plugin slot '«slot.name»': «IF slot.multiple»names of the plugins«ELSE»name of the plugin«ENDIF» to load";
+        desc.read_only = true;
+        this->declare_parameter<«slotParamCppType(slot)»>("«slot.parameter»", «slotParamDefaultCpp(slot)», desc);
+        this->get_parameter("«slot.parameter»", param_«sanitizeName(slot.parameter)»_);
+    }
+    «ENDFOR»
+    «FOR slot : node.loadedSlots»
+    slot_«slotId(slot)»_loader_ = std::make_unique<pluginlib::ClassLoader<«slot.base.className»>>(
+        "«PluginBases.packageOf(slot.base)»", "«slot.base.className»");
+    «IF slot.multiple»
+    for (const auto & plugin_name : param_«sanitizeName(slot.parameter)»_) {
+        try {
+            slot_«slotId(slot)»_plugins_.push_back(slot_«slotId(slot)»_loader_->createSharedInstance(plugin_name));
+            RCLCPP_INFO(this->get_logger(), "Slot '«slot.name»': loaded plugin '%s'", plugin_name.c_str());
+        } catch (const pluginlib::PluginlibException & e) {
+            RCLCPP_ERROR(this->get_logger(), "Slot '«slot.name»': could not load plugin '%s': %s", plugin_name.c_str(), e.what());
+        }
+    }
+    «ELSE»
+    if (!param_«sanitizeName(slot.parameter)»_.empty()) {
+        try {
+            slot_«slotId(slot)»_plugin_ = slot_«slotId(slot)»_loader_->createSharedInstance(param_«sanitizeName(slot.parameter)»_);
+            RCLCPP_INFO(this->get_logger(), "Slot '«slot.name»': loaded plugin '%s'",
+                param_«sanitizeName(slot.parameter)»_.c_str());
+        } catch (const pluginlib::PluginlibException & e) {
+            RCLCPP_ERROR(this->get_logger(), "Slot '«slot.name»': could not load plugin '%s': %s",
+                param_«sanitizeName(slot.parameter)»_.c_str(), e.what());
+        }
+    }
+    «ENDIF»
     «ENDFOR»
     «IF !node.parameter.empty»
     param_cb_handle_ = this->add_on_set_parameters_callback(
@@ -687,6 +762,13 @@ rcl_interfaces::msg::SetParametersResult «artCamel»Wrapper::internal_on_set_pa
 «ENDFOR»
 «FOR actClient : node.actionclient»
 #include "«actClient.action.specPackage»/action/«toSnakeCase(actClient.action.specName)».hpp"
+«ENDFOR»
+«IF !node.loadedSlots.empty»
+
+// Plugin base classes for the node's plugin slots
+«ENDIF»
+«FOR header : node.loadedSlots.map[base.header].toSet»
+#include "«header»"
 «ENDFOR»
 
 namespace «pkg.name.toLowerCase» {
@@ -1273,6 +1355,23 @@ public:
             std::chrono::duration<double>(seconds)));
     }
         
+    «IF !node.loadedSlots.empty»
+    // ==========================================
+    // PLUGIN SLOTS (filled by the generated node)
+    // ==========================================
+    «FOR slot : node.loadedSlots»
+    «IF slot.multiple»
+    void set_«slotId(slot)»_plugins(std::vector<std::shared_ptr<«slot.base.className»>> plugins) { «slotId(slot)»_plugins_ = std::move(plugins); }
+    /** @brief Plugins attached to slot '«slot.name»', in parameter order */
+    const std::vector<std::shared_ptr<«slot.base.className»>> & «slotId(slot)»_plugins() const { return «slotId(slot)»_plugins_; }
+    «ELSE»
+    void set_«slotId(slot)»_plugin(std::shared_ptr<«slot.base.className»> plugin) { «slotId(slot)»_plugin_ = std::move(plugin); }
+    /** @brief Plugin attached to slot '«slot.name»', or nullptr */
+    std::shared_ptr<«slot.base.className»> «slotId(slot)»_plugin() const { return «slotId(slot)»_plugin_; }
+    «ENDIF»
+    «ENDFOR»
+
+    «ENDIF»
 private:
     TimerFactory timer_factory_;
     RateFactory rate_factory_;
@@ -1284,6 +1383,13 @@ private:
     std::unordered_map<std::string, ParameterValue> parameters_;
     «FOR pub : node.publisher»
     «pub.name»PubFn publish_«sanitizeName(pub.name)»_fn_;
+    «ENDFOR»
+    «FOR slot : node.loadedSlots»
+    «IF slot.multiple»
+    std::vector<std::shared_ptr<«slot.base.className»>> «slotId(slot)»_plugins_;
+    «ELSE»
+    std::shared_ptr<«slot.base.className»> «slotId(slot)»_plugin_;
+    «ENDIF»
     «ENDFOR»
     «FOR client : node.serviceclient»
     «client.name»SyncCaller call_«sanitizeName(client.name)»_sync_fn_;
@@ -1300,5 +1406,312 @@ private:
 
 } // namespace «pkg.name.toLowerCase»
 '''
+
+    def String compilePluginWrapperHpp(Package pkg, Artifact art, Plugin plugin, Ros2Target target) {
+        val pkgLower = pkg.name.toLowerCase
+        val cls = pluginClassName(plugin)
+        val hasAct = plugin.hasActions
+        val hasSrv = !plugin.serviceserver.empty || !plugin.serviceclient.empty
+        return '''
+#pragma once
+
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <optional>
+#include <string>
+#include <vector>
+
+#include "rclcpp/rclcpp.hpp"
+«IF hasAct»
+#include "rclcpp_action/rclcpp_action.hpp"
+«ENDIF»
+
+// ROS 2 Interface Message / Service / Action headers
+«FOR pub : plugin.publisher»
+#include "«pub.message.specPackage»/msg/«toSnakeCase(pub.message.specName)».hpp"
+«ENDFOR»
+«FOR sub : plugin.subscriber»
+#include "«sub.message.specPackage»/msg/«toSnakeCase(sub.message.specName)».hpp"
+«ENDFOR»
+«FOR srv : plugin.serviceserver»
+#include "«srv.service.specPackage»/srv/«toSnakeCase(srv.service.specName)».hpp"
+«ENDFOR»
+«FOR client : plugin.serviceclient»
+#include "«client.service.specPackage»/srv/«toSnakeCase(client.service.specName)».hpp"
+«ENDFOR»
+«FOR act : plugin.actionserver»
+#include "«act.action.specPackage»/action/«toSnakeCase(act.action.specName)».hpp"
+«ENDFOR»
+«FOR actClient : plugin.actionclient»
+#include "«actClient.action.specPackage»/action/«toSnakeCase(actClient.action.specName)».hpp"
+«ENDFOR»
+
+namespace «pkgLower» {
+
+/**
+ * @brief Generated ROS 2 pluginlib interface wrapper for '«plugin.name»' (Artifact: '«art.name»').
+ * DO NOT DIRECTLY EDIT THIS FILE - it will be overwritten on generation.
+ */
+class «cls»RosWrapper {
+public:
+    «cls»RosWrapper() = default;
+    ~«cls»RosWrapper() = default;
+
+    /**
+     * @brief Bind all modeled interfaces and parameters onto the host ROS 2 node.
+     */
+    template <typename NodePtrT>
+    void configure(const NodePtrT & node, const std::string & param_prefix = "") {
+        if (!node) {
+            return;
+        }
+        (void)param_prefix;
+        «IF hasSrv»
+        client_cb_group_ = node->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+        «ENDIF»
+        «FOR param : plugin.parameter»
+        {
+            const std::string pname = param_prefix.empty() ? "«param.name»" : (param_prefix + ".«param.name»");
+            «val defVal = getParamDefaultValueCpp(param)»
+            if (!node->has_parameter(pname)) {
+                «IF defVal !== null»
+                node->template declare_parameter<«getCppType(param.type)»>(pname, «getCppType(param.type)»(«defVal»));
+                «ELSE»
+                node->template declare_parameter<«getCppType(param.type)»>(pname);
+                «ENDIF»
+            }
+            node->get_parameter(pname, «sanitizeName(param.name)»_param_);
+        }
+        «ENDFOR»
+        «FOR pub : plugin.publisher»
+        {
+            auto pub = node->template create_publisher<«pub.message.specPackage»::msg::«pub.message.specName»>(
+                "«pub.name»", «getQosCpp(pub.qos)»);
+            publish_«sanitizeName(pub.name)»_fn_ =
+                [pub](const «pub.message.specPackage»::msg::«pub.message.specName» & msg) {
+                    pub->publish(msg);
+                };
+            pub_«sanitizeName(pub.name)»_handle_ = pub;
+        }
+        «ENDFOR»
+        «FOR sub : plugin.subscriber»
+        sub_«sanitizeName(sub.name)»_ = node->template create_subscription<«sub.message.specPackage»::msg::«sub.message.specName»>(
+            "«sub.name»", «getQosCpp(sub.qos)»,
+            [this](const «sub.message.specPackage»::msg::«sub.message.specName»::SharedPtr msg) {
+                {
+                    std::lock_guard<std::mutex> lock(sub_«sanitizeName(sub.name)»_mutex_);
+                    latest_sub_«sanitizeName(sub.name)»_msg_ = *msg;
+                }
+                if (on_«sanitizeName(sub.name)»_cb_) {
+                    on_«sanitizeName(sub.name)»_cb_(msg);
+                }
+            });
+        «ENDFOR»
+        «FOR srv : plugin.serviceserver»
+        srv_«sanitizeName(srv.name)»_ = node->template create_service<«srv.service.specPackage»::srv::«srv.service.specName»>(
+            "«srv.name»",
+            [this](
+                const std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Request> req,
+                std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Response> res) {
+                if (handle_«sanitizeName(srv.name)»_cb_) {
+                    handle_«sanitizeName(srv.name)»_cb_(req, res);
+                }
+            },
+            «target.cpp.serviceQos»,
+            client_cb_group_);
+        «ENDFOR»
+        «FOR client : plugin.serviceclient»
+        client_«sanitizeName(client.name)»_ = node->template create_client<«client.service.specPackage»::srv::«client.service.specName»>(
+            "«client.name»", «target.cpp.serviceQos», client_cb_group_);
+        «ENDFOR»
+        «FOR act : plugin.actionserver»
+        act_srv_«sanitizeName(act.name)»_ = rclcpp_action::create_server<«act.action.specPackage»::action::«act.action.specName»>(
+            node,
+            "«act.name»",
+            [this](const rclcpp_action::GoalUUID & uuid,
+                   std::shared_ptr<const «act.action.specPackage»::action::«act.action.specName»::Goal> goal) {
+                if (on_«sanitizeName(act.name)»_goal_cb_) {
+                    return on_«sanitizeName(act.name)»_goal_cb_(uuid, goal);
+                }
+                return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
+            },
+            [this](const std::shared_ptr<rclcpp_action::ServerGoalHandle<«act.action.specPackage»::action::«act.action.specName»>> gh) {
+                if (on_«sanitizeName(act.name)»_cancel_cb_) {
+                    return on_«sanitizeName(act.name)»_cancel_cb_(gh);
+                }
+                return rclcpp_action::CancelResponse::ACCEPT;
+            },
+            [this](const std::shared_ptr<rclcpp_action::ServerGoalHandle<«act.action.specPackage»::action::«act.action.specName»>> gh) {
+                if (on_«sanitizeName(act.name)»_accepted_cb_) {
+                    on_«sanitizeName(act.name)»_accepted_cb_(gh);
+                }
+            });
+        «ENDFOR»
+        «FOR actClient : plugin.actionclient»
+        act_client_«sanitizeName(actClient.name)»_ = rclcpp_action::create_client<«actClient.action.specPackage»::action::«actClient.action.specName»>(
+            node,
+            "«actClient.name»");
+        «ENDFOR»
+    }
+
+    «FOR pub : plugin.publisher»
+    void publish_«sanitizeName(pub.name)»(const «pub.message.specPackage»::msg::«pub.message.specName» & msg) {
+        if (publish_«sanitizeName(pub.name)»_fn_) {
+            publish_«sanitizeName(pub.name)»_fn_(msg);
+        }
+    }
+    «ENDFOR»
+    «FOR sub : plugin.subscriber»
+    std::optional<«sub.message.specPackage»::msg::«sub.message.specName»> get_latest_«sanitizeName(sub.name)»_msg() const {
+        std::lock_guard<std::mutex> lock(sub_«sanitizeName(sub.name)»_mutex_);
+        return latest_sub_«sanitizeName(sub.name)»_msg_;
+    }
+
+    void set_on_«sanitizeName(sub.name)»(
+        std::function<void(const «sub.message.specPackage»::msg::«sub.message.specName»::SharedPtr)> cb) {
+        on_«sanitizeName(sub.name)»_cb_ = std::move(cb);
+    }
+    «ENDFOR»
+    «FOR srv : plugin.serviceserver»
+    void set_handle_«sanitizeName(srv.name)»(
+        std::function<void(
+            const std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Request>,
+            std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Response>)> cb) {
+        handle_«sanitizeName(srv.name)»_cb_ = std::move(cb);
+    }
+    «ENDFOR»
+    «FOR client : plugin.serviceclient»
+    rclcpp::Client<«client.service.specPackage»::srv::«client.service.specName»>::SharedPtr «sanitizeName(client.name)»_client() const {
+        return client_«sanitizeName(client.name)»_;
+    }
+    «ENDFOR»
+    «FOR act : plugin.actionserver»
+    void set_«sanitizeName(act.name)»_handlers(
+        std::function<rclcpp_action::GoalResponse(const rclcpp_action::GoalUUID &, std::shared_ptr<const «act.action.specPackage»::action::«act.action.specName»::Goal>)> on_goal,
+        std::function<rclcpp_action::CancelResponse(const std::shared_ptr<rclcpp_action::ServerGoalHandle<«act.action.specPackage»::action::«act.action.specName»>>)> on_cancel,
+        std::function<void(const std::shared_ptr<rclcpp_action::ServerGoalHandle<«act.action.specPackage»::action::«act.action.specName»>>)> on_accepted) {
+        on_«sanitizeName(act.name)»_goal_cb_ = std::move(on_goal);
+        on_«sanitizeName(act.name)»_cancel_cb_ = std::move(on_cancel);
+        on_«sanitizeName(act.name)»_accepted_cb_ = std::move(on_accepted);
+    }
+    «ENDFOR»
+    «FOR actClient : plugin.actionclient»
+    rclcpp_action::Client<«actClient.action.specPackage»::action::«actClient.action.specName»>::SharedPtr «sanitizeName(actClient.name)»_client() const {
+        return act_client_«sanitizeName(actClient.name)»_;
+    }
+    «ENDFOR»
+    «FOR param : plugin.parameter»
+    const «getCppType(param.type)» & get_«sanitizeName(param.name)»() const {
+        return «sanitizeName(param.name)»_param_;
+    }
+    «ENDFOR»
+
+private:
+    «IF hasSrv»
+    rclcpp::CallbackGroup::SharedPtr client_cb_group_;
+    «ENDIF»
+    «FOR param : plugin.parameter»
+    «getCppType(param.type)» «sanitizeName(param.name)»_param_{};
+    «ENDFOR»
+    «FOR pub : plugin.publisher»
+    std::function<void(const «pub.message.specPackage»::msg::«pub.message.specName» &)> publish_«sanitizeName(pub.name)»_fn_;
+    rclcpp::PublisherBase::SharedPtr pub_«sanitizeName(pub.name)»_handle_;
+    «ENDFOR»
+    «FOR sub : plugin.subscriber»
+    rclcpp::SubscriptionBase::SharedPtr sub_«sanitizeName(sub.name)»_;
+    mutable std::mutex sub_«sanitizeName(sub.name)»_mutex_;
+    std::optional<«sub.message.specPackage»::msg::«sub.message.specName»> latest_sub_«sanitizeName(sub.name)»_msg_;
+    std::function<void(const «sub.message.specPackage»::msg::«sub.message.specName»::SharedPtr)> on_«sanitizeName(sub.name)»_cb_;
+    «ENDFOR»
+    «FOR srv : plugin.serviceserver»
+    rclcpp::ServiceBase::SharedPtr srv_«sanitizeName(srv.name)»_;
+    std::function<void(
+        const std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Request>,
+        std::shared_ptr<«srv.service.specPackage»::srv::«srv.service.specName»::Response>)> handle_«sanitizeName(srv.name)»_cb_;
+    «ENDFOR»
+    «FOR client : plugin.serviceclient»
+    rclcpp::Client<«client.service.specPackage»::srv::«client.service.specName»>::SharedPtr client_«sanitizeName(client.name)»_;
+    «ENDFOR»
+    «FOR act : plugin.actionserver»
+    rclcpp_action::ServerBase::SharedPtr act_srv_«sanitizeName(act.name)»_;
+    std::function<rclcpp_action::GoalResponse(const rclcpp_action::GoalUUID &, std::shared_ptr<const «act.action.specPackage»::action::«act.action.specName»::Goal>)> on_«sanitizeName(act.name)»_goal_cb_;
+    std::function<rclcpp_action::CancelResponse(const std::shared_ptr<rclcpp_action::ServerGoalHandle<«act.action.specPackage»::action::«act.action.specName»>>)> on_«sanitizeName(act.name)»_cancel_cb_;
+    std::function<void(const std::shared_ptr<rclcpp_action::ServerGoalHandle<«act.action.specPackage»::action::«act.action.specName»>>)> on_«sanitizeName(act.name)»_accepted_cb_;
+    «ENDFOR»
+    «FOR actClient : plugin.actionclient»
+    rclcpp_action::Client<«actClient.action.specPackage»::action::«actClient.action.specName»>::SharedPtr act_client_«sanitizeName(actClient.name)»_;
+    «ENDFOR»
+};
+
+} // namespace «pkgLower»
+'''
+    }
+
+    def String compilePluginUserHpp(Package pkg, Artifact art, Plugin plugin) {
+        val pkgLower = pkg.name.toLowerCase
+        val cls = pluginClassName(plugin)
+        val snake = pluginSnakeName(plugin)
+        val baseHeader = baseHeader(plugin)
+        return '''
+#pragma once
+
+«IF !baseHeader.empty»
+#include "«baseHeader»"
+«ENDIF»
+#include "«pkgLower»/«snake»_plugin_wrapper.hpp"
+
+namespace «pkgLower» {
+
+/**
+ * @brief Domain logic implementation for plugin '«plugin.name»' implementing '«PluginBases.baseClassOf(plugin)»'.
+ * PROTECTED LOGIC FILE (Domain Logic Shield): written once and never overwritten on regeneration.
+ */
+class «cls» : public «PluginBases.baseClassOf(plugin)» {
+public:
+    «cls»() = default;
+    ~«cls»() override = default;
+
+    // Implement pure virtual methods of «PluginBases.baseClassOf(plugin)» here and use ros_wrapper_.
+
+protected:
+    «cls»RosWrapper ros_wrapper_;
+};
+
+} // namespace «pkgLower»
+'''
+    }
+
+    def String compilePluginCpp(Package pkg, Artifact art, Plugin plugin) {
+        val pkgLower = pkg.name.toLowerCase
+        val cls = pluginClassName(plugin)
+        val snake = pluginSnakeName(plugin)
+        return '''
+#include "«pkgLower»/«snake»_plugin.hpp"
+#include <pluginlib/class_list_macros.hpp>
+
+PLUGINLIB_EXPORT_CLASS(«pkgLower»::«cls», «PluginBases.baseClassOf(plugin)»)
+'''
+    }
+
+    def String compilePluginsXml(Package pkg) {
+        val pkgLower = pkg.name.toLowerCase
+        return '''
+<class_libraries>
+«FOR art : pkg.artifact»
+«val pluginlibList = art.plugins.filter[PluginBases.isPluginlib(it)].toList»
+«IF !pluginlibList.empty»
+  <library path="«pluginLibraryTargetName(art)»">
+«FOR plugin : pluginlibList»
+    <class name="«pkgLower»::«plugin.name»" type="«pkgLower»::«pluginClassName(plugin)»" base_class_type="«PluginBases.baseClassOf(plugin)»">
+      <description>ROS 2 pluginlib plugin '«plugin.name»'</description>
+    </class>
+«ENDFOR»
+  </library>
+«ENDIF»
+«ENDFOR»
+</class_libraries>
+'''
+    }
 
 }

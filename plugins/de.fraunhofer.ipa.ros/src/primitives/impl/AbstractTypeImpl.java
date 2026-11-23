@@ -17,22 +17,22 @@ import primitives.PrimitivesPackage;
  */
 public abstract class AbstractTypeImpl extends MinimalEObjectImpl.Container implements AbstractType {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected AbstractTypeImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.ABSTRACT_TYPE;
-    }
+		return PrimitivesPackage.Literals.ABSTRACT_TYPE;
+	}
 
 } //AbstractTypeImpl

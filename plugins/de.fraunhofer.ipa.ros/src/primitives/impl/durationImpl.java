@@ -16,22 +16,22 @@ import primitives.duration;
  */
 public class durationImpl extends AbstractTypeImpl implements duration {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected durationImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.DURATION;
-    }
+		return PrimitivesPackage.Literals.DURATION;
+	}
 
 } //durationImpl

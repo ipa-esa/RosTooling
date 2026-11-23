@@ -204,4 +204,86 @@ for lang in "${languages[@]}"; do
   popd > /dev/null
 done
 
+# ---- Scoped plugin launch include isolation check -------------------------
+# Uses hand-written launch files to verify GroupAction(scoped=True) runtime
+# argument isolation per ROS distro; generated GroupAction output is checked
+# by PluginArchitecturePhase2Test#systemLaunchIncludeRendersScopedGroupAction.
+smoke_scoped_plugin_includes() {
+  echo "------------------- scoped plugin launch (${distro}) -------------------"
+  python3 - <<'PY'
+import os, sys, tempfile
+from launch import LaunchDescription, LaunchService
+from launch.actions import DeclareLaunchArgument, GroupAction, IncludeLaunchDescription, OpaqueFunction
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration, TextSubstitution
+
+td = tempfile.mkdtemp()
+p1 = os.path.join(td, 'plugin_a.launch.py')
+p2 = os.path.join(td, 'plugin_b.launch.py')
+with open(p1, 'w') as f:
+    f.write('''from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch.substitutions import LaunchConfiguration
+def generate_launch_description():
+    return LaunchDescription([
+        DeclareLaunchArgument("ns", default_value="p1_default"),
+        DeclareLaunchArgument("only_p1", default_value="p1_orig"),
+        OpaqueFunction(function=lambda ctx: print("PLUGIN_A:" + LaunchConfiguration("ns").perform(ctx) + ":" + LaunchConfiguration("only_p1").perform(ctx))),
+    ])
+''')
+with open(p2, 'w') as f:
+    f.write('''from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch.substitutions import LaunchConfiguration
+def generate_launch_description():
+    return LaunchDescription([
+        DeclareLaunchArgument("ns", default_value="p2_default"),
+        DeclareLaunchArgument("only_p1", default_value="p2_default_only_p1"),
+        OpaqueFunction(function=lambda ctx: print("PLUGIN_B:" + LaunchConfiguration("ns").perform(ctx) + ":" + LaunchConfiguration("only_p1").perform(ctx))),
+    ])
+''')
+
+observed = []
+root = LaunchDescription([
+    DeclareLaunchArgument('ns', default_value=TextSubstitution(text='core_default_ns')),
+    DeclareLaunchArgument('sys_shared', default_value=TextSubstitution(text='from_core_sys')),
+    GroupAction(
+        actions=[
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([p1]),
+                launch_arguments={'ns': TextSubstitution(text='ns_alpha'), 'only_p1': TextSubstitution(text='p1_override')}.items()
+            )
+        ],
+        scoped=True
+    ),
+    GroupAction(
+        actions=[
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([p2]),
+                launch_arguments={'ns': LaunchConfiguration('sys_shared')}.items()
+            )
+        ],
+        scoped=True
+    ),
+    OpaqueFunction(function=lambda ctx: observed.append("CORE_AFTER:" + LaunchConfiguration('ns').perform(ctx))),
+])
+
+import io, contextlib
+buf = io.StringIO()
+with contextlib.redirect_stdout(buf):
+    ls = LaunchService(noninteractive=True)
+    ls.include_launch_description(root)
+    rc = ls.run()
+
+out_lines = buf.getvalue().splitlines() + observed
+assert rc == 0, f"LaunchService failed with rc={rc}: {out_lines}"
+assert "PLUGIN_A:ns_alpha:p1_override" in out_lines, out_lines
+assert "PLUGIN_B:from_core_sys:p2_default_only_p1" in out_lines, out_lines
+assert "CORE_AFTER:core_default_ns" in out_lines, out_lines
+print("SCOPED LAUNCH OK:", out_lines)
+PY
+}
+
+smoke_scoped_plugin_includes || status=1
+
 exit ${status}

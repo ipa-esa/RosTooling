@@ -12,7 +12,7 @@ Package returns Package:
 
 CatkinPackage returns CatkinPackage:
     {CatkinPackage}
-    name=RosNames':'
+    (name=RosNames':' | name=AddedKeywordName)
     BEGIN
         ('fromGitRepo:' fromGitRepo=EString)?
         ('artifacts:'

@@ -13,7 +13,8 @@ class YamlFileCompiler_ROS2 {
       ros__parameters:
         «FOR param:component.rosparameters»«IF !isSubstitutionValue(param)»
         «param.from.name»: «get_param_value(param.value,param.name)»
-        «ENDIF»«ENDFOR»
+        «ENDIF»«ENDFOR»«FOR slotParam:getSlotParameterEntries(component)»
+        «slotParam.paramName»: «IF slotParam.array»[«FOR v:slotParam.values SEPARATOR ', '»"«v»"«ENDFOR»]«ELSE»"«slotParam.values.head»"«ENDIF»«ENDFOR»
 
     '''
 

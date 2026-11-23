@@ -48,6 +48,12 @@ import primitives.uint64Array;
 import primitives.uint8;
 import primitives.uint8Array;
 import ros.ArrayTopicSpecMsgRef;
+import ros.ExtensionBlock;
+import ros.ExtensionEntry;
+import ros.ExtensionListValue;
+import ros.ExtensionMapValue;
+import ros.ExtensionRefValue;
+import ros.ExtensionScalarValue;
 import ros.GlobalNamespace;
 import ros.ParameterAny;
 import ros.ParameterAnyType;
@@ -191,6 +197,35 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case RosPackage.ARRAY_TOPIC_SPEC_MSG_REF:
 				sequence_ArraySpecRef(context, (ArrayTopicSpecMsgRef) semanticObject); 
 				return; 
+			case RosPackage.EXTENSION_BLOCK:
+				sequence_ExtensionBlock(context, (ExtensionBlock) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_ENTRY:
+				sequence_ExtensionEntry(context, (ExtensionEntry) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_LIST_VALUE:
+				sequence_ExtensionListValue(context, (ExtensionListValue) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_MAP_VALUE:
+				if (rule == grammarAccess.getExtensionValueRule()) {
+					sequence_ExtensionBraceMapValue_ExtensionIndentedMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getExtensionBraceMapValueRule()) {
+					sequence_ExtensionBraceMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getExtensionIndentedMapValueRule()) {
+					sequence_ExtensionIndentedMapValue(context, (ExtensionMapValue) semanticObject); 
+					return; 
+				}
+				else break;
+			case RosPackage.EXTENSION_REF_VALUE:
+				sequence_ExtensionRefValue(context, (ExtensionRefValue) semanticObject); 
+				return; 
+			case RosPackage.EXTENSION_SCALAR_VALUE:
+				sequence_ExtensionScalarValue(context, (ExtensionScalarValue) semanticObject); 
+				return; 
 			case RosPackage.GLOBAL_NAMESPACE:
 				sequence_GlobalNamespace(context, (GlobalNamespace) semanticObject); 
 				return; 
@@ -291,6 +326,138 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getArraySpecRefAccess().getReferenceTopicSpecEStringParserRuleCall_0_0_1(), semanticObject.eGet(RosPackage.Literals.ARRAY_TOPIC_SPEC_MSG_REF__REFERENCE, false));
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ExtensionBlock returns ExtensionBlock
+	 *
+	 * Constraint:
+	 *     (name=ExtensionBlockName (entries+=ExtensionEntry+ | (entries+=ExtensionEntry entries+=ExtensionEntry*))?)
+	 * </pre>
+	 */
+	protected void sequence_ExtensionBlock(ISerializationContext context, ExtensionBlock semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ExtensionValue returns ExtensionMapValue
+	 *
+	 * Constraint:
+	 *     ((entries+=ExtensionEntry entries+=ExtensionEntry*) | entries+=ExtensionEntry+)?
+	 * </pre>
+	 */
+	protected void sequence_ExtensionBraceMapValue_ExtensionIndentedMapValue(ISerializationContext context, ExtensionMapValue semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ExtensionBraceMapValue returns ExtensionMapValue
+	 *
+	 * Constraint:
+	 *     (entries+=ExtensionEntry entries+=ExtensionEntry*)?
+	 * </pre>
+	 */
+	protected void sequence_ExtensionBraceMapValue(ISerializationContext context, ExtensionMapValue semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ExtensionEntry returns ExtensionEntry
+	 *
+	 * Constraint:
+	 *     ((key=ExtensionKey | key=ExtensionColonKey | key=AddedKeywordName) value=ExtensionValue)
+	 * </pre>
+	 */
+	protected void sequence_ExtensionEntry(ISerializationContext context, ExtensionEntry semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ExtensionIndentedMapValue returns ExtensionMapValue
+	 *
+	 * Constraint:
+	 *     entries+=ExtensionEntry+
+	 * </pre>
+	 */
+	protected void sequence_ExtensionIndentedMapValue(ISerializationContext context, ExtensionMapValue semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ExtensionValue returns ExtensionListValue
+	 *     ExtensionListValue returns ExtensionListValue
+	 *
+	 * Constraint:
+	 *     (items+=ExtensionValue items+=ExtensionValue*)?
+	 * </pre>
+	 */
+	protected void sequence_ExtensionListValue(ISerializationContext context, ExtensionListValue semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ExtensionValue returns ExtensionRefValue
+	 *     ExtensionRefValue returns ExtensionRefValue
+	 *
+	 * Constraint:
+	 *     (
+	 *         (
+	 *             refKind='pub-&gt;' | 
+	 *             refKind='sub-&gt;' | 
+	 *             refKind='ss-&gt;' | 
+	 *             refKind='sc-&gt;' | 
+	 *             refKind='as-&gt;' | 
+	 *             refKind='ac-&gt;' | 
+	 *             refKind='param-&gt;'
+	 *         ) 
+	 *         target=[EObject|EString]
+	 *     )
+	 * </pre>
+	 */
+	protected void sequence_ExtensionRefValue(ISerializationContext context, ExtensionRefValue semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ExtensionValue returns ExtensionScalarValue
+	 *     ExtensionScalarValue returns ExtensionScalarValue
+	 *
+	 * Constraint:
+	 *     value=ExtensionScalarLiteral
+	 * </pre>
+	 */
+	protected void sequence_ExtensionScalarValue(ISerializationContext context, ExtensionScalarValue semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, RosPackage.Literals.EXTENSION_SCALAR_VALUE__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RosPackage.Literals.EXTENSION_SCALAR_VALUE__VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getExtensionScalarValueAccess().getValueExtensionScalarLiteralParserRuleCall_1_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
@@ -632,20 +799,11 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     ParameterStructMember returns ParameterStructMember
 	 *
 	 * Constraint:
-	 *     (name=EString value=ParameterValue)
+	 *     ((name=EString | name=AddedKeywordName) value=ParameterValue)
 	 * </pre>
 	 */
 	protected void sequence_ParameterStructMember(ISerializationContext context, ParameterStructMember semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, RosPackage.Literals.PARAMETER_STRUCT_MEMBER__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RosPackage.Literals.PARAMETER_STRUCT_MEMBER__NAME));
-			if (transientValues.isValueTransient(semanticObject, RosPackage.Literals.PARAMETER_STRUCT_MEMBER__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RosPackage.Literals.PARAMETER_STRUCT_MEMBER__VALUE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getParameterStructMemberAccess().getNameEStringParserRuleCall_0_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getParameterStructMemberAccess().getValueParameterValueParserRuleCall_2_0(), semanticObject.getValue());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -708,7 +866,7 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     Parameter returns Parameter
 	 *
 	 * Constraint:
-	 *     (name=EString namespace=Namespace? type=ParameterType value=ParameterValue?)
+	 *     ((name=EString | name=AddedKeywordName) namespace=Namespace? type=ParameterType value=ParameterValue?)
 	 * </pre>
 	 */
 	protected void sequence_Parameter(ISerializationContext context, ros.Parameter semanticObject) {

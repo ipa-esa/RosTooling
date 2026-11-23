@@ -1,29 +1,28 @@
 package de.fraunhofer.ipa.rossystem.scoping
 
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.xtext.scoping.IScope
-import org.eclipse.xtext.scoping.impl.SimpleScope
-import org.eclipse.xtext.resource.EObjectDescription
-import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.xtext.EcoreUtil2
-import system.System
-import system.RossystemPackage
-import system.RossystemFactory
-import system.RosNode
-import system.RosInterface
-import system.SubSystem
+import de.fraunhofer.ipa.ros.scoping.ExtensionScopingHelper
 import java.util.List
 import java.util.Map
 import java.util.Set
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.naming.QualifiedName
+import org.eclipse.xtext.resource.EObjectDescription
+import org.eclipse.xtext.scoping.IScope
+import org.eclipse.xtext.scoping.Scopes
+import org.eclipse.xtext.scoping.impl.SimpleScope
+import ros.InterfaceHolder
 import ros.Node
-import ros.Publisher
-import ros.Subscriber
-import ros.ServiceServer
-import ros.ServiceClient
-import ros.ActionServer
-import ros.ActionClient
+import ros.Plugin
+import ros.RosPackage
+import system.RosInterface
+import system.RosNode
+import system.RossystemFactory
+import system.RossystemPackage
+import system.SubSystem
+import system.System
 
 /**
  * Custom scoping provider for RosSystem connections.
@@ -39,6 +38,41 @@ import ros.ActionClient
 class RosSystemScopeProvider extends AbstractRosSystemScopeProvider {
 
   override IScope getScope(EObject context, EReference reference) {
+    if (reference == RosPackage.Literals.EXTENSION_REF_VALUE__TARGET) {
+      val rosNode = EcoreUtil2.getContainerOfType(context, RosNode)
+      val List<InterfaceHolder> extraHolders = newArrayList
+      if (rosNode !== null) {
+        var fromNode = rosNode.from
+        if (fromNode !== null && fromNode.eIsProxy) {
+          fromNode = EcoreUtil.resolve(fromNode, context) as Node
+        }
+        if (fromNode !== null && !fromNode.eIsProxy) {
+          extraHolders.add(fromNode)
+        }
+        for (p : attachedPlugins(rosNode)) {
+          var resolved = p
+          if (resolved !== null && resolved.eIsProxy) {
+            resolved = EcoreUtil.resolve(resolved, context) as Plugin
+          }
+          if (resolved !== null && !resolved.eIsProxy) {
+            extraHolders.add(resolved)
+          }
+        }
+      }
+      return ExtensionScopingHelper.scopeForExtensionRef(context, reference, extraHolders)
+    }
+    if (reference == RossystemPackage.Literals.SLOT_ATTACHMENT__SLOT) {
+      // A slot name is resolved on the node in from:, by its simple name.
+      val rosNode = EcoreUtil2.getContainerOfType(context, RosNode)
+      var fromNode = rosNode?.from
+      if (fromNode !== null && fromNode.eIsProxy) {
+        fromNode = EcoreUtil.resolve(fromNode, context) as Node
+      }
+      if (fromNode === null || fromNode.eIsProxy) {
+        return IScope.NULLSCOPE
+      }
+      return Scopes.scopeFor(fromNode.pluginSlots)
+    }
     if (reference == RossystemPackage.Literals.ROS_SYSTEM_CONNECTION__FROM ||
         reference == RossystemPackage.Literals.ROS_SYSTEM_CONNECTION__TO) {
       val system = EcoreUtil2.getContainerOfType(context, System)
@@ -135,107 +169,12 @@ class RosSystemScopeProvider extends AbstractRosSystemScopeProvider {
             }
           }
         } else {
-          // (b) Node declares no explicit interfaces: synthesize RosInterfaces from rosNode.from
-          var fromNode = rosNode.from
-          if (fromNode !== null && fromNode.eIsProxy) {
-            fromNode = EcoreUtil.resolve(fromNode, rootSystem) as Node
-          }
-          if (fromNode !== null && !fromNode.eIsProxy) {
-            val existingNames = newHashSet
-            if (rosNode.rosinterfaces !== null) {
-              for (ex : rosNode.rosinterfaces) {
-                if (ex.name !== null) existingNames.add(ex.name)
-              }
-            }
-
-            if (fromNode.publisher !== null) {
-              for (pub : fromNode.publisher) {
-                if (pub.name !== null && !pub.name.empty && existingNames.add(pub.name)) {
-                  val iface = RossystemFactory.eINSTANCE.createRosInterface
-                  iface.name = pub.name
-                  val ref = RossystemFactory.eINSTANCE.createRosPublisherReference
-                  ref.from = pub
-                  iface.reference = ref
-                  rosNode.rosinterfaces.add(iface)
-                  allInterfaces.add(Pair.of(nodePrefix, iface))
-                  nodeExposedNames.add(pub.name)
-                }
-              }
-            }
-
-            if (fromNode.subscriber !== null) {
-              for (sub : fromNode.subscriber) {
-                if (sub.name !== null && !sub.name.empty && existingNames.add(sub.name)) {
-                  val iface = RossystemFactory.eINSTANCE.createRosInterface
-                  iface.name = sub.name
-                  val ref = RossystemFactory.eINSTANCE.createRosSubscriberReference
-                  ref.from = sub
-                  iface.reference = ref
-                  rosNode.rosinterfaces.add(iface)
-                  allInterfaces.add(Pair.of(nodePrefix, iface))
-                  nodeExposedNames.add(sub.name)
-                }
-              }
-            }
-
-            if (fromNode.serviceserver !== null) {
-              for (ss : fromNode.serviceserver) {
-                if (ss.name !== null && !ss.name.empty && existingNames.add(ss.name)) {
-                  val iface = RossystemFactory.eINSTANCE.createRosInterface
-                  iface.name = ss.name
-                  val ref = RossystemFactory.eINSTANCE.createRosServiceServerReference
-                  ref.from = ss
-                  iface.reference = ref
-                  rosNode.rosinterfaces.add(iface)
-                  allInterfaces.add(Pair.of(nodePrefix, iface))
-                  nodeExposedNames.add(ss.name)
-                }
-              }
-            }
-
-            if (fromNode.serviceclient !== null) {
-              for (sc : fromNode.serviceclient) {
-                if (sc.name !== null && !sc.name.empty && existingNames.add(sc.name)) {
-                  val iface = RossystemFactory.eINSTANCE.createRosInterface
-                  iface.name = sc.name
-                  val ref = RossystemFactory.eINSTANCE.createRosServiceClientReference
-                  ref.from = sc
-                  iface.reference = ref
-                  rosNode.rosinterfaces.add(iface)
-                  allInterfaces.add(Pair.of(nodePrefix, iface))
-                  nodeExposedNames.add(sc.name)
-                }
-              }
-            }
-
-            if (fromNode.actionserver !== null) {
-              for (actServer : fromNode.actionserver) {
-                if (actServer.name !== null && !actServer.name.empty && existingNames.add(actServer.name)) {
-                  val iface = RossystemFactory.eINSTANCE.createRosInterface
-                  iface.name = actServer.name
-                  val ref = RossystemFactory.eINSTANCE.createRosActionServerReference
-                  ref.from = actServer
-                  iface.reference = ref
-                  rosNode.rosinterfaces.add(iface)
-                  allInterfaces.add(Pair.of(nodePrefix, iface))
-                  nodeExposedNames.add(actServer.name)
-                }
-              }
-            }
-
-            if (fromNode.actionclient !== null) {
-              for (ac : fromNode.actionclient) {
-                if (ac.name !== null && !ac.name.empty && existingNames.add(ac.name)) {
-                  val iface = RossystemFactory.eINSTANCE.createRosInterface
-                  iface.name = ac.name
-                  val ref = RossystemFactory.eINSTANCE.createRosActionClientReference
-                  ref.from = ac
-                  iface.reference = ref
-                  rosNode.rosinterfaces.add(iface)
-                  allInterfaces.add(Pair.of(nodePrefix, iface))
-                  nodeExposedNames.add(ac.name)
-                }
-              }
+          // (b) Node declares no explicit interfaces: synthesize RosInterfaces from rosNode.from and rosNode.plugins
+          ensureDefaultInterfacesSynthesized(rosNode, rootSystem)
+          for (iface : rosNode.rosinterfaces) {
+            allInterfaces.add(Pair.of(nodePrefix, iface))
+            if (iface.name !== null && !iface.name.empty) {
+              nodeExposedNames.add(iface.name)
             }
           }
         }
@@ -245,7 +184,7 @@ class RosSystemScopeProvider extends AbstractRosSystemScopeProvider {
           nameCounts.put(ifaceName, count + 1)
         }
 
-      } else if (component instanceof SubSystem) {
+        } else if (component instanceof SubSystem) {
         var subSystem = (component as SubSystem).system
         if (subSystem !== null && subSystem.eIsProxy) {
           subSystem = EcoreUtil.resolve(subSystem, rootSystem) as System
@@ -254,6 +193,130 @@ class RosSystemScopeProvider extends AbstractRosSystemScopeProvider {
           val subName = if (subSystem.name !== null) subSystem.name else ""
           val subPrefix = if (prefix.empty) subName else prefix + "." + subName
           collectSystemInterfaces(subSystem, subPrefix, rootSystem, allInterfaces, nameCounts, visitedSystems)
+        }
+      }
+    }
+  }
+
+  /**
+   * Synthesizes default {@link RosInterface} entries on {@code rosNode} from its host {@code from}
+   * node and all plugins attached to its slots when {@code interfaces:} was omitted in the model.
+   */
+  def static void ensureDefaultInterfacesSynthesized(RosNode rosNode, EObject contextForResolve) {
+    if (rosNode === null) {
+      return
+    }
+    val existingNames = newHashSet
+    if (rosNode.rosinterfaces !== null) {
+      for (ex : rosNode.rosinterfaces) {
+        if (ex.name !== null) existingNames.add(ex.name)
+      }
+    }
+
+    var fromNode = rosNode.from
+    if (fromNode !== null && fromNode.eIsProxy) {
+      fromNode = EcoreUtil.resolve(fromNode, contextForResolve) as Node
+    }
+    if (fromNode !== null && !fromNode.eIsProxy) {
+      synthesizeInterfacesFromHolder(rosNode, fromNode, existingNames)
+    }
+
+    for (plugin : attachedPlugins(rosNode)) {
+      var resolvedPlugin = plugin
+      if (resolvedPlugin !== null && resolvedPlugin.eIsProxy) {
+        resolvedPlugin = EcoreUtil.resolve(resolvedPlugin, contextForResolve) as Plugin
+      }
+      if (resolvedPlugin !== null && !resolvedPlugin.eIsProxy) {
+        synthesizeInterfacesFromHolder(rosNode, resolvedPlugin, existingNames)
+      }
+    }
+  }
+
+  /** The plugins attached to {@code rosNode} through its slots, in model order. */
+  def static List<Plugin> attachedPlugins(RosNode rosNode) {
+    val List<Plugin> plugins = newArrayList
+    for (attachment : rosNode.slots) {
+      plugins.addAll(attachment.plugins)
+    }
+    return plugins
+  }
+
+  def static void synthesizeInterfacesFromHolder(
+      RosNode rosNode,
+      InterfaceHolder holder,
+      Set<String> existingNames) {
+    if (holder === null) {
+      return
+    }
+    if (holder.publisher !== null) {
+      for (pub : holder.publisher) {
+        if (pub.name !== null && !pub.name.empty && existingNames.add(pub.name)) {
+          val iface = RossystemFactory.eINSTANCE.createRosInterface
+          iface.name = pub.name
+          val ref = RossystemFactory.eINSTANCE.createRosPublisherReference
+          ref.from = pub
+          iface.reference = ref
+          rosNode.rosinterfaces.add(iface)
+        }
+      }
+    }
+    if (holder.subscriber !== null) {
+      for (sub : holder.subscriber) {
+        if (sub.name !== null && !sub.name.empty && existingNames.add(sub.name)) {
+          val iface = RossystemFactory.eINSTANCE.createRosInterface
+          iface.name = sub.name
+          val ref = RossystemFactory.eINSTANCE.createRosSubscriberReference
+          ref.from = sub
+          iface.reference = ref
+          rosNode.rosinterfaces.add(iface)
+        }
+      }
+    }
+    if (holder.serviceserver !== null) {
+      for (ss : holder.serviceserver) {
+        if (ss.name !== null && !ss.name.empty && existingNames.add(ss.name)) {
+          val iface = RossystemFactory.eINSTANCE.createRosInterface
+          iface.name = ss.name
+          val ref = RossystemFactory.eINSTANCE.createRosServiceServerReference
+          ref.from = ss
+          iface.reference = ref
+          rosNode.rosinterfaces.add(iface)
+        }
+      }
+    }
+    if (holder.serviceclient !== null) {
+      for (sc : holder.serviceclient) {
+        if (sc.name !== null && !sc.name.empty && existingNames.add(sc.name)) {
+          val iface = RossystemFactory.eINSTANCE.createRosInterface
+          iface.name = sc.name
+          val ref = RossystemFactory.eINSTANCE.createRosServiceClientReference
+          ref.from = sc
+          iface.reference = ref
+          rosNode.rosinterfaces.add(iface)
+        }
+      }
+    }
+    if (holder.actionserver !== null) {
+      for (asrv : holder.actionserver) {
+        if (asrv.name !== null && !asrv.name.empty && existingNames.add(asrv.name)) {
+          val iface = RossystemFactory.eINSTANCE.createRosInterface
+          iface.name = asrv.name
+          val ref = RossystemFactory.eINSTANCE.createRosActionServerReference
+          ref.from = asrv
+          iface.reference = ref
+          rosNode.rosinterfaces.add(iface)
+        }
+      }
+    }
+    if (holder.actionclient !== null) {
+      for (ac : holder.actionclient) {
+        if (ac.name !== null && !ac.name.empty && existingNames.add(ac.name)) {
+          val iface = RossystemFactory.eINSTANCE.createRosInterface
+          iface.name = ac.name
+          val ref = RossystemFactory.eINSTANCE.createRosActionClientReference
+          ref.from = ac
+          iface.reference = ref
+          rosNode.rosinterfaces.add(iface)
         }
       }
     }

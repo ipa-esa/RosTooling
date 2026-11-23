@@ -16,22 +16,22 @@ import primitives.uint16;
  */
 public class uint16Impl extends AbstractTypeImpl implements uint16 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected uint16Impl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PrimitivesPackage.Literals.UINT16;
-    }
+		return PrimitivesPackage.Literals.UINT16;
+	}
 
 } //uint16Impl

@@ -34,1276 +34,1492 @@ import ros.util.RosAdapterFactory;
  */
 public class RosItemProviderAdapterFactory extends RosAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**
-     * This keeps track of the root adapter factory that delegates to this adapter factory.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the root adapter factory that delegates to this adapter factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ComposedAdapterFactory parentAdapterFactory;
 
     /**
-     * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
-     * <!-- begin-user-doc -->
+	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
     /**
-     * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
-     * <!-- begin-user-doc -->
+	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected Collection<Object> supportedTypes = new ArrayList<Object>();
 
     /**
-     * This constructs an instance.
-     * <!-- begin-user-doc -->
+	 * This constructs an instance.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public RosItemProviderAdapterFactory() {
-        supportedTypes.add(IEditingDomainItemProvider.class);
-        supportedTypes.add(IStructuredItemContentProvider.class);
-        supportedTypes.add(ITreeItemContentProvider.class);
-        supportedTypes.add(IItemLabelProvider.class);
-        supportedTypes.add(IItemPropertySource.class);
-    }
+		supportedTypes.add(IEditingDomainItemProvider.class);
+		supportedTypes.add(IStructuredItemContentProvider.class);
+		supportedTypes.add(ITreeItemContentProvider.class);
+		supportedTypes.add(IItemLabelProvider.class);
+		supportedTypes.add(IItemPropertySource.class);
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.Node} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ExtensionBlock} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ExtensionBlockItemProvider extensionBlockItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link ros.ExtensionBlock}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createExtensionBlockAdapter() {
+		if (extensionBlockItemProvider == null) {
+			extensionBlockItemProvider = new ExtensionBlockItemProvider(this);
+		}
+
+		return extensionBlockItemProvider;
+	}
+
+				/**
+	 * This keeps track of the one adapter used for all {@link ros.ExtensionEntry} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ExtensionEntryItemProvider extensionEntryItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link ros.ExtensionEntry}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createExtensionEntryAdapter() {
+		if (extensionEntryItemProvider == null) {
+			extensionEntryItemProvider = new ExtensionEntryItemProvider(this);
+		}
+
+		return extensionEntryItemProvider;
+	}
+
+				/**
+	 * This keeps track of the one adapter used for all {@link ros.ExtensionScalarValue} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ExtensionScalarValueItemProvider extensionScalarValueItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link ros.ExtensionScalarValue}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createExtensionScalarValueAdapter() {
+		if (extensionScalarValueItemProvider == null) {
+			extensionScalarValueItemProvider = new ExtensionScalarValueItemProvider(this);
+		}
+
+		return extensionScalarValueItemProvider;
+	}
+
+				/**
+	 * This keeps track of the one adapter used for all {@link ros.ExtensionListValue} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ExtensionListValueItemProvider extensionListValueItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link ros.ExtensionListValue}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createExtensionListValueAdapter() {
+		if (extensionListValueItemProvider == null) {
+			extensionListValueItemProvider = new ExtensionListValueItemProvider(this);
+		}
+
+		return extensionListValueItemProvider;
+	}
+
+				/**
+	 * This keeps track of the one adapter used for all {@link ros.ExtensionMapValue} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ExtensionMapValueItemProvider extensionMapValueItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link ros.ExtensionMapValue}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createExtensionMapValueAdapter() {
+		if (extensionMapValueItemProvider == null) {
+			extensionMapValueItemProvider = new ExtensionMapValueItemProvider(this);
+		}
+
+		return extensionMapValueItemProvider;
+	}
+
+				/**
+	 * This keeps track of the one adapter used for all {@link ros.ExtensionRefValue} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ExtensionRefValueItemProvider extensionRefValueItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link ros.ExtensionRefValue}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createExtensionRefValueAdapter() {
+		if (extensionRefValueItemProvider == null) {
+			extensionRefValueItemProvider = new ExtensionRefValueItemProvider(this);
+		}
+
+		return extensionRefValueItemProvider;
+	}
+
+				/**
+	 * This keeps track of the one adapter used for all {@link ros.Node} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected NodeItemProvider nodeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.Node}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.Node}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createNodeAdapter() {
-        if (nodeItemProvider == null) {
-            nodeItemProvider = new NodeItemProvider(this);
-        }
+		if (nodeItemProvider == null) {
+			nodeItemProvider = new NodeItemProvider(this);
+		}
 
-        return nodeItemProvider;
-    }
+		return nodeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.Package} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.Plugin} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected PluginItemProvider pluginItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link ros.Plugin}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createPluginAdapter() {
+		if (pluginItemProvider == null) {
+			pluginItemProvider = new PluginItemProvider(this);
+		}
+
+		return pluginItemProvider;
+	}
+
+				/**
+	 * This keeps track of the one adapter used for all {@link ros.PluginBase} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected PluginBaseItemProvider pluginBaseItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link ros.PluginBase}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createPluginBaseAdapter() {
+		if (pluginBaseItemProvider == null) {
+			pluginBaseItemProvider = new PluginBaseItemProvider(this);
+		}
+
+		return pluginBaseItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link ros.PluginSlot} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected PluginSlotItemProvider pluginSlotItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link ros.PluginSlot}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createPluginSlotAdapter() {
+		if (pluginSlotItemProvider == null) {
+			pluginSlotItemProvider = new PluginSlotItemProvider(this);
+		}
+
+		return pluginSlotItemProvider;
+	}
+
+				/**
+	 * This keeps track of the one adapter used for all {@link ros.Package} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected PackageItemProvider packageItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.Package}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.Package}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createPackageAdapter() {
-        if (packageItemProvider == null) {
-            packageItemProvider = new PackageItemProvider(this);
-        }
+		if (packageItemProvider == null) {
+			packageItemProvider = new PackageItemProvider(this);
+		}
 
-        return packageItemProvider;
-    }
+		return packageItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ServiceSpec} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ServiceSpec} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ServiceSpecItemProvider serviceSpecItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ServiceSpec}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ServiceSpec}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createServiceSpecAdapter() {
-        if (serviceSpecItemProvider == null) {
-            serviceSpecItemProvider = new ServiceSpecItemProvider(this);
-        }
+		if (serviceSpecItemProvider == null) {
+			serviceSpecItemProvider = new ServiceSpecItemProvider(this);
+		}
 
-        return serviceSpecItemProvider;
-    }
+		return serviceSpecItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ServiceServer} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ServiceServer} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ServiceServerItemProvider serviceServerItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ServiceServer}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ServiceServer}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createServiceServerAdapter() {
-        if (serviceServerItemProvider == null) {
-            serviceServerItemProvider = new ServiceServerItemProvider(this);
-        }
+		if (serviceServerItemProvider == null) {
+			serviceServerItemProvider = new ServiceServerItemProvider(this);
+		}
 
-        return serviceServerItemProvider;
-    }
+		return serviceServerItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.TopicSpec} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.TopicSpec} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected TopicSpecItemProvider topicSpecItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.TopicSpec}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.TopicSpec}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createTopicSpecAdapter() {
-        if (topicSpecItemProvider == null) {
-            topicSpecItemProvider = new TopicSpecItemProvider(this);
-        }
+		if (topicSpecItemProvider == null) {
+			topicSpecItemProvider = new TopicSpecItemProvider(this);
+		}
 
-        return topicSpecItemProvider;
-    }
+		return topicSpecItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.Publisher} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.Publisher} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected PublisherItemProvider publisherItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.Publisher}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.Publisher}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createPublisherAdapter() {
-        if (publisherItemProvider == null) {
-            publisherItemProvider = new PublisherItemProvider(this);
-        }
+		if (publisherItemProvider == null) {
+			publisherItemProvider = new PublisherItemProvider(this);
+		}
 
-        return publisherItemProvider;
-    }
+		return publisherItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.PackageDependency} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.PackageDependency} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected PackageDependencyItemProvider packageDependencyItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.PackageDependency}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.PackageDependency}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createPackageDependencyAdapter() {
-        if (packageDependencyItemProvider == null) {
-            packageDependencyItemProvider = new PackageDependencyItemProvider(this);
-        }
+		if (packageDependencyItemProvider == null) {
+			packageDependencyItemProvider = new PackageDependencyItemProvider(this);
+		}
 
-        return packageDependencyItemProvider;
-    }
+		return packageDependencyItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ExternalDependency} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ExternalDependency} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ExternalDependencyItemProvider externalDependencyItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ExternalDependency}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ExternalDependency}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createExternalDependencyAdapter() {
-        if (externalDependencyItemProvider == null) {
-            externalDependencyItemProvider = new ExternalDependencyItemProvider(this);
-        }
+		if (externalDependencyItemProvider == null) {
+			externalDependencyItemProvider = new ExternalDependencyItemProvider(this);
+		}
 
-        return externalDependencyItemProvider;
-    }
+		return externalDependencyItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.CatkinPackage} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.CatkinPackage} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected CatkinPackageItemProvider catkinPackageItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.CatkinPackage}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.CatkinPackage}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createCatkinPackageAdapter() {
-        if (catkinPackageItemProvider == null) {
-            catkinPackageItemProvider = new CatkinPackageItemProvider(this);
-        }
+		if (catkinPackageItemProvider == null) {
+			catkinPackageItemProvider = new CatkinPackageItemProvider(this);
+		}
 
-        return catkinPackageItemProvider;
-    }
+		return catkinPackageItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.Artifact} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.Artifact} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ArtifactItemProvider artifactItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.Artifact}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.Artifact}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createArtifactAdapter() {
-        if (artifactItemProvider == null) {
-            artifactItemProvider = new ArtifactItemProvider(this);
-        }
+		if (artifactItemProvider == null) {
+			artifactItemProvider = new ArtifactItemProvider(this);
+		}
 
-        return artifactItemProvider;
-    }
+		return artifactItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.Subscriber} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.Subscriber} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected SubscriberItemProvider subscriberItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.Subscriber}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.Subscriber}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createSubscriberAdapter() {
-        if (subscriberItemProvider == null) {
-            subscriberItemProvider = new SubscriberItemProvider(this);
-        }
+		if (subscriberItemProvider == null) {
+			subscriberItemProvider = new SubscriberItemProvider(this);
+		}
 
-        return subscriberItemProvider;
-    }
+		return subscriberItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ServiceClient} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ServiceClient} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ServiceClientItemProvider serviceClientItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ServiceClient}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ServiceClient}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createServiceClientAdapter() {
-        if (serviceClientItemProvider == null) {
-            serviceClientItemProvider = new ServiceClientItemProvider(this);
-        }
+		if (serviceClientItemProvider == null) {
+			serviceClientItemProvider = new ServiceClientItemProvider(this);
+		}
 
-        return serviceClientItemProvider;
-    }
+		return serviceClientItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.PackageSet} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.PackageSet} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected PackageSetItemProvider packageSetItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.PackageSet}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.PackageSet}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createPackageSetAdapter() {
-        if (packageSetItemProvider == null) {
-            packageSetItemProvider = new PackageSetItemProvider(this);
-        }
+		if (packageSetItemProvider == null) {
+			packageSetItemProvider = new PackageSetItemProvider(this);
+		}
 
-        return packageSetItemProvider;
-    }
+		return packageSetItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ActionSpec} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ActionSpec} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ActionSpecItemProvider actionSpecItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ActionSpec}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ActionSpec}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createActionSpecAdapter() {
-        if (actionSpecItemProvider == null) {
-            actionSpecItemProvider = new ActionSpecItemProvider(this);
-        }
+		if (actionSpecItemProvider == null) {
+			actionSpecItemProvider = new ActionSpecItemProvider(this);
+		}
 
-        return actionSpecItemProvider;
-    }
+		return actionSpecItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ActionServer} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ActionServer} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ActionServerItemProvider actionServerItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ActionServer}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ActionServer}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createActionServerAdapter() {
-        if (actionServerItemProvider == null) {
-            actionServerItemProvider = new ActionServerItemProvider(this);
-        }
+		if (actionServerItemProvider == null) {
+			actionServerItemProvider = new ActionServerItemProvider(this);
+		}
 
-        return actionServerItemProvider;
-    }
+		return actionServerItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ActionClient} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ActionClient} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ActionClientItemProvider actionClientItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ActionClient}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ActionClient}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createActionClientAdapter() {
-        if (actionClientItemProvider == null) {
-            actionClientItemProvider = new ActionClientItemProvider(this);
-        }
+		if (actionClientItemProvider == null) {
+			actionClientItemProvider = new ActionClientItemProvider(this);
+		}
 
-        return actionClientItemProvider;
-    }
+		return actionClientItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.MessageDefinition} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.MessageDefinition} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected MessageDefinitionItemProvider messageDefinitionItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.MessageDefinition}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.MessageDefinition}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createMessageDefinitionAdapter() {
-        if (messageDefinitionItemProvider == null) {
-            messageDefinitionItemProvider = new MessageDefinitionItemProvider(this);
-        }
+		if (messageDefinitionItemProvider == null) {
+			messageDefinitionItemProvider = new MessageDefinitionItemProvider(this);
+		}
 
-        return messageDefinitionItemProvider;
-    }
+		return messageDefinitionItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.GlobalNamespace} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.GlobalNamespace} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected GlobalNamespaceItemProvider globalNamespaceItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.GlobalNamespace}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.GlobalNamespace}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createGlobalNamespaceAdapter() {
-        if (globalNamespaceItemProvider == null) {
-            globalNamespaceItemProvider = new GlobalNamespaceItemProvider(this);
-        }
+		if (globalNamespaceItemProvider == null) {
+			globalNamespaceItemProvider = new GlobalNamespaceItemProvider(this);
+		}
 
-        return globalNamespaceItemProvider;
-    }
+		return globalNamespaceItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.RelativeNamespace} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.RelativeNamespace} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RelativeNamespaceItemProvider relativeNamespaceItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.RelativeNamespace}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.RelativeNamespace}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createRelativeNamespaceAdapter() {
-        if (relativeNamespaceItemProvider == null) {
-            relativeNamespaceItemProvider = new RelativeNamespaceItemProvider(this);
-        }
+		if (relativeNamespaceItemProvider == null) {
+			relativeNamespaceItemProvider = new RelativeNamespaceItemProvider(this);
+		}
 
-        return relativeNamespaceItemProvider;
-    }
+		return relativeNamespaceItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.PrivateNamespace} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.PrivateNamespace} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected PrivateNamespaceItemProvider privateNamespaceItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.PrivateNamespace}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.PrivateNamespace}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createPrivateNamespaceAdapter() {
-        if (privateNamespaceItemProvider == null) {
-            privateNamespaceItemProvider = new PrivateNamespaceItemProvider(this);
-        }
+		if (privateNamespaceItemProvider == null) {
+			privateNamespaceItemProvider = new PrivateNamespaceItemProvider(this);
+		}
 
-        return privateNamespaceItemProvider;
-    }
+		return privateNamespaceItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.InterfaceType} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.InterfaceType} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected InterfaceTypeItemProvider interfaceTypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.InterfaceType}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.InterfaceType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createInterfaceTypeAdapter() {
-        if (interfaceTypeItemProvider == null) {
-            interfaceTypeItemProvider = new InterfaceTypeItemProvider(this);
-        }
+		if (interfaceTypeItemProvider == null) {
+			interfaceTypeItemProvider = new InterfaceTypeItemProvider(this);
+		}
 
-        return interfaceTypeItemProvider;
-    }
+		return interfaceTypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterListType} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterListType} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterListTypeItemProvider parameterListTypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterListType}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterListType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterListTypeAdapter() {
-        if (parameterListTypeItemProvider == null) {
-            parameterListTypeItemProvider = new ParameterListTypeItemProvider(this);
-        }
+		if (parameterListTypeItemProvider == null) {
+			parameterListTypeItemProvider = new ParameterListTypeItemProvider(this);
+		}
 
-        return parameterListTypeItemProvider;
-    }
+		return parameterListTypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterStructType} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterStructType} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterStructTypeItemProvider parameterStructTypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterStructType}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterStructType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterStructTypeAdapter() {
-        if (parameterStructTypeItemProvider == null) {
-            parameterStructTypeItemProvider = new ParameterStructTypeItemProvider(this);
-        }
+		if (parameterStructTypeItemProvider == null) {
+			parameterStructTypeItemProvider = new ParameterStructTypeItemProvider(this);
+		}
 
-        return parameterStructTypeItemProvider;
-    }
+		return parameterStructTypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterIntegerType} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterIntegerType} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterIntegerTypeItemProvider parameterIntegerTypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterIntegerType}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterIntegerType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterIntegerTypeAdapter() {
-        if (parameterIntegerTypeItemProvider == null) {
-            parameterIntegerTypeItemProvider = new ParameterIntegerTypeItemProvider(this);
-        }
+		if (parameterIntegerTypeItemProvider == null) {
+			parameterIntegerTypeItemProvider = new ParameterIntegerTypeItemProvider(this);
+		}
 
-        return parameterIntegerTypeItemProvider;
-    }
+		return parameterIntegerTypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterStringType} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterStringType} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterStringTypeItemProvider parameterStringTypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterStringType}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterStringType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterStringTypeAdapter() {
-        if (parameterStringTypeItemProvider == null) {
-            parameterStringTypeItemProvider = new ParameterStringTypeItemProvider(this);
-        }
+		if (parameterStringTypeItemProvider == null) {
+			parameterStringTypeItemProvider = new ParameterStringTypeItemProvider(this);
+		}
 
-        return parameterStringTypeItemProvider;
-    }
+		return parameterStringTypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterDoubleType} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterDoubleType} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterDoubleTypeItemProvider parameterDoubleTypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterDoubleType}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterDoubleType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterDoubleTypeAdapter() {
-        if (parameterDoubleTypeItemProvider == null) {
-            parameterDoubleTypeItemProvider = new ParameterDoubleTypeItemProvider(this);
-        }
+		if (parameterDoubleTypeItemProvider == null) {
+			parameterDoubleTypeItemProvider = new ParameterDoubleTypeItemProvider(this);
+		}
 
-        return parameterDoubleTypeItemProvider;
-    }
+		return parameterDoubleTypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.Parameter} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.Parameter} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterItemProvider parameterItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.Parameter}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.Parameter}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterAdapter() {
-        if (parameterItemProvider == null) {
-            parameterItemProvider = new ParameterItemProvider(this);
-        }
+		if (parameterItemProvider == null) {
+			parameterItemProvider = new ParameterItemProvider(this);
+		}
 
-        return parameterItemProvider;
-    }
+		return parameterItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterDateType} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterDateType} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterDateTypeItemProvider parameterDateTypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterDateType}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterDateType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterDateTypeAdapter() {
-        if (parameterDateTypeItemProvider == null) {
-            parameterDateTypeItemProvider = new ParameterDateTypeItemProvider(this);
-        }
+		if (parameterDateTypeItemProvider == null) {
+			parameterDateTypeItemProvider = new ParameterDateTypeItemProvider(this);
+		}
 
-        return parameterDateTypeItemProvider;
-    }
+		return parameterDateTypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterBooleanType} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterBooleanType} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterBooleanTypeItemProvider parameterBooleanTypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterBooleanType}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterBooleanType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterBooleanTypeAdapter() {
-        if (parameterBooleanTypeItemProvider == null) {
-            parameterBooleanTypeItemProvider = new ParameterBooleanTypeItemProvider(this);
-        }
+		if (parameterBooleanTypeItemProvider == null) {
+			parameterBooleanTypeItemProvider = new ParameterBooleanTypeItemProvider(this);
+		}
 
-        return parameterBooleanTypeItemProvider;
-    }
+		return parameterBooleanTypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterBase64Type} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterBase64Type} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterBase64TypeItemProvider parameterBase64TypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterBase64Type}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterBase64Type}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterBase64TypeAdapter() {
-        if (parameterBase64TypeItemProvider == null) {
-            parameterBase64TypeItemProvider = new ParameterBase64TypeItemProvider(this);
-        }
+		if (parameterBase64TypeItemProvider == null) {
+			parameterBase64TypeItemProvider = new ParameterBase64TypeItemProvider(this);
+		}
 
-        return parameterBase64TypeItemProvider;
-    }
+		return parameterBase64TypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterAnyType} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterAnyType} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterAnyTypeItemProvider parameterAnyTypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterAnyType}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterAnyType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterAnyTypeAdapter() {
-        if (parameterAnyTypeItemProvider == null) {
-            parameterAnyTypeItemProvider = new ParameterAnyTypeItemProvider(this);
-        }
+		if (parameterAnyTypeItemProvider == null) {
+			parameterAnyTypeItemProvider = new ParameterAnyTypeItemProvider(this);
+		}
 
-        return parameterAnyTypeItemProvider;
-    }
+		return parameterAnyTypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterStructTypeMember} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterStructTypeMember} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterStructTypeMemberItemProvider parameterStructTypeMemberItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterStructTypeMember}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterStructTypeMember}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterStructTypeMemberAdapter() {
-        if (parameterStructTypeMemberItemProvider == null) {
-            parameterStructTypeMemberItemProvider = new ParameterStructTypeMemberItemProvider(this);
-        }
+		if (parameterStructTypeMemberItemProvider == null) {
+			parameterStructTypeMemberItemProvider = new ParameterStructTypeMemberItemProvider(this);
+		}
 
-        return parameterStructTypeMemberItemProvider;
-    }
+		return parameterStructTypeMemberItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterArrayType} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterArrayType} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterArrayTypeItemProvider parameterArrayTypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterArrayType}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterArrayType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterArrayTypeAdapter() {
-        if (parameterArrayTypeItemProvider == null) {
-            parameterArrayTypeItemProvider = new ParameterArrayTypeItemProvider(this);
-        }
+		if (parameterArrayTypeItemProvider == null) {
+			parameterArrayTypeItemProvider = new ParameterArrayTypeItemProvider(this);
+		}
 
-        return parameterArrayTypeItemProvider;
-    }
+		return parameterArrayTypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterAny} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterAny} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterAnyItemProvider parameterAnyItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterAny}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterAny}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterAnyAdapter() {
-        if (parameterAnyItemProvider == null) {
-            parameterAnyItemProvider = new ParameterAnyItemProvider(this);
-        }
+		if (parameterAnyItemProvider == null) {
+			parameterAnyItemProvider = new ParameterAnyItemProvider(this);
+		}
 
-        return parameterAnyItemProvider;
-    }
+		return parameterAnyItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterString} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterString} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterStringItemProvider parameterStringItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterString}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterString}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterStringAdapter() {
-        if (parameterStringItemProvider == null) {
-            parameterStringItemProvider = new ParameterStringItemProvider(this);
-        }
+		if (parameterStringItemProvider == null) {
+			parameterStringItemProvider = new ParameterStringItemProvider(this);
+		}
 
-        return parameterStringItemProvider;
-    }
+		return parameterStringItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterBase64} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterBase64} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterBase64ItemProvider parameterBase64ItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterBase64}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterBase64}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterBase64Adapter() {
-        if (parameterBase64ItemProvider == null) {
-            parameterBase64ItemProvider = new ParameterBase64ItemProvider(this);
-        }
+		if (parameterBase64ItemProvider == null) {
+			parameterBase64ItemProvider = new ParameterBase64ItemProvider(this);
+		}
 
-        return parameterBase64ItemProvider;
-    }
+		return parameterBase64ItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterInteger} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterInteger} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterIntegerItemProvider parameterIntegerItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterInteger}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterInteger}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterIntegerAdapter() {
-        if (parameterIntegerItemProvider == null) {
-            parameterIntegerItemProvider = new ParameterIntegerItemProvider(this);
-        }
+		if (parameterIntegerItemProvider == null) {
+			parameterIntegerItemProvider = new ParameterIntegerItemProvider(this);
+		}
 
-        return parameterIntegerItemProvider;
-    }
+		return parameterIntegerItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterDouble} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterDouble} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterDoubleItemProvider parameterDoubleItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterDouble}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterDouble}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterDoubleAdapter() {
-        if (parameterDoubleItemProvider == null) {
-            parameterDoubleItemProvider = new ParameterDoubleItemProvider(this);
-        }
+		if (parameterDoubleItemProvider == null) {
+			parameterDoubleItemProvider = new ParameterDoubleItemProvider(this);
+		}
 
-        return parameterDoubleItemProvider;
-    }
+		return parameterDoubleItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterBoolean} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterBoolean} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterBooleanItemProvider parameterBooleanItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterBoolean}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterBoolean}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterBooleanAdapter() {
-        if (parameterBooleanItemProvider == null) {
-            parameterBooleanItemProvider = new ParameterBooleanItemProvider(this);
-        }
+		if (parameterBooleanItemProvider == null) {
+			parameterBooleanItemProvider = new ParameterBooleanItemProvider(this);
+		}
 
-        return parameterBooleanItemProvider;
-    }
+		return parameterBooleanItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterSequence} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterSequence} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterSequenceItemProvider parameterSequenceItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterSequence}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterSequence}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterSequenceAdapter() {
-        if (parameterSequenceItemProvider == null) {
-            parameterSequenceItemProvider = new ParameterSequenceItemProvider(this);
-        }
+		if (parameterSequenceItemProvider == null) {
+			parameterSequenceItemProvider = new ParameterSequenceItemProvider(this);
+		}
 
-        return parameterSequenceItemProvider;
-    }
+		return parameterSequenceItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterStruct} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterStruct} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterStructItemProvider parameterStructItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterStruct}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterStruct}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterStructAdapter() {
-        if (parameterStructItemProvider == null) {
-            parameterStructItemProvider = new ParameterStructItemProvider(this);
-        }
+		if (parameterStructItemProvider == null) {
+			parameterStructItemProvider = new ParameterStructItemProvider(this);
+		}
 
-        return parameterStructItemProvider;
-    }
+		return parameterStructItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterStructMember} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterStructMember} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterStructMemberItemProvider parameterStructMemberItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterStructMember}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterStructMember}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterStructMemberAdapter() {
-        if (parameterStructMemberItemProvider == null) {
-            parameterStructMemberItemProvider = new ParameterStructMemberItemProvider(this);
-        }
+		if (parameterStructMemberItemProvider == null) {
+			parameterStructMemberItemProvider = new ParameterStructMemberItemProvider(this);
+		}
 
-        return parameterStructMemberItemProvider;
-    }
+		return parameterStructMemberItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.ParameterDate} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ParameterDate} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ParameterDateItemProvider parameterDateItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.ParameterDate}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ParameterDate}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createParameterDateAdapter() {
-        if (parameterDateItemProvider == null) {
-            parameterDateItemProvider = new ParameterDateItemProvider(this);
-        }
+		if (parameterDateItemProvider == null) {
+			parameterDateItemProvider = new ParameterDateItemProvider(this);
+		}
 
-        return parameterDateItemProvider;
-    }
+		return parameterDateItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.AmentPackage} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.AmentPackage} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected AmentPackageItemProvider amentPackageItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.AmentPackage}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.AmentPackage}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createAmentPackageAdapter() {
-        if (amentPackageItemProvider == null) {
-            amentPackageItemProvider = new AmentPackageItemProvider(this);
-        }
+		if (amentPackageItemProvider == null) {
+			amentPackageItemProvider = new AmentPackageItemProvider(this);
+		}
 
-        return amentPackageItemProvider;
-    }
+		return amentPackageItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.QualityOfService} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.QualityOfService} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected QualityOfServiceItemProvider qualityOfServiceItemProvider;
 
     /**
-     * This creates an adapter for a {@link ros.QualityOfService}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.QualityOfService}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createQualityOfServiceAdapter() {
-        if (qualityOfServiceItemProvider == null) {
-            qualityOfServiceItemProvider = new QualityOfServiceItemProvider(this);
-        }
+		if (qualityOfServiceItemProvider == null) {
+			qualityOfServiceItemProvider = new QualityOfServiceItemProvider(this);
+		}
 
-        return qualityOfServiceItemProvider;
-    }
+		return qualityOfServiceItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link ros.TopicSpecMsgRef} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.TopicSpecMsgRef} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected TopicSpecMsgRefItemProvider topicSpecMsgRefItemProvider;
 
                 /**
-     * This creates an adapter for a {@link ros.TopicSpecMsgRef}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.TopicSpecMsgRef}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createTopicSpecMsgRefAdapter() {
-        if (topicSpecMsgRefItemProvider == null) {
-            topicSpecMsgRefItemProvider = new TopicSpecMsgRefItemProvider(this);
-        }
+		if (topicSpecMsgRefItemProvider == null) {
+			topicSpecMsgRefItemProvider = new TopicSpecMsgRefItemProvider(this);
+		}
 
-        return topicSpecMsgRefItemProvider;
-    }
+		return topicSpecMsgRefItemProvider;
+	}
 
                 /**
-     * This keeps track of the one adapter used for all {@link ros.ArrayTopicSpecMsgRef} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link ros.ArrayTopicSpecMsgRef} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ArrayTopicSpecMsgRefItemProvider arrayTopicSpecMsgRefItemProvider;
 
                                                                 /**
-     * This creates an adapter for a {@link ros.ArrayTopicSpecMsgRef}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link ros.ArrayTopicSpecMsgRef}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createArrayTopicSpecMsgRefAdapter() {
-        if (arrayTopicSpecMsgRefItemProvider == null) {
-            arrayTopicSpecMsgRefItemProvider = new ArrayTopicSpecMsgRefItemProvider(this);
-        }
+		if (arrayTopicSpecMsgRefItemProvider == null) {
+			arrayTopicSpecMsgRefItemProvider = new ArrayTopicSpecMsgRefItemProvider(this);
+		}
 
-        return arrayTopicSpecMsgRefItemProvider;
-    }
+		return arrayTopicSpecMsgRefItemProvider;
+	}
 
                                                                 /**
-     * This returns the root adapter factory that contains this factory.
-     * <!-- begin-user-doc -->
+	 * This returns the root adapter factory that contains this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public ComposeableAdapterFactory getRootAdapterFactory() {
-        return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
-    }
+		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
+	}
 
     /**
-     * This sets the composed adapter factory that contains this factory.
-     * <!-- begin-user-doc -->
+	 * This sets the composed adapter factory that contains this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
-        this.parentAdapterFactory = parentAdapterFactory;
-    }
+		this.parentAdapterFactory = parentAdapterFactory;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean isFactoryForType(Object type) {
-        return supportedTypes.contains(type) || super.isFactoryForType(type);
-    }
+		return supportedTypes.contains(type) || super.isFactoryForType(type);
+	}
 
     /**
-     * This implementation substitutes the factory itself as the key for the adapter.
-     * <!-- begin-user-doc -->
+	 * This implementation substitutes the factory itself as the key for the adapter.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter adapt(Notifier notifier, Object type) {
-        return super.adapt(notifier, this);
-    }
+		return super.adapt(notifier, this);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object adapt(Object object, Object type) {
-        if (isFactoryForType(type)) {
-            Object adapter = super.adapt(object, type);
-            if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
-                return adapter;
-            }
-        }
+		if (isFactoryForType(type)) {
+			Object adapter = super.adapt(object, type);
+			if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
+				return adapter;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
     /**
-     * This adds a listener.
-     * <!-- begin-user-doc -->
+	 * This adds a listener.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void addListener(INotifyChangedListener notifyChangedListener) {
-        changeNotifier.addListener(notifyChangedListener);
-    }
+		changeNotifier.addListener(notifyChangedListener);
+	}
 
     /**
-     * This removes a listener.
-     * <!-- begin-user-doc -->
+	 * This removes a listener.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void removeListener(INotifyChangedListener notifyChangedListener) {
-        changeNotifier.removeListener(notifyChangedListener);
-    }
+		changeNotifier.removeListener(notifyChangedListener);
+	}
 
     /**
-     * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
-     * <!-- begin-user-doc -->
+	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void fireNotifyChanged(Notification notification) {
-        changeNotifier.fireNotifyChanged(notification);
+		changeNotifier.fireNotifyChanged(notification);
 
-        if (parentAdapterFactory != null) {
-            parentAdapterFactory.fireNotifyChanged(notification);
-        }
-    }
+		if (parentAdapterFactory != null) {
+			parentAdapterFactory.fireNotifyChanged(notification);
+		}
+	}
 
     /**
-     * This disposes all of the item providers created by this factory.
-     * <!-- begin-user-doc -->
+	 * This disposes all of the item providers created by this factory. 
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void dispose() {
-        if (nodeItemProvider != null) nodeItemProvider.dispose();
-        if (packageItemProvider != null) packageItemProvider.dispose();
-        if (serviceSpecItemProvider != null) serviceSpecItemProvider.dispose();
-        if (serviceServerItemProvider != null) serviceServerItemProvider.dispose();
-        if (topicSpecItemProvider != null) topicSpecItemProvider.dispose();
-        if (packageDependencyItemProvider != null) packageDependencyItemProvider.dispose();
-        if (externalDependencyItemProvider != null) externalDependencyItemProvider.dispose();
-        if (catkinPackageItemProvider != null) catkinPackageItemProvider.dispose();
-        if (publisherItemProvider != null) publisherItemProvider.dispose();
-        if (artifactItemProvider != null) artifactItemProvider.dispose();
-        if (subscriberItemProvider != null) subscriberItemProvider.dispose();
-        if (serviceClientItemProvider != null) serviceClientItemProvider.dispose();
-        if (packageSetItemProvider != null) packageSetItemProvider.dispose();
-        if (actionSpecItemProvider != null) actionSpecItemProvider.dispose();
-        if (actionServerItemProvider != null) actionServerItemProvider.dispose();
-        if (actionClientItemProvider != null) actionClientItemProvider.dispose();
-        if (messageDefinitionItemProvider != null) messageDefinitionItemProvider.dispose();
-        if (globalNamespaceItemProvider != null) globalNamespaceItemProvider.dispose();
-        if (relativeNamespaceItemProvider != null) relativeNamespaceItemProvider.dispose();
-        if (privateNamespaceItemProvider != null) privateNamespaceItemProvider.dispose();
-        if (interfaceTypeItemProvider != null) interfaceTypeItemProvider.dispose();
-        if (parameterListTypeItemProvider != null) parameterListTypeItemProvider.dispose();
-        if (parameterStructTypeItemProvider != null) parameterStructTypeItemProvider.dispose();
-        if (parameterIntegerTypeItemProvider != null) parameterIntegerTypeItemProvider.dispose();
-        if (parameterStringTypeItemProvider != null) parameterStringTypeItemProvider.dispose();
-        if (parameterDoubleTypeItemProvider != null) parameterDoubleTypeItemProvider.dispose();
-        if (parameterItemProvider != null) parameterItemProvider.dispose();
-        if (parameterDateTypeItemProvider != null) parameterDateTypeItemProvider.dispose();
-        if (parameterBooleanTypeItemProvider != null) parameterBooleanTypeItemProvider.dispose();
-        if (parameterBase64TypeItemProvider != null) parameterBase64TypeItemProvider.dispose();
-        if (parameterAnyTypeItemProvider != null) parameterAnyTypeItemProvider.dispose();
-        if (parameterStructTypeMemberItemProvider != null) parameterStructTypeMemberItemProvider.dispose();
-        if (parameterArrayTypeItemProvider != null) parameterArrayTypeItemProvider.dispose();
-        if (parameterAnyItemProvider != null) parameterAnyItemProvider.dispose();
-        if (parameterStringItemProvider != null) parameterStringItemProvider.dispose();
-        if (parameterBase64ItemProvider != null) parameterBase64ItemProvider.dispose();
-        if (parameterIntegerItemProvider != null) parameterIntegerItemProvider.dispose();
-        if (parameterDoubleItemProvider != null) parameterDoubleItemProvider.dispose();
-        if (parameterBooleanItemProvider != null) parameterBooleanItemProvider.dispose();
-        if (parameterSequenceItemProvider != null) parameterSequenceItemProvider.dispose();
-        if (parameterStructItemProvider != null) parameterStructItemProvider.dispose();
-        if (parameterStructMemberItemProvider != null) parameterStructMemberItemProvider.dispose();
-        if (parameterDateItemProvider != null) parameterDateItemProvider.dispose();
-        if (amentPackageItemProvider != null) amentPackageItemProvider.dispose();
-        if (qualityOfServiceItemProvider != null) qualityOfServiceItemProvider.dispose();
-        if (topicSpecMsgRefItemProvider != null) topicSpecMsgRefItemProvider.dispose();
-        if (arrayTopicSpecMsgRefItemProvider != null) arrayTopicSpecMsgRefItemProvider.dispose();
-    }
+		if (extensionBlockItemProvider != null) extensionBlockItemProvider.dispose();
+		if (extensionEntryItemProvider != null) extensionEntryItemProvider.dispose();
+		if (extensionScalarValueItemProvider != null) extensionScalarValueItemProvider.dispose();
+		if (extensionListValueItemProvider != null) extensionListValueItemProvider.dispose();
+		if (extensionMapValueItemProvider != null) extensionMapValueItemProvider.dispose();
+		if (extensionRefValueItemProvider != null) extensionRefValueItemProvider.dispose();
+		if (nodeItemProvider != null) nodeItemProvider.dispose();
+		if (pluginItemProvider != null) pluginItemProvider.dispose();
+		if (pluginBaseItemProvider != null) pluginBaseItemProvider.dispose();
+		if (pluginSlotItemProvider != null) pluginSlotItemProvider.dispose();
+		if (packageItemProvider != null) packageItemProvider.dispose();
+		if (serviceSpecItemProvider != null) serviceSpecItemProvider.dispose();
+		if (serviceServerItemProvider != null) serviceServerItemProvider.dispose();
+		if (topicSpecItemProvider != null) topicSpecItemProvider.dispose();
+		if (packageDependencyItemProvider != null) packageDependencyItemProvider.dispose();
+		if (externalDependencyItemProvider != null) externalDependencyItemProvider.dispose();
+		if (catkinPackageItemProvider != null) catkinPackageItemProvider.dispose();
+		if (publisherItemProvider != null) publisherItemProvider.dispose();
+		if (artifactItemProvider != null) artifactItemProvider.dispose();
+		if (subscriberItemProvider != null) subscriberItemProvider.dispose();
+		if (serviceClientItemProvider != null) serviceClientItemProvider.dispose();
+		if (packageSetItemProvider != null) packageSetItemProvider.dispose();
+		if (actionSpecItemProvider != null) actionSpecItemProvider.dispose();
+		if (actionServerItemProvider != null) actionServerItemProvider.dispose();
+		if (actionClientItemProvider != null) actionClientItemProvider.dispose();
+		if (messageDefinitionItemProvider != null) messageDefinitionItemProvider.dispose();
+		if (globalNamespaceItemProvider != null) globalNamespaceItemProvider.dispose();
+		if (relativeNamespaceItemProvider != null) relativeNamespaceItemProvider.dispose();
+		if (privateNamespaceItemProvider != null) privateNamespaceItemProvider.dispose();
+		if (interfaceTypeItemProvider != null) interfaceTypeItemProvider.dispose();
+		if (parameterListTypeItemProvider != null) parameterListTypeItemProvider.dispose();
+		if (parameterStructTypeItemProvider != null) parameterStructTypeItemProvider.dispose();
+		if (parameterIntegerTypeItemProvider != null) parameterIntegerTypeItemProvider.dispose();
+		if (parameterStringTypeItemProvider != null) parameterStringTypeItemProvider.dispose();
+		if (parameterDoubleTypeItemProvider != null) parameterDoubleTypeItemProvider.dispose();
+		if (parameterItemProvider != null) parameterItemProvider.dispose();
+		if (parameterDateTypeItemProvider != null) parameterDateTypeItemProvider.dispose();
+		if (parameterBooleanTypeItemProvider != null) parameterBooleanTypeItemProvider.dispose();
+		if (parameterBase64TypeItemProvider != null) parameterBase64TypeItemProvider.dispose();
+		if (parameterAnyTypeItemProvider != null) parameterAnyTypeItemProvider.dispose();
+		if (parameterStructTypeMemberItemProvider != null) parameterStructTypeMemberItemProvider.dispose();
+		if (parameterArrayTypeItemProvider != null) parameterArrayTypeItemProvider.dispose();
+		if (parameterAnyItemProvider != null) parameterAnyItemProvider.dispose();
+		if (parameterStringItemProvider != null) parameterStringItemProvider.dispose();
+		if (parameterBase64ItemProvider != null) parameterBase64ItemProvider.dispose();
+		if (parameterIntegerItemProvider != null) parameterIntegerItemProvider.dispose();
+		if (parameterDoubleItemProvider != null) parameterDoubleItemProvider.dispose();
+		if (parameterBooleanItemProvider != null) parameterBooleanItemProvider.dispose();
+		if (parameterSequenceItemProvider != null) parameterSequenceItemProvider.dispose();
+		if (parameterStructItemProvider != null) parameterStructItemProvider.dispose();
+		if (parameterStructMemberItemProvider != null) parameterStructMemberItemProvider.dispose();
+		if (parameterDateItemProvider != null) parameterDateItemProvider.dispose();
+		if (amentPackageItemProvider != null) amentPackageItemProvider.dispose();
+		if (qualityOfServiceItemProvider != null) qualityOfServiceItemProvider.dispose();
+		if (topicSpecMsgRefItemProvider != null) topicSpecMsgRefItemProvider.dispose();
+		if (arrayTopicSpecMsgRefItemProvider != null) arrayTopicSpecMsgRefItemProvider.dispose();
+	}
 
 }
