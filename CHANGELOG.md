@@ -36,6 +36,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **GLSP String Parameter Escaping**:
   - Escaped string parameter values per the Xtext `STRING` terminal in `RosAstNodeModelSerializer` while keeping unchanged literals byte-identical.
 
+## [3.5.1] - 2026-11-18
+
+### Fixed
+- **Catalogue Cross-Reference Resolution (`RosCatalogueResolver`)**:
+  - Indexed every root package declared in multi-package `.ros` `PackageSet` catalogue files (such as `common_msgs.ros` declaring `actionlib_msgs`, `diagnostic_msgs`, `geometry_msgs`, `sensor_msgs`, etc., and `ros_core.ros` declaring `std_msgs` and `std_srvs`) instead of stopping at the first package header. Previously GLSP sessions left references to non-first packages in a multi-package `.ros` file (e.g. `geometry_msgs/msg/Point`) unresolved while the Xtext language server resolved them cleanly.
+
 ## [3.5.0] - 2026-11-16
 
 ### Added

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import signal
 import sys
 import rclpy
 from rclpy.duration import Duration
@@ -102,10 +103,20 @@ def main(args=None):
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
     finally:
-        node.destroy_node()
-        # Ctrl+C or the logic's shutdown handler may already have shut the context down.
-        if rclpy.ok():
-            rclpy.shutdown()
+        # Ignore duplicate SIGINTs during teardown (e.g. Ctrl+C forwarded by `ros2 run`).
+        while True:
+            try:
+                prev_sigint = signal.signal(signal.SIGINT, signal.SIG_IGN)
+                break
+            except KeyboardInterrupt:
+                pass
+        try:
+            node.destroy_node()
+            # Ctrl+C or the logic's shutdown handler may already have shut the context down.
+            if rclpy.ok():
+                rclpy.shutdown()
+        finally:
+            signal.signal(signal.SIGINT, prev_sigint)
 
 
 if __name__ == '__main__':

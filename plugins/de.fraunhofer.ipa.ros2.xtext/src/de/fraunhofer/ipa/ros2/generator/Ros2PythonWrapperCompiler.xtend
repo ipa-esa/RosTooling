@@ -827,6 +827,7 @@ class «node.name»Logic:
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import signal
 import sys
 import rclpy
 «IF node.isLifecycle»
@@ -1059,27 +1060,35 @@ def main(args=None):
     # Automated Executor Selection: MultiThreadedExecutor selected
     executor = MultiThreadedExecutor()
     executor.add_node(node)
-    try:
-        executor.spin()
-    except (KeyboardInterrupt, ExternalShutdownException):
-        pass
-    finally:
-        node.destroy_node()
-        # Ctrl+C or the logic's shutdown handler may already have shut the context down.
-        if rclpy.ok():
-            rclpy.shutdown()
     «ELSE»
     # Automated Executor Selection: SingleThreadedExecutor selected
+    «ENDIF»
     try:
+        «IF node.hasActionServer || node.hasServiceClients»
+        executor.spin()
+        «ELSE»
         rclpy.spin(node)
+        «ENDIF»
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
     finally:
-        node.destroy_node()
-        # Ctrl+C or the logic's shutdown handler may already have shut the context down.
-        if rclpy.ok():
-            rclpy.shutdown()
-    «ENDIF»
+        # Ignore duplicate SIGINTs during teardown (e.g. Ctrl+C forwarded by `ros2 run`).
+        while True:
+            try:
+                prev_sigint = signal.signal(signal.SIGINT, signal.SIG_IGN)
+                break
+            except KeyboardInterrupt:
+                pass
+        try:
+            «IF node.hasActionServer || node.hasServiceClients»
+            executor.shutdown()
+            «ENDIF»
+            node.destroy_node()
+            # Ctrl+C or the logic's shutdown handler may already have shut the context down.
+            if rclpy.ok():
+                rclpy.shutdown()
+        finally:
+            signal.signal(signal.SIGINT, prev_sigint)
 
 
 if __name__ == '__main__':
