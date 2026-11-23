@@ -128,9 +128,12 @@ class RosSystemValidator extends AbstractRosSystemValidator {
       }
   }
 
+  // A system without fromFile: is valid: the generator then writes its own bringup package.
+  // The null test comes first; the reverse order threw on every such system (Xtext logs and
+  // swallows exceptions thrown inside a check, so nothing showed).
   @Check
   def fromFileHelper(System system ) {
-      if (!system.fromFile.empty && system.fromFile !== null){
+      if (system.fromFile !== null && !system.fromFile.empty){
         if (!system.fromFile.toString.contains("/")){
                 error('Path not valid, the format for the FromFile attribute is: "NameOfThePackage/Path/to/ExecutableLaunchFile.launch.py"'
                     ,null,FROM_FILE_PATH)
@@ -163,6 +166,28 @@ class RosSystemValidator extends AbstractRosSystemValidator {
         }
     }
     return interfaces
+  }
+
+  public static val DUPLICATE_INTERFACE_NAME = 'rosnode.duplicateInterfaceName'
+
+  /**
+   * Connections refer to a node's interfaces by name, so two interfaces of one node with the same
+   * name leave the second one unreachable and make a connection silently use the first.
+   */
+  @Check
+  def checkUniqueInterfaceNames(RosNode rosNode) {
+    val seen = newHashSet
+    for (RosInterface iface : rosNode.rosinterfaces) {
+      if (iface.name !== null && !seen.add(iface.name)) {
+        error(
+          "Node '" + rosNode.name + "' declares the interface name '" + iface.name
+            + "' more than once; connections refer to interfaces by name, so give each one its own",
+          iface,
+          RossystemPackage.Literals.ROS_INTERFACE__NAME,
+          DUPLICATE_INTERFACE_NAME
+        )
+      }
+    }
   }
 
   public static val INCOMPATIBLE_PLUGIN = 'rosnode.incompatiblePlugin'
