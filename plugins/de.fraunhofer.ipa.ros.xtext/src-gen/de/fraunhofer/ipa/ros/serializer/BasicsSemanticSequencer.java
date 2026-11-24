@@ -19,6 +19,7 @@ import primitives.ByteArray;
 import primitives.Header;
 import primitives.MessagePart;
 import primitives.PrimitivesPackage;
+import primitives.SizedArray;
 import primitives.bool;
 import primitives.boolArray;
 import primitives.char0;
@@ -96,7 +97,7 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 		if (epackage == PrimitivesPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
 			case PrimitivesPackage.BYTE:
-				sequence_byte(context, (primitives.Byte) semanticObject); 
+				sequence_SizedByte_byte(context, (primitives.Byte) semanticObject); 
 				return; 
 			case PrimitivesPackage.BYTE_ARRAY:
 				sequence_byteArray(context, (ByteArray) semanticObject); 
@@ -107,14 +108,24 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case PrimitivesPackage.MESSAGE_PART:
 				sequence_MessagePart(context, (MessagePart) semanticObject); 
 				return; 
+			case PrimitivesPackage.SIZED_ARRAY:
+				if (rule == grammarAccess.getAbstractTypeRule()) {
+					sequence_AbstractType_SizedPrimitiveArray(context, (SizedArray) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getSizedPrimitiveArrayRule()) {
+					sequence_SizedPrimitiveArray(context, (SizedArray) semanticObject); 
+					return; 
+				}
+				else break;
 			case PrimitivesPackage.BOOL:
-				sequence_bool(context, (bool) semanticObject); 
+				sequence_SizedBool_bool(context, (bool) semanticObject); 
 				return; 
 			case PrimitivesPackage.BOOL_ARRAY:
 				sequence_boolArray(context, (boolArray) semanticObject); 
 				return; 
 			case PrimitivesPackage.CHAR0:
-				sequence_char(context, (char0) semanticObject); 
+				sequence_SizedChar_char(context, (char0) semanticObject); 
 				return; 
 			case PrimitivesPackage.CHAR_ARRAY:
 				sequence_charArray(context, (charArray) semanticObject); 
@@ -123,43 +134,43 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				sequence_duration(context, (duration) semanticObject); 
 				return; 
 			case PrimitivesPackage.FLOAT32:
-				sequence_float32(context, (float32) semanticObject); 
+				sequence_SizedFloat32_float32(context, (float32) semanticObject); 
 				return; 
 			case PrimitivesPackage.FLOAT32_ARRAY:
 				sequence_float32Array(context, (float32Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.FLOAT64:
-				sequence_float64(context, (float64) semanticObject); 
+				sequence_SizedFloat64_float64(context, (float64) semanticObject); 
 				return; 
 			case PrimitivesPackage.FLOAT64_ARRAY:
 				sequence_float64Array(context, (float64Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT16:
-				sequence_int16(context, (int16) semanticObject); 
+				sequence_SizedInt16_int16(context, (int16) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT16_ARRAY:
 				sequence_int16Array(context, (int16Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT32:
-				sequence_int32(context, (int32) semanticObject); 
+				sequence_SizedInt32_int32(context, (int32) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT32_ARRAY:
 				sequence_int32Array(context, (int32Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT64:
-				sequence_int64(context, (int64) semanticObject); 
+				sequence_SizedInt64_int64(context, (int64) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT64_ARRAY:
 				sequence_int64Array(context, (int64Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT8:
-				sequence_int8(context, (int8) semanticObject); 
+				sequence_SizedInt8_int8(context, (int8) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT8_ARRAY:
 				sequence_int8Array(context, (int8Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.STRING:
-				sequence_string0(context, (string) semanticObject); 
+				sequence_SizedString_string0(context, (string) semanticObject); 
 				return; 
 			case PrimitivesPackage.STRING_ARRAY:
 				sequence_string0Array(context, (stringArray) semanticObject); 
@@ -168,25 +179,25 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				sequence_time(context, (time) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT16:
-				sequence_uint16(context, (uint16) semanticObject); 
+				sequence_SizedUint16_uint16(context, (uint16) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT16_ARRAY:
 				sequence_uint16Array(context, (uint16Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT32:
-				sequence_uint32(context, (uint32) semanticObject); 
+				sequence_SizedUint32_uint32(context, (uint32) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT32_ARRAY:
 				sequence_uint32Array(context, (uint32Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT64:
-				sequence_uint64(context, (uint64) semanticObject); 
+				sequence_SizedUint64_uint64(context, (uint64) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT64_ARRAY:
 				sequence_uint64Array(context, (uint64Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT8:
-				sequence_uint8(context, (uint8) semanticObject); 
+				sequence_SizedUint8_uint8(context, (uint8) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT8_ARRAY:
 				sequence_uint8Array(context, (uint8Array) semanticObject); 
@@ -312,7 +323,45 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     AbstractType returns SizedArray
+	 *
+	 * Constraint:
+	 *     (
+	 *         (element=AbstractType_SizedArray_1_1_0 bounded?='&lt;='? size=ArraySize) | 
+	 *         (
+	 *             (
+	 *                 element=SizedBool | 
+	 *                 element=SizedInt8 | 
+	 *                 element=SizedUint8 | 
+	 *                 element=SizedInt16 | 
+	 *                 element=SizedUint16 | 
+	 *                 element=SizedInt32 | 
+	 *                 element=SizedUint32 | 
+	 *                 element=SizedInt64 | 
+	 *                 element=SizedUint64 | 
+	 *                 element=SizedFloat32 | 
+	 *                 element=SizedFloat64 | 
+	 *                 element=SizedString | 
+	 *                 element=SizedByte | 
+	 *                 element=SizedChar
+	 *             ) 
+	 *             bounded?='&lt;='? 
+	 *             size=ArraySize
+	 *         )
+	 *     )
+	 * </pre>
+	 */
+	protected void sequence_AbstractType_SizedPrimitiveArray(ISerializationContext context, SizedArray semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     AbstractType returns ArrayTopicSpecMsgRef
+	 *     AbstractType.SizedArray_1_1_0 returns ArrayTopicSpecMsgRef
+	 *     ElementType returns ArrayTopicSpecMsgRef
 	 *     ArraySpecRef returns ArrayTopicSpecMsgRef
 	 *
 	 * Constraint:
@@ -481,6 +530,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns Header
+	 *     AbstractType.SizedArray_1_1_0 returns Header
+	 *     ElementType returns Header
 	 *     Header returns Header
 	 *
 	 * Constraint:
@@ -907,7 +958,294 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     AbstractType returns bool
+	 *     AbstractType.SizedArray_1_1_0 returns bool
+	 *     SizedBool returns bool
+	 *     ElementType returns bool
+	 *     bool returns bool
+	 *
+	 * Constraint:
+	 *     {bool}
+	 * </pre>
+	 */
+	protected void sequence_SizedBool_bool(ISerializationContext context, bool semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns Byte
+	 *     AbstractType.SizedArray_1_1_0 returns Byte
+	 *     SizedByte returns Byte
+	 *     ElementType returns Byte
+	 *     byte returns Byte
+	 *
+	 * Constraint:
+	 *     {Byte}
+	 * </pre>
+	 */
+	protected void sequence_SizedByte_byte(ISerializationContext context, primitives.Byte semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns char0
+	 *     AbstractType.SizedArray_1_1_0 returns char0
+	 *     SizedChar returns char0
+	 *     ElementType returns char0
+	 *     char returns char0
+	 *
+	 * Constraint:
+	 *     {char0}
+	 * </pre>
+	 */
+	protected void sequence_SizedChar_char(ISerializationContext context, char0 semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns float32
+	 *     AbstractType.SizedArray_1_1_0 returns float32
+	 *     SizedFloat32 returns float32
+	 *     ElementType returns float32
+	 *     float32 returns float32
+	 *
+	 * Constraint:
+	 *     {float32}
+	 * </pre>
+	 */
+	protected void sequence_SizedFloat32_float32(ISerializationContext context, float32 semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns float64
+	 *     AbstractType.SizedArray_1_1_0 returns float64
+	 *     SizedFloat64 returns float64
+	 *     ElementType returns float64
+	 *     float64 returns float64
+	 *
+	 * Constraint:
+	 *     {float64}
+	 * </pre>
+	 */
+	protected void sequence_SizedFloat64_float64(ISerializationContext context, float64 semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns int16
+	 *     AbstractType.SizedArray_1_1_0 returns int16
+	 *     SizedInt16 returns int16
+	 *     ElementType returns int16
+	 *     int16 returns int16
+	 *
+	 * Constraint:
+	 *     {int16}
+	 * </pre>
+	 */
+	protected void sequence_SizedInt16_int16(ISerializationContext context, int16 semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns int32
+	 *     AbstractType.SizedArray_1_1_0 returns int32
+	 *     SizedInt32 returns int32
+	 *     ElementType returns int32
+	 *     int32 returns int32
+	 *
+	 * Constraint:
+	 *     {int32}
+	 * </pre>
+	 */
+	protected void sequence_SizedInt32_int32(ISerializationContext context, int32 semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns int64
+	 *     AbstractType.SizedArray_1_1_0 returns int64
+	 *     SizedInt64 returns int64
+	 *     ElementType returns int64
+	 *     int64 returns int64
+	 *
+	 * Constraint:
+	 *     {int64}
+	 * </pre>
+	 */
+	protected void sequence_SizedInt64_int64(ISerializationContext context, int64 semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns int8
+	 *     AbstractType.SizedArray_1_1_0 returns int8
+	 *     SizedInt8 returns int8
+	 *     ElementType returns int8
+	 *     int8 returns int8
+	 *
+	 * Constraint:
+	 *     {int8}
+	 * </pre>
+	 */
+	protected void sequence_SizedInt8_int8(ISerializationContext context, int8 semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     SizedPrimitiveArray returns SizedArray
+	 *
+	 * Constraint:
+	 *     (
+	 *         (
+	 *             element=SizedBool | 
+	 *             element=SizedInt8 | 
+	 *             element=SizedUint8 | 
+	 *             element=SizedInt16 | 
+	 *             element=SizedUint16 | 
+	 *             element=SizedInt32 | 
+	 *             element=SizedUint32 | 
+	 *             element=SizedInt64 | 
+	 *             element=SizedUint64 | 
+	 *             element=SizedFloat32 | 
+	 *             element=SizedFloat64 | 
+	 *             element=SizedString | 
+	 *             element=SizedByte | 
+	 *             element=SizedChar
+	 *         ) 
+	 *         bounded?='&lt;='? 
+	 *         size=ArraySize
+	 *     )
+	 * </pre>
+	 */
+	protected void sequence_SizedPrimitiveArray(ISerializationContext context, SizedArray semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns string
+	 *     AbstractType.SizedArray_1_1_0 returns string
+	 *     SizedString returns string
+	 *     ElementType returns string
+	 *     string0 returns string
+	 *
+	 * Constraint:
+	 *     {string}
+	 * </pre>
+	 */
+	protected void sequence_SizedString_string0(ISerializationContext context, string semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns uint16
+	 *     AbstractType.SizedArray_1_1_0 returns uint16
+	 *     SizedUint16 returns uint16
+	 *     ElementType returns uint16
+	 *     uint16 returns uint16
+	 *
+	 * Constraint:
+	 *     {uint16}
+	 * </pre>
+	 */
+	protected void sequence_SizedUint16_uint16(ISerializationContext context, uint16 semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns uint32
+	 *     AbstractType.SizedArray_1_1_0 returns uint32
+	 *     SizedUint32 returns uint32
+	 *     ElementType returns uint32
+	 *     uint32 returns uint32
+	 *
+	 * Constraint:
+	 *     {uint32}
+	 * </pre>
+	 */
+	protected void sequence_SizedUint32_uint32(ISerializationContext context, uint32 semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns uint64
+	 *     AbstractType.SizedArray_1_1_0 returns uint64
+	 *     SizedUint64 returns uint64
+	 *     ElementType returns uint64
+	 *     uint64 returns uint64
+	 *
+	 * Constraint:
+	 *     {uint64}
+	 * </pre>
+	 */
+	protected void sequence_SizedUint64_uint64(ISerializationContext context, uint64 semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     AbstractType returns uint8
+	 *     AbstractType.SizedArray_1_1_0 returns uint8
+	 *     SizedUint8 returns uint8
+	 *     ElementType returns uint8
+	 *     uint8 returns uint8
+	 *
+	 * Constraint:
+	 *     {uint8}
+	 * </pre>
+	 */
+	protected void sequence_SizedUint8_uint8(ISerializationContext context, uint8 semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     AbstractType returns TopicSpecMsgRef
+	 *     AbstractType.SizedArray_1_1_0 returns TopicSpecMsgRef
+	 *     ElementType returns TopicSpecMsgRef
 	 *     SpecBaseRef returns TopicSpecMsgRef
 	 *
 	 * Constraint:
@@ -929,6 +1267,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns boolArray
+	 *     AbstractType.SizedArray_1_1_0 returns boolArray
+	 *     ElementType returns boolArray
 	 *     boolArray returns boolArray
 	 *
 	 * Constraint:
@@ -943,22 +1283,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns bool
-	 *     bool returns bool
-	 *
-	 * Constraint:
-	 *     {bool}
-	 * </pre>
-	 */
-	protected void sequence_bool(ISerializationContext context, bool semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns ByteArray
+	 *     AbstractType.SizedArray_1_1_0 returns ByteArray
+	 *     ElementType returns ByteArray
 	 *     byteArray returns ByteArray
 	 *
 	 * Constraint:
@@ -973,22 +1300,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns Byte
-	 *     byte returns Byte
-	 *
-	 * Constraint:
-	 *     {Byte}
-	 * </pre>
-	 */
-	protected void sequence_byte(ISerializationContext context, primitives.Byte semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns charArray
+	 *     AbstractType.SizedArray_1_1_0 returns charArray
+	 *     ElementType returns charArray
 	 *     charArray returns charArray
 	 *
 	 * Constraint:
@@ -1003,22 +1317,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns char0
-	 *     char returns char0
-	 *
-	 * Constraint:
-	 *     {char0}
-	 * </pre>
-	 */
-	protected void sequence_char(ISerializationContext context, char0 semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns duration
+	 *     AbstractType.SizedArray_1_1_0 returns duration
+	 *     ElementType returns duration
 	 *     duration returns duration
 	 *
 	 * Constraint:
@@ -1034,6 +1335,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns float32Array
+	 *     AbstractType.SizedArray_1_1_0 returns float32Array
+	 *     ElementType returns float32Array
 	 *     float32Array returns float32Array
 	 *
 	 * Constraint:
@@ -1048,22 +1351,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns float32
-	 *     float32 returns float32
-	 *
-	 * Constraint:
-	 *     {float32}
-	 * </pre>
-	 */
-	protected void sequence_float32(ISerializationContext context, float32 semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns float64Array
+	 *     AbstractType.SizedArray_1_1_0 returns float64Array
+	 *     ElementType returns float64Array
 	 *     float64Array returns float64Array
 	 *
 	 * Constraint:
@@ -1078,22 +1368,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns float64
-	 *     float64 returns float64
-	 *
-	 * Constraint:
-	 *     {float64}
-	 * </pre>
-	 */
-	protected void sequence_float64(ISerializationContext context, float64 semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns int16Array
+	 *     AbstractType.SizedArray_1_1_0 returns int16Array
+	 *     ElementType returns int16Array
 	 *     int16Array returns int16Array
 	 *
 	 * Constraint:
@@ -1108,22 +1385,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns int16
-	 *     int16 returns int16
-	 *
-	 * Constraint:
-	 *     {int16}
-	 * </pre>
-	 */
-	protected void sequence_int16(ISerializationContext context, int16 semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns int32Array
+	 *     AbstractType.SizedArray_1_1_0 returns int32Array
+	 *     ElementType returns int32Array
 	 *     int32Array returns int32Array
 	 *
 	 * Constraint:
@@ -1138,22 +1402,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns int32
-	 *     int32 returns int32
-	 *
-	 * Constraint:
-	 *     {int32}
-	 * </pre>
-	 */
-	protected void sequence_int32(ISerializationContext context, int32 semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns int64Array
+	 *     AbstractType.SizedArray_1_1_0 returns int64Array
+	 *     ElementType returns int64Array
 	 *     int64Array returns int64Array
 	 *
 	 * Constraint:
@@ -1168,22 +1419,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns int64
-	 *     int64 returns int64
-	 *
-	 * Constraint:
-	 *     {int64}
-	 * </pre>
-	 */
-	protected void sequence_int64(ISerializationContext context, int64 semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns int8Array
+	 *     AbstractType.SizedArray_1_1_0 returns int8Array
+	 *     ElementType returns int8Array
 	 *     int8Array returns int8Array
 	 *
 	 * Constraint:
@@ -1198,22 +1436,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns int8
-	 *     int8 returns int8
-	 *
-	 * Constraint:
-	 *     {int8}
-	 * </pre>
-	 */
-	protected void sequence_int8(ISerializationContext context, int8 semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns stringArray
+	 *     AbstractType.SizedArray_1_1_0 returns stringArray
+	 *     ElementType returns stringArray
 	 *     string0Array returns stringArray
 	 *
 	 * Constraint:
@@ -1228,22 +1453,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns string
-	 *     string0 returns string
-	 *
-	 * Constraint:
-	 *     {string}
-	 * </pre>
-	 */
-	protected void sequence_string0(ISerializationContext context, string semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns time
+	 *     AbstractType.SizedArray_1_1_0 returns time
+	 *     ElementType returns time
 	 *     time returns time
 	 *
 	 * Constraint:
@@ -1259,6 +1471,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns uint16Array
+	 *     AbstractType.SizedArray_1_1_0 returns uint16Array
+	 *     ElementType returns uint16Array
 	 *     uint16Array returns uint16Array
 	 *
 	 * Constraint:
@@ -1273,22 +1487,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns uint16
-	 *     uint16 returns uint16
-	 *
-	 * Constraint:
-	 *     {uint16}
-	 * </pre>
-	 */
-	protected void sequence_uint16(ISerializationContext context, uint16 semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns uint32Array
+	 *     AbstractType.SizedArray_1_1_0 returns uint32Array
+	 *     ElementType returns uint32Array
 	 *     uint32Array returns uint32Array
 	 *
 	 * Constraint:
@@ -1303,22 +1504,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns uint32
-	 *     uint32 returns uint32
-	 *
-	 * Constraint:
-	 *     {uint32}
-	 * </pre>
-	 */
-	protected void sequence_uint32(ISerializationContext context, uint32 semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns uint64Array
+	 *     AbstractType.SizedArray_1_1_0 returns uint64Array
+	 *     ElementType returns uint64Array
 	 *     uint64Array returns uint64Array
 	 *
 	 * Constraint:
@@ -1333,22 +1521,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
-	 *     AbstractType returns uint64
-	 *     uint64 returns uint64
-	 *
-	 * Constraint:
-	 *     {uint64}
-	 * </pre>
-	 */
-	protected void sequence_uint64(ISerializationContext context, uint64 semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
 	 *     AbstractType returns uint8Array
+	 *     AbstractType.SizedArray_1_1_0 returns uint8Array
+	 *     ElementType returns uint8Array
 	 *     uint8Array returns uint8Array
 	 *
 	 * Constraint:
@@ -1356,21 +1531,6 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * </pre>
 	 */
 	protected void sequence_uint8Array(ISerializationContext context, uint8Array semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
-	 *     AbstractType returns uint8
-	 *     uint8 returns uint8
-	 *
-	 * Constraint:
-	 *     {uint8}
-	 * </pre>
-	 */
-	protected void sequence_uint8(ISerializationContext context, uint8 semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

@@ -207,7 +207,83 @@ terminal MESSAGE_ASIGMENT:
     ((ID|STRING)'='(ID|STRING|INT|'-'INT))
 ;
 
+// A field type. "T[N]" is an array of exactly N elements, "T[<=N]" one of at most N, for any
+// element type; "T[]" (the keyword forms below) stays the unbounded array.
+//
+// The lexer reads "int32[]" as one keyword, so it cannot fall back to "int32" when a digit
+// follows the bracket. The primitives that have such a keyword therefore get their own "T["
+// keyword (the Sized rules below); every other element type, and any primitive with a space
+// before the bracket, goes through the generic "[" form.
 AbstractType returns primitives::AbstractType:
+    SizedPrimitiveArray |
+    ElementType ({primitives::SizedArray.element=current} '[' (bounded?='<=')? size=ArraySize ']')?;
+
+SizedPrimitiveArray returns primitives::SizedArray:
+    (element=SizedBool | element=SizedInt8 | element=SizedUint8 | element=SizedInt16 | element=SizedUint16 | element=SizedInt32 | element=SizedUint32 | element=SizedInt64 | element=SizedUint64 | element=SizedFloat32 | element=SizedFloat64 | element=SizedString | element=SizedByte | element=SizedChar)
+    (bounded?='<=')? size=ArraySize ']';
+
+SizedBool returns primitives::bool:
+    {primitives::bool} 'bool['
+    ;
+
+SizedInt8 returns primitives::int8:
+    {primitives::int8} 'int8['
+    ;
+
+SizedUint8 returns primitives::uint8:
+    {primitives::uint8} 'uint8['
+    ;
+
+SizedInt16 returns primitives::int16:
+    {primitives::int16} 'int16['
+    ;
+
+SizedUint16 returns primitives::uint16:
+    {primitives::uint16} 'uint16['
+    ;
+
+SizedInt32 returns primitives::int32:
+    {primitives::int32} 'int32['
+    ;
+
+SizedUint32 returns primitives::uint32:
+    {primitives::uint32} 'uint32['
+    ;
+
+SizedInt64 returns primitives::int64:
+    {primitives::int64} 'int64['
+    ;
+
+SizedUint64 returns primitives::uint64:
+    {primitives::uint64} 'uint64['
+    ;
+
+SizedFloat32 returns primitives::float32:
+    {primitives::float32} 'float32['
+    ;
+
+SizedFloat64 returns primitives::float64:
+    {primitives::float64} 'float64['
+    ;
+
+SizedString returns primitives::string:
+    {primitives::string} 'string['
+    ;
+
+SizedByte returns primitives::Byte:
+    {primitives::Byte} 'byte['
+    ;
+
+SizedChar returns primitives::char0:
+    {primitives::char0} 'char['
+    ;
+
+// DECINT is the only integer terminal the lexer produces here; referencing DIGIT or INT would turn
+// those into tokens of their own that take single digits away from DECINT everywhere.
+ArraySize returns ecore::EInt:
+    DECINT;
+
+ElementType returns primitives::AbstractType:
     bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | string0 | byte | time | duration | Header |
     boolArray | int8Array | uint8Array | int16Array | uint16Array | int32Array | uint32Array | int64Array | uint64Array | float32Array | float64Array | string0Array | byteArray |
     SpecBaseRef | ArraySpecRef | char | charArray;

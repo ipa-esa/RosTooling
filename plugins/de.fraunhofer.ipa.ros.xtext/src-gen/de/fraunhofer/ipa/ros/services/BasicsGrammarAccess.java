@@ -1318,6 +1318,512 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	public class AbstractTypeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.AbstractType");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cSizedPrimitiveArrayParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final RuleCall cElementTypeParserRuleCall_1_0 = (RuleCall)cGroup_1.eContents().get(0);
+		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
+		private final Action cSizedArrayElementAction_1_1_0 = (Action)cGroup_1_1.eContents().get(0);
+		private final Keyword cLeftSquareBracketKeyword_1_1_1 = (Keyword)cGroup_1_1.eContents().get(1);
+		private final Assignment cBoundedAssignment_1_1_2 = (Assignment)cGroup_1_1.eContents().get(2);
+		private final Keyword cBoundedLessThanSignEqualsSignKeyword_1_1_2_0 = (Keyword)cBoundedAssignment_1_1_2.eContents().get(0);
+		private final Assignment cSizeAssignment_1_1_3 = (Assignment)cGroup_1_1.eContents().get(3);
+		private final RuleCall cSizeArraySizeParserRuleCall_1_1_3_0 = (RuleCall)cSizeAssignment_1_1_3.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_1_1_4 = (Keyword)cGroup_1_1.eContents().get(4);
+		
+		//// A field type. "T[N]" is an array of exactly N elements, "T[<=N]" one of at most N, for any
+		//// element type; "T[]" (the keyword forms below) stays the unbounded array.
+		////
+		//// The lexer reads "int32[]" as one keyword, so it cannot fall back to "int32" when a digit
+		//// follows the bracket. The primitives that have such a keyword therefore get their own "T["
+		//// keyword (the Sized rules below); every other element type, and any primitive with a space
+		//// before the bracket, goes through the generic "[" form.
+		//AbstractType returns primitives::AbstractType:
+		//    SizedPrimitiveArray |
+		//    ElementType ({primitives::SizedArray.element=current} '[' (bounded?='<=')? size=ArraySize ']')?;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//SizedPrimitiveArray |
+		//ElementType ({primitives::SizedArray.element=current} '[' (bounded?='<=')? size=ArraySize ']')?
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//SizedPrimitiveArray
+		public RuleCall getSizedPrimitiveArrayParserRuleCall_0() { return cSizedPrimitiveArrayParserRuleCall_0; }
+		
+		//ElementType ({primitives::SizedArray.element=current} '[' (bounded?='<=')? size=ArraySize ']')?
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//ElementType
+		public RuleCall getElementTypeParserRuleCall_1_0() { return cElementTypeParserRuleCall_1_0; }
+		
+		//({primitives::SizedArray.element=current} '[' (bounded?='<=')? size=ArraySize ']')?
+		public Group getGroup_1_1() { return cGroup_1_1; }
+		
+		//{primitives::SizedArray.element=current}
+		public Action getSizedArrayElementAction_1_1_0() { return cSizedArrayElementAction_1_1_0; }
+		
+		//'['
+		public Keyword getLeftSquareBracketKeyword_1_1_1() { return cLeftSquareBracketKeyword_1_1_1; }
+		
+		//(bounded?='<=')?
+		public Assignment getBoundedAssignment_1_1_2() { return cBoundedAssignment_1_1_2; }
+		
+		//'<='
+		public Keyword getBoundedLessThanSignEqualsSignKeyword_1_1_2_0() { return cBoundedLessThanSignEqualsSignKeyword_1_1_2_0; }
+		
+		//size=ArraySize
+		public Assignment getSizeAssignment_1_1_3() { return cSizeAssignment_1_1_3; }
+		
+		//ArraySize
+		public RuleCall getSizeArraySizeParserRuleCall_1_1_3_0() { return cSizeArraySizeParserRuleCall_1_1_3_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_1_1_4() { return cRightSquareBracketKeyword_1_1_4; }
+	}
+	public class SizedPrimitiveArrayElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedPrimitiveArray");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
+		private final Assignment cElementAssignment_0_0 = (Assignment)cAlternatives_0.eContents().get(0);
+		private final RuleCall cElementSizedBoolParserRuleCall_0_0_0 = (RuleCall)cElementAssignment_0_0.eContents().get(0);
+		private final Assignment cElementAssignment_0_1 = (Assignment)cAlternatives_0.eContents().get(1);
+		private final RuleCall cElementSizedInt8ParserRuleCall_0_1_0 = (RuleCall)cElementAssignment_0_1.eContents().get(0);
+		private final Assignment cElementAssignment_0_2 = (Assignment)cAlternatives_0.eContents().get(2);
+		private final RuleCall cElementSizedUint8ParserRuleCall_0_2_0 = (RuleCall)cElementAssignment_0_2.eContents().get(0);
+		private final Assignment cElementAssignment_0_3 = (Assignment)cAlternatives_0.eContents().get(3);
+		private final RuleCall cElementSizedInt16ParserRuleCall_0_3_0 = (RuleCall)cElementAssignment_0_3.eContents().get(0);
+		private final Assignment cElementAssignment_0_4 = (Assignment)cAlternatives_0.eContents().get(4);
+		private final RuleCall cElementSizedUint16ParserRuleCall_0_4_0 = (RuleCall)cElementAssignment_0_4.eContents().get(0);
+		private final Assignment cElementAssignment_0_5 = (Assignment)cAlternatives_0.eContents().get(5);
+		private final RuleCall cElementSizedInt32ParserRuleCall_0_5_0 = (RuleCall)cElementAssignment_0_5.eContents().get(0);
+		private final Assignment cElementAssignment_0_6 = (Assignment)cAlternatives_0.eContents().get(6);
+		private final RuleCall cElementSizedUint32ParserRuleCall_0_6_0 = (RuleCall)cElementAssignment_0_6.eContents().get(0);
+		private final Assignment cElementAssignment_0_7 = (Assignment)cAlternatives_0.eContents().get(7);
+		private final RuleCall cElementSizedInt64ParserRuleCall_0_7_0 = (RuleCall)cElementAssignment_0_7.eContents().get(0);
+		private final Assignment cElementAssignment_0_8 = (Assignment)cAlternatives_0.eContents().get(8);
+		private final RuleCall cElementSizedUint64ParserRuleCall_0_8_0 = (RuleCall)cElementAssignment_0_8.eContents().get(0);
+		private final Assignment cElementAssignment_0_9 = (Assignment)cAlternatives_0.eContents().get(9);
+		private final RuleCall cElementSizedFloat32ParserRuleCall_0_9_0 = (RuleCall)cElementAssignment_0_9.eContents().get(0);
+		private final Assignment cElementAssignment_0_10 = (Assignment)cAlternatives_0.eContents().get(10);
+		private final RuleCall cElementSizedFloat64ParserRuleCall_0_10_0 = (RuleCall)cElementAssignment_0_10.eContents().get(0);
+		private final Assignment cElementAssignment_0_11 = (Assignment)cAlternatives_0.eContents().get(11);
+		private final RuleCall cElementSizedStringParserRuleCall_0_11_0 = (RuleCall)cElementAssignment_0_11.eContents().get(0);
+		private final Assignment cElementAssignment_0_12 = (Assignment)cAlternatives_0.eContents().get(12);
+		private final RuleCall cElementSizedByteParserRuleCall_0_12_0 = (RuleCall)cElementAssignment_0_12.eContents().get(0);
+		private final Assignment cElementAssignment_0_13 = (Assignment)cAlternatives_0.eContents().get(13);
+		private final RuleCall cElementSizedCharParserRuleCall_0_13_0 = (RuleCall)cElementAssignment_0_13.eContents().get(0);
+		private final Assignment cBoundedAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final Keyword cBoundedLessThanSignEqualsSignKeyword_1_0 = (Keyword)cBoundedAssignment_1.eContents().get(0);
+		private final Assignment cSizeAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cSizeArraySizeParserRuleCall_2_0 = (RuleCall)cSizeAssignment_2.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		
+		//SizedPrimitiveArray returns primitives::SizedArray:
+		//    (element=SizedBool | element=SizedInt8 | element=SizedUint8 | element=SizedInt16 | element=SizedUint16 | element=SizedInt32 | element=SizedUint32 | element=SizedInt64 | element=SizedUint64 | element=SizedFloat32 | element=SizedFloat64 | element=SizedString | element=SizedByte | element=SizedChar)
+		//    (bounded?='<=')? size=ArraySize ']';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//(element=SizedBool | element=SizedInt8 | element=SizedUint8 | element=SizedInt16 | element=SizedUint16 | element=SizedInt32 | element=SizedUint32 | element=SizedInt64 | element=SizedUint64 | element=SizedFloat32 | element=SizedFloat64 | element=SizedString | element=SizedByte | element=SizedChar)
+		//(bounded?='<=')? size=ArraySize ']'
+		public Group getGroup() { return cGroup; }
+		
+		//(element=SizedBool | element=SizedInt8 | element=SizedUint8 | element=SizedInt16 | element=SizedUint16 | element=SizedInt32 | element=SizedUint32 | element=SizedInt64 | element=SizedUint64 | element=SizedFloat32 | element=SizedFloat64 | element=SizedString | element=SizedByte | element=SizedChar)
+		public Alternatives getAlternatives_0() { return cAlternatives_0; }
+		
+		//element=SizedBool
+		public Assignment getElementAssignment_0_0() { return cElementAssignment_0_0; }
+		
+		//SizedBool
+		public RuleCall getElementSizedBoolParserRuleCall_0_0_0() { return cElementSizedBoolParserRuleCall_0_0_0; }
+		
+		//element=SizedInt8
+		public Assignment getElementAssignment_0_1() { return cElementAssignment_0_1; }
+		
+		//SizedInt8
+		public RuleCall getElementSizedInt8ParserRuleCall_0_1_0() { return cElementSizedInt8ParserRuleCall_0_1_0; }
+		
+		//element=SizedUint8
+		public Assignment getElementAssignment_0_2() { return cElementAssignment_0_2; }
+		
+		//SizedUint8
+		public RuleCall getElementSizedUint8ParserRuleCall_0_2_0() { return cElementSizedUint8ParserRuleCall_0_2_0; }
+		
+		//element=SizedInt16
+		public Assignment getElementAssignment_0_3() { return cElementAssignment_0_3; }
+		
+		//SizedInt16
+		public RuleCall getElementSizedInt16ParserRuleCall_0_3_0() { return cElementSizedInt16ParserRuleCall_0_3_0; }
+		
+		//element=SizedUint16
+		public Assignment getElementAssignment_0_4() { return cElementAssignment_0_4; }
+		
+		//SizedUint16
+		public RuleCall getElementSizedUint16ParserRuleCall_0_4_0() { return cElementSizedUint16ParserRuleCall_0_4_0; }
+		
+		//element=SizedInt32
+		public Assignment getElementAssignment_0_5() { return cElementAssignment_0_5; }
+		
+		//SizedInt32
+		public RuleCall getElementSizedInt32ParserRuleCall_0_5_0() { return cElementSizedInt32ParserRuleCall_0_5_0; }
+		
+		//element=SizedUint32
+		public Assignment getElementAssignment_0_6() { return cElementAssignment_0_6; }
+		
+		//SizedUint32
+		public RuleCall getElementSizedUint32ParserRuleCall_0_6_0() { return cElementSizedUint32ParserRuleCall_0_6_0; }
+		
+		//element=SizedInt64
+		public Assignment getElementAssignment_0_7() { return cElementAssignment_0_7; }
+		
+		//SizedInt64
+		public RuleCall getElementSizedInt64ParserRuleCall_0_7_0() { return cElementSizedInt64ParserRuleCall_0_7_0; }
+		
+		//element=SizedUint64
+		public Assignment getElementAssignment_0_8() { return cElementAssignment_0_8; }
+		
+		//SizedUint64
+		public RuleCall getElementSizedUint64ParserRuleCall_0_8_0() { return cElementSizedUint64ParserRuleCall_0_8_0; }
+		
+		//element=SizedFloat32
+		public Assignment getElementAssignment_0_9() { return cElementAssignment_0_9; }
+		
+		//SizedFloat32
+		public RuleCall getElementSizedFloat32ParserRuleCall_0_9_0() { return cElementSizedFloat32ParserRuleCall_0_9_0; }
+		
+		//element=SizedFloat64
+		public Assignment getElementAssignment_0_10() { return cElementAssignment_0_10; }
+		
+		//SizedFloat64
+		public RuleCall getElementSizedFloat64ParserRuleCall_0_10_0() { return cElementSizedFloat64ParserRuleCall_0_10_0; }
+		
+		//element=SizedString
+		public Assignment getElementAssignment_0_11() { return cElementAssignment_0_11; }
+		
+		//SizedString
+		public RuleCall getElementSizedStringParserRuleCall_0_11_0() { return cElementSizedStringParserRuleCall_0_11_0; }
+		
+		//element=SizedByte
+		public Assignment getElementAssignment_0_12() { return cElementAssignment_0_12; }
+		
+		//SizedByte
+		public RuleCall getElementSizedByteParserRuleCall_0_12_0() { return cElementSizedByteParserRuleCall_0_12_0; }
+		
+		//element=SizedChar
+		public Assignment getElementAssignment_0_13() { return cElementAssignment_0_13; }
+		
+		//SizedChar
+		public RuleCall getElementSizedCharParserRuleCall_0_13_0() { return cElementSizedCharParserRuleCall_0_13_0; }
+		
+		//(bounded?='<=')?
+		public Assignment getBoundedAssignment_1() { return cBoundedAssignment_1; }
+		
+		//'<='
+		public Keyword getBoundedLessThanSignEqualsSignKeyword_1_0() { return cBoundedLessThanSignEqualsSignKeyword_1_0; }
+		
+		//size=ArraySize
+		public Assignment getSizeAssignment_2() { return cSizeAssignment_2; }
+		
+		//ArraySize
+		public RuleCall getSizeArraySizeParserRuleCall_2_0() { return cSizeArraySizeParserRuleCall_2_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_3() { return cRightSquareBracketKeyword_3; }
+	}
+	public class SizedBoolElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedBool");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cBoolAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cBoolKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedBool returns primitives::bool:
+		//    {primitives::bool} 'bool['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::bool} 'bool['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::bool}
+		public Action getBoolAction_0() { return cBoolAction_0; }
+		
+		//'bool['
+		public Keyword getBoolKeyword_1() { return cBoolKeyword_1; }
+	}
+	public class SizedInt8Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedInt8");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cInt8Action_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cInt8Keyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedInt8 returns primitives::int8:
+		//    {primitives::int8} 'int8['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::int8} 'int8['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::int8}
+		public Action getInt8Action_0() { return cInt8Action_0; }
+		
+		//'int8['
+		public Keyword getInt8Keyword_1() { return cInt8Keyword_1; }
+	}
+	public class SizedUint8Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedUint8");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cUint8Action_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cUint8Keyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedUint8 returns primitives::uint8:
+		//    {primitives::uint8} 'uint8['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::uint8} 'uint8['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::uint8}
+		public Action getUint8Action_0() { return cUint8Action_0; }
+		
+		//'uint8['
+		public Keyword getUint8Keyword_1() { return cUint8Keyword_1; }
+	}
+	public class SizedInt16Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedInt16");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cInt16Action_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cInt16Keyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedInt16 returns primitives::int16:
+		//    {primitives::int16} 'int16['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::int16} 'int16['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::int16}
+		public Action getInt16Action_0() { return cInt16Action_0; }
+		
+		//'int16['
+		public Keyword getInt16Keyword_1() { return cInt16Keyword_1; }
+	}
+	public class SizedUint16Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedUint16");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cUint16Action_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cUint16Keyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedUint16 returns primitives::uint16:
+		//    {primitives::uint16} 'uint16['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::uint16} 'uint16['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::uint16}
+		public Action getUint16Action_0() { return cUint16Action_0; }
+		
+		//'uint16['
+		public Keyword getUint16Keyword_1() { return cUint16Keyword_1; }
+	}
+	public class SizedInt32Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedInt32");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cInt32Action_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cInt32Keyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedInt32 returns primitives::int32:
+		//    {primitives::int32} 'int32['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::int32} 'int32['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::int32}
+		public Action getInt32Action_0() { return cInt32Action_0; }
+		
+		//'int32['
+		public Keyword getInt32Keyword_1() { return cInt32Keyword_1; }
+	}
+	public class SizedUint32Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedUint32");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cUint32Action_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cUint32Keyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedUint32 returns primitives::uint32:
+		//    {primitives::uint32} 'uint32['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::uint32} 'uint32['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::uint32}
+		public Action getUint32Action_0() { return cUint32Action_0; }
+		
+		//'uint32['
+		public Keyword getUint32Keyword_1() { return cUint32Keyword_1; }
+	}
+	public class SizedInt64Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedInt64");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cInt64Action_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cInt64Keyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedInt64 returns primitives::int64:
+		//    {primitives::int64} 'int64['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::int64} 'int64['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::int64}
+		public Action getInt64Action_0() { return cInt64Action_0; }
+		
+		//'int64['
+		public Keyword getInt64Keyword_1() { return cInt64Keyword_1; }
+	}
+	public class SizedUint64Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedUint64");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cUint64Action_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cUint64Keyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedUint64 returns primitives::uint64:
+		//    {primitives::uint64} 'uint64['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::uint64} 'uint64['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::uint64}
+		public Action getUint64Action_0() { return cUint64Action_0; }
+		
+		//'uint64['
+		public Keyword getUint64Keyword_1() { return cUint64Keyword_1; }
+	}
+	public class SizedFloat32Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedFloat32");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cFloat32Action_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cFloat32Keyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedFloat32 returns primitives::float32:
+		//    {primitives::float32} 'float32['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::float32} 'float32['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::float32}
+		public Action getFloat32Action_0() { return cFloat32Action_0; }
+		
+		//'float32['
+		public Keyword getFloat32Keyword_1() { return cFloat32Keyword_1; }
+	}
+	public class SizedFloat64Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedFloat64");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cFloat64Action_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cFloat64Keyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedFloat64 returns primitives::float64:
+		//    {primitives::float64} 'float64['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::float64} 'float64['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::float64}
+		public Action getFloat64Action_0() { return cFloat64Action_0; }
+		
+		//'float64['
+		public Keyword getFloat64Keyword_1() { return cFloat64Keyword_1; }
+	}
+	public class SizedStringElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedString");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cStringAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cStringKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedString returns primitives::string:
+		//    {primitives::string} 'string['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::string} 'string['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::string}
+		public Action getStringAction_0() { return cStringAction_0; }
+		
+		//'string['
+		public Keyword getStringKeyword_1() { return cStringKeyword_1; }
+	}
+	public class SizedByteElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedByte");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cByteAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cByteKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedByte returns primitives::Byte:
+		//    {primitives::Byte} 'byte['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::Byte} 'byte['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::Byte}
+		public Action getByteAction_0() { return cByteAction_0; }
+		
+		//'byte['
+		public Keyword getByteKeyword_1() { return cByteKeyword_1; }
+	}
+	public class SizedCharElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.SizedChar");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cChar0Action_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cCharKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//SizedChar returns primitives::char0:
+		//    {primitives::char0} 'char['
+		//    ;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{primitives::char0} 'char['
+		public Group getGroup() { return cGroup; }
+		
+		//{primitives::char0}
+		public Action getChar0Action_0() { return cChar0Action_0; }
+		
+		//'char['
+		public Keyword getCharKeyword_1() { return cCharKeyword_1; }
+	}
+	public class ArraySizeElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.ArraySize");
+		private final RuleCall cDECINTTerminalRuleCall = (RuleCall)rule.eContents().get(1);
+		
+		//// DECINT is the only integer terminal the lexer produces here; referencing DIGIT or INT would turn
+		//// those into tokens of their own that take single digits away from DECINT everywhere.
+		//ArraySize returns ecore::EInt:
+		//    DECINT;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//DECINT
+		public RuleCall getDECINTTerminalRuleCall() { return cDECINTTerminalRuleCall; }
+	}
+	public class ElementTypeElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.ElementType");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cBoolParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cInt8ParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cUint8ParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
@@ -1352,7 +1858,7 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final RuleCall cCharParserRuleCall_31 = (RuleCall)cAlternatives.eContents().get(31);
 		private final RuleCall cCharArrayParserRuleCall_32 = (RuleCall)cAlternatives.eContents().get(32);
 		
-		//AbstractType returns primitives::AbstractType:
+		//ElementType returns primitives::AbstractType:
 		//    bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | string0 | byte | time | duration | Header |
 		//    boolArray | int8Array | uint8Array | int16Array | uint16Array | int32Array | uint32Array | int64Array | uint64Array | float32Array | float64Array | string0Array | byteArray |
 		//    SpecBaseRef | ArraySpecRef | char | charArray;
@@ -3144,6 +3650,23 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	private final MessagePartElements pMessagePart;
 	private final TerminalRule tMESSAGE_ASIGMENT;
 	private final AbstractTypeElements pAbstractType;
+	private final SizedPrimitiveArrayElements pSizedPrimitiveArray;
+	private final SizedBoolElements pSizedBool;
+	private final SizedInt8Elements pSizedInt8;
+	private final SizedUint8Elements pSizedUint8;
+	private final SizedInt16Elements pSizedInt16;
+	private final SizedUint16Elements pSizedUint16;
+	private final SizedInt32Elements pSizedInt32;
+	private final SizedUint32Elements pSizedUint32;
+	private final SizedInt64Elements pSizedInt64;
+	private final SizedUint64Elements pSizedUint64;
+	private final SizedFloat32Elements pSizedFloat32;
+	private final SizedFloat64Elements pSizedFloat64;
+	private final SizedStringElements pSizedString;
+	private final SizedByteElements pSizedByte;
+	private final SizedCharElements pSizedChar;
+	private final ArraySizeElements pArraySize;
+	private final ElementTypeElements pElementType;
 	private final BoolElements pBool;
 	private final Int8Elements pInt8;
 	private final Uint8Elements pUint8;
@@ -3258,6 +3781,23 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		this.pMessagePart = new MessagePartElements();
 		this.tMESSAGE_ASIGMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.MESSAGE_ASIGMENT");
 		this.pAbstractType = new AbstractTypeElements();
+		this.pSizedPrimitiveArray = new SizedPrimitiveArrayElements();
+		this.pSizedBool = new SizedBoolElements();
+		this.pSizedInt8 = new SizedInt8Elements();
+		this.pSizedUint8 = new SizedUint8Elements();
+		this.pSizedInt16 = new SizedInt16Elements();
+		this.pSizedUint16 = new SizedUint16Elements();
+		this.pSizedInt32 = new SizedInt32Elements();
+		this.pSizedUint32 = new SizedUint32Elements();
+		this.pSizedInt64 = new SizedInt64Elements();
+		this.pSizedUint64 = new SizedUint64Elements();
+		this.pSizedFloat32 = new SizedFloat32Elements();
+		this.pSizedFloat64 = new SizedFloat64Elements();
+		this.pSizedString = new SizedStringElements();
+		this.pSizedByte = new SizedByteElements();
+		this.pSizedChar = new SizedCharElements();
+		this.pArraySize = new ArraySizeElements();
+		this.pElementType = new ElementTypeElements();
 		this.pBool = new BoolElements();
 		this.pInt8 = new Int8Elements();
 		this.pUint8 = new Uint8Elements();
@@ -3838,16 +4378,211 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return tMESSAGE_ASIGMENT;
 	}
 	
+	//// A field type. "T[N]" is an array of exactly N elements, "T[<=N]" one of at most N, for any
+	//// element type; "T[]" (the keyword forms below) stays the unbounded array.
+	////
+	//// The lexer reads "int32[]" as one keyword, so it cannot fall back to "int32" when a digit
+	//// follows the bracket. The primitives that have such a keyword therefore get their own "T["
+	//// keyword (the Sized rules below); every other element type, and any primitive with a space
+	//// before the bracket, goes through the generic "[" form.
 	//AbstractType returns primitives::AbstractType:
-	//    bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | string0 | byte | time | duration | Header |
-	//    boolArray | int8Array | uint8Array | int16Array | uint16Array | int32Array | uint32Array | int64Array | uint64Array | float32Array | float64Array | string0Array | byteArray |
-	//    SpecBaseRef | ArraySpecRef | char | charArray;
+	//    SizedPrimitiveArray |
+	//    ElementType ({primitives::SizedArray.element=current} '[' (bounded?='<=')? size=ArraySize ']')?;
 	public AbstractTypeElements getAbstractTypeAccess() {
 		return pAbstractType;
 	}
 	
 	public ParserRule getAbstractTypeRule() {
 		return getAbstractTypeAccess().getRule();
+	}
+	
+	//SizedPrimitiveArray returns primitives::SizedArray:
+	//    (element=SizedBool | element=SizedInt8 | element=SizedUint8 | element=SizedInt16 | element=SizedUint16 | element=SizedInt32 | element=SizedUint32 | element=SizedInt64 | element=SizedUint64 | element=SizedFloat32 | element=SizedFloat64 | element=SizedString | element=SizedByte | element=SizedChar)
+	//    (bounded?='<=')? size=ArraySize ']';
+	public SizedPrimitiveArrayElements getSizedPrimitiveArrayAccess() {
+		return pSizedPrimitiveArray;
+	}
+	
+	public ParserRule getSizedPrimitiveArrayRule() {
+		return getSizedPrimitiveArrayAccess().getRule();
+	}
+	
+	//SizedBool returns primitives::bool:
+	//    {primitives::bool} 'bool['
+	//    ;
+	public SizedBoolElements getSizedBoolAccess() {
+		return pSizedBool;
+	}
+	
+	public ParserRule getSizedBoolRule() {
+		return getSizedBoolAccess().getRule();
+	}
+	
+	//SizedInt8 returns primitives::int8:
+	//    {primitives::int8} 'int8['
+	//    ;
+	public SizedInt8Elements getSizedInt8Access() {
+		return pSizedInt8;
+	}
+	
+	public ParserRule getSizedInt8Rule() {
+		return getSizedInt8Access().getRule();
+	}
+	
+	//SizedUint8 returns primitives::uint8:
+	//    {primitives::uint8} 'uint8['
+	//    ;
+	public SizedUint8Elements getSizedUint8Access() {
+		return pSizedUint8;
+	}
+	
+	public ParserRule getSizedUint8Rule() {
+		return getSizedUint8Access().getRule();
+	}
+	
+	//SizedInt16 returns primitives::int16:
+	//    {primitives::int16} 'int16['
+	//    ;
+	public SizedInt16Elements getSizedInt16Access() {
+		return pSizedInt16;
+	}
+	
+	public ParserRule getSizedInt16Rule() {
+		return getSizedInt16Access().getRule();
+	}
+	
+	//SizedUint16 returns primitives::uint16:
+	//    {primitives::uint16} 'uint16['
+	//    ;
+	public SizedUint16Elements getSizedUint16Access() {
+		return pSizedUint16;
+	}
+	
+	public ParserRule getSizedUint16Rule() {
+		return getSizedUint16Access().getRule();
+	}
+	
+	//SizedInt32 returns primitives::int32:
+	//    {primitives::int32} 'int32['
+	//    ;
+	public SizedInt32Elements getSizedInt32Access() {
+		return pSizedInt32;
+	}
+	
+	public ParserRule getSizedInt32Rule() {
+		return getSizedInt32Access().getRule();
+	}
+	
+	//SizedUint32 returns primitives::uint32:
+	//    {primitives::uint32} 'uint32['
+	//    ;
+	public SizedUint32Elements getSizedUint32Access() {
+		return pSizedUint32;
+	}
+	
+	public ParserRule getSizedUint32Rule() {
+		return getSizedUint32Access().getRule();
+	}
+	
+	//SizedInt64 returns primitives::int64:
+	//    {primitives::int64} 'int64['
+	//    ;
+	public SizedInt64Elements getSizedInt64Access() {
+		return pSizedInt64;
+	}
+	
+	public ParserRule getSizedInt64Rule() {
+		return getSizedInt64Access().getRule();
+	}
+	
+	//SizedUint64 returns primitives::uint64:
+	//    {primitives::uint64} 'uint64['
+	//    ;
+	public SizedUint64Elements getSizedUint64Access() {
+		return pSizedUint64;
+	}
+	
+	public ParserRule getSizedUint64Rule() {
+		return getSizedUint64Access().getRule();
+	}
+	
+	//SizedFloat32 returns primitives::float32:
+	//    {primitives::float32} 'float32['
+	//    ;
+	public SizedFloat32Elements getSizedFloat32Access() {
+		return pSizedFloat32;
+	}
+	
+	public ParserRule getSizedFloat32Rule() {
+		return getSizedFloat32Access().getRule();
+	}
+	
+	//SizedFloat64 returns primitives::float64:
+	//    {primitives::float64} 'float64['
+	//    ;
+	public SizedFloat64Elements getSizedFloat64Access() {
+		return pSizedFloat64;
+	}
+	
+	public ParserRule getSizedFloat64Rule() {
+		return getSizedFloat64Access().getRule();
+	}
+	
+	//SizedString returns primitives::string:
+	//    {primitives::string} 'string['
+	//    ;
+	public SizedStringElements getSizedStringAccess() {
+		return pSizedString;
+	}
+	
+	public ParserRule getSizedStringRule() {
+		return getSizedStringAccess().getRule();
+	}
+	
+	//SizedByte returns primitives::Byte:
+	//    {primitives::Byte} 'byte['
+	//    ;
+	public SizedByteElements getSizedByteAccess() {
+		return pSizedByte;
+	}
+	
+	public ParserRule getSizedByteRule() {
+		return getSizedByteAccess().getRule();
+	}
+	
+	//SizedChar returns primitives::char0:
+	//    {primitives::char0} 'char['
+	//    ;
+	public SizedCharElements getSizedCharAccess() {
+		return pSizedChar;
+	}
+	
+	public ParserRule getSizedCharRule() {
+		return getSizedCharAccess().getRule();
+	}
+	
+	//// DECINT is the only integer terminal the lexer produces here; referencing DIGIT or INT would turn
+	//// those into tokens of their own that take single digits away from DECINT everywhere.
+	//ArraySize returns ecore::EInt:
+	//    DECINT;
+	public ArraySizeElements getArraySizeAccess() {
+		return pArraySize;
+	}
+	
+	public ParserRule getArraySizeRule() {
+		return getArraySizeAccess().getRule();
+	}
+	
+	//ElementType returns primitives::AbstractType:
+	//    bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | string0 | byte | time | duration | Header |
+	//    boolArray | int8Array | uint8Array | int16Array | uint16Array | int32Array | uint32Array | int64Array | uint64Array | float32Array | float64Array | string0Array | byteArray |
+	//    SpecBaseRef | ArraySpecRef | char | charArray;
+	public ElementTypeElements getElementTypeAccess() {
+		return pElementType;
+	}
+	
+	public ParserRule getElementTypeRule() {
+		return getElementTypeAccess().getRule();
 	}
 	
 	//bool returns primitives::bool:

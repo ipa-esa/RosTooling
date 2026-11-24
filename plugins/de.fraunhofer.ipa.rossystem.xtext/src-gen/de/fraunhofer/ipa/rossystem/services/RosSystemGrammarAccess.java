@@ -2449,16 +2449,211 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		return gaBasics.getMESSAGE_ASIGMENTRule();
 	}
 	
+	//// A field type. "T[N]" is an array of exactly N elements, "T[<=N]" one of at most N, for any
+	//// element type; "T[]" (the keyword forms below) stays the unbounded array.
+	////
+	//// The lexer reads "int32[]" as one keyword, so it cannot fall back to "int32" when a digit
+	//// follows the bracket. The primitives that have such a keyword therefore get their own "T["
+	//// keyword (the Sized rules below); every other element type, and any primitive with a space
+	//// before the bracket, goes through the generic "[" form.
 	//AbstractType returns primitives::AbstractType:
-	//    bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | string0 | byte | time | duration | Header |
-	//    boolArray | int8Array | uint8Array | int16Array | uint16Array | int32Array | uint32Array | int64Array | uint64Array | float32Array | float64Array | string0Array | byteArray |
-	//    SpecBaseRef | ArraySpecRef | char | charArray;
+	//    SizedPrimitiveArray |
+	//    ElementType ({primitives::SizedArray.element=current} '[' (bounded?='<=')? size=ArraySize ']')?;
 	public BasicsGrammarAccess.AbstractTypeElements getAbstractTypeAccess() {
 		return gaBasics.getAbstractTypeAccess();
 	}
 	
 	public ParserRule getAbstractTypeRule() {
 		return getAbstractTypeAccess().getRule();
+	}
+	
+	//SizedPrimitiveArray returns primitives::SizedArray:
+	//    (element=SizedBool | element=SizedInt8 | element=SizedUint8 | element=SizedInt16 | element=SizedUint16 | element=SizedInt32 | element=SizedUint32 | element=SizedInt64 | element=SizedUint64 | element=SizedFloat32 | element=SizedFloat64 | element=SizedString | element=SizedByte | element=SizedChar)
+	//    (bounded?='<=')? size=ArraySize ']';
+	public BasicsGrammarAccess.SizedPrimitiveArrayElements getSizedPrimitiveArrayAccess() {
+		return gaBasics.getSizedPrimitiveArrayAccess();
+	}
+	
+	public ParserRule getSizedPrimitiveArrayRule() {
+		return getSizedPrimitiveArrayAccess().getRule();
+	}
+	
+	//SizedBool returns primitives::bool:
+	//    {primitives::bool} 'bool['
+	//    ;
+	public BasicsGrammarAccess.SizedBoolElements getSizedBoolAccess() {
+		return gaBasics.getSizedBoolAccess();
+	}
+	
+	public ParserRule getSizedBoolRule() {
+		return getSizedBoolAccess().getRule();
+	}
+	
+	//SizedInt8 returns primitives::int8:
+	//    {primitives::int8} 'int8['
+	//    ;
+	public BasicsGrammarAccess.SizedInt8Elements getSizedInt8Access() {
+		return gaBasics.getSizedInt8Access();
+	}
+	
+	public ParserRule getSizedInt8Rule() {
+		return getSizedInt8Access().getRule();
+	}
+	
+	//SizedUint8 returns primitives::uint8:
+	//    {primitives::uint8} 'uint8['
+	//    ;
+	public BasicsGrammarAccess.SizedUint8Elements getSizedUint8Access() {
+		return gaBasics.getSizedUint8Access();
+	}
+	
+	public ParserRule getSizedUint8Rule() {
+		return getSizedUint8Access().getRule();
+	}
+	
+	//SizedInt16 returns primitives::int16:
+	//    {primitives::int16} 'int16['
+	//    ;
+	public BasicsGrammarAccess.SizedInt16Elements getSizedInt16Access() {
+		return gaBasics.getSizedInt16Access();
+	}
+	
+	public ParserRule getSizedInt16Rule() {
+		return getSizedInt16Access().getRule();
+	}
+	
+	//SizedUint16 returns primitives::uint16:
+	//    {primitives::uint16} 'uint16['
+	//    ;
+	public BasicsGrammarAccess.SizedUint16Elements getSizedUint16Access() {
+		return gaBasics.getSizedUint16Access();
+	}
+	
+	public ParserRule getSizedUint16Rule() {
+		return getSizedUint16Access().getRule();
+	}
+	
+	//SizedInt32 returns primitives::int32:
+	//    {primitives::int32} 'int32['
+	//    ;
+	public BasicsGrammarAccess.SizedInt32Elements getSizedInt32Access() {
+		return gaBasics.getSizedInt32Access();
+	}
+	
+	public ParserRule getSizedInt32Rule() {
+		return getSizedInt32Access().getRule();
+	}
+	
+	//SizedUint32 returns primitives::uint32:
+	//    {primitives::uint32} 'uint32['
+	//    ;
+	public BasicsGrammarAccess.SizedUint32Elements getSizedUint32Access() {
+		return gaBasics.getSizedUint32Access();
+	}
+	
+	public ParserRule getSizedUint32Rule() {
+		return getSizedUint32Access().getRule();
+	}
+	
+	//SizedInt64 returns primitives::int64:
+	//    {primitives::int64} 'int64['
+	//    ;
+	public BasicsGrammarAccess.SizedInt64Elements getSizedInt64Access() {
+		return gaBasics.getSizedInt64Access();
+	}
+	
+	public ParserRule getSizedInt64Rule() {
+		return getSizedInt64Access().getRule();
+	}
+	
+	//SizedUint64 returns primitives::uint64:
+	//    {primitives::uint64} 'uint64['
+	//    ;
+	public BasicsGrammarAccess.SizedUint64Elements getSizedUint64Access() {
+		return gaBasics.getSizedUint64Access();
+	}
+	
+	public ParserRule getSizedUint64Rule() {
+		return getSizedUint64Access().getRule();
+	}
+	
+	//SizedFloat32 returns primitives::float32:
+	//    {primitives::float32} 'float32['
+	//    ;
+	public BasicsGrammarAccess.SizedFloat32Elements getSizedFloat32Access() {
+		return gaBasics.getSizedFloat32Access();
+	}
+	
+	public ParserRule getSizedFloat32Rule() {
+		return getSizedFloat32Access().getRule();
+	}
+	
+	//SizedFloat64 returns primitives::float64:
+	//    {primitives::float64} 'float64['
+	//    ;
+	public BasicsGrammarAccess.SizedFloat64Elements getSizedFloat64Access() {
+		return gaBasics.getSizedFloat64Access();
+	}
+	
+	public ParserRule getSizedFloat64Rule() {
+		return getSizedFloat64Access().getRule();
+	}
+	
+	//SizedString returns primitives::string:
+	//    {primitives::string} 'string['
+	//    ;
+	public BasicsGrammarAccess.SizedStringElements getSizedStringAccess() {
+		return gaBasics.getSizedStringAccess();
+	}
+	
+	public ParserRule getSizedStringRule() {
+		return getSizedStringAccess().getRule();
+	}
+	
+	//SizedByte returns primitives::Byte:
+	//    {primitives::Byte} 'byte['
+	//    ;
+	public BasicsGrammarAccess.SizedByteElements getSizedByteAccess() {
+		return gaBasics.getSizedByteAccess();
+	}
+	
+	public ParserRule getSizedByteRule() {
+		return getSizedByteAccess().getRule();
+	}
+	
+	//SizedChar returns primitives::char0:
+	//    {primitives::char0} 'char['
+	//    ;
+	public BasicsGrammarAccess.SizedCharElements getSizedCharAccess() {
+		return gaBasics.getSizedCharAccess();
+	}
+	
+	public ParserRule getSizedCharRule() {
+		return getSizedCharAccess().getRule();
+	}
+	
+	//// DECINT is the only integer terminal the lexer produces here; referencing DIGIT or INT would turn
+	//// those into tokens of their own that take single digits away from DECINT everywhere.
+	//ArraySize returns ecore::EInt:
+	//    DECINT;
+	public BasicsGrammarAccess.ArraySizeElements getArraySizeAccess() {
+		return gaBasics.getArraySizeAccess();
+	}
+	
+	public ParserRule getArraySizeRule() {
+		return getArraySizeAccess().getRule();
+	}
+	
+	//ElementType returns primitives::AbstractType:
+	//    bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | string0 | byte | time | duration | Header |
+	//    boolArray | int8Array | uint8Array | int16Array | uint16Array | int32Array | uint32Array | int64Array | uint64Array | float32Array | float64Array | string0Array | byteArray |
+	//    SpecBaseRef | ArraySpecRef | char | charArray;
+	public BasicsGrammarAccess.ElementTypeElements getElementTypeAccess() {
+		return gaBasics.getElementTypeAccess();
+	}
+	
+	public ParserRule getElementTypeRule() {
+		return getElementTypeAccess().getRule();
 	}
 	
 	//bool returns primitives::bool:

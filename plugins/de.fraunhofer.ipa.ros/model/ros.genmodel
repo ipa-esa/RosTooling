@@ -279,5 +279,10 @@
     <genClasses ecoreClass="PrimitivesTypes.ecore#//ByteArray"/>
     <genClasses ecoreClass="PrimitivesTypes.ecore#//char0"/>
     <genClasses ecoreClass="PrimitivesTypes.ecore#//charArray"/>
+    <genClasses ecoreClass="PrimitivesTypes.ecore#//SizedArray">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference PrimitivesTypes.ecore#//SizedArray/element"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute PrimitivesTypes.ecore#//SizedArray/size"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute PrimitivesTypes.ecore#//SizedArray/bounded"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

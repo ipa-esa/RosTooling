@@ -4,6 +4,8 @@ import de.fraunhofer.ipa.ros.plugin.model.PluginBases;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
@@ -16,7 +18,9 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import primitives.AbstractType;
+import primitives.PrimitivesFactory;
 import primitives.PrimitivesPackage;
+import primitives.SizedArray;
 import ros.ActionClient;
 import ros.ActionServer;
 import ros.ActionSpec;
@@ -347,6 +351,10 @@ public final class RosDslText {
                 return raw;
             }
         }
+        if (type instanceof SizedArray sized) {
+            String element = sized.getElement() == null ? "" : messagePartTypeText(state, sized.getElement());
+            return element.isEmpty() ? "" : element + "[" + (sized.isBounded() ? "<=" : "") + sized.getSize() + "]";
+        }
         if (type instanceof TopicSpecMsgRef ref) {
             return "'" + specFullName(ref.getReference()) + "'";
         }
@@ -364,9 +372,20 @@ public final class RosDslText {
         }
     }
 
+    /** {@code T[N]} or {@code T[<=N]}: element text, optional bound marker, size. */
+    private static final Pattern SIZED_ARRAY = Pattern.compile("^(.+?)\\s*\\[\\s*(<=)?\\s*(\\d{1,9})\\s*\\]$");
+
     /** Creates the EMF type object for a message field type string; unknown names become spec refs. */
     public static AbstractType createMessagePartType(final RosModelState state, final ResourceSet rs, final String typeText) {
         String raw = typeText == null ? "" : typeText.trim();
+        Matcher sizedMatch = SIZED_ARRAY.matcher(raw);
+        if (sizedMatch.matches() && !sizedMatch.group(1).trim().endsWith("]")) {
+            SizedArray sized = PrimitivesFactory.eINSTANCE.createSizedArray();
+            sized.setBounded(sizedMatch.group(2) != null);
+            sized.setSize(Integer.parseInt(sizedMatch.group(3)));
+            sized.setElement(createMessagePartType(state, rs, sizedMatch.group(1)));
+            return sized;
+        }
         boolean isArray = raw.endsWith("[]");
         String base = unquote(isArray ? raw.substring(0, raw.length() - 2).trim() : raw);
         String clsName;

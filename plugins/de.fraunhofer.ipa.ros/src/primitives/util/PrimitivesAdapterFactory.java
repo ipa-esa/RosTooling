@@ -14,6 +14,7 @@ import primitives.ByteArray;
 import primitives.Header;
 import primitives.MessagePart;
 import primitives.PrimitivesPackage;
+import primitives.SizedArray;
 import primitives.bool;
 import primitives.boolArray;
 import primitives.char0;
@@ -230,6 +231,10 @@ public class PrimitivesAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter casecharArray(charArray object) {
 				return createcharArrayAdapter();
+			}
+			@Override
+			public Adapter caseSizedArray(SizedArray object) {
+				return createSizedArrayAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -710,6 +715,20 @@ public class PrimitivesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
     public Adapter createMessagePartAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link primitives.SizedArray <em>Sized Array</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see primitives.SizedArray
+	 * @generated
+	 */
+	public Adapter createSizedArrayAdapter() {
 		return null;
 	}
 

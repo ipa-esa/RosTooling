@@ -6,6 +6,8 @@ package de.fraunhofer.ipa.ros.validation
 import org.eclipse.xtext.validation.Check
 import ros.ActionClient
 import ros.ActionServer
+import primitives.PrimitivesPackage
+import primitives.SizedArray
 import ros.Artifact
 import ros.Node
 import ros.Package
@@ -30,6 +32,7 @@ class RosValidator extends AbstractRosValidator {
 
   public static val INVALID_NAME = 'invalidName'
   public static val PARAMETER_HELP = 'paramInfo'
+  public static val INVALID_ARRAY_SIZE = 'invalidArraySize'
 
   /* CAPITAL LETTERS */
   @Check
@@ -262,6 +265,19 @@ class RosValidator extends AbstractRosValidator {
           )
         }
       }
+    }
+  }
+
+  /** "T[N]" and "T[<=N]": the size is a count of elements, so it is at least 1; arrays do not nest. */
+  @Check
+  def void checkSizedArray(SizedArray array) {
+    if (array.size < 1) {
+      error("An array needs a size of at least 1; write 'T[]' for an array of any length.",
+        PrimitivesPackage.Literals.SIZED_ARRAY__SIZE, INVALID_ARRAY_SIZE)
+    }
+    if (array.element instanceof SizedArray) {
+      error("An array cannot hold arrays; ROS interfaces have no nested arrays.",
+        PrimitivesPackage.Literals.SIZED_ARRAY__ELEMENT, INVALID_ARRAY_SIZE)
     }
   }
 
