@@ -33,10 +33,6 @@ Parameter : 'parameter:';
 
 GraphName : 'GraphName';
 
-Float32_1 : 'float32[]';
-
-Float64_1 : 'float64[]';
-
 Multiple : 'multiple:';
 
 Default : 'default:';
@@ -46,14 +42,6 @@ Duration : 'duration';
 Feedback : 'feedback';
 
 Plugins : 'plugins:';
-
-String_2 : 'string[]';
-
-Uint16_1 : 'uint16[]';
-
-Uint32_1 : 'uint32[]';
-
-Uint64_1 : 'uint64[]';
 
 Boolean : 'Boolean';
 
@@ -67,12 +55,6 @@ Format : 'format:';
 
 Header_1 : 'header:';
 
-Int16_1 : 'int16[]';
-
-Int32_1 : 'int32[]';
-
-Int64_1 : 'int64[]';
-
 Loader : 'loader:';
 
 Message : 'message';
@@ -80,8 +62,6 @@ Message : 'message';
 Param : 'param->';
 
 Service : 'service';
-
-Uint8_1 : 'uint8[]';
 
 Base64 : 'Base64';
 
@@ -95,15 +75,7 @@ Struct : 'Struct';
 
 Action : 'action';
 
-Bool_1 : 'bool[]';
-
-Byte_1 : 'byte[]';
-
-Char_1 : 'char[]';
-
 Class : 'class:';
-
-Int8_1 : 'int8[]';
 
 Result : 'result';
 
@@ -173,7 +145,7 @@ Any : 'Any';
 
 Ns : 'ns:';
 
-LeftSquareBracketRightSquareBracket : '[]';
+LessThanSignEqualsSign : '<=';
 
 Comma : ',';
 

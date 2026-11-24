@@ -24,9 +24,9 @@ import ros.Node;
 import system.RosNode;
 
 /**
- * An empty list written "[]" parses like "[ ]". The message-field rule ArraySpecRef makes "[]" a
- * keyword of every language inheriting Basics, so the lexer reads it as one token; the list
- * rules must accept that token too.
+ * An empty list written "[]" parses like "[ ]". The brackets are always two tokens, so the list
+ * rules need no special case for the empty list; this pins that down for slot attachments and
+ * extension block lists.
  */
 public class EmptyBracketListTest {
 

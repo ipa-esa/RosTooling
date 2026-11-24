@@ -39,4 +39,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="ByteArray" eSuperTypes="#//AbstractType"/>
   <eClassifiers xsi:type="ecore:EClass" name="char0" eSuperTypes="#//AbstractType"/>
   <eClassifiers xsi:type="ecore:EClass" name="charArray" eSuperTypes="#//AbstractType"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SizedArray" eSuperTypes="#//AbstractType">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="element" lowerBound="1"
+        eType="#//AbstractType" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bounded" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
 </ecore:EPackage>

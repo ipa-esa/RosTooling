@@ -4715,16 +4715,43 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return gaBasics.getMESSAGE_ASIGMENTRule();
 	}
 	
+	//// A field type. "T[N]" is an array of exactly N elements, "T[<=N]" one of at most N, for any
+	//// scalar element type; "T[]" is the unbounded array, with a class of its own per element type.
+	//// A bracket is always the two tokens "[" and "]": there is no keyword that includes it, so
+	//// "int32[3]", "int32 [3]" and "int32[]" all lex as the type followed by brackets.
 	//AbstractType returns primitives::AbstractType:
-	//    bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | string0 | byte | time | duration | Header |
+	//    ScalarType ({primitives::SizedArray.element=current} '[' (bounded?='<=')? size=ArraySize ']')? |
 	//    boolArray | int8Array | uint8Array | int16Array | uint16Array | int32Array | uint32Array | int64Array | uint64Array | float32Array | float64Array | string0Array | byteArray |
-	//    SpecBaseRef | ArraySpecRef | char | charArray;
+	//    ArraySpecRef | charArray;
 	public BasicsGrammarAccess.AbstractTypeElements getAbstractTypeAccess() {
 		return gaBasics.getAbstractTypeAccess();
 	}
 	
 	public ParserRule getAbstractTypeRule() {
 		return getAbstractTypeAccess().getRule();
+	}
+	
+	//// DECINT is the only integer terminal the lexer produces here; referencing DIGIT or INT would turn
+	//// those into tokens of their own that take single digits away from DECINT everywhere.
+	//ArraySize returns ecore::EInt:
+	//    DECINT;
+	public BasicsGrammarAccess.ArraySizeElements getArraySizeAccess() {
+		return gaBasics.getArraySizeAccess();
+	}
+	
+	public ParserRule getArraySizeRule() {
+		return getArraySizeAccess().getRule();
+	}
+	
+	//ScalarType returns primitives::AbstractType:
+	//    bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | string0 | byte | time | duration | Header |
+	//    SpecBaseRef | char;
+	public BasicsGrammarAccess.ScalarTypeElements getScalarTypeAccess() {
+		return gaBasics.getScalarTypeAccess();
+	}
+	
+	public ParserRule getScalarTypeRule() {
+		return getScalarTypeAccess().getRule();
 	}
 	
 	//bool returns primitives::bool:
@@ -4921,7 +4948,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//boolArray returns primitives::boolArray:
 	//    {primitives::boolArray}
-	//    'bool[]'
+	//    'bool' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.BoolArrayElements getBoolArrayAccess() {
 		return gaBasics.getBoolArrayAccess();
@@ -4933,7 +4960,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//int8Array returns primitives::int8Array:
 	//    {primitives::int8Array}
-	//    'int8[]'
+	//    'int8' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Int8ArrayElements getInt8ArrayAccess() {
 		return gaBasics.getInt8ArrayAccess();
@@ -4945,7 +4972,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//uint8Array returns primitives::uint8Array:
 	//    {primitives::uint8Array}
-	//    'uint8[]'
+	//    'uint8' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Uint8ArrayElements getUint8ArrayAccess() {
 		return gaBasics.getUint8ArrayAccess();
@@ -4957,7 +4984,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//int16Array returns primitives::int16Array:
 	//    {primitives::int16Array}
-	//    'int16[]'
+	//    'int16' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Int16ArrayElements getInt16ArrayAccess() {
 		return gaBasics.getInt16ArrayAccess();
@@ -4969,7 +4996,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//uint16Array returns primitives::uint16Array:
 	//    {primitives::uint16Array}
-	//    'uint16[]'
+	//    'uint16' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Uint16ArrayElements getUint16ArrayAccess() {
 		return gaBasics.getUint16ArrayAccess();
@@ -4981,7 +5008,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//int32Array returns primitives::int32Array:
 	//    {primitives::int32Array}
-	//    'int32[]'
+	//    'int32' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Int32ArrayElements getInt32ArrayAccess() {
 		return gaBasics.getInt32ArrayAccess();
@@ -4993,7 +5020,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//uint32Array returns primitives::uint32Array:
 	//    {primitives::uint32Array}
-	//    'uint32[]'
+	//    'uint32' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Uint32ArrayElements getUint32ArrayAccess() {
 		return gaBasics.getUint32ArrayAccess();
@@ -5005,7 +5032,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//int64Array returns primitives::int64Array:
 	//    {primitives::int64Array}
-	//    'int64[]'
+	//    'int64' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Int64ArrayElements getInt64ArrayAccess() {
 		return gaBasics.getInt64ArrayAccess();
@@ -5017,7 +5044,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//uint64Array returns primitives::uint64Array:
 	//    {primitives::uint64Array}
-	//    'uint64[]'
+	//    'uint64' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Uint64ArrayElements getUint64ArrayAccess() {
 		return gaBasics.getUint64ArrayAccess();
@@ -5029,7 +5056,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//float32Array returns primitives::float32Array:
 	//    {primitives::float32Array}
-	//    'float32[]'
+	//    'float32' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Float32ArrayElements getFloat32ArrayAccess() {
 		return gaBasics.getFloat32ArrayAccess();
@@ -5041,7 +5068,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//float64Array returns primitives::float64Array:
 	//    {primitives::float64Array}
-	//    'float64[]'
+	//    'float64' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Float64ArrayElements getFloat64ArrayAccess() {
 		return gaBasics.getFloat64ArrayAccess();
@@ -5053,7 +5080,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//string0Array returns primitives::stringArray:
 	//    {primitives::stringArray}
-	//    'string[]'
+	//    'string' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.String0ArrayElements getString0ArrayAccess() {
 		return gaBasics.getString0ArrayAccess();
@@ -5065,7 +5092,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//byteArray returns primitives::ByteArray:
 	//    {primitives::ByteArray}
-	//    'byte[]'
+	//    'byte' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.ByteArrayElements getByteArrayAccess() {
 		return gaBasics.getByteArrayAccess();
@@ -5077,7 +5104,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//charArray returns primitives::charArray:
 	//    {primitives::charArray}
-	//    'char[]'
+	//    'char' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.CharArrayElements getCharArrayAccess() {
 		return gaBasics.getCharArrayAccess();
@@ -5111,7 +5138,7 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//ArraySpecRef returns ArrayTopicSpecMsgRef:
-	//    Reference=[TopicSpec|EString]'[]'
+	//    Reference=[TopicSpec|EString] '[' ']'
 	//;
 	public BasicsGrammarAccess.ArraySpecRefElements getArraySpecRefAccess() {
 		return gaBasics.getArraySpecRefAccess();
@@ -5228,11 +5255,9 @@ public class Ros2GrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getExtensionValueAccess().getRule();
 	}
 	
-	//// "[]" is a keyword (ArraySpecRef), so the lexer reads an empty list written without a space as
-	//// that one token; accept it as an empty list.
 	//ExtensionListValue returns ExtensionListValue:
 	//    {ExtensionListValue}
-	//    ('[]' | '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']');
+	//    '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']';
 	public BasicsGrammarAccess.ExtensionListValueElements getExtensionListValueAccess() {
 		return gaBasics.getExtensionListValueAccess();
 	}

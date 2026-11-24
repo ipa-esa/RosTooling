@@ -5,6 +5,11 @@ All notable changes to the **RosTooling** model and generator plugins will be do
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Fixed-size and bounded arrays in `.ros` message specs**: a field type can now be `T[N]` (exactly N elements) or `T[<=N]` (at most N), as ROS interface definitions allow, for any element type: the primitives, `time`, `duration`, `Header`, and message references (`float64[9] covariance`, `'geometry_msgs/msg/Point'[<=10] points`). The new metamodel class `primitives.SizedArray` holds the element type, the size and a `bounded` flag. The validator rejects a size below 1 and nested arrays. The unbounded forms (`T[]`) are unchanged, and models that parsed before parse and generate the same. Bounded strings (`string<=N`) are not covered. The brackets are now always the two tokens `[` and `]`: the keywords that fused them to a type (`int32[]`, `bool[]` and the rest) and the `[]` keyword are gone, so `int32[3]`, `int32 [3]` and `int32[]` lex alike, and an empty list can be written `[]` or `[ ]` without special rules. Every existing model parses to the same tree as before (checked across 52 corpora).
+
 ## [3.6.0] - 2026-11-18
 
 ### Added

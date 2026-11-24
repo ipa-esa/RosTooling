@@ -17,6 +17,7 @@ import primitives.ByteArray;
 import primitives.Header;
 import primitives.MessagePart;
 import primitives.PrimitivesPackage;
+import primitives.SizedArray;
 import primitives.bool;
 import primitives.boolArray;
 import primitives.char0;
@@ -124,6 +125,9 @@ public class Ros2SemanticSequencer extends RosSemanticSequencer {
 				return; 
 			case PrimitivesPackage.MESSAGE_PART:
 				sequence_MessagePart(context, (MessagePart) semanticObject); 
+				return; 
+			case PrimitivesPackage.SIZED_ARRAY:
+				sequence_AbstractType(context, (SizedArray) semanticObject); 
 				return; 
 			case PrimitivesPackage.BOOL:
 				sequence_bool(context, (bool) semanticObject); 

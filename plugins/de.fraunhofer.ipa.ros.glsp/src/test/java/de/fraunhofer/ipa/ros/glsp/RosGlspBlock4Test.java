@@ -286,6 +286,42 @@ class RosGlspBlock4Test {
         assertTrue(specs.contains("\"type\":\"float64\",\"name\":\"confidence\""), specs);
     }
     @Test
+    void sizedArrayFieldsAreWrittenAndShownAsText() throws Exception {
+        Path ros = tempDir.resolve("sized_msgs.ros");
+        Files.writeString(ros, String.join("\n",
+                "sized_msgs:",
+                "  msgs:",
+                "    Base",
+                "      message",
+                "        int32 x",
+                "    Scan",
+                "      message",
+                "        float64[9] covariance",
+                "        int32[<=5] ids",
+                ""));
+        Session s = open(ros, "block4-sized");
+
+        edit(s, "Scan", "addField", "stamps", "time[2]", "message");
+        edit(s, "Scan", "addField", "triple", "'sized_msgs/msg/Base'[3]", "message");
+        edit(s, "Scan", "addField", "tags", "string[<=8]", "message");
+        edit(s, "Scan.ids", "type", null, "int32[7]", null);
+
+        String text = save(s, ros);
+
+        assertTrue(text.contains("float64[9] covariance"), text);
+        assertTrue(text.contains("int32[7] ids"), text);
+        assertTrue(text.contains("time[2] stamps"), text);
+        assertTrue(text.contains("'sized_msgs/msg/Base'[3] triple"), text);
+        assertTrue(text.contains("string[<=8] tags"), text);
+
+        s.gModelFactory.createGModel();
+        GModelRoot root = s.state.getRoot();
+        String specs = String.valueOf(((org.eclipse.glsp.graph.GArgumentable) root.getChildren().get(0)).getArgs().get("specsJson"));
+        assertTrue(specs.contains("\"type\":\"float64[9]\",\"name\":\"covariance\""), specs);
+        assertTrue(specs.contains("\"type\":\"string[<=8]\",\"name\":\"tags\""), specs);
+    }
+
+    @Test
     void rossystemSubsystemsAndEmptiedSectionsStayParseable() throws Exception {
         writeMsgs(tempDir);
         Files.writeString(tempDir.resolve("nav_pkg.ros2"), String.join("\n",

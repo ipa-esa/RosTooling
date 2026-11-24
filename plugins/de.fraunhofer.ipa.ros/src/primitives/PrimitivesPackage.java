@@ -998,6 +998,61 @@ public interface PrimitivesPackage extends EPackage {
 	 */
 	int CHAR_ARRAY_OPERATION_COUNT = ABSTRACT_TYPE_OPERATION_COUNT + 0;
 
+	/**
+	 * The meta object id for the '{@link primitives.impl.SizedArrayImpl <em>Sized Array</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see primitives.impl.SizedArrayImpl
+	 * @see primitives.impl.PrimitivesPackageImpl#getSizedArray()
+	 * @generated
+	 */
+	int SIZED_ARRAY = 33;
+
+	/**
+	 * The feature id for the '<em><b>Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIZED_ARRAY__ELEMENT = ABSTRACT_TYPE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Size</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIZED_ARRAY__SIZE = ABSTRACT_TYPE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Bounded</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIZED_ARRAY__BOUNDED = ABSTRACT_TYPE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Sized Array</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIZED_ARRAY_FEATURE_COUNT = ABSTRACT_TYPE_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of operations of the '<em>Sized Array</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIZED_ARRAY_OPERATION_COUNT = ABSTRACT_TYPE_OPERATION_COUNT + 0;
+
 
 	/**
 	 * Returns the meta object for class '{@link primitives.AbstractType <em>Abstract Type</em>}'.
@@ -1350,6 +1405,49 @@ public interface PrimitivesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getcharArray();
+
+	/**
+	 * Returns the meta object for class '{@link primitives.SizedArray <em>Sized Array</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Sized Array</em>'.
+	 * @see primitives.SizedArray
+	 * @generated
+	 */
+	EClass getSizedArray();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link primitives.SizedArray#getElement <em>Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Element</em>'.
+	 * @see primitives.SizedArray#getElement()
+	 * @see #getSizedArray()
+	 * @generated
+	 */
+	EReference getSizedArray_Element();
+
+	/**
+	 * Returns the meta object for the attribute '{@link primitives.SizedArray#getSize <em>Size</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Size</em>'.
+	 * @see primitives.SizedArray#getSize()
+	 * @see #getSizedArray()
+	 * @generated
+	 */
+	EAttribute getSizedArray_Size();
+
+	/**
+	 * Returns the meta object for the attribute '{@link primitives.SizedArray#isBounded <em>Bounded</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Bounded</em>'.
+	 * @see primitives.SizedArray#isBounded()
+	 * @see #getSizedArray()
+	 * @generated
+	 */
+	EAttribute getSizedArray_Bounded();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -1719,6 +1817,40 @@ public interface PrimitivesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass CHAR_ARRAY = eINSTANCE.getcharArray();
+
+		/**
+		 * The meta object literal for the '{@link primitives.impl.SizedArrayImpl <em>Sized Array</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see primitives.impl.SizedArrayImpl
+		 * @see primitives.impl.PrimitivesPackageImpl#getSizedArray()
+		 * @generated
+		 */
+		EClass SIZED_ARRAY = eINSTANCE.getSizedArray();
+
+		/**
+		 * The meta object literal for the '<em><b>Element</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SIZED_ARRAY__ELEMENT = eINSTANCE.getSizedArray_Element();
+
+		/**
+		 * The meta object literal for the '<em><b>Size</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SIZED_ARRAY__SIZE = eINSTANCE.getSizedArray_Size();
+
+		/**
+		 * The meta object literal for the '<em><b>Bounded</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SIZED_ARRAY__BOUNDED = eINSTANCE.getSizedArray_Bounded();
 
 	}
 

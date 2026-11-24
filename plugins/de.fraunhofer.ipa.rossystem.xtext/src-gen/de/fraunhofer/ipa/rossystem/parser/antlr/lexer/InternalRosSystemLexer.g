@@ -33,10 +33,6 @@ Processes : 'processes:';
 
 GraphName : 'GraphName';
 
-Float32_1 : 'float32[]';
-
-Float64_1 : 'float64[]';
-
 FromFile : 'fromFile:';
 
 Default : 'default:';
@@ -45,15 +41,7 @@ Duration : 'duration';
 
 Feedback : 'feedback';
 
-String_2 : 'string[]';
-
 Threads : 'threads:';
-
-Uint16_1 : 'uint16[]';
-
-Uint32_1 : 'uint32[]';
-
-Uint64_1 : 'uint64[]';
 
 Boolean : 'Boolean';
 
@@ -63,19 +51,11 @@ Float32 : 'float32';
 
 Float64 : 'float64';
 
-Int16_1 : 'int16[]';
-
-Int32_1 : 'int32[]';
-
-Int64_1 : 'int64[]';
-
 Message : 'message';
 
 Param : 'param->';
 
 Service : 'service';
-
-Uint8_1 : 'uint8[]';
 
 Base64 : 'Base64';
 
@@ -88,14 +68,6 @@ String : 'String';
 Struct : 'Struct';
 
 Action : 'action';
-
-Bool_1 : 'bool[]';
-
-Byte_1 : 'byte[]';
-
-Char_1 : 'char[]';
-
-Int8_1 : 'int8[]';
 
 Nodes : 'nodes:';
 
@@ -167,7 +139,7 @@ Any : 'Any';
 
 Ns : 'ns:';
 
-LeftSquareBracketRightSquareBracket : '[]';
+LessThanSignEqualsSign : '<=';
 
 Comma : ',';
 

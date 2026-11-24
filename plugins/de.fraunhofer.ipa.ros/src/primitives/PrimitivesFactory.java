@@ -310,6 +310,15 @@ public interface PrimitivesFactory extends EFactory {
 	charArray createcharArray();
 
 	/**
+	 * Returns a new object of class '<em>Sized Array</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Sized Array</em>'.
+	 * @generated
+	 */
+	SizedArray createSizedArray();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

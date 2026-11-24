@@ -19,6 +19,7 @@ import primitives.ByteArray;
 import primitives.Header;
 import primitives.MessagePart;
 import primitives.PrimitivesPackage;
+import primitives.SizedArray;
 import primitives.bool;
 import primitives.boolArray;
 import primitives.char0;
@@ -106,6 +107,9 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				return; 
 			case PrimitivesPackage.MESSAGE_PART:
 				sequence_MessagePart(context, (MessagePart) semanticObject); 
+				return; 
+			case PrimitivesPackage.SIZED_ARRAY:
+				sequence_AbstractType(context, (SizedArray) semanticObject); 
 				return; 
 			case PrimitivesPackage.BOOL:
 				sequence_bool(context, (bool) semanticObject); 
@@ -312,6 +316,20 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     AbstractType returns SizedArray
+	 *
+	 * Constraint:
+	 *     (element=AbstractType_SizedArray_0_1_0 bounded?='&lt;='? size=ArraySize)
+	 * </pre>
+	 */
+	protected void sequence_AbstractType(ISerializationContext context, SizedArray semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     AbstractType returns ArrayTopicSpecMsgRef
 	 *     ArraySpecRef returns ArrayTopicSpecMsgRef
 	 *
@@ -481,6 +499,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns Header
+	 *     AbstractType.SizedArray_0_1_0 returns Header
+	 *     ScalarType returns Header
 	 *     Header returns Header
 	 *
 	 * Constraint:
@@ -908,6 +928,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns TopicSpecMsgRef
+	 *     AbstractType.SizedArray_0_1_0 returns TopicSpecMsgRef
+	 *     ScalarType returns TopicSpecMsgRef
 	 *     SpecBaseRef returns TopicSpecMsgRef
 	 *
 	 * Constraint:
@@ -944,6 +966,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns bool
+	 *     AbstractType.SizedArray_0_1_0 returns bool
+	 *     ScalarType returns bool
 	 *     bool returns bool
 	 *
 	 * Constraint:
@@ -974,6 +998,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns Byte
+	 *     AbstractType.SizedArray_0_1_0 returns Byte
+	 *     ScalarType returns Byte
 	 *     byte returns Byte
 	 *
 	 * Constraint:
@@ -1004,6 +1030,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns char0
+	 *     AbstractType.SizedArray_0_1_0 returns char0
+	 *     ScalarType returns char0
 	 *     char returns char0
 	 *
 	 * Constraint:
@@ -1019,6 +1047,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns duration
+	 *     AbstractType.SizedArray_0_1_0 returns duration
+	 *     ScalarType returns duration
 	 *     duration returns duration
 	 *
 	 * Constraint:
@@ -1049,6 +1079,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns float32
+	 *     AbstractType.SizedArray_0_1_0 returns float32
+	 *     ScalarType returns float32
 	 *     float32 returns float32
 	 *
 	 * Constraint:
@@ -1079,6 +1111,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns float64
+	 *     AbstractType.SizedArray_0_1_0 returns float64
+	 *     ScalarType returns float64
 	 *     float64 returns float64
 	 *
 	 * Constraint:
@@ -1109,6 +1143,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns int16
+	 *     AbstractType.SizedArray_0_1_0 returns int16
+	 *     ScalarType returns int16
 	 *     int16 returns int16
 	 *
 	 * Constraint:
@@ -1139,6 +1175,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns int32
+	 *     AbstractType.SizedArray_0_1_0 returns int32
+	 *     ScalarType returns int32
 	 *     int32 returns int32
 	 *
 	 * Constraint:
@@ -1169,6 +1207,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns int64
+	 *     AbstractType.SizedArray_0_1_0 returns int64
+	 *     ScalarType returns int64
 	 *     int64 returns int64
 	 *
 	 * Constraint:
@@ -1199,6 +1239,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns int8
+	 *     AbstractType.SizedArray_0_1_0 returns int8
+	 *     ScalarType returns int8
 	 *     int8 returns int8
 	 *
 	 * Constraint:
@@ -1229,6 +1271,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns string
+	 *     AbstractType.SizedArray_0_1_0 returns string
+	 *     ScalarType returns string
 	 *     string0 returns string
 	 *
 	 * Constraint:
@@ -1244,6 +1288,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns time
+	 *     AbstractType.SizedArray_0_1_0 returns time
+	 *     ScalarType returns time
 	 *     time returns time
 	 *
 	 * Constraint:
@@ -1274,6 +1320,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns uint16
+	 *     AbstractType.SizedArray_0_1_0 returns uint16
+	 *     ScalarType returns uint16
 	 *     uint16 returns uint16
 	 *
 	 * Constraint:
@@ -1304,6 +1352,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns uint32
+	 *     AbstractType.SizedArray_0_1_0 returns uint32
+	 *     ScalarType returns uint32
 	 *     uint32 returns uint32
 	 *
 	 * Constraint:
@@ -1334,6 +1384,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns uint64
+	 *     AbstractType.SizedArray_0_1_0 returns uint64
+	 *     ScalarType returns uint64
 	 *     uint64 returns uint64
 	 *
 	 * Constraint:
@@ -1364,6 +1416,8 @@ public class BasicsSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * <pre>
 	 * Contexts:
 	 *     AbstractType returns uint8
+	 *     AbstractType.SizedArray_0_1_0 returns uint8
+	 *     ScalarType returns uint8
 	 *     uint8 returns uint8
 	 *
 	 * Constraint:

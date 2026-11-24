@@ -807,6 +807,29 @@ public class PrimitivesItemProviderAdapterFactory extends PrimitivesAdapterFacto
 	}
 
 				/**
+	 * This keeps track of the one adapter used for all {@link primitives.SizedArray} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected SizedArrayItemProvider sizedArrayItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link primitives.SizedArray}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createSizedArrayAdapter() {
+		if (sizedArrayItemProvider == null) {
+			sizedArrayItemProvider = new SizedArrayItemProvider(this);
+		}
+
+		return sizedArrayItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

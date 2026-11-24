@@ -708,32 +708,27 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		private final Assignment cSlotAssignment_0_1 = (Assignment)cAlternatives_0.eContents().get(1);
 		private final CrossReference cSlotPluginSlotCrossReference_0_1_0 = (CrossReference)cSlotAssignment_0_1.eContents().get(0);
 		private final RuleCall cSlotPluginSlotAddedKeywordNameParserRuleCall_0_1_0_1 = (RuleCall)cSlotPluginSlotCrossReference_0_1_0.eContents().get(1);
-		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
-		private final Keyword cLeftSquareBracketRightSquareBracketKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
-		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
-		private final Keyword cLeftSquareBracketKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
-		private final Group cGroup_1_1_1 = (Group)cGroup_1_1.eContents().get(1);
-		private final Assignment cPluginsAssignment_1_1_1_0 = (Assignment)cGroup_1_1_1.eContents().get(0);
-		private final CrossReference cPluginsPluginCrossReference_1_1_1_0_0 = (CrossReference)cPluginsAssignment_1_1_1_0.eContents().get(0);
-		private final RuleCall cPluginsPluginQualifiedRefParserRuleCall_1_1_1_0_0_1 = (RuleCall)cPluginsPluginCrossReference_1_1_1_0_0.eContents().get(1);
-		private final Group cGroup_1_1_1_1 = (Group)cGroup_1_1_1.eContents().get(1);
-		private final Keyword cCommaKeyword_1_1_1_1_0 = (Keyword)cGroup_1_1_1_1.eContents().get(0);
-		private final Assignment cPluginsAssignment_1_1_1_1_1 = (Assignment)cGroup_1_1_1_1.eContents().get(1);
-		private final CrossReference cPluginsPluginCrossReference_1_1_1_1_1_0 = (CrossReference)cPluginsAssignment_1_1_1_1_1.eContents().get(0);
-		private final RuleCall cPluginsPluginQualifiedRefParserRuleCall_1_1_1_1_1_0_1 = (RuleCall)cPluginsPluginCrossReference_1_1_1_1_1_0.eContents().get(1);
-		private final Keyword cRightSquareBracketKeyword_1_1_2 = (Keyword)cGroup_1_1.eContents().get(2);
+		private final Keyword cLeftSquareBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Assignment cPluginsAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
+		private final CrossReference cPluginsPluginCrossReference_2_0_0 = (CrossReference)cPluginsAssignment_2_0.eContents().get(0);
+		private final RuleCall cPluginsPluginQualifiedRefParserRuleCall_2_0_0_1 = (RuleCall)cPluginsPluginCrossReference_2_0_0.eContents().get(1);
+		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
+		private final Keyword cCommaKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
+		private final Assignment cPluginsAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
+		private final CrossReference cPluginsPluginCrossReference_2_1_1_0 = (CrossReference)cPluginsAssignment_2_1_1.eContents().get(0);
+		private final RuleCall cPluginsPluginQualifiedRefParserRuleCall_2_1_1_0_1 = (RuleCall)cPluginsPluginCrossReference_2_1_1_0.eContents().get(1);
+		private final Keyword cRightSquareBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
 		//// Attaches plugins to a slot of the node in from:. The slot name is resolved on that node.
-		//// "[]" is a keyword (Basics ArraySpecRef), so an empty list written without a space arrives as
-		//// that one token; accept it as an empty list.
 		//SlotAttachment returns SlotAttachment:
 		//    (slot=[ros::PluginSlot|EString] ':' | slot=[ros::PluginSlot|AddedKeywordName])
-		//    ('[]' | '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']')
+		//    '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']'
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//(slot=[ros::PluginSlot|EString] ':' | slot=[ros::PluginSlot|AddedKeywordName])
-		//('[]' | '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']')
+		//'[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']'
 		public Group getGroup() { return cGroup; }
 		
 		//(slot=[ros::PluginSlot|EString] ':' | slot=[ros::PluginSlot|AddedKeywordName])
@@ -763,47 +758,38 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		//AddedKeywordName
 		public RuleCall getSlotPluginSlotAddedKeywordNameParserRuleCall_0_1_0_1() { return cSlotPluginSlotAddedKeywordNameParserRuleCall_0_1_0_1; }
 		
-		//('[]' | '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']')
-		public Alternatives getAlternatives_1() { return cAlternatives_1; }
-		
-		//'[]'
-		public Keyword getLeftSquareBracketRightSquareBracketKeyword_1_0() { return cLeftSquareBracketRightSquareBracketKeyword_1_0; }
-		
-		//'[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']'
-		public Group getGroup_1_1() { return cGroup_1_1; }
-		
 		//'['
-		public Keyword getLeftSquareBracketKeyword_1_1_0() { return cLeftSquareBracketKeyword_1_1_0; }
+		public Keyword getLeftSquareBracketKeyword_1() { return cLeftSquareBracketKeyword_1; }
 		
 		//(plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)?
-		public Group getGroup_1_1_1() { return cGroup_1_1_1; }
+		public Group getGroup_2() { return cGroup_2; }
 		
 		//plugins+=[ros::Plugin|QualifiedRef]
-		public Assignment getPluginsAssignment_1_1_1_0() { return cPluginsAssignment_1_1_1_0; }
+		public Assignment getPluginsAssignment_2_0() { return cPluginsAssignment_2_0; }
 		
 		//[ros::Plugin|QualifiedRef]
-		public CrossReference getPluginsPluginCrossReference_1_1_1_0_0() { return cPluginsPluginCrossReference_1_1_1_0_0; }
+		public CrossReference getPluginsPluginCrossReference_2_0_0() { return cPluginsPluginCrossReference_2_0_0; }
 		
 		//QualifiedRef
-		public RuleCall getPluginsPluginQualifiedRefParserRuleCall_1_1_1_0_0_1() { return cPluginsPluginQualifiedRefParserRuleCall_1_1_1_0_0_1; }
+		public RuleCall getPluginsPluginQualifiedRefParserRuleCall_2_0_0_1() { return cPluginsPluginQualifiedRefParserRuleCall_2_0_0_1; }
 		
 		//(',' plugins+=[ros::Plugin|QualifiedRef])*
-		public Group getGroup_1_1_1_1() { return cGroup_1_1_1_1; }
+		public Group getGroup_2_1() { return cGroup_2_1; }
 		
 		//','
-		public Keyword getCommaKeyword_1_1_1_1_0() { return cCommaKeyword_1_1_1_1_0; }
+		public Keyword getCommaKeyword_2_1_0() { return cCommaKeyword_2_1_0; }
 		
 		//plugins+=[ros::Plugin|QualifiedRef]
-		public Assignment getPluginsAssignment_1_1_1_1_1() { return cPluginsAssignment_1_1_1_1_1; }
+		public Assignment getPluginsAssignment_2_1_1() { return cPluginsAssignment_2_1_1; }
 		
 		//[ros::Plugin|QualifiedRef]
-		public CrossReference getPluginsPluginCrossReference_1_1_1_1_1_0() { return cPluginsPluginCrossReference_1_1_1_1_1_0; }
+		public CrossReference getPluginsPluginCrossReference_2_1_1_0() { return cPluginsPluginCrossReference_2_1_1_0; }
 		
 		//QualifiedRef
-		public RuleCall getPluginsPluginQualifiedRefParserRuleCall_1_1_1_1_1_0_1() { return cPluginsPluginQualifiedRefParserRuleCall_1_1_1_1_1_0_1; }
+		public RuleCall getPluginsPluginQualifiedRefParserRuleCall_2_1_1_0_1() { return cPluginsPluginQualifiedRefParserRuleCall_2_1_1_0_1; }
 		
 		//']'
-		public Keyword getRightSquareBracketKeyword_1_1_2() { return cRightSquareBracketKeyword_1_1_2; }
+		public Keyword getRightSquareBracketKeyword_3() { return cRightSquareBracketKeyword_3; }
 	}
 	public class RosInterfaceElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.rossystem.RosSystem.RosInterface");
@@ -1740,11 +1726,9 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	}
 	
 	//// Attaches plugins to a slot of the node in from:. The slot name is resolved on that node.
-	//// "[]" is a keyword (Basics ArraySpecRef), so an empty list written without a space arrives as
-	//// that one token; accept it as an empty list.
 	//SlotAttachment returns SlotAttachment:
 	//    (slot=[ros::PluginSlot|EString] ':' | slot=[ros::PluginSlot|AddedKeywordName])
-	//    ('[]' | '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']')
+	//    '[' (plugins+=[ros::Plugin|QualifiedRef] (',' plugins+=[ros::Plugin|QualifiedRef])*)? ']'
 	//;
 	public SlotAttachmentElements getSlotAttachmentAccess() {
 		return pSlotAttachment;
@@ -2451,16 +2435,43 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		return gaBasics.getMESSAGE_ASIGMENTRule();
 	}
 	
+	//// A field type. "T[N]" is an array of exactly N elements, "T[<=N]" one of at most N, for any
+	//// scalar element type; "T[]" is the unbounded array, with a class of its own per element type.
+	//// A bracket is always the two tokens "[" and "]": there is no keyword that includes it, so
+	//// "int32[3]", "int32 [3]" and "int32[]" all lex as the type followed by brackets.
 	//AbstractType returns primitives::AbstractType:
-	//    bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | string0 | byte | time | duration | Header |
+	//    ScalarType ({primitives::SizedArray.element=current} '[' (bounded?='<=')? size=ArraySize ']')? |
 	//    boolArray | int8Array | uint8Array | int16Array | uint16Array | int32Array | uint32Array | int64Array | uint64Array | float32Array | float64Array | string0Array | byteArray |
-	//    SpecBaseRef | ArraySpecRef | char | charArray;
+	//    ArraySpecRef | charArray;
 	public BasicsGrammarAccess.AbstractTypeElements getAbstractTypeAccess() {
 		return gaBasics.getAbstractTypeAccess();
 	}
 	
 	public ParserRule getAbstractTypeRule() {
 		return getAbstractTypeAccess().getRule();
+	}
+	
+	//// DECINT is the only integer terminal the lexer produces here; referencing DIGIT or INT would turn
+	//// those into tokens of their own that take single digits away from DECINT everywhere.
+	//ArraySize returns ecore::EInt:
+	//    DECINT;
+	public BasicsGrammarAccess.ArraySizeElements getArraySizeAccess() {
+		return gaBasics.getArraySizeAccess();
+	}
+	
+	public ParserRule getArraySizeRule() {
+		return getArraySizeAccess().getRule();
+	}
+	
+	//ScalarType returns primitives::AbstractType:
+	//    bool | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64 | float32 | float64 | string0 | byte | time | duration | Header |
+	//    SpecBaseRef | char;
+	public BasicsGrammarAccess.ScalarTypeElements getScalarTypeAccess() {
+		return gaBasics.getScalarTypeAccess();
+	}
+	
+	public ParserRule getScalarTypeRule() {
+		return getScalarTypeAccess().getRule();
 	}
 	
 	//bool returns primitives::bool:
@@ -2657,7 +2668,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//boolArray returns primitives::boolArray:
 	//    {primitives::boolArray}
-	//    'bool[]'
+	//    'bool' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.BoolArrayElements getBoolArrayAccess() {
 		return gaBasics.getBoolArrayAccess();
@@ -2669,7 +2680,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//int8Array returns primitives::int8Array:
 	//    {primitives::int8Array}
-	//    'int8[]'
+	//    'int8' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Int8ArrayElements getInt8ArrayAccess() {
 		return gaBasics.getInt8ArrayAccess();
@@ -2681,7 +2692,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//uint8Array returns primitives::uint8Array:
 	//    {primitives::uint8Array}
-	//    'uint8[]'
+	//    'uint8' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Uint8ArrayElements getUint8ArrayAccess() {
 		return gaBasics.getUint8ArrayAccess();
@@ -2693,7 +2704,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//int16Array returns primitives::int16Array:
 	//    {primitives::int16Array}
-	//    'int16[]'
+	//    'int16' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Int16ArrayElements getInt16ArrayAccess() {
 		return gaBasics.getInt16ArrayAccess();
@@ -2705,7 +2716,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//uint16Array returns primitives::uint16Array:
 	//    {primitives::uint16Array}
-	//    'uint16[]'
+	//    'uint16' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Uint16ArrayElements getUint16ArrayAccess() {
 		return gaBasics.getUint16ArrayAccess();
@@ -2717,7 +2728,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//int32Array returns primitives::int32Array:
 	//    {primitives::int32Array}
-	//    'int32[]'
+	//    'int32' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Int32ArrayElements getInt32ArrayAccess() {
 		return gaBasics.getInt32ArrayAccess();
@@ -2729,7 +2740,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//uint32Array returns primitives::uint32Array:
 	//    {primitives::uint32Array}
-	//    'uint32[]'
+	//    'uint32' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Uint32ArrayElements getUint32ArrayAccess() {
 		return gaBasics.getUint32ArrayAccess();
@@ -2741,7 +2752,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//int64Array returns primitives::int64Array:
 	//    {primitives::int64Array}
-	//    'int64[]'
+	//    'int64' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Int64ArrayElements getInt64ArrayAccess() {
 		return gaBasics.getInt64ArrayAccess();
@@ -2753,7 +2764,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//uint64Array returns primitives::uint64Array:
 	//    {primitives::uint64Array}
-	//    'uint64[]'
+	//    'uint64' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Uint64ArrayElements getUint64ArrayAccess() {
 		return gaBasics.getUint64ArrayAccess();
@@ -2765,7 +2776,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//float32Array returns primitives::float32Array:
 	//    {primitives::float32Array}
-	//    'float32[]'
+	//    'float32' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Float32ArrayElements getFloat32ArrayAccess() {
 		return gaBasics.getFloat32ArrayAccess();
@@ -2777,7 +2788,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//float64Array returns primitives::float64Array:
 	//    {primitives::float64Array}
-	//    'float64[]'
+	//    'float64' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.Float64ArrayElements getFloat64ArrayAccess() {
 		return gaBasics.getFloat64ArrayAccess();
@@ -2789,7 +2800,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//string0Array returns primitives::stringArray:
 	//    {primitives::stringArray}
-	//    'string[]'
+	//    'string' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.String0ArrayElements getString0ArrayAccess() {
 		return gaBasics.getString0ArrayAccess();
@@ -2801,7 +2812,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//byteArray returns primitives::ByteArray:
 	//    {primitives::ByteArray}
-	//    'byte[]'
+	//    'byte' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.ByteArrayElements getByteArrayAccess() {
 		return gaBasics.getByteArrayAccess();
@@ -2813,7 +2824,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	
 	//charArray returns primitives::charArray:
 	//    {primitives::charArray}
-	//    'char[]'
+	//    'char' '[' ']'
 	//    ;
 	public BasicsGrammarAccess.CharArrayElements getCharArrayAccess() {
 		return gaBasics.getCharArrayAccess();
@@ -2847,7 +2858,7 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 	}
 	
 	//ArraySpecRef returns ArrayTopicSpecMsgRef:
-	//    Reference=[TopicSpec|EString]'[]'
+	//    Reference=[TopicSpec|EString] '[' ']'
 	//;
 	public BasicsGrammarAccess.ArraySpecRefElements getArraySpecRefAccess() {
 		return gaBasics.getArraySpecRefAccess();
@@ -2999,11 +3010,9 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		return getExtensionValueAccess().getRule();
 	}
 	
-	//// "[]" is a keyword (ArraySpecRef), so the lexer reads an empty list written without a space as
-	//// that one token; accept it as an empty list.
 	//ExtensionListValue returns ExtensionListValue:
 	//    {ExtensionListValue}
-	//    ('[]' | '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']');
+	//    '[' (items+=ExtensionValue (','? items+=ExtensionValue)*)? ']';
 	public BasicsGrammarAccess.ExtensionListValueElements getExtensionListValueAccess() {
 		return gaBasics.getExtensionListValueAccess();
 	}

@@ -12,6 +12,7 @@ import primitives.ByteArray;
 import primitives.Header;
 import primitives.MessagePart;
 import primitives.PrimitivesPackage;
+import primitives.SizedArray;
 import primitives.bool;
 import primitives.boolArray;
 import primitives.char0;
@@ -324,6 +325,13 @@ public class PrimitivesSwitch<T> extends Switch<T> {
 				charArray charArray = (charArray)theEObject;
 				T result = casecharArray(charArray);
 				if (result == null) result = caseAbstractType(charArray);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case PrimitivesPackage.SIZED_ARRAY: {
+				SizedArray sizedArray = (SizedArray)theEObject;
+				T result = caseSizedArray(sizedArray);
+				if (result == null) result = caseAbstractType(sizedArray);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -823,6 +831,21 @@ public class PrimitivesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T casecharArray(charArray object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Sized Array</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Sized Array</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSizedArray(SizedArray object) {
 		return null;
 	}
 

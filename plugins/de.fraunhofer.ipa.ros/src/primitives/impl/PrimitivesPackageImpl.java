@@ -15,6 +15,7 @@ import primitives.Header;
 import primitives.MessagePart;
 import primitives.PrimitivesFactory;
 import primitives.PrimitivesPackage;
+import primitives.SizedArray;
 import primitives.bool;
 import primitives.boolArray;
 import primitives.char0;
@@ -285,6 +286,13 @@ public class PrimitivesPackageImpl extends EPackageImpl implements PrimitivesPac
 	 * @generated
 	 */
 	private EClass charArrayEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass sizedArrayEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -708,6 +716,46 @@ public class PrimitivesPackageImpl extends EPackageImpl implements PrimitivesPac
 	 * @generated
 	 */
 	@Override
+	public EClass getSizedArray() {
+		return sizedArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getSizedArray_Element() {
+		return (EReference)sizedArrayEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getSizedArray_Size() {
+		return (EAttribute)sizedArrayEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getSizedArray_Bounded() {
+		return (EAttribute)sizedArrayEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public PrimitivesFactory getPrimitivesFactory() {
 		return (PrimitivesFactory)getEFactoryInstance();
 	}
@@ -798,6 +846,11 @@ public class PrimitivesPackageImpl extends EPackageImpl implements PrimitivesPac
 		char0EClass = createEClass(CHAR0);
 
 		charArrayEClass = createEClass(CHAR_ARRAY);
+
+		sizedArrayEClass = createEClass(SIZED_ARRAY);
+		createEReference(sizedArrayEClass, SIZED_ARRAY__ELEMENT);
+		createEAttribute(sizedArrayEClass, SIZED_ARRAY__SIZE);
+		createEAttribute(sizedArrayEClass, SIZED_ARRAY__BOUNDED);
 	}
 
 	/**
@@ -859,6 +912,7 @@ public class PrimitivesPackageImpl extends EPackageImpl implements PrimitivesPac
 		byteArrayEClass.getESuperTypes().add(this.getAbstractType());
 		char0EClass.getESuperTypes().add(this.getAbstractType());
 		charArrayEClass.getESuperTypes().add(this.getAbstractType());
+		sizedArrayEClass.getESuperTypes().add(this.getAbstractType());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(abstractTypeEClass, AbstractType.class, "AbstractType", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -928,6 +982,11 @@ public class PrimitivesPackageImpl extends EPackageImpl implements PrimitivesPac
 		initEClass(char0EClass, char0.class, "char0", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(charArrayEClass, charArray.class, "charArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(sizedArrayEClass, SizedArray.class, "SizedArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSizedArray_Element(), this.getAbstractType(), null, "element", null, 1, 1, SizedArray.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSizedArray_Size(), ecorePackage.getEInt(), "size", null, 1, 1, SizedArray.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSizedArray_Bounded(), ecorePackage.getEBoolean(), "bounded", null, 0, 1, SizedArray.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

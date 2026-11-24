@@ -5517,8 +5517,246 @@ ruleAbstractType returns [EObject current=null]
 	leaveRule();
 }:
 	(
+		(
+			{
+				newCompositeNode(grammarAccess.getAbstractTypeAccess().getScalarTypeParserRuleCall_0_0());
+			}
+			this_ScalarType_0=ruleScalarType
+			{
+				$current = $this_ScalarType_0.current;
+				afterParserOrEnumRuleCall();
+			}
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getAbstractTypeAccess().getSizedArrayElementAction_0_1_0(),
+							$current);
+					}
+				)
+				otherlv_2=LeftSquareBracket
+				{
+					newLeafNode(otherlv_2, grammarAccess.getAbstractTypeAccess().getLeftSquareBracketKeyword_0_1_1());
+				}
+				(
+					(
+						lv_bounded_3_0=LessThanSignEqualsSign
+						{
+							newLeafNode(lv_bounded_3_0, grammarAccess.getAbstractTypeAccess().getBoundedLessThanSignEqualsSignKeyword_0_1_2_0());
+						}
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getAbstractTypeRule());
+							}
+							setWithLastConsumed($current, "bounded", lv_bounded_3_0 != null, "<=");
+						}
+					)
+				)?
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getAbstractTypeAccess().getSizeArraySizeParserRuleCall_0_1_3_0());
+						}
+						lv_size_4_0=ruleArraySize
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getAbstractTypeRule());
+							}
+							set(
+								$current,
+								"size",
+								lv_size_4_0,
+								"de.fraunhofer.ipa.ros.Basics.ArraySize");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				otherlv_5=RightSquareBracket
+				{
+					newLeafNode(otherlv_5, grammarAccess.getAbstractTypeAccess().getRightSquareBracketKeyword_0_1_4());
+				}
+			)?
+		)
+		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getBoolParserRuleCall_0());
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getBoolArrayParserRuleCall_1());
+		}
+		this_boolArray_6=ruleboolArray
+		{
+			$current = $this_boolArray_6.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt8ArrayParserRuleCall_2());
+		}
+		this_int8Array_7=ruleint8Array
+		{
+			$current = $this_int8Array_7.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint8ArrayParserRuleCall_3());
+		}
+		this_uint8Array_8=ruleuint8Array
+		{
+			$current = $this_uint8Array_8.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt16ArrayParserRuleCall_4());
+		}
+		this_int16Array_9=ruleint16Array
+		{
+			$current = $this_int16Array_9.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint16ArrayParserRuleCall_5());
+		}
+		this_uint16Array_10=ruleuint16Array
+		{
+			$current = $this_uint16Array_10.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt32ArrayParserRuleCall_6());
+		}
+		this_int32Array_11=ruleint32Array
+		{
+			$current = $this_int32Array_11.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint32ArrayParserRuleCall_7());
+		}
+		this_uint32Array_12=ruleuint32Array
+		{
+			$current = $this_uint32Array_12.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt64ArrayParserRuleCall_8());
+		}
+		this_int64Array_13=ruleint64Array
+		{
+			$current = $this_int64Array_13.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint64ArrayParserRuleCall_9());
+		}
+		this_uint64Array_14=ruleuint64Array
+		{
+			$current = $this_uint64Array_14.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getFloat32ArrayParserRuleCall_10());
+		}
+		this_float32Array_15=rulefloat32Array
+		{
+			$current = $this_float32Array_15.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getFloat64ArrayParserRuleCall_11());
+		}
+		this_float64Array_16=rulefloat64Array
+		{
+			$current = $this_float64Array_16.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getString0ArrayParserRuleCall_12());
+		}
+		this_string0Array_17=rulestring0Array
+		{
+			$current = $this_string0Array_17.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getByteArrayParserRuleCall_13());
+		}
+		this_byteArray_18=rulebyteArray
+		{
+			$current = $this_byteArray_18.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getArraySpecRefParserRuleCall_14());
+		}
+		this_ArraySpecRef_19=ruleArraySpecRef
+		{
+			$current = $this_ArraySpecRef_19.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getCharArrayParserRuleCall_15());
+		}
+		this_charArray_20=rulecharArray
+		{
+			$current = $this_charArray_20.current;
+			afterParserOrEnumRuleCall();
+		}
+	)
+;
+
+// Entry rule entryRuleArraySize
+entryRuleArraySize returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getArraySizeRule()); }
+	iv_ruleArraySize=ruleArraySize
+	{ $current=$iv_ruleArraySize.current.getText(); }
+	EOF;
+
+// Rule ArraySize
+ruleArraySize returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	this_DECINT_0=RULE_DECINT
+	{
+		$current.merge(this_DECINT_0);
+	}
+	{
+		newLeafNode(this_DECINT_0, grammarAccess.getArraySizeAccess().getDECINTTerminalRuleCall());
+	}
+;
+
+// Entry rule entryRuleScalarType
+entryRuleScalarType returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getScalarTypeRule()); }
+	iv_ruleScalarType=ruleScalarType
+	{ $current=$iv_ruleScalarType.current; }
+	EOF;
+
+// Rule ScalarType
+ruleScalarType returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getBoolParserRuleCall_0());
 		}
 		this_bool_0=rulebool
 		{
@@ -5527,7 +5765,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt8ParserRuleCall_1());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getInt8ParserRuleCall_1());
 		}
 		this_int8_1=ruleint8
 		{
@@ -5536,7 +5774,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint8ParserRuleCall_2());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getUint8ParserRuleCall_2());
 		}
 		this_uint8_2=ruleuint8
 		{
@@ -5545,7 +5783,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt16ParserRuleCall_3());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getInt16ParserRuleCall_3());
 		}
 		this_int16_3=ruleint16
 		{
@@ -5554,7 +5792,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint16ParserRuleCall_4());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getUint16ParserRuleCall_4());
 		}
 		this_uint16_4=ruleuint16
 		{
@@ -5563,7 +5801,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt32ParserRuleCall_5());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getInt32ParserRuleCall_5());
 		}
 		this_int32_5=ruleint32
 		{
@@ -5572,7 +5810,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint32ParserRuleCall_6());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getUint32ParserRuleCall_6());
 		}
 		this_uint32_6=ruleuint32
 		{
@@ -5581,7 +5819,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt64ParserRuleCall_7());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getInt64ParserRuleCall_7());
 		}
 		this_int64_7=ruleint64
 		{
@@ -5590,7 +5828,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint64ParserRuleCall_8());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getUint64ParserRuleCall_8());
 		}
 		this_uint64_8=ruleuint64
 		{
@@ -5599,7 +5837,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getFloat32ParserRuleCall_9());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getFloat32ParserRuleCall_9());
 		}
 		this_float32_9=rulefloat32
 		{
@@ -5608,7 +5846,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getFloat64ParserRuleCall_10());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getFloat64ParserRuleCall_10());
 		}
 		this_float64_10=rulefloat64
 		{
@@ -5617,7 +5855,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getString0ParserRuleCall_11());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getString0ParserRuleCall_11());
 		}
 		this_string0_11=rulestring0
 		{
@@ -5626,7 +5864,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getByteParserRuleCall_12());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getByteParserRuleCall_12());
 		}
 		this_byte_12=rulebyte
 		{
@@ -5635,7 +5873,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getTimeParserRuleCall_13());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getTimeParserRuleCall_13());
 		}
 		this_time_13=ruletime
 		{
@@ -5644,7 +5882,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getDurationParserRuleCall_14());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getDurationParserRuleCall_14());
 		}
 		this_duration_14=ruleduration
 		{
@@ -5653,7 +5891,7 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getHeaderParserRuleCall_15());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getHeaderParserRuleCall_15());
 		}
 		this_Header_15=ruleHeader
 		{
@@ -5662,155 +5900,20 @@ ruleAbstractType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getBoolArrayParserRuleCall_16());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getSpecBaseRefParserRuleCall_16());
 		}
-		this_boolArray_16=ruleboolArray
+		this_SpecBaseRef_16=ruleSpecBaseRef
 		{
-			$current = $this_boolArray_16.current;
+			$current = $this_SpecBaseRef_16.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt8ArrayParserRuleCall_17());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getCharParserRuleCall_17());
 		}
-		this_int8Array_17=ruleint8Array
+		this_char_17=rulechar
 		{
-			$current = $this_int8Array_17.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint8ArrayParserRuleCall_18());
-		}
-		this_uint8Array_18=ruleuint8Array
-		{
-			$current = $this_uint8Array_18.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt16ArrayParserRuleCall_19());
-		}
-		this_int16Array_19=ruleint16Array
-		{
-			$current = $this_int16Array_19.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint16ArrayParserRuleCall_20());
-		}
-		this_uint16Array_20=ruleuint16Array
-		{
-			$current = $this_uint16Array_20.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt32ArrayParserRuleCall_21());
-		}
-		this_int32Array_21=ruleint32Array
-		{
-			$current = $this_int32Array_21.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint32ArrayParserRuleCall_22());
-		}
-		this_uint32Array_22=ruleuint32Array
-		{
-			$current = $this_uint32Array_22.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt64ArrayParserRuleCall_23());
-		}
-		this_int64Array_23=ruleint64Array
-		{
-			$current = $this_int64Array_23.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint64ArrayParserRuleCall_24());
-		}
-		this_uint64Array_24=ruleuint64Array
-		{
-			$current = $this_uint64Array_24.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getFloat32ArrayParserRuleCall_25());
-		}
-		this_float32Array_25=rulefloat32Array
-		{
-			$current = $this_float32Array_25.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getFloat64ArrayParserRuleCall_26());
-		}
-		this_float64Array_26=rulefloat64Array
-		{
-			$current = $this_float64Array_26.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getString0ArrayParserRuleCall_27());
-		}
-		this_string0Array_27=rulestring0Array
-		{
-			$current = $this_string0Array_27.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getByteArrayParserRuleCall_28());
-		}
-		this_byteArray_28=rulebyteArray
-		{
-			$current = $this_byteArray_28.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getSpecBaseRefParserRuleCall_29());
-		}
-		this_SpecBaseRef_29=ruleSpecBaseRef
-		{
-			$current = $this_SpecBaseRef_29.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getArraySpecRefParserRuleCall_30());
-		}
-		this_ArraySpecRef_30=ruleArraySpecRef
-		{
-			$current = $this_ArraySpecRef_30.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getCharParserRuleCall_31());
-		}
-		this_char_31=rulechar
-		{
-			$current = $this_char_31.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getCharArrayParserRuleCall_32());
-		}
-		this_charArray_32=rulecharArray
-		{
-			$current = $this_charArray_32.current;
+			$current = $this_char_17.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -6319,9 +6422,17 @@ ruleboolArray returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Bool_1
+		otherlv_1=Bool
 		{
 			newLeafNode(otherlv_1, grammarAccess.getBoolArrayAccess().getBoolKeyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getBoolArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getBoolArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6349,9 +6460,17 @@ ruleint8Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Int8_1
+		otherlv_1=Int8
 		{
 			newLeafNode(otherlv_1, grammarAccess.getInt8ArrayAccess().getInt8Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getInt8ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getInt8ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6379,9 +6498,17 @@ ruleuint8Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Uint8_1
+		otherlv_1=Uint8
 		{
 			newLeafNode(otherlv_1, grammarAccess.getUint8ArrayAccess().getUint8Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getUint8ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getUint8ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6409,9 +6536,17 @@ ruleint16Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Int16_1
+		otherlv_1=Int16
 		{
 			newLeafNode(otherlv_1, grammarAccess.getInt16ArrayAccess().getInt16Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getInt16ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getInt16ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6439,9 +6574,17 @@ ruleuint16Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Uint16_1
+		otherlv_1=Uint16
 		{
 			newLeafNode(otherlv_1, grammarAccess.getUint16ArrayAccess().getUint16Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getUint16ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getUint16ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6469,9 +6612,17 @@ ruleint32Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Int32_1
+		otherlv_1=Int32
 		{
 			newLeafNode(otherlv_1, grammarAccess.getInt32ArrayAccess().getInt32Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getInt32ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getInt32ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6499,9 +6650,17 @@ ruleuint32Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Uint32_1
+		otherlv_1=Uint32
 		{
 			newLeafNode(otherlv_1, grammarAccess.getUint32ArrayAccess().getUint32Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getUint32ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getUint32ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6529,9 +6688,17 @@ ruleint64Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Int64_1
+		otherlv_1=Int64
 		{
 			newLeafNode(otherlv_1, grammarAccess.getInt64ArrayAccess().getInt64Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getInt64ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getInt64ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6559,9 +6726,17 @@ ruleuint64Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Uint64_1
+		otherlv_1=Uint64
 		{
 			newLeafNode(otherlv_1, grammarAccess.getUint64ArrayAccess().getUint64Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getUint64ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getUint64ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6589,9 +6764,17 @@ rulefloat32Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Float32_1
+		otherlv_1=Float32
 		{
 			newLeafNode(otherlv_1, grammarAccess.getFloat32ArrayAccess().getFloat32Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getFloat32ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getFloat32ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6619,9 +6802,17 @@ rulefloat64Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Float64_1
+		otherlv_1=Float64
 		{
 			newLeafNode(otherlv_1, grammarAccess.getFloat64ArrayAccess().getFloat64Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getFloat64ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getFloat64ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6649,9 +6840,17 @@ rulestring0Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=String_2
+		otherlv_1=String_1
 		{
 			newLeafNode(otherlv_1, grammarAccess.getString0ArrayAccess().getStringKeyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getString0ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getString0ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6679,9 +6878,17 @@ rulebyteArray returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Byte_1
+		otherlv_1=Byte
 		{
 			newLeafNode(otherlv_1, grammarAccess.getByteArrayAccess().getByteKeyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getByteArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getByteArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6709,9 +6916,17 @@ rulecharArray returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Char_1
+		otherlv_1=Char
 		{
 			newLeafNode(otherlv_1, grammarAccess.getCharArrayAccess().getCharKeyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getCharArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getCharArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6811,9 +7026,13 @@ ruleArraySpecRef returns [EObject current=null]
 				}
 			)
 		)
-		otherlv_1=LeftSquareBracketRightSquareBracket
+		otherlv_1=LeftSquareBracket
 		{
-			newLeafNode(otherlv_1, grammarAccess.getArraySpecRefAccess().getLeftSquareBracketRightSquareBracketKeyword_1());
+			newLeafNode(otherlv_1, grammarAccess.getArraySpecRefAccess().getLeftSquareBracketKeyword_1());
+		}
+		otherlv_2=RightSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getArraySpecRefAccess().getRightSquareBracketKeyword_2());
 		}
 	)
 ;
@@ -7354,71 +7573,62 @@ ruleExtensionListValue returns [EObject current=null]
 					$current);
 			}
 		)
+		otherlv_1=LeftSquareBracket
+		{
+			newLeafNode(otherlv_1, grammarAccess.getExtensionListValueAccess().getLeftSquareBracketKeyword_1());
+		}
 		(
-			otherlv_1=LeftSquareBracketRightSquareBracket
-			{
-				newLeafNode(otherlv_1, grammarAccess.getExtensionListValueAccess().getLeftSquareBracketRightSquareBracketKeyword_1_0());
-			}
-			    |
 			(
-				otherlv_2=LeftSquareBracket
-				{
-					newLeafNode(otherlv_2, grammarAccess.getExtensionListValueAccess().getLeftSquareBracketKeyword_1_1_0());
-				}
+				(
+					{
+						newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_2_0_0());
+					}
+					lv_items_2_0=ruleExtensionValue
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
+						}
+						add(
+							$current,
+							"items",
+							lv_items_2_0,
+							"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+			(
+				(
+					otherlv_3=Comma
+					{
+						newLeafNode(otherlv_3, grammarAccess.getExtensionListValueAccess().getCommaKeyword_2_1_0());
+					}
+				)?
 				(
 					(
-						(
-							{
-								newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_1_1_1_0_0());
+						{
+							newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_2_1_1_0());
+						}
+						lv_items_4_0=ruleExtensionValue
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
 							}
-							lv_items_3_0=ruleExtensionValue
-							{
-								if ($current==null) {
-									$current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
-								}
-								add(
-									$current,
-									"items",
-									lv_items_3_0,
-									"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
-								afterParserOrEnumRuleCall();
-							}
-						)
+							add(
+								$current,
+								"items",
+								lv_items_4_0,
+								"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
+							afterParserOrEnumRuleCall();
+						}
 					)
-					(
-						(
-							otherlv_4=Comma
-							{
-								newLeafNode(otherlv_4, grammarAccess.getExtensionListValueAccess().getCommaKeyword_1_1_1_1_0());
-							}
-						)?
-						(
-							(
-								{
-									newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_1_1_1_1_1_0());
-								}
-								lv_items_5_0=ruleExtensionValue
-								{
-									if ($current==null) {
-										$current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
-									}
-									add(
-										$current,
-										"items",
-										lv_items_5_0,
-										"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
-									afterParserOrEnumRuleCall();
-								}
-							)
-						)
-					)*
-				)?
-				otherlv_6=RightSquareBracket
-				{
-					newLeafNode(otherlv_6, grammarAccess.getExtensionListValueAccess().getRightSquareBracketKeyword_1_1_2());
-				}
-			)
-		)
+				)
+			)*
+		)?
+		otherlv_5=RightSquareBracket
+		{
+			newLeafNode(otherlv_5, grammarAccess.getExtensionListValueAccess().getRightSquareBracketKeyword_3());
+		}
 	)
 ;
 

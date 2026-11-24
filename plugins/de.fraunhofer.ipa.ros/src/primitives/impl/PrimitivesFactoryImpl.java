@@ -15,6 +15,7 @@ import primitives.Header;
 import primitives.MessagePart;
 import primitives.PrimitivesFactory;
 import primitives.PrimitivesPackage;
+import primitives.SizedArray;
 import primitives.bool;
 import primitives.boolArray;
 import primitives.char0;
@@ -120,6 +121,7 @@ public class PrimitivesFactoryImpl extends EFactoryImpl implements PrimitivesFac
 			case PrimitivesPackage.BYTE_ARRAY: return createByteArray();
 			case PrimitivesPackage.CHAR0: return createchar0();
 			case PrimitivesPackage.CHAR_ARRAY: return createcharArray();
+			case PrimitivesPackage.SIZED_ARRAY: return createSizedArray();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -475,6 +477,17 @@ public class PrimitivesFactoryImpl extends EFactoryImpl implements PrimitivesFac
 	public charArray createcharArray() {
 		charArrayImpl charArray = new charArrayImpl();
 		return charArray;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public SizedArray createSizedArray() {
+		SizedArrayImpl sizedArray = new SizedArrayImpl();
+		return sizedArray;
 	}
 
 	/**
