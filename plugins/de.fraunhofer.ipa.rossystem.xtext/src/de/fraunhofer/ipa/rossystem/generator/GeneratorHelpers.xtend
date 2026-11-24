@@ -65,6 +65,25 @@ class GeneratorHelpers {
         PackageSet=false
     }
 
+    /**
+     * File name (without directory) of the ROS 2 parameter file of a node. A node in a namespace gets
+     * {@code <namespace>_<name>.yaml} so that same-named nodes in different namespaces do not collide;
+     * the writer and the launch file both use this, so they always agree.
+     */
+    def String parameterFileName(RosNode component) {
+        val ns = removeLeadingSlash(component.namespace)
+        return (if (ns.nullOrEmpty) "" else ns.replace("/", "_") + "_") + component.name + ".yaml"
+    }
+
+    /**
+     * Top key of the node in its ROS 2 parameter file: the fully qualified node name. A bare name only
+     * matches a node in the root namespace.
+     */
+    def String parameterFileNodeKey(RosNode component) {
+        val ns = removeLeadingSlash(component.namespace)
+        return if (ns.nullOrEmpty) component.name else "/" + ns + "/" + component.name
+    }
+
     def boolean generate_yaml(RosNode component){
         var yaml_gen=false
         for(param:component.rosparameters){

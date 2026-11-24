@@ -150,7 +150,7 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                     rosNodesList.add(rnode)
                     coreOwnedPaths.add(pkgName + "/config/" + rnode.getName() + ".yaml")
                     if (!rnode.namespace.nullOrEmpty) {
-                        coreOwnedPaths.add(pkgName + "/config/" + rnode.namespace + "_" + rnode.getName() + ".yaml")
+                        coreOwnedPaths.add(pkgName + "/config/" + parameterFileName(rnode))
                     }
                     if (rnode.from !== null && !rnode.from.eIsProxy) {
                         rosNodeTypes.put(rnode, rnode.from)
@@ -277,15 +277,9 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                         val rnode = component as RosNode
                         if (!rnode.rosparameters.nullOrEmpty || (hasAutoSlotParameters(rnode) && generate_yaml(rnode))) {
                             yaml_gen = true
-                            if (rnode.namespace !== null) {
-                                emitCoreFile(fsa, outcome,
-                                    pkgName + "/config/" + rnode.namespace + "_" + rnode.getName() + ".yaml",
-                                    compile_toROS2yaml(rnode).toString().replace("\t", "  "))
-                            } else {
-                                emitCoreFile(fsa, outcome,
-                                    pkgName + "/config/" + rnode.getName() + ".yaml",
-                                    compile_toROS2yaml(rnode).toString().replace("\t", "  "))
-                            }
+                            emitCoreFile(fsa, outcome,
+                                pkgName + "/config/" + parameterFileName(rnode),
+                                compile_toROS2yaml(rnode).toString().replace("\t", "  "))
                         }
                     }
                 }
