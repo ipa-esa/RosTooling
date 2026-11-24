@@ -83,10 +83,6 @@ Automatic : 'automatic';
 
 Deadline : 'deadline:';
 
-Float32_2 : 'float32[]';
-
-Float64_2 : 'float64[]';
-
 Keep_last : 'keep_last';
 
 Lifespan : 'lifespan:';
@@ -103,10 +99,6 @@ Duration : 'duration';
 
 Feedback : 'feedback';
 
-Float32_1 : 'float32[';
-
-Float64_1 : 'float64[';
-
 History : 'history:';
 
 Infinite : 'infinite';
@@ -120,14 +112,6 @@ Profile : 'profile:';
 Reliable : 'reliable';
 
 Response : 'response';
-
-String_3 : 'string[]';
-
-Uint16_2 : 'uint16[]';
-
-Uint32_2 : 'uint32[]';
-
-Uint64_2 : 'uint64[]';
 
 Volatile : 'volatile';
 
@@ -143,12 +127,6 @@ Format : 'format:';
 
 Header_1 : 'header:';
 
-Int16_2 : 'int16[]';
-
-Int32_2 : 'int32[]';
-
-Int64_2 : 'int64[]';
-
 Library : 'library';
 
 Loader : 'loader:';
@@ -160,16 +138,6 @@ Param : 'param->';
 Request : 'request';
 
 Service : 'service';
-
-String_2 : 'string[';
-
-Uint16_1 : 'uint16[';
-
-Uint32_1 : 'uint32[';
-
-Uint64_1 : 'uint64[';
-
-Uint8_2 : 'uint8[]';
 
 Active : 'Active';
 
@@ -185,23 +153,9 @@ Struct : 'Struct';
 
 Action : 'action';
 
-Bool_2 : 'bool[]';
-
-Byte_2 : 'byte[]';
-
-Char_2 : 'char[]';
-
 Class_1 : 'class:';
 
 Depth : 'depth:';
-
-Int16_1 : 'int16[';
-
-Int32_1 : 'int32[';
-
-Int64_1 : 'int64[';
-
-Int8_2 : 'int8[]';
 
 Manual : 'manual';
 
@@ -215,19 +169,11 @@ Uint32 : 'uint32';
 
 Uint64 : 'uint64';
 
-Uint8_1 : 'uint8[';
-
 Value_1 : 'value:';
 
 Array : 'Array';
 
 Base : 'base:';
-
-Bool_1 : 'bool[';
-
-Byte_1 : 'byte[';
-
-Char_1 : 'char[';
 
 Class : 'class';
 
@@ -236,8 +182,6 @@ Int16 : 'int16';
 Int32 : 'int32';
 
 Int64 : 'int64';
-
-Int8_1 : 'int8[';
 
 Msgs : 'msgs:';
 
@@ -292,8 +236,6 @@ Any : 'Any';
 Ns : 'ns:';
 
 LessThanSignEqualsSign : '<=';
-
-LeftSquareBracketRightSquareBracket : '[]';
 
 Comma : ',';
 

@@ -33,9 +33,10 @@ import ros.TopicSpec;
 import ros.TopicSpecMsgRef;
 
 /**
- * "T[N]" and "T[<=N]" in a message field type, for every kind of element type. The lexer reads
- * "int32[]" and "[]" as keywords, and every digit as DIGIT or DECINT before INT, so these tests
- * pin down that sizes and the element types still parse and that the unbounded forms are untouched.
+ * "T[N]" and "T[<=N]" in a message field type, for every kind of element type. A bracket is always
+ * the two tokens "[" and "]" (no keyword includes it), so the sized forms, the unbounded "T[]" and
+ * the spellings with spaces all lex the same way; these tests pin that down for sizes, element
+ * types and the unbounded forms.
  */
 public class SizedArrayTest {
 
@@ -154,10 +155,72 @@ public class SizedArrayTest {
                   msgs:
                     Spaced
                       message
-                        float32 [ 4 ] a
-                        float32 [ <= 4 ] b
+                        float32 [ 4 ] fa
+                        float32 [ <= 4 ] fb
                 """);
         assertTrue(res.getErrors().toString(), res.getErrors().isEmpty());
+    }
+
+    @Test
+    public void bracketsMayBeSeparatedFromTheTypeWhateverTheType() throws Exception {
+        Resource res = load("""
+                demo_msgs:
+                  msgs:
+                    Base
+                      message
+                        int32 x
+                    Spaced
+                      message
+                        int32 [] fa
+                        int32[ ] fb
+                        'demo_msgs/msg/Base' [] fc
+                        'demo_msgs/msg/Base'[ ] fd
+                        string [3] fe
+                        char[ <= 3 ] ff
+                """);
+        assertTrue(res.getErrors().toString(), res.getErrors().isEmpty());
+        PackageSet set = (PackageSet) res.getContents().get(0);
+        List<MessagePart> parts = new ArrayList<>(((TopicSpec) set.getPackage().get(0).getSpec().get(1))
+                .getMessage().getMessagePart());
+        assertTrue(parts.get(0).getType() instanceof int32Array);
+        assertTrue(parts.get(1).getType() instanceof int32Array);
+        assertTrue(parts.get(2).getType() instanceof ArrayTopicSpecMsgRef);
+        assertTrue(parts.get(3).getType() instanceof ArrayTopicSpecMsgRef);
+        assertEquals(3, sized(parts.get(4)).getSize());
+        assertTrue(sized(parts.get(5)).isBounded());
+    }
+
+    @Test
+    public void unboundedArraysOfEveryPrimitiveKeepTheirClass() throws Exception {
+        Resource res = load("""
+                demo_msgs:
+                  msgs:
+                    All
+                      message
+                        bool[] fa
+                        int8[] fb
+                        uint8[] fc
+                        int16[] fd
+                        uint16[] fe
+                        int32[] ff
+                        uint32[] fg
+                        int64[] fh
+                        uint64[] fi
+                        float32[] fj
+                        float64[] fk
+                        string[] fl
+                        byte[] fm
+                        char[] fn
+                """);
+        assertTrue(res.getErrors().toString(), res.getErrors().isEmpty());
+        PackageSet set = (PackageSet) res.getContents().get(0);
+        List<String> classes = new ArrayList<>();
+        for (MessagePart part : ((TopicSpec) set.getPackage().get(0).getSpec().get(0)).getMessage().getMessagePart()) {
+            classes.add(part.getType().eClass().getName());
+        }
+        assertEquals(List.of("boolArray", "int8Array", "uint8Array", "int16Array", "uint16Array", "int32Array",
+                "uint32Array", "int64Array", "uint64Array", "float32Array", "float64Array", "stringArray",
+                "ByteArray", "charArray"), classes);
     }
 
     @Test
@@ -167,7 +230,7 @@ public class SizedArrayTest {
                   msgs:
                     Nested
                       message
-                        int32[3][4] m
+                        int32[3][4] fm
                 """);
         assertFalse("nested arrays are not valid in ROS interfaces", res.getErrors().isEmpty());
     }
@@ -179,14 +242,14 @@ public class SizedArrayTest {
                   msgs:
                     Bad
                       message
-                        int32[x] m
+                        int32[x] fm
                 """).getErrors().isEmpty());
         assertFalse(load("""
                 demo_msgs:
                   msgs:
                     Bad
                       message
-                        int32[<=] m
+                        int32[<=] fm
                 """).getErrors().isEmpty());
     }
 

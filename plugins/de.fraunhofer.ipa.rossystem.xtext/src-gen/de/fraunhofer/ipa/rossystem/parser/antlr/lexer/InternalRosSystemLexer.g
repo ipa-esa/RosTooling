@@ -33,10 +33,6 @@ Processes : 'processes:';
 
 GraphName : 'GraphName';
 
-Float32_2 : 'float32[]';
-
-Float64_2 : 'float64[]';
-
 FromFile : 'fromFile:';
 
 Default : 'default:';
@@ -45,19 +41,7 @@ Duration : 'duration';
 
 Feedback : 'feedback';
 
-Float32_1 : 'float32[';
-
-Float64_1 : 'float64[';
-
-String_3 : 'string[]';
-
 Threads : 'threads:';
-
-Uint16_2 : 'uint16[]';
-
-Uint32_2 : 'uint32[]';
-
-Uint64_2 : 'uint64[]';
 
 Boolean : 'Boolean';
 
@@ -67,27 +51,11 @@ Float32 : 'float32';
 
 Float64 : 'float64';
 
-Int16_2 : 'int16[]';
-
-Int32_2 : 'int32[]';
-
-Int64_2 : 'int64[]';
-
 Message : 'message';
 
 Param : 'param->';
 
 Service : 'service';
-
-String_2 : 'string[';
-
-Uint16_1 : 'uint16[';
-
-Uint32_1 : 'uint32[';
-
-Uint64_1 : 'uint64[';
-
-Uint8_2 : 'uint8[]';
 
 Base64 : 'Base64';
 
@@ -100,20 +68,6 @@ String : 'String';
 Struct : 'Struct';
 
 Action : 'action';
-
-Bool_2 : 'bool[]';
-
-Byte_2 : 'byte[]';
-
-Char_2 : 'char[]';
-
-Int16_1 : 'int16[';
-
-Int32_1 : 'int32[';
-
-Int64_1 : 'int64[';
-
-Int8_2 : 'int8[]';
 
 Nodes : 'nodes:';
 
@@ -129,17 +83,9 @@ Uint32 : 'uint32';
 
 Uint64 : 'uint64';
 
-Uint8_1 : 'uint8[';
-
 Value_1 : 'value:';
 
 Array : 'Array';
-
-Bool_1 : 'bool[';
-
-Byte_1 : 'byte[';
-
-Char_1 : 'char[';
 
 From : 'from:';
 
@@ -148,8 +94,6 @@ Int16 : 'int16';
 Int32 : 'int32';
 
 Int64 : 'int64';
-
-Int8_1 : 'int8[';
 
 Pub : 'pub->';
 
@@ -196,8 +140,6 @@ Any : 'Any';
 Ns : 'ns:';
 
 LessThanSignEqualsSign : '<=';
-
-LeftSquareBracketRightSquareBracket : '[]';
 
 Comma : ',';
 

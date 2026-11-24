@@ -5204,56 +5204,47 @@ ruleAbstractType returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		{
-			newCompositeNode(grammarAccess.getAbstractTypeAccess().getSizedPrimitiveArrayParserRuleCall_0());
-		}
-		this_SizedPrimitiveArray_0=ruleSizedPrimitiveArray
-		{
-			$current = $this_SizedPrimitiveArray_0.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
 		(
 			{
-				newCompositeNode(grammarAccess.getAbstractTypeAccess().getElementTypeParserRuleCall_1_0());
+				newCompositeNode(grammarAccess.getAbstractTypeAccess().getScalarTypeParserRuleCall_0_0());
 			}
-			this_ElementType_1=ruleElementType
+			this_ScalarType_0=ruleScalarType
 			{
-				$current = $this_ElementType_1.current;
+				$current = $this_ScalarType_0.current;
 				afterParserOrEnumRuleCall();
 			}
 			(
 				(
 					{
 						$current = forceCreateModelElementAndSet(
-							grammarAccess.getAbstractTypeAccess().getSizedArrayElementAction_1_1_0(),
+							grammarAccess.getAbstractTypeAccess().getSizedArrayElementAction_0_1_0(),
 							$current);
 					}
 				)
-				otherlv_3=LeftSquareBracket
+				otherlv_2=LeftSquareBracket
 				{
-					newLeafNode(otherlv_3, grammarAccess.getAbstractTypeAccess().getLeftSquareBracketKeyword_1_1_1());
+					newLeafNode(otherlv_2, grammarAccess.getAbstractTypeAccess().getLeftSquareBracketKeyword_0_1_1());
 				}
 				(
 					(
-						lv_bounded_4_0=LessThanSignEqualsSign
+						lv_bounded_3_0=LessThanSignEqualsSign
 						{
-							newLeafNode(lv_bounded_4_0, grammarAccess.getAbstractTypeAccess().getBoundedLessThanSignEqualsSignKeyword_1_1_2_0());
+							newLeafNode(lv_bounded_3_0, grammarAccess.getAbstractTypeAccess().getBoundedLessThanSignEqualsSignKeyword_0_1_2_0());
 						}
 						{
 							if ($current==null) {
 								$current = createModelElement(grammarAccess.getAbstractTypeRule());
 							}
-							setWithLastConsumed($current, "bounded", lv_bounded_4_0 != null, "<=");
+							setWithLastConsumed($current, "bounded", lv_bounded_3_0 != null, "<=");
 						}
 					)
 				)?
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getAbstractTypeAccess().getSizeArraySizeParserRuleCall_1_1_3_0());
+							newCompositeNode(grammarAccess.getAbstractTypeAccess().getSizeArraySizeParserRuleCall_0_1_3_0());
 						}
-						lv_size_5_0=ruleArraySize
+						lv_size_4_0=ruleArraySize
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getAbstractTypeRule());
@@ -5261,774 +5252,152 @@ ruleAbstractType returns [EObject current=null]
 							set(
 								$current,
 								"size",
-								lv_size_5_0,
+								lv_size_4_0,
 								"de.fraunhofer.ipa.ros.Basics.ArraySize");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
-				otherlv_6=RightSquareBracket
+				otherlv_5=RightSquareBracket
 				{
-					newLeafNode(otherlv_6, grammarAccess.getAbstractTypeAccess().getRightSquareBracketKeyword_1_1_4());
+					newLeafNode(otherlv_5, grammarAccess.getAbstractTypeAccess().getRightSquareBracketKeyword_0_1_4());
 				}
 			)?
 		)
-	)
-;
-
-// Entry rule entryRuleSizedPrimitiveArray
-entryRuleSizedPrimitiveArray returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedPrimitiveArrayRule()); }
-	iv_ruleSizedPrimitiveArray=ruleSizedPrimitiveArray
-	{ $current=$iv_ruleSizedPrimitiveArray.current; }
-	EOF;
-
-// Rule SizedPrimitiveArray
-ruleSizedPrimitiveArray returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedBoolParserRuleCall_0_0_0());
-					}
-					lv_element_0_0=ruleSizedBool
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_0_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedBool");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedInt8ParserRuleCall_0_1_0());
-					}
-					lv_element_1_0=ruleSizedInt8
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_1_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedInt8");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedUint8ParserRuleCall_0_2_0());
-					}
-					lv_element_2_0=ruleSizedUint8
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_2_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedUint8");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedInt16ParserRuleCall_0_3_0());
-					}
-					lv_element_3_0=ruleSizedInt16
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_3_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedInt16");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedUint16ParserRuleCall_0_4_0());
-					}
-					lv_element_4_0=ruleSizedUint16
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_4_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedUint16");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedInt32ParserRuleCall_0_5_0());
-					}
-					lv_element_5_0=ruleSizedInt32
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_5_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedInt32");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedUint32ParserRuleCall_0_6_0());
-					}
-					lv_element_6_0=ruleSizedUint32
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_6_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedUint32");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedInt64ParserRuleCall_0_7_0());
-					}
-					lv_element_7_0=ruleSizedInt64
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_7_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedInt64");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedUint64ParserRuleCall_0_8_0());
-					}
-					lv_element_8_0=ruleSizedUint64
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_8_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedUint64");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedFloat32ParserRuleCall_0_9_0());
-					}
-					lv_element_9_0=ruleSizedFloat32
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_9_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedFloat32");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedFloat64ParserRuleCall_0_10_0());
-					}
-					lv_element_10_0=ruleSizedFloat64
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_10_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedFloat64");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedStringParserRuleCall_0_11_0());
-					}
-					lv_element_11_0=ruleSizedString
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_11_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedString");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedByteParserRuleCall_0_12_0());
-					}
-					lv_element_12_0=ruleSizedByte
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_12_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedByte");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getElementSizedCharParserRuleCall_0_13_0());
-					}
-					lv_element_13_0=ruleSizedChar
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-						}
-						set(
-							$current,
-							"element",
-							lv_element_13_0,
-							"de.fraunhofer.ipa.ros.Basics.SizedChar");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)
-		(
-			(
-				lv_bounded_14_0=LessThanSignEqualsSign
-				{
-					newLeafNode(lv_bounded_14_0, grammarAccess.getSizedPrimitiveArrayAccess().getBoundedLessThanSignEqualsSignKeyword_1_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getSizedPrimitiveArrayRule());
-					}
-					setWithLastConsumed($current, "bounded", lv_bounded_14_0 != null, "<=");
-				}
-			)
-		)?
-		(
-			(
-				{
-					newCompositeNode(grammarAccess.getSizedPrimitiveArrayAccess().getSizeArraySizeParserRuleCall_2_0());
-				}
-				lv_size_15_0=ruleArraySize
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getSizedPrimitiveArrayRule());
-					}
-					set(
-						$current,
-						"size",
-						lv_size_15_0,
-						"de.fraunhofer.ipa.ros.Basics.ArraySize");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-		otherlv_16=RightSquareBracket
+		    |
 		{
-			newLeafNode(otherlv_16, grammarAccess.getSizedPrimitiveArrayAccess().getRightSquareBracketKeyword_3());
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getBoolArrayParserRuleCall_1());
 		}
-	)
-;
-
-// Entry rule entryRuleSizedBool
-entryRuleSizedBool returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedBoolRule()); }
-	iv_ruleSizedBool=ruleSizedBool
-	{ $current=$iv_ruleSizedBool.current; }
-	EOF;
-
-// Rule SizedBool
-ruleSizedBool returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedBoolAccess().getBoolAction_0(),
-					$current);
-			}
-		)
-		otherlv_1=Bool_1
+		this_boolArray_6=ruleboolArray
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedBoolAccess().getBoolKeyword_1());
+			$current = $this_boolArray_6.current;
+			afterParserOrEnumRuleCall();
 		}
-	)
-;
-
-// Entry rule entryRuleSizedInt8
-entryRuleSizedInt8 returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedInt8Rule()); }
-	iv_ruleSizedInt8=ruleSizedInt8
-	{ $current=$iv_ruleSizedInt8.current; }
-	EOF;
-
-// Rule SizedInt8
-ruleSizedInt8 returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedInt8Access().getInt8Action_0(),
-					$current);
-			}
-		)
-		otherlv_1=Int8_1
+		    |
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedInt8Access().getInt8Keyword_1());
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt8ArrayParserRuleCall_2());
 		}
-	)
-;
-
-// Entry rule entryRuleSizedUint8
-entryRuleSizedUint8 returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedUint8Rule()); }
-	iv_ruleSizedUint8=ruleSizedUint8
-	{ $current=$iv_ruleSizedUint8.current; }
-	EOF;
-
-// Rule SizedUint8
-ruleSizedUint8 returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedUint8Access().getUint8Action_0(),
-					$current);
-			}
-		)
-		otherlv_1=Uint8_1
+		this_int8Array_7=ruleint8Array
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedUint8Access().getUint8Keyword_1());
+			$current = $this_int8Array_7.current;
+			afterParserOrEnumRuleCall();
 		}
-	)
-;
-
-// Entry rule entryRuleSizedInt16
-entryRuleSizedInt16 returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedInt16Rule()); }
-	iv_ruleSizedInt16=ruleSizedInt16
-	{ $current=$iv_ruleSizedInt16.current; }
-	EOF;
-
-// Rule SizedInt16
-ruleSizedInt16 returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedInt16Access().getInt16Action_0(),
-					$current);
-			}
-		)
-		otherlv_1=Int16_1
+		    |
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedInt16Access().getInt16Keyword_1());
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint8ArrayParserRuleCall_3());
 		}
-	)
-;
-
-// Entry rule entryRuleSizedUint16
-entryRuleSizedUint16 returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedUint16Rule()); }
-	iv_ruleSizedUint16=ruleSizedUint16
-	{ $current=$iv_ruleSizedUint16.current; }
-	EOF;
-
-// Rule SizedUint16
-ruleSizedUint16 returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedUint16Access().getUint16Action_0(),
-					$current);
-			}
-		)
-		otherlv_1=Uint16_1
+		this_uint8Array_8=ruleuint8Array
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedUint16Access().getUint16Keyword_1());
+			$current = $this_uint8Array_8.current;
+			afterParserOrEnumRuleCall();
 		}
-	)
-;
-
-// Entry rule entryRuleSizedInt32
-entryRuleSizedInt32 returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedInt32Rule()); }
-	iv_ruleSizedInt32=ruleSizedInt32
-	{ $current=$iv_ruleSizedInt32.current; }
-	EOF;
-
-// Rule SizedInt32
-ruleSizedInt32 returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedInt32Access().getInt32Action_0(),
-					$current);
-			}
-		)
-		otherlv_1=Int32_1
+		    |
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedInt32Access().getInt32Keyword_1());
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt16ArrayParserRuleCall_4());
 		}
-	)
-;
-
-// Entry rule entryRuleSizedUint32
-entryRuleSizedUint32 returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedUint32Rule()); }
-	iv_ruleSizedUint32=ruleSizedUint32
-	{ $current=$iv_ruleSizedUint32.current; }
-	EOF;
-
-// Rule SizedUint32
-ruleSizedUint32 returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedUint32Access().getUint32Action_0(),
-					$current);
-			}
-		)
-		otherlv_1=Uint32_1
+		this_int16Array_9=ruleint16Array
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedUint32Access().getUint32Keyword_1());
+			$current = $this_int16Array_9.current;
+			afterParserOrEnumRuleCall();
 		}
-	)
-;
-
-// Entry rule entryRuleSizedInt64
-entryRuleSizedInt64 returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedInt64Rule()); }
-	iv_ruleSizedInt64=ruleSizedInt64
-	{ $current=$iv_ruleSizedInt64.current; }
-	EOF;
-
-// Rule SizedInt64
-ruleSizedInt64 returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedInt64Access().getInt64Action_0(),
-					$current);
-			}
-		)
-		otherlv_1=Int64_1
+		    |
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedInt64Access().getInt64Keyword_1());
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint16ArrayParserRuleCall_5());
 		}
-	)
-;
-
-// Entry rule entryRuleSizedUint64
-entryRuleSizedUint64 returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedUint64Rule()); }
-	iv_ruleSizedUint64=ruleSizedUint64
-	{ $current=$iv_ruleSizedUint64.current; }
-	EOF;
-
-// Rule SizedUint64
-ruleSizedUint64 returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedUint64Access().getUint64Action_0(),
-					$current);
-			}
-		)
-		otherlv_1=Uint64_1
+		this_uint16Array_10=ruleuint16Array
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedUint64Access().getUint64Keyword_1());
+			$current = $this_uint16Array_10.current;
+			afterParserOrEnumRuleCall();
 		}
-	)
-;
-
-// Entry rule entryRuleSizedFloat32
-entryRuleSizedFloat32 returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedFloat32Rule()); }
-	iv_ruleSizedFloat32=ruleSizedFloat32
-	{ $current=$iv_ruleSizedFloat32.current; }
-	EOF;
-
-// Rule SizedFloat32
-ruleSizedFloat32 returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedFloat32Access().getFloat32Action_0(),
-					$current);
-			}
-		)
-		otherlv_1=Float32_1
+		    |
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedFloat32Access().getFloat32Keyword_1());
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt32ArrayParserRuleCall_6());
 		}
-	)
-;
-
-// Entry rule entryRuleSizedFloat64
-entryRuleSizedFloat64 returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedFloat64Rule()); }
-	iv_ruleSizedFloat64=ruleSizedFloat64
-	{ $current=$iv_ruleSizedFloat64.current; }
-	EOF;
-
-// Rule SizedFloat64
-ruleSizedFloat64 returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedFloat64Access().getFloat64Action_0(),
-					$current);
-			}
-		)
-		otherlv_1=Float64_1
+		this_int32Array_11=ruleint32Array
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedFloat64Access().getFloat64Keyword_1());
+			$current = $this_int32Array_11.current;
+			afterParserOrEnumRuleCall();
 		}
-	)
-;
-
-// Entry rule entryRuleSizedString
-entryRuleSizedString returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedStringRule()); }
-	iv_ruleSizedString=ruleSizedString
-	{ $current=$iv_ruleSizedString.current; }
-	EOF;
-
-// Rule SizedString
-ruleSizedString returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedStringAccess().getStringAction_0(),
-					$current);
-			}
-		)
-		otherlv_1=String_2
+		    |
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedStringAccess().getStringKeyword_1());
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint32ArrayParserRuleCall_7());
 		}
-	)
-;
-
-// Entry rule entryRuleSizedByte
-entryRuleSizedByte returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedByteRule()); }
-	iv_ruleSizedByte=ruleSizedByte
-	{ $current=$iv_ruleSizedByte.current; }
-	EOF;
-
-// Rule SizedByte
-ruleSizedByte returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedByteAccess().getByteAction_0(),
-					$current);
-			}
-		)
-		otherlv_1=Byte_1
+		this_uint32Array_12=ruleuint32Array
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedByteAccess().getByteKeyword_1());
+			$current = $this_uint32Array_12.current;
+			afterParserOrEnumRuleCall();
 		}
-	)
-;
-
-// Entry rule entryRuleSizedChar
-entryRuleSizedChar returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getSizedCharRule()); }
-	iv_ruleSizedChar=ruleSizedChar
-	{ $current=$iv_ruleSizedChar.current; }
-	EOF;
-
-// Rule SizedChar
-ruleSizedChar returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				$current = forceCreateModelElement(
-					grammarAccess.getSizedCharAccess().getChar0Action_0(),
-					$current);
-			}
-		)
-		otherlv_1=Char_1
+		    |
 		{
-			newLeafNode(otherlv_1, grammarAccess.getSizedCharAccess().getCharKeyword_1());
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getInt64ArrayParserRuleCall_8());
+		}
+		this_int64Array_13=ruleint64Array
+		{
+			$current = $this_int64Array_13.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getUint64ArrayParserRuleCall_9());
+		}
+		this_uint64Array_14=ruleuint64Array
+		{
+			$current = $this_uint64Array_14.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getFloat32ArrayParserRuleCall_10());
+		}
+		this_float32Array_15=rulefloat32Array
+		{
+			$current = $this_float32Array_15.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getFloat64ArrayParserRuleCall_11());
+		}
+		this_float64Array_16=rulefloat64Array
+		{
+			$current = $this_float64Array_16.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getString0ArrayParserRuleCall_12());
+		}
+		this_string0Array_17=rulestring0Array
+		{
+			$current = $this_string0Array_17.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getByteArrayParserRuleCall_13());
+		}
+		this_byteArray_18=rulebyteArray
+		{
+			$current = $this_byteArray_18.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getArraySpecRefParserRuleCall_14());
+		}
+		this_ArraySpecRef_19=ruleArraySpecRef
+		{
+			$current = $this_ArraySpecRef_19.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAbstractTypeAccess().getCharArrayParserRuleCall_15());
+		}
+		this_charArray_20=rulecharArray
+		{
+			$current = $this_charArray_20.current;
+			afterParserOrEnumRuleCall();
 		}
 	)
 ;
@@ -6057,15 +5426,15 @@ ruleArraySize returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
 	}
 ;
 
-// Entry rule entryRuleElementType
-entryRuleElementType returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getElementTypeRule()); }
-	iv_ruleElementType=ruleElementType
-	{ $current=$iv_ruleElementType.current; }
+// Entry rule entryRuleScalarType
+entryRuleScalarType returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getScalarTypeRule()); }
+	iv_ruleScalarType=ruleScalarType
+	{ $current=$iv_ruleScalarType.current; }
 	EOF;
 
-// Rule ElementType
-ruleElementType returns [EObject current=null]
+// Rule ScalarType
+ruleScalarType returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -6074,7 +5443,7 @@ ruleElementType returns [EObject current=null]
 }:
 	(
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getBoolParserRuleCall_0());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getBoolParserRuleCall_0());
 		}
 		this_bool_0=rulebool
 		{
@@ -6083,7 +5452,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getInt8ParserRuleCall_1());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getInt8ParserRuleCall_1());
 		}
 		this_int8_1=ruleint8
 		{
@@ -6092,7 +5461,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getUint8ParserRuleCall_2());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getUint8ParserRuleCall_2());
 		}
 		this_uint8_2=ruleuint8
 		{
@@ -6101,7 +5470,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getInt16ParserRuleCall_3());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getInt16ParserRuleCall_3());
 		}
 		this_int16_3=ruleint16
 		{
@@ -6110,7 +5479,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getUint16ParserRuleCall_4());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getUint16ParserRuleCall_4());
 		}
 		this_uint16_4=ruleuint16
 		{
@@ -6119,7 +5488,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getInt32ParserRuleCall_5());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getInt32ParserRuleCall_5());
 		}
 		this_int32_5=ruleint32
 		{
@@ -6128,7 +5497,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getUint32ParserRuleCall_6());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getUint32ParserRuleCall_6());
 		}
 		this_uint32_6=ruleuint32
 		{
@@ -6137,7 +5506,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getInt64ParserRuleCall_7());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getInt64ParserRuleCall_7());
 		}
 		this_int64_7=ruleint64
 		{
@@ -6146,7 +5515,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getUint64ParserRuleCall_8());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getUint64ParserRuleCall_8());
 		}
 		this_uint64_8=ruleuint64
 		{
@@ -6155,7 +5524,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getFloat32ParserRuleCall_9());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getFloat32ParserRuleCall_9());
 		}
 		this_float32_9=rulefloat32
 		{
@@ -6164,7 +5533,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getFloat64ParserRuleCall_10());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getFloat64ParserRuleCall_10());
 		}
 		this_float64_10=rulefloat64
 		{
@@ -6173,7 +5542,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getString0ParserRuleCall_11());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getString0ParserRuleCall_11());
 		}
 		this_string0_11=rulestring0
 		{
@@ -6182,7 +5551,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getByteParserRuleCall_12());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getByteParserRuleCall_12());
 		}
 		this_byte_12=rulebyte
 		{
@@ -6191,7 +5560,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getTimeParserRuleCall_13());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getTimeParserRuleCall_13());
 		}
 		this_time_13=ruletime
 		{
@@ -6200,7 +5569,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getDurationParserRuleCall_14());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getDurationParserRuleCall_14());
 		}
 		this_duration_14=ruleduration
 		{
@@ -6209,7 +5578,7 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getHeaderParserRuleCall_15());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getHeaderParserRuleCall_15());
 		}
 		this_Header_15=ruleHeader
 		{
@@ -6218,155 +5587,20 @@ ruleElementType returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getBoolArrayParserRuleCall_16());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getSpecBaseRefParserRuleCall_16());
 		}
-		this_boolArray_16=ruleboolArray
+		this_SpecBaseRef_16=ruleSpecBaseRef
 		{
-			$current = $this_boolArray_16.current;
+			$current = $this_SpecBaseRef_16.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getInt8ArrayParserRuleCall_17());
+			newCompositeNode(grammarAccess.getScalarTypeAccess().getCharParserRuleCall_17());
 		}
-		this_int8Array_17=ruleint8Array
+		this_char_17=rulechar
 		{
-			$current = $this_int8Array_17.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getUint8ArrayParserRuleCall_18());
-		}
-		this_uint8Array_18=ruleuint8Array
-		{
-			$current = $this_uint8Array_18.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getInt16ArrayParserRuleCall_19());
-		}
-		this_int16Array_19=ruleint16Array
-		{
-			$current = $this_int16Array_19.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getUint16ArrayParserRuleCall_20());
-		}
-		this_uint16Array_20=ruleuint16Array
-		{
-			$current = $this_uint16Array_20.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getInt32ArrayParserRuleCall_21());
-		}
-		this_int32Array_21=ruleint32Array
-		{
-			$current = $this_int32Array_21.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getUint32ArrayParserRuleCall_22());
-		}
-		this_uint32Array_22=ruleuint32Array
-		{
-			$current = $this_uint32Array_22.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getInt64ArrayParserRuleCall_23());
-		}
-		this_int64Array_23=ruleint64Array
-		{
-			$current = $this_int64Array_23.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getUint64ArrayParserRuleCall_24());
-		}
-		this_uint64Array_24=ruleuint64Array
-		{
-			$current = $this_uint64Array_24.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getFloat32ArrayParserRuleCall_25());
-		}
-		this_float32Array_25=rulefloat32Array
-		{
-			$current = $this_float32Array_25.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getFloat64ArrayParserRuleCall_26());
-		}
-		this_float64Array_26=rulefloat64Array
-		{
-			$current = $this_float64Array_26.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getString0ArrayParserRuleCall_27());
-		}
-		this_string0Array_27=rulestring0Array
-		{
-			$current = $this_string0Array_27.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getByteArrayParserRuleCall_28());
-		}
-		this_byteArray_28=rulebyteArray
-		{
-			$current = $this_byteArray_28.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getSpecBaseRefParserRuleCall_29());
-		}
-		this_SpecBaseRef_29=ruleSpecBaseRef
-		{
-			$current = $this_SpecBaseRef_29.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getArraySpecRefParserRuleCall_30());
-		}
-		this_ArraySpecRef_30=ruleArraySpecRef
-		{
-			$current = $this_ArraySpecRef_30.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getCharParserRuleCall_31());
-		}
-		this_char_31=rulechar
-		{
-			$current = $this_char_31.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getElementTypeAccess().getCharArrayParserRuleCall_32());
-		}
-		this_charArray_32=rulecharArray
-		{
-			$current = $this_charArray_32.current;
+			$current = $this_char_17.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -6875,9 +6109,17 @@ ruleboolArray returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Bool_2
+		otherlv_1=Bool
 		{
 			newLeafNode(otherlv_1, grammarAccess.getBoolArrayAccess().getBoolKeyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getBoolArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getBoolArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6905,9 +6147,17 @@ ruleint8Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Int8_2
+		otherlv_1=Int8
 		{
 			newLeafNode(otherlv_1, grammarAccess.getInt8ArrayAccess().getInt8Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getInt8ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getInt8ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6935,9 +6185,17 @@ ruleuint8Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Uint8_2
+		otherlv_1=Uint8
 		{
 			newLeafNode(otherlv_1, grammarAccess.getUint8ArrayAccess().getUint8Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getUint8ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getUint8ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6965,9 +6223,17 @@ ruleint16Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Int16_2
+		otherlv_1=Int16
 		{
 			newLeafNode(otherlv_1, grammarAccess.getInt16ArrayAccess().getInt16Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getInt16ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getInt16ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -6995,9 +6261,17 @@ ruleuint16Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Uint16_2
+		otherlv_1=Uint16
 		{
 			newLeafNode(otherlv_1, grammarAccess.getUint16ArrayAccess().getUint16Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getUint16ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getUint16ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -7025,9 +6299,17 @@ ruleint32Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Int32_2
+		otherlv_1=Int32
 		{
 			newLeafNode(otherlv_1, grammarAccess.getInt32ArrayAccess().getInt32Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getInt32ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getInt32ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -7055,9 +6337,17 @@ ruleuint32Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Uint32_2
+		otherlv_1=Uint32
 		{
 			newLeafNode(otherlv_1, grammarAccess.getUint32ArrayAccess().getUint32Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getUint32ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getUint32ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -7085,9 +6375,17 @@ ruleint64Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Int64_2
+		otherlv_1=Int64
 		{
 			newLeafNode(otherlv_1, grammarAccess.getInt64ArrayAccess().getInt64Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getInt64ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getInt64ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -7115,9 +6413,17 @@ ruleuint64Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Uint64_2
+		otherlv_1=Uint64
 		{
 			newLeafNode(otherlv_1, grammarAccess.getUint64ArrayAccess().getUint64Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getUint64ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getUint64ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -7145,9 +6451,17 @@ rulefloat32Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Float32_2
+		otherlv_1=Float32
 		{
 			newLeafNode(otherlv_1, grammarAccess.getFloat32ArrayAccess().getFloat32Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getFloat32ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getFloat32ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -7175,9 +6489,17 @@ rulefloat64Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Float64_2
+		otherlv_1=Float64
 		{
 			newLeafNode(otherlv_1, grammarAccess.getFloat64ArrayAccess().getFloat64Keyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getFloat64ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getFloat64ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -7205,9 +6527,17 @@ rulestring0Array returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=String_3
+		otherlv_1=String_1
 		{
 			newLeafNode(otherlv_1, grammarAccess.getString0ArrayAccess().getStringKeyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getString0ArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getString0ArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -7235,9 +6565,17 @@ rulebyteArray returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Byte_2
+		otherlv_1=Byte
 		{
 			newLeafNode(otherlv_1, grammarAccess.getByteArrayAccess().getByteKeyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getByteArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getByteArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -7265,9 +6603,17 @@ rulecharArray returns [EObject current=null]
 					$current);
 			}
 		)
-		otherlv_1=Char_2
+		otherlv_1=Char
 		{
 			newLeafNode(otherlv_1, grammarAccess.getCharArrayAccess().getCharKeyword_1());
+		}
+		otherlv_2=LeftSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getCharArrayAccess().getLeftSquareBracketKeyword_2());
+		}
+		otherlv_3=RightSquareBracket
+		{
+			newLeafNode(otherlv_3, grammarAccess.getCharArrayAccess().getRightSquareBracketKeyword_3());
 		}
 	)
 ;
@@ -7367,9 +6713,13 @@ ruleArraySpecRef returns [EObject current=null]
 				}
 			)
 		)
-		otherlv_1=LeftSquareBracketRightSquareBracket
+		otherlv_1=LeftSquareBracket
 		{
-			newLeafNode(otherlv_1, grammarAccess.getArraySpecRefAccess().getLeftSquareBracketRightSquareBracketKeyword_1());
+			newLeafNode(otherlv_1, grammarAccess.getArraySpecRefAccess().getLeftSquareBracketKeyword_1());
+		}
+		otherlv_2=RightSquareBracket
+		{
+			newLeafNode(otherlv_2, grammarAccess.getArraySpecRefAccess().getRightSquareBracketKeyword_2());
 		}
 	)
 ;
@@ -7910,71 +7260,62 @@ ruleExtensionListValue returns [EObject current=null]
 					$current);
 			}
 		)
+		otherlv_1=LeftSquareBracket
+		{
+			newLeafNode(otherlv_1, grammarAccess.getExtensionListValueAccess().getLeftSquareBracketKeyword_1());
+		}
 		(
-			otherlv_1=LeftSquareBracketRightSquareBracket
-			{
-				newLeafNode(otherlv_1, grammarAccess.getExtensionListValueAccess().getLeftSquareBracketRightSquareBracketKeyword_1_0());
-			}
-			    |
 			(
-				otherlv_2=LeftSquareBracket
-				{
-					newLeafNode(otherlv_2, grammarAccess.getExtensionListValueAccess().getLeftSquareBracketKeyword_1_1_0());
-				}
+				(
+					{
+						newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_2_0_0());
+					}
+					lv_items_2_0=ruleExtensionValue
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
+						}
+						add(
+							$current,
+							"items",
+							lv_items_2_0,
+							"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+			(
+				(
+					otherlv_3=Comma
+					{
+						newLeafNode(otherlv_3, grammarAccess.getExtensionListValueAccess().getCommaKeyword_2_1_0());
+					}
+				)?
 				(
 					(
-						(
-							{
-								newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_1_1_1_0_0());
+						{
+							newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_2_1_1_0());
+						}
+						lv_items_4_0=ruleExtensionValue
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
 							}
-							lv_items_3_0=ruleExtensionValue
-							{
-								if ($current==null) {
-									$current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
-								}
-								add(
-									$current,
-									"items",
-									lv_items_3_0,
-									"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
-								afterParserOrEnumRuleCall();
-							}
-						)
+							add(
+								$current,
+								"items",
+								lv_items_4_0,
+								"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
+							afterParserOrEnumRuleCall();
+						}
 					)
-					(
-						(
-							otherlv_4=Comma
-							{
-								newLeafNode(otherlv_4, grammarAccess.getExtensionListValueAccess().getCommaKeyword_1_1_1_1_0());
-							}
-						)?
-						(
-							(
-								{
-									newCompositeNode(grammarAccess.getExtensionListValueAccess().getItemsExtensionValueParserRuleCall_1_1_1_1_1_0());
-								}
-								lv_items_5_0=ruleExtensionValue
-								{
-									if ($current==null) {
-										$current = createModelElementForParent(grammarAccess.getExtensionListValueRule());
-									}
-									add(
-										$current,
-										"items",
-										lv_items_5_0,
-										"de.fraunhofer.ipa.ros.Basics.ExtensionValue");
-									afterParserOrEnumRuleCall();
-								}
-							)
-						)
-					)*
-				)?
-				otherlv_6=RightSquareBracket
-				{
-					newLeafNode(otherlv_6, grammarAccess.getExtensionListValueAccess().getRightSquareBracketKeyword_1_1_2());
-				}
-			)
-		)
+				)
+			)*
+		)?
+		otherlv_5=RightSquareBracket
+		{
+			newLeafNode(otherlv_5, grammarAccess.getExtensionListValueAccess().getRightSquareBracketKeyword_3());
+		}
 	)
 ;
 

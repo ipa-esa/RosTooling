@@ -47,10 +47,6 @@ Parameter : 'parameter:';
 
 GraphName : 'GraphName';
 
-Float32_2 : 'float32[]';
-
-Float64_2 : 'float64[]';
-
 Multiple : 'multiple:';
 
 Actions : 'actions:';
@@ -61,21 +57,9 @@ Duration : 'duration';
 
 Feedback : 'feedback';
 
-Float32_1 : 'float32[';
-
-Float64_1 : 'float64[';
-
 Plugins : 'plugins:';
 
 Response : 'response';
-
-String_3 : 'string[]';
-
-Uint16_2 : 'uint16[]';
-
-Uint32_2 : 'uint32[]';
-
-Uint64_2 : 'uint64[]';
 
 Boolean : 'Boolean';
 
@@ -87,12 +71,6 @@ Float64 : 'float64';
 
 Format : 'format:';
 
-Int16_2 : 'int16[]';
-
-Int32_2 : 'int32[]';
-
-Int64_2 : 'int64[]';
-
 Library : 'library';
 
 Message : 'message';
@@ -102,16 +80,6 @@ Param : 'param->';
 Request : 'request';
 
 Service : 'service';
-
-String_2 : 'string[';
-
-Uint16_1 : 'uint16[';
-
-Uint32_1 : 'uint32[';
-
-Uint64_1 : 'uint64[';
-
-Uint8_2 : 'uint8[]';
 
 Base64 : 'Base64';
 
@@ -125,20 +93,6 @@ Struct : 'Struct';
 
 Action : 'action';
 
-Bool_2 : 'bool[]';
-
-Byte_2 : 'byte[]';
-
-Char_2 : 'char[]';
-
-Int16_1 : 'int16[';
-
-Int32_1 : 'int32[';
-
-Int64_1 : 'int64[';
-
-Int8_2 : 'int8[]';
-
 Result : 'result';
 
 String_1 : 'string';
@@ -149,19 +103,11 @@ Uint32 : 'uint32';
 
 Uint64 : 'uint64';
 
-Uint8_1 : 'uint8[';
-
 Value_1 : 'value:';
 
 Array : 'Array';
 
 Base : 'base:';
-
-Bool_1 : 'bool[';
-
-Byte_1 : 'byte[';
-
-Char_1 : 'char[';
 
 Class : 'class';
 
@@ -170,8 +116,6 @@ Int16 : 'int16';
 Int32 : 'int32';
 
 Int64 : 'int64';
-
-Int8_1 : 'int8[';
 
 Msgs : 'msgs:';
 
@@ -224,8 +168,6 @@ Any : 'Any';
 Ns : 'ns:';
 
 LessThanSignEqualsSign : '<=';
-
-LeftSquareBracketRightSquareBracket : '[]';
 
 Comma : ',';
 

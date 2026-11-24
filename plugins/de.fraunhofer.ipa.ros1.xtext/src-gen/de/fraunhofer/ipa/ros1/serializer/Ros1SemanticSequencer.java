@@ -113,7 +113,7 @@ public class Ros1SemanticSequencer extends RosSemanticSequencer {
 		if (epackage == PrimitivesPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
 			case PrimitivesPackage.BYTE:
-				sequence_SizedByte_byte(context, (primitives.Byte) semanticObject); 
+				sequence_byte(context, (primitives.Byte) semanticObject); 
 				return; 
 			case PrimitivesPackage.BYTE_ARRAY:
 				sequence_byteArray(context, (ByteArray) semanticObject); 
@@ -125,23 +125,16 @@ public class Ros1SemanticSequencer extends RosSemanticSequencer {
 				sequence_MessagePart(context, (MessagePart) semanticObject); 
 				return; 
 			case PrimitivesPackage.SIZED_ARRAY:
-				if (rule == grammarAccess.getAbstractTypeRule()) {
-					sequence_AbstractType_SizedPrimitiveArray(context, (SizedArray) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getSizedPrimitiveArrayRule()) {
-					sequence_SizedPrimitiveArray(context, (SizedArray) semanticObject); 
-					return; 
-				}
-				else break;
+				sequence_AbstractType(context, (SizedArray) semanticObject); 
+				return; 
 			case PrimitivesPackage.BOOL:
-				sequence_SizedBool_bool(context, (bool) semanticObject); 
+				sequence_bool(context, (bool) semanticObject); 
 				return; 
 			case PrimitivesPackage.BOOL_ARRAY:
 				sequence_boolArray(context, (boolArray) semanticObject); 
 				return; 
 			case PrimitivesPackage.CHAR0:
-				sequence_SizedChar_char(context, (char0) semanticObject); 
+				sequence_char(context, (char0) semanticObject); 
 				return; 
 			case PrimitivesPackage.CHAR_ARRAY:
 				sequence_charArray(context, (charArray) semanticObject); 
@@ -150,43 +143,43 @@ public class Ros1SemanticSequencer extends RosSemanticSequencer {
 				sequence_duration(context, (duration) semanticObject); 
 				return; 
 			case PrimitivesPackage.FLOAT32:
-				sequence_SizedFloat32_float32(context, (float32) semanticObject); 
+				sequence_float32(context, (float32) semanticObject); 
 				return; 
 			case PrimitivesPackage.FLOAT32_ARRAY:
 				sequence_float32Array(context, (float32Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.FLOAT64:
-				sequence_SizedFloat64_float64(context, (float64) semanticObject); 
+				sequence_float64(context, (float64) semanticObject); 
 				return; 
 			case PrimitivesPackage.FLOAT64_ARRAY:
 				sequence_float64Array(context, (float64Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT16:
-				sequence_SizedInt16_int16(context, (int16) semanticObject); 
+				sequence_int16(context, (int16) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT16_ARRAY:
 				sequence_int16Array(context, (int16Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT32:
-				sequence_SizedInt32_int32(context, (int32) semanticObject); 
+				sequence_int32(context, (int32) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT32_ARRAY:
 				sequence_int32Array(context, (int32Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT64:
-				sequence_SizedInt64_int64(context, (int64) semanticObject); 
+				sequence_int64(context, (int64) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT64_ARRAY:
 				sequence_int64Array(context, (int64Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT8:
-				sequence_SizedInt8_int8(context, (int8) semanticObject); 
+				sequence_int8(context, (int8) semanticObject); 
 				return; 
 			case PrimitivesPackage.INT8_ARRAY:
 				sequence_int8Array(context, (int8Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.STRING:
-				sequence_SizedString_string0(context, (string) semanticObject); 
+				sequence_string0(context, (string) semanticObject); 
 				return; 
 			case PrimitivesPackage.STRING_ARRAY:
 				sequence_string0Array(context, (stringArray) semanticObject); 
@@ -195,25 +188,25 @@ public class Ros1SemanticSequencer extends RosSemanticSequencer {
 				sequence_time(context, (time) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT16:
-				sequence_SizedUint16_uint16(context, (uint16) semanticObject); 
+				sequence_uint16(context, (uint16) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT16_ARRAY:
 				sequence_uint16Array(context, (uint16Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT32:
-				sequence_SizedUint32_uint32(context, (uint32) semanticObject); 
+				sequence_uint32(context, (uint32) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT32_ARRAY:
 				sequence_uint32Array(context, (uint32Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT64:
-				sequence_SizedUint64_uint64(context, (uint64) semanticObject); 
+				sequence_uint64(context, (uint64) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT64_ARRAY:
 				sequence_uint64Array(context, (uint64Array) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT8:
-				sequence_SizedUint8_uint8(context, (uint8) semanticObject); 
+				sequence_uint8(context, (uint8) semanticObject); 
 				return; 
 			case PrimitivesPackage.UINT8_ARRAY:
 				sequence_uint8Array(context, (uint8Array) semanticObject); 
