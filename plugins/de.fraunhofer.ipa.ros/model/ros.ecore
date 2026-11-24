@@ -135,7 +135,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullname" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" changeable="false"
         volatile="true" transient="true" defaultValueLiteral="" unsettable="true"
-        iD="true"/>
+        iD="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="get" value="return getPackage() != null ? String.format(&quot;%s/%s&quot;, getPackage().getName(), getName()) : getName();"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Subscriber" eSuperTypes="#//InterfaceType">
     <eStructuralFeatures xsi:type="ecore:EReference" name="message" lowerBound="1"

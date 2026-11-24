@@ -184,10 +184,10 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case RosPackage.LIFECYCLE_STATE:
-				return createLifecycleStateFromString(eDataType, initialValue);
 			case RosPackage.PLUGIN_SLOT_VALUE_FORMAT:
 				return createPluginSlotValueFormatFromString(eDataType, initialValue);
+			case RosPackage.LIFECYCLE_STATE:
+				return createLifecycleStateFromString(eDataType, initialValue);
 			case RosPackage.GRAPH_NAME:
 				return createGraphNameFromString(eDataType, initialValue);
 			default:
@@ -203,10 +203,10 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-			case RosPackage.LIFECYCLE_STATE:
-				return convertLifecycleStateToString(eDataType, instanceValue);
 			case RosPackage.PLUGIN_SLOT_VALUE_FORMAT:
 				return convertPluginSlotValueFormatToString(eDataType, instanceValue);
+			case RosPackage.LIFECYCLE_STATE:
+				return convertLifecycleStateToString(eDataType, instanceValue);
 			case RosPackage.GRAPH_NAME:
 				return convertGraphNameToString(eDataType, instanceValue);
 			default:
@@ -835,26 +835,6 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public LifecycleState createLifecycleStateFromString(EDataType eDataType, String initialValue) {
-		LifecycleState result = LifecycleState.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertLifecycleStateToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public PluginSlotValueFormat createPluginSlotValueFormatFromString(EDataType eDataType, String initialValue) {
 		PluginSlotValueFormat result = PluginSlotValueFormat.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
@@ -867,6 +847,26 @@ public class RosFactoryImpl extends EFactoryImpl implements RosFactory {
 	 * @generated
 	 */
 	public String convertPluginSlotValueFormatToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LifecycleState createLifecycleStateFromString(EDataType eDataType, String initialValue) {
+		LifecycleState result = LifecycleState.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertLifecycleStateToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

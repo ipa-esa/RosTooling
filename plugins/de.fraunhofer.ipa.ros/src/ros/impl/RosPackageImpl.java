@@ -545,14 +545,14 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EEnum lifecycleStateEEnum = null;
+	private EEnum pluginSlotValueFormatEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EEnum pluginSlotValueFormatEEnum = null;
+	private EEnum lifecycleStateEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2326,8 +2326,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EEnum getLifecycleState() {
-		return lifecycleStateEEnum;
+	public EEnum getPluginSlotValueFormat() {
+		return pluginSlotValueFormatEEnum;
 	}
 
 	/**
@@ -2336,8 +2336,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 	 * @generated
 	 */
 	@Override
-	public EEnum getPluginSlotValueFormat() {
-		return pluginSlotValueFormatEEnum;
+	public EEnum getLifecycleState() {
+		return lifecycleStateEEnum;
 	}
 
 	/**
@@ -2613,8 +2613,8 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		createEReference(arrayTopicSpecMsgRefEClass, ARRAY_TOPIC_SPEC_MSG_REF__REFERENCE);
 
 		// Create enums
-		lifecycleStateEEnum = createEEnum(LIFECYCLE_STATE);
 		pluginSlotValueFormatEEnum = createEEnum(PLUGIN_SLOT_VALUE_FORMAT);
+		lifecycleStateEEnum = createEEnum(LIFECYCLE_STATE);
 
 		// Create data types
 		graphNameEDataType = createEDataType(GRAPH_NAME);
@@ -2933,15 +2933,15 @@ public class RosPackageImpl extends EPackageImpl implements RosPackage {
 		initEReference(getArrayTopicSpecMsgRef_Reference(), this.getSpecBase(), null, "Reference", null, 1, 1, ArrayTopicSpecMsgRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
+		initEEnum(pluginSlotValueFormatEEnum, PluginSlotValueFormat.class, "PluginSlotValueFormat");
+		addEEnumLiteral(pluginSlotValueFormatEEnum, PluginSlotValueFormat.CLASS);
+		addEEnumLiteral(pluginSlotValueFormatEEnum, PluginSlotValueFormat.LIBRARY);
+
 		initEEnum(lifecycleStateEEnum, LifecycleState.class, "LifecycleState");
 		addEEnumLiteral(lifecycleStateEEnum, LifecycleState.UNCONFIGURED);
 		addEEnumLiteral(lifecycleStateEEnum, LifecycleState.INACTIVE);
 		addEEnumLiteral(lifecycleStateEEnum, LifecycleState.ACTIVE);
 		addEEnumLiteral(lifecycleStateEEnum, LifecycleState.FINALIZED);
-
-		initEEnum(pluginSlotValueFormatEEnum, PluginSlotValueFormat.class, "PluginSlotValueFormat");
-		addEEnumLiteral(pluginSlotValueFormatEEnum, PluginSlotValueFormat.CLASS);
-		addEEnumLiteral(pluginSlotValueFormatEEnum, PluginSlotValueFormat.LIBRARY);
 
 		// Initialize data types
 		initEDataType(graphNameEDataType, String.class, "GraphName", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

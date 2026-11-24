@@ -11,7 +11,6 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import ros.Plugin;
 import ros.RosPackage;
@@ -65,7 +64,7 @@ public class PluginItemProvider extends InterfaceHolderItemProvider {
 				 RosPackage.Literals.PLUGIN__IMPLEMENTS,
 				 true,
 				 false,
-				 false,
+				 true,
 				 null,
 				 null,
 				 null));
@@ -107,12 +106,6 @@ public class PluginItemProvider extends InterfaceHolderItemProvider {
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
-
-		switch (notification.getFeatureID(Plugin.class)) {
-			case RosPackage.PLUGIN__IMPLEMENTS:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
 		super.notifyChanged(notification);
 	}
 

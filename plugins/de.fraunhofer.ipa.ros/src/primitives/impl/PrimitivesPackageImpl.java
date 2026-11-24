@@ -5,8 +5,8 @@ package primitives.impl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.EReference;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import primitives.AbstractType;
@@ -43,6 +43,7 @@ import primitives.uint64;
 import primitives.uint64Array;
 import primitives.uint8;
 import primitives.uint8Array;
+
 import ros.RosPackage;
 
 import ros.impl.RosPackageImpl;
@@ -54,238 +55,238 @@ import ros.impl.RosPackageImpl;
  * @generated
  */
 public class PrimitivesPackageImpl extends EPackageImpl implements PrimitivesPackage {
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass boolEClass = null;
+	private EClass abstractTypeEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass int8EClass = null;
+	private EClass messagePartEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass uint8EClass = null;
+	private EClass boolEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass int16EClass = null;
+	private EClass int8EClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass uint16EClass = null;
+	private EClass uint8EClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass int32EClass = null;
+	private EClass int16EClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass uint32EClass = null;
+	private EClass uint16EClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass int64EClass = null;
+	private EClass int32EClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass uint64EClass = null;
+	private EClass uint32EClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass float32EClass = null;
+	private EClass int64EClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass float64EClass = null;
+	private EClass uint64EClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass abstractTypeEClass = null;
+	private EClass float32EClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass stringEClass = null;
+	private EClass float64EClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass timeEClass = null;
+	private EClass stringEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass durationEClass = null;
+	private EClass timeEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass boolArrayEClass = null;
+	private EClass durationEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass int8ArrayEClass = null;
+	private EClass boolArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass uint8ArrayEClass = null;
+	private EClass int8ArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass int16ArrayEClass = null;
+	private EClass uint8ArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass uint16ArrayEClass = null;
+	private EClass int16ArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass int32ArrayEClass = null;
+	private EClass uint16ArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass uint32ArrayEClass = null;
+	private EClass int32ArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass int64ArrayEClass = null;
+	private EClass uint32ArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass uint64ArrayEClass = null;
+	private EClass int64ArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass float32ArrayEClass = null;
+	private EClass uint64ArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass float64ArrayEClass = null;
+	private EClass float32ArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass stringArrayEClass = null;
+	private EClass float64ArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass headerEClass = null;
+	private EClass stringArrayEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass byteEClass = null;
+	private EClass headerEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass byteArrayEClass = null;
+	private EClass byteEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass char0EClass = null;
+	private EClass byteArrayEClass = null;
 
-                /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass charArrayEClass = null;
+	private EClass char0EClass = null;
 
-                /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass messagePartEClass = null;
+	private EClass charArrayEClass = null;
 
-    /**
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -294,36 +295,35 @@ public class PrimitivesPackageImpl extends EPackageImpl implements PrimitivesPac
 	 * initialization of the package, or returns the registered package,
 	 * if one already exists.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see primitives.PrimitivesPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */
-    private PrimitivesPackageImpl() {
+	private PrimitivesPackageImpl() {
 		super(eNS_URI, PrimitivesFactory.eINSTANCE);
 	}
-
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private static boolean isInited = false;
+	private static boolean isInited = false;
 
-    /**
+	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
 	 *
 	 * <p>This method is used to initialize {@link PrimitivesPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #eNS_URI
 	 * @see #createPackageContents()
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-    public static PrimitivesPackage init() {
+	public static PrimitivesPackage init() {
 		if (isInited) return (PrimitivesPackage)EPackage.Registry.INSTANCE.getEPackage(PrimitivesPackage.eNS_URI);
 
 		// Obtain or create and register package
@@ -352,381 +352,381 @@ public class PrimitivesPackageImpl extends EPackageImpl implements PrimitivesPac
 		return thePrimitivesPackage;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public EClass getbool() {
-		return boolEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getint8() {
-		return int8EClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getuint8() {
-		return uint8EClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getint16() {
-		return int16EClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getuint16() {
-		return uint16EClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getint32() {
-		return int32EClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getuint32() {
-		return uint32EClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getint64() {
-		return int64EClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getuint64() {
-		return uint64EClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getfloat32() {
-		return float32EClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getfloat64() {
-		return float64EClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getAbstractType() {
+	@Override
+	public EClass getAbstractType() {
 		return abstractTypeEClass;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public EClass getstring() {
-		return stringEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass gettime() {
-		return timeEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getduration() {
-		return durationEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getboolArray() {
-		return boolArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getint8Array() {
-		return int8ArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getuint8Array() {
-		return uint8ArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getint16Array() {
-		return int16ArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getuint16Array() {
-		return uint16ArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getint32Array() {
-		return int32ArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getuint32Array() {
-		return uint32ArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getint64Array() {
-		return int64ArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getuint64Array() {
-		return uint64ArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getfloat32Array() {
-		return float32ArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getfloat64Array() {
-		return float64ArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getstringArray() {
-		return stringArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getHeader() {
-		return headerEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getByte() {
-		return byteEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getByteArray() {
-		return byteArrayEClass;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getchar0() {
-		return char0EClass;
-	}
-
-                /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getcharArray() {
-		return charArrayEClass;
-	}
-
-                /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public EClass getMessagePart() {
+	@Override
+	public EClass getMessagePart() {
 		return messagePartEClass;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public EReference getMessagePart_Type() {
+	@Override
+	public EReference getMessagePart_Type() {
 		return (EReference)messagePartEClass.getEStructuralFeatures().get(0);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public EAttribute getMessagePart_Data() {
+	@Override
+	public EAttribute getMessagePart_Data() {
 		return (EAttribute)messagePartEClass.getEStructuralFeatures().get(1);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public PrimitivesFactory getPrimitivesFactory() {
+	@Override
+	public EClass getbool() {
+		return boolEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getint8() {
+		return int8EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getuint8() {
+		return uint8EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getint16() {
+		return int16EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getuint16() {
+		return uint16EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getint32() {
+		return int32EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getuint32() {
+		return uint32EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getint64() {
+		return int64EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getuint64() {
+		return uint64EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getfloat32() {
+		return float32EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getfloat64() {
+		return float64EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getstring() {
+		return stringEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass gettime() {
+		return timeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getduration() {
+		return durationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getboolArray() {
+		return boolArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getint8Array() {
+		return int8ArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getuint8Array() {
+		return uint8ArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getint16Array() {
+		return int16ArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getuint16Array() {
+		return uint16ArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getint32Array() {
+		return int32ArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getuint32Array() {
+		return uint32ArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getint64Array() {
+		return int64ArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getuint64Array() {
+		return uint64ArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getfloat32Array() {
+		return float32ArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getfloat64Array() {
+		return float64ArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getstringArray() {
+		return stringArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getHeader() {
+		return headerEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getByte() {
+		return byteEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getByteArray() {
+		return byteArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getchar0() {
+		return char0EClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getcharArray() {
+		return charArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public PrimitivesFactory getPrimitivesFactory() {
 		return (PrimitivesFactory)getEFactoryInstance();
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private boolean isCreated = false;
+	private boolean isCreated = false;
 
-    /**
+	/**
 	 * Creates the meta-model objects for the package.  This method is
 	 * guarded to have no affect on any invocation but its first.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public void createPackageContents() {
+	public void createPackageContents() {
 		if (isCreated) return;
 		isCreated = true;
 
@@ -800,21 +800,21 @@ public class PrimitivesPackageImpl extends EPackageImpl implements PrimitivesPac
 		charArrayEClass = createEClass(CHAR_ARRAY);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private boolean isInitialized = false;
+	private boolean isInitialized = false;
 
-    /**
+	/**
 	 * Complete the initialization of the package and its meta-model.  This
 	 * method is guarded to have no affect on any invocation but its first.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public void initializePackageContents() {
+	public void initializePackageContents() {
 		if (isInitialized) return;
 		isInitialized = true;
 

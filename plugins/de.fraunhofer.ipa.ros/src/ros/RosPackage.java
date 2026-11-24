@@ -3437,17 +3437,6 @@ public interface RosPackage extends EPackage {
 	int ARRAY_TOPIC_SPEC_MSG_REF_OPERATION_COUNT = PrimitivesPackage.ABSTRACT_TYPE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link ros.LifecycleState <em>Lifecycle State</em>}' enum.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see ros.LifecycleState
-	 * @see ros.impl.RosPackageImpl#getLifecycleState()
-	 * @generated
-	 */
-	int LIFECYCLE_STATE = 64;
-
-
-	/**
 	 * The meta object id for the '{@link ros.PluginSlotValueFormat <em>Plugin Slot Value Format</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3455,7 +3444,17 @@ public interface RosPackage extends EPackage {
 	 * @see ros.impl.RosPackageImpl#getPluginSlotValueFormat()
 	 * @generated
 	 */
-	int PLUGIN_SLOT_VALUE_FORMAT = 65;
+	int PLUGIN_SLOT_VALUE_FORMAT = 64;
+
+	/**
+	 * The meta object id for the '{@link ros.LifecycleState <em>Lifecycle State</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see ros.LifecycleState
+	 * @see ros.impl.RosPackageImpl#getLifecycleState()
+	 * @generated
+	 */
+	int LIFECYCLE_STATE = 65;
 
 	/**
 	 * The meta object id for the '<em>Graph Name</em>' data type.
@@ -5264,16 +5263,6 @@ public interface RosPackage extends EPackage {
 	EReference getArrayTopicSpecMsgRef_Reference();
 
 	/**
-	 * Returns the meta object for enum '{@link ros.LifecycleState <em>Lifecycle State</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Lifecycle State</em>'.
-	 * @see ros.LifecycleState
-	 * @generated
-	 */
-	EEnum getLifecycleState();
-
-	/**
 	 * Returns the meta object for enum '{@link ros.PluginSlotValueFormat <em>Plugin Slot Value Format</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5282,6 +5271,16 @@ public interface RosPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getPluginSlotValueFormat();
+
+	/**
+	 * Returns the meta object for enum '{@link ros.LifecycleState <em>Lifecycle State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Lifecycle State</em>'.
+	 * @see ros.LifecycleState
+	 * @generated
+	 */
+	EEnum getLifecycleState();
 
 	/**
 	 * Returns the meta object for data type '{@link java.lang.String <em>Graph Name</em>}'.
@@ -6798,16 +6797,6 @@ public interface RosPackage extends EPackage {
 		EReference ARRAY_TOPIC_SPEC_MSG_REF__REFERENCE = eINSTANCE.getArrayTopicSpecMsgRef_Reference();
 
 		/**
-		 * The meta object literal for the '{@link ros.LifecycleState <em>Lifecycle State</em>}' enum.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see ros.LifecycleState
-		 * @see ros.impl.RosPackageImpl#getLifecycleState()
-		 * @generated
-		 */
-		EEnum LIFECYCLE_STATE = eINSTANCE.getLifecycleState();
-
-		/**
 		 * The meta object literal for the '{@link ros.PluginSlotValueFormat <em>Plugin Slot Value Format</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -6816,6 +6805,16 @@ public interface RosPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum PLUGIN_SLOT_VALUE_FORMAT = eINSTANCE.getPluginSlotValueFormat();
+
+		/**
+		 * The meta object literal for the '{@link ros.LifecycleState <em>Lifecycle State</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see ros.LifecycleState
+		 * @see ros.impl.RosPackageImpl#getLifecycleState()
+		 * @generated
+		 */
+		EEnum LIFECYCLE_STATE = eINSTANCE.getLifecycleState();
 
 		/**
 		 * The meta object literal for the '<em>Graph Name</em>' data type.

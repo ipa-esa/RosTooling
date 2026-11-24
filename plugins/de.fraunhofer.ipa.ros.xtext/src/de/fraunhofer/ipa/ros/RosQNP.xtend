@@ -17,7 +17,6 @@ import ros.ServiceServer
 import ros.ServiceClient
 import ros.ActionServer
 import ros.ActionClient
-import ros.NamespacedElement
 import ros.Parameter
 import ros.InterfaceType
 

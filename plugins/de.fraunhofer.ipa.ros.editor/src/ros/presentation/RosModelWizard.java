@@ -59,8 +59,6 @@ import ros.CatkinPackage;
 import ros.PackageSet;
 import ros.RosFactory;
 import ros.RosPackage;
-import ros.impl.ArtifactImpl;
-import ros.impl.CatkinPackageImpl;
 import ros.impl.PackageSetImpl;
 import ros.provider.RosEditPlugin;
 
@@ -226,8 +224,8 @@ public class RosModelWizard extends Wizard implements INewWizard {
                             }
                             PackageSet packageSet_model = (PackageSetImpl) resource.getContents().get(0);
 
-                            CatkinPackage pkg = new CatkinPackageImpl();
-                            Artifact artifact = new ArtifactImpl();
+                            CatkinPackage pkg = RosFactory.eINSTANCE.createCatkinPackage();
+                            Artifact artifact = RosFactory.eINSTANCE.createArtifact();
                             artifact.setName(project.getName());
                             pkg.setName(project.getName());
                             pkg.getArtifact().add(artifact);

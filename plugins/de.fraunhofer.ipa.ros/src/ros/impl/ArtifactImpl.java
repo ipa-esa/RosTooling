@@ -79,9 +79,9 @@ public class ArtifactImpl extends MinimalEObjectImpl.Container implements Artifa
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
-	public ArtifactImpl() {
+	protected ArtifactImpl() {
 		super();
 	}
 

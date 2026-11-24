@@ -33,37 +33,37 @@ import ros.util.RosAdapterFactory;
  * @generated
  */
 public class RosItemProviderAdapterFactory extends RosAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
-    /**
+	/**
 	 * This keeps track of the root adapter factory that delegates to this adapter factory.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ComposedAdapterFactory parentAdapterFactory;
+	protected ComposedAdapterFactory parentAdapterFactory;
 
-    /**
+	/**
 	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected IChangeNotifier changeNotifier = new ChangeNotifier();
+	protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
-    /**
+	/**
 	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected Collection<Object> supportedTypes = new ArrayList<Object>();
+	protected Collection<Object> supportedTypes = new ArrayList<Object>();
 
-    /**
+	/**
 	 * This constructs an instance.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public RosItemProviderAdapterFactory() {
+	public RosItemProviderAdapterFactory() {
 		supportedTypes.add(IEditingDomainItemProvider.class);
 		supportedTypes.add(IStructuredItemContentProvider.class);
 		supportedTypes.add(ITreeItemContentProvider.class);
@@ -71,7 +71,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		supportedTypes.add(IItemPropertySource.class);
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ExtensionBlock} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -79,7 +79,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 	 */
 	protected ExtensionBlockItemProvider extensionBlockItemProvider;
 
-				/**
+	/**
 	 * This creates an adapter for a {@link ros.ExtensionBlock}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -94,7 +94,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return extensionBlockItemProvider;
 	}
 
-				/**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ExtensionEntry} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -102,7 +102,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 	 */
 	protected ExtensionEntryItemProvider extensionEntryItemProvider;
 
-				/**
+	/**
 	 * This creates an adapter for a {@link ros.ExtensionEntry}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -117,7 +117,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return extensionEntryItemProvider;
 	}
 
-				/**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ExtensionScalarValue} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -125,7 +125,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 	 */
 	protected ExtensionScalarValueItemProvider extensionScalarValueItemProvider;
 
-				/**
+	/**
 	 * This creates an adapter for a {@link ros.ExtensionScalarValue}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -140,7 +140,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return extensionScalarValueItemProvider;
 	}
 
-				/**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ExtensionListValue} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -148,7 +148,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 	 */
 	protected ExtensionListValueItemProvider extensionListValueItemProvider;
 
-				/**
+	/**
 	 * This creates an adapter for a {@link ros.ExtensionListValue}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -163,7 +163,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return extensionListValueItemProvider;
 	}
 
-				/**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ExtensionMapValue} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -171,7 +171,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 	 */
 	protected ExtensionMapValueItemProvider extensionMapValueItemProvider;
 
-				/**
+	/**
 	 * This creates an adapter for a {@link ros.ExtensionMapValue}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -186,7 +186,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return extensionMapValueItemProvider;
 	}
 
-				/**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ExtensionRefValue} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -194,7 +194,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 	 */
 	protected ExtensionRefValueItemProvider extensionRefValueItemProvider;
 
-				/**
+	/**
 	 * This creates an adapter for a {@link ros.ExtensionRefValue}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -209,22 +209,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return extensionRefValueItemProvider;
 	}
 
-				/**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.Node} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected NodeItemProvider nodeItemProvider;
+	protected NodeItemProvider nodeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.Node}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createNodeAdapter() {
+	@Override
+	public Adapter createNodeAdapter() {
 		if (nodeItemProvider == null) {
 			nodeItemProvider = new NodeItemProvider(this);
 		}
@@ -232,7 +232,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return nodeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.Plugin} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -240,7 +240,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 	 */
 	protected PluginItemProvider pluginItemProvider;
 
-				/**
+	/**
 	 * This creates an adapter for a {@link ros.Plugin}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -255,7 +255,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return pluginItemProvider;
 	}
 
-				/**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.PluginBase} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -286,7 +286,7 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 	 */
 	protected PluginSlotItemProvider pluginSlotItemProvider;
 
-				/**
+	/**
 	 * This creates an adapter for a {@link ros.PluginSlot}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -301,22 +301,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return pluginSlotItemProvider;
 	}
 
-				/**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.Package} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected PackageItemProvider packageItemProvider;
+	protected PackageItemProvider packageItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.Package}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createPackageAdapter() {
+	@Override
+	public Adapter createPackageAdapter() {
 		if (packageItemProvider == null) {
 			packageItemProvider = new PackageItemProvider(this);
 		}
@@ -324,22 +324,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return packageItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ServiceSpec} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ServiceSpecItemProvider serviceSpecItemProvider;
+	protected ServiceSpecItemProvider serviceSpecItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ServiceSpec}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createServiceSpecAdapter() {
+	@Override
+	public Adapter createServiceSpecAdapter() {
 		if (serviceSpecItemProvider == null) {
 			serviceSpecItemProvider = new ServiceSpecItemProvider(this);
 		}
@@ -347,22 +347,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return serviceSpecItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ServiceServer} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ServiceServerItemProvider serviceServerItemProvider;
+	protected ServiceServerItemProvider serviceServerItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ServiceServer}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createServiceServerAdapter() {
+	@Override
+	public Adapter createServiceServerAdapter() {
 		if (serviceServerItemProvider == null) {
 			serviceServerItemProvider = new ServiceServerItemProvider(this);
 		}
@@ -370,22 +370,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return serviceServerItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.TopicSpec} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected TopicSpecItemProvider topicSpecItemProvider;
+	protected TopicSpecItemProvider topicSpecItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.TopicSpec}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createTopicSpecAdapter() {
+	@Override
+	public Adapter createTopicSpecAdapter() {
 		if (topicSpecItemProvider == null) {
 			topicSpecItemProvider = new TopicSpecItemProvider(this);
 		}
@@ -393,45 +393,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return topicSpecItemProvider;
 	}
 
-    /**
-	 * This keeps track of the one adapter used for all {@link ros.Publisher} instances.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    protected PublisherItemProvider publisherItemProvider;
-
-    /**
-	 * This creates an adapter for a {@link ros.Publisher}.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public Adapter createPublisherAdapter() {
-		if (publisherItemProvider == null) {
-			publisherItemProvider = new PublisherItemProvider(this);
-		}
-
-		return publisherItemProvider;
-	}
-
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.PackageDependency} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected PackageDependencyItemProvider packageDependencyItemProvider;
+	protected PackageDependencyItemProvider packageDependencyItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.PackageDependency}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createPackageDependencyAdapter() {
+	@Override
+	public Adapter createPackageDependencyAdapter() {
 		if (packageDependencyItemProvider == null) {
 			packageDependencyItemProvider = new PackageDependencyItemProvider(this);
 		}
@@ -439,22 +416,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return packageDependencyItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ExternalDependency} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ExternalDependencyItemProvider externalDependencyItemProvider;
+	protected ExternalDependencyItemProvider externalDependencyItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ExternalDependency}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createExternalDependencyAdapter() {
+	@Override
+	public Adapter createExternalDependencyAdapter() {
 		if (externalDependencyItemProvider == null) {
 			externalDependencyItemProvider = new ExternalDependencyItemProvider(this);
 		}
@@ -462,22 +439,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return externalDependencyItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.CatkinPackage} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected CatkinPackageItemProvider catkinPackageItemProvider;
+	protected CatkinPackageItemProvider catkinPackageItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.CatkinPackage}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createCatkinPackageAdapter() {
+	@Override
+	public Adapter createCatkinPackageAdapter() {
 		if (catkinPackageItemProvider == null) {
 			catkinPackageItemProvider = new CatkinPackageItemProvider(this);
 		}
@@ -485,22 +462,45 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return catkinPackageItemProvider;
 	}
 
-    /**
+	/**
+	 * This keeps track of the one adapter used for all {@link ros.Publisher} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected PublisherItemProvider publisherItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link ros.Publisher}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createPublisherAdapter() {
+		if (publisherItemProvider == null) {
+			publisherItemProvider = new PublisherItemProvider(this);
+		}
+
+		return publisherItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.Artifact} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ArtifactItemProvider artifactItemProvider;
+	protected ArtifactItemProvider artifactItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.Artifact}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createArtifactAdapter() {
+	@Override
+	public Adapter createArtifactAdapter() {
 		if (artifactItemProvider == null) {
 			artifactItemProvider = new ArtifactItemProvider(this);
 		}
@@ -508,22 +508,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return artifactItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.Subscriber} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected SubscriberItemProvider subscriberItemProvider;
+	protected SubscriberItemProvider subscriberItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.Subscriber}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createSubscriberAdapter() {
+	@Override
+	public Adapter createSubscriberAdapter() {
 		if (subscriberItemProvider == null) {
 			subscriberItemProvider = new SubscriberItemProvider(this);
 		}
@@ -531,22 +531,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return subscriberItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ServiceClient} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ServiceClientItemProvider serviceClientItemProvider;
+	protected ServiceClientItemProvider serviceClientItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ServiceClient}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createServiceClientAdapter() {
+	@Override
+	public Adapter createServiceClientAdapter() {
 		if (serviceClientItemProvider == null) {
 			serviceClientItemProvider = new ServiceClientItemProvider(this);
 		}
@@ -554,22 +554,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return serviceClientItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.PackageSet} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected PackageSetItemProvider packageSetItemProvider;
+	protected PackageSetItemProvider packageSetItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.PackageSet}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createPackageSetAdapter() {
+	@Override
+	public Adapter createPackageSetAdapter() {
 		if (packageSetItemProvider == null) {
 			packageSetItemProvider = new PackageSetItemProvider(this);
 		}
@@ -577,22 +577,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return packageSetItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ActionSpec} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ActionSpecItemProvider actionSpecItemProvider;
+	protected ActionSpecItemProvider actionSpecItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ActionSpec}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createActionSpecAdapter() {
+	@Override
+	public Adapter createActionSpecAdapter() {
 		if (actionSpecItemProvider == null) {
 			actionSpecItemProvider = new ActionSpecItemProvider(this);
 		}
@@ -600,22 +600,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return actionSpecItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ActionServer} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ActionServerItemProvider actionServerItemProvider;
+	protected ActionServerItemProvider actionServerItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ActionServer}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createActionServerAdapter() {
+	@Override
+	public Adapter createActionServerAdapter() {
 		if (actionServerItemProvider == null) {
 			actionServerItemProvider = new ActionServerItemProvider(this);
 		}
@@ -623,22 +623,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return actionServerItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ActionClient} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ActionClientItemProvider actionClientItemProvider;
+	protected ActionClientItemProvider actionClientItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ActionClient}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createActionClientAdapter() {
+	@Override
+	public Adapter createActionClientAdapter() {
 		if (actionClientItemProvider == null) {
 			actionClientItemProvider = new ActionClientItemProvider(this);
 		}
@@ -646,22 +646,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return actionClientItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.MessageDefinition} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected MessageDefinitionItemProvider messageDefinitionItemProvider;
+	protected MessageDefinitionItemProvider messageDefinitionItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.MessageDefinition}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createMessageDefinitionAdapter() {
+	@Override
+	public Adapter createMessageDefinitionAdapter() {
 		if (messageDefinitionItemProvider == null) {
 			messageDefinitionItemProvider = new MessageDefinitionItemProvider(this);
 		}
@@ -669,22 +669,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return messageDefinitionItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.GlobalNamespace} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected GlobalNamespaceItemProvider globalNamespaceItemProvider;
+	protected GlobalNamespaceItemProvider globalNamespaceItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.GlobalNamespace}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createGlobalNamespaceAdapter() {
+	@Override
+	public Adapter createGlobalNamespaceAdapter() {
 		if (globalNamespaceItemProvider == null) {
 			globalNamespaceItemProvider = new GlobalNamespaceItemProvider(this);
 		}
@@ -692,22 +692,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return globalNamespaceItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.RelativeNamespace} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected RelativeNamespaceItemProvider relativeNamespaceItemProvider;
+	protected RelativeNamespaceItemProvider relativeNamespaceItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.RelativeNamespace}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createRelativeNamespaceAdapter() {
+	@Override
+	public Adapter createRelativeNamespaceAdapter() {
 		if (relativeNamespaceItemProvider == null) {
 			relativeNamespaceItemProvider = new RelativeNamespaceItemProvider(this);
 		}
@@ -715,22 +715,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return relativeNamespaceItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.PrivateNamespace} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected PrivateNamespaceItemProvider privateNamespaceItemProvider;
+	protected PrivateNamespaceItemProvider privateNamespaceItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.PrivateNamespace}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createPrivateNamespaceAdapter() {
+	@Override
+	public Adapter createPrivateNamespaceAdapter() {
 		if (privateNamespaceItemProvider == null) {
 			privateNamespaceItemProvider = new PrivateNamespaceItemProvider(this);
 		}
@@ -738,22 +738,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return privateNamespaceItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.InterfaceType} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected InterfaceTypeItemProvider interfaceTypeItemProvider;
+	protected InterfaceTypeItemProvider interfaceTypeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.InterfaceType}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createInterfaceTypeAdapter() {
+	@Override
+	public Adapter createInterfaceTypeAdapter() {
 		if (interfaceTypeItemProvider == null) {
 			interfaceTypeItemProvider = new InterfaceTypeItemProvider(this);
 		}
@@ -761,22 +761,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return interfaceTypeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterListType} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterListTypeItemProvider parameterListTypeItemProvider;
+	protected ParameterListTypeItemProvider parameterListTypeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterListType}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterListTypeAdapter() {
+	@Override
+	public Adapter createParameterListTypeAdapter() {
 		if (parameterListTypeItemProvider == null) {
 			parameterListTypeItemProvider = new ParameterListTypeItemProvider(this);
 		}
@@ -784,22 +784,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterListTypeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterStructType} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterStructTypeItemProvider parameterStructTypeItemProvider;
+	protected ParameterStructTypeItemProvider parameterStructTypeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterStructType}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterStructTypeAdapter() {
+	@Override
+	public Adapter createParameterStructTypeAdapter() {
 		if (parameterStructTypeItemProvider == null) {
 			parameterStructTypeItemProvider = new ParameterStructTypeItemProvider(this);
 		}
@@ -807,22 +807,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterStructTypeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterIntegerType} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterIntegerTypeItemProvider parameterIntegerTypeItemProvider;
+	protected ParameterIntegerTypeItemProvider parameterIntegerTypeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterIntegerType}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterIntegerTypeAdapter() {
+	@Override
+	public Adapter createParameterIntegerTypeAdapter() {
 		if (parameterIntegerTypeItemProvider == null) {
 			parameterIntegerTypeItemProvider = new ParameterIntegerTypeItemProvider(this);
 		}
@@ -830,22 +830,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterIntegerTypeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterStringType} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterStringTypeItemProvider parameterStringTypeItemProvider;
+	protected ParameterStringTypeItemProvider parameterStringTypeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterStringType}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterStringTypeAdapter() {
+	@Override
+	public Adapter createParameterStringTypeAdapter() {
 		if (parameterStringTypeItemProvider == null) {
 			parameterStringTypeItemProvider = new ParameterStringTypeItemProvider(this);
 		}
@@ -853,22 +853,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterStringTypeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterDoubleType} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterDoubleTypeItemProvider parameterDoubleTypeItemProvider;
+	protected ParameterDoubleTypeItemProvider parameterDoubleTypeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterDoubleType}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterDoubleTypeAdapter() {
+	@Override
+	public Adapter createParameterDoubleTypeAdapter() {
 		if (parameterDoubleTypeItemProvider == null) {
 			parameterDoubleTypeItemProvider = new ParameterDoubleTypeItemProvider(this);
 		}
@@ -876,22 +876,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterDoubleTypeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.Parameter} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterItemProvider parameterItemProvider;
+	protected ParameterItemProvider parameterItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.Parameter}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterAdapter() {
+	@Override
+	public Adapter createParameterAdapter() {
 		if (parameterItemProvider == null) {
 			parameterItemProvider = new ParameterItemProvider(this);
 		}
@@ -899,22 +899,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterDateType} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterDateTypeItemProvider parameterDateTypeItemProvider;
+	protected ParameterDateTypeItemProvider parameterDateTypeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterDateType}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterDateTypeAdapter() {
+	@Override
+	public Adapter createParameterDateTypeAdapter() {
 		if (parameterDateTypeItemProvider == null) {
 			parameterDateTypeItemProvider = new ParameterDateTypeItemProvider(this);
 		}
@@ -922,22 +922,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterDateTypeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterBooleanType} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterBooleanTypeItemProvider parameterBooleanTypeItemProvider;
+	protected ParameterBooleanTypeItemProvider parameterBooleanTypeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterBooleanType}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterBooleanTypeAdapter() {
+	@Override
+	public Adapter createParameterBooleanTypeAdapter() {
 		if (parameterBooleanTypeItemProvider == null) {
 			parameterBooleanTypeItemProvider = new ParameterBooleanTypeItemProvider(this);
 		}
@@ -945,22 +945,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterBooleanTypeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterBase64Type} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterBase64TypeItemProvider parameterBase64TypeItemProvider;
+	protected ParameterBase64TypeItemProvider parameterBase64TypeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterBase64Type}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterBase64TypeAdapter() {
+	@Override
+	public Adapter createParameterBase64TypeAdapter() {
 		if (parameterBase64TypeItemProvider == null) {
 			parameterBase64TypeItemProvider = new ParameterBase64TypeItemProvider(this);
 		}
@@ -968,22 +968,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterBase64TypeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterAnyType} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterAnyTypeItemProvider parameterAnyTypeItemProvider;
+	protected ParameterAnyTypeItemProvider parameterAnyTypeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterAnyType}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterAnyTypeAdapter() {
+	@Override
+	public Adapter createParameterAnyTypeAdapter() {
 		if (parameterAnyTypeItemProvider == null) {
 			parameterAnyTypeItemProvider = new ParameterAnyTypeItemProvider(this);
 		}
@@ -991,22 +991,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterAnyTypeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterStructTypeMember} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterStructTypeMemberItemProvider parameterStructTypeMemberItemProvider;
+	protected ParameterStructTypeMemberItemProvider parameterStructTypeMemberItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterStructTypeMember}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterStructTypeMemberAdapter() {
+	@Override
+	public Adapter createParameterStructTypeMemberAdapter() {
 		if (parameterStructTypeMemberItemProvider == null) {
 			parameterStructTypeMemberItemProvider = new ParameterStructTypeMemberItemProvider(this);
 		}
@@ -1014,22 +1014,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterStructTypeMemberItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterArrayType} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterArrayTypeItemProvider parameterArrayTypeItemProvider;
+	protected ParameterArrayTypeItemProvider parameterArrayTypeItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterArrayType}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterArrayTypeAdapter() {
+	@Override
+	public Adapter createParameterArrayTypeAdapter() {
 		if (parameterArrayTypeItemProvider == null) {
 			parameterArrayTypeItemProvider = new ParameterArrayTypeItemProvider(this);
 		}
@@ -1037,22 +1037,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterArrayTypeItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterAny} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterAnyItemProvider parameterAnyItemProvider;
+	protected ParameterAnyItemProvider parameterAnyItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterAny}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterAnyAdapter() {
+	@Override
+	public Adapter createParameterAnyAdapter() {
 		if (parameterAnyItemProvider == null) {
 			parameterAnyItemProvider = new ParameterAnyItemProvider(this);
 		}
@@ -1060,22 +1060,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterAnyItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterString} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterStringItemProvider parameterStringItemProvider;
+	protected ParameterStringItemProvider parameterStringItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterString}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterStringAdapter() {
+	@Override
+	public Adapter createParameterStringAdapter() {
 		if (parameterStringItemProvider == null) {
 			parameterStringItemProvider = new ParameterStringItemProvider(this);
 		}
@@ -1083,22 +1083,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterStringItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterBase64} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterBase64ItemProvider parameterBase64ItemProvider;
+	protected ParameterBase64ItemProvider parameterBase64ItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterBase64}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterBase64Adapter() {
+	@Override
+	public Adapter createParameterBase64Adapter() {
 		if (parameterBase64ItemProvider == null) {
 			parameterBase64ItemProvider = new ParameterBase64ItemProvider(this);
 		}
@@ -1106,22 +1106,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterBase64ItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterInteger} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterIntegerItemProvider parameterIntegerItemProvider;
+	protected ParameterIntegerItemProvider parameterIntegerItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterInteger}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterIntegerAdapter() {
+	@Override
+	public Adapter createParameterIntegerAdapter() {
 		if (parameterIntegerItemProvider == null) {
 			parameterIntegerItemProvider = new ParameterIntegerItemProvider(this);
 		}
@@ -1129,22 +1129,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterIntegerItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterDouble} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterDoubleItemProvider parameterDoubleItemProvider;
+	protected ParameterDoubleItemProvider parameterDoubleItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterDouble}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterDoubleAdapter() {
+	@Override
+	public Adapter createParameterDoubleAdapter() {
 		if (parameterDoubleItemProvider == null) {
 			parameterDoubleItemProvider = new ParameterDoubleItemProvider(this);
 		}
@@ -1152,22 +1152,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterDoubleItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterBoolean} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterBooleanItemProvider parameterBooleanItemProvider;
+	protected ParameterBooleanItemProvider parameterBooleanItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterBoolean}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterBooleanAdapter() {
+	@Override
+	public Adapter createParameterBooleanAdapter() {
 		if (parameterBooleanItemProvider == null) {
 			parameterBooleanItemProvider = new ParameterBooleanItemProvider(this);
 		}
@@ -1175,22 +1175,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterBooleanItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterSequence} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterSequenceItemProvider parameterSequenceItemProvider;
+	protected ParameterSequenceItemProvider parameterSequenceItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterSequence}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterSequenceAdapter() {
+	@Override
+	public Adapter createParameterSequenceAdapter() {
 		if (parameterSequenceItemProvider == null) {
 			parameterSequenceItemProvider = new ParameterSequenceItemProvider(this);
 		}
@@ -1198,22 +1198,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterSequenceItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterStruct} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterStructItemProvider parameterStructItemProvider;
+	protected ParameterStructItemProvider parameterStructItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterStruct}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterStructAdapter() {
+	@Override
+	public Adapter createParameterStructAdapter() {
 		if (parameterStructItemProvider == null) {
 			parameterStructItemProvider = new ParameterStructItemProvider(this);
 		}
@@ -1221,22 +1221,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterStructItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterStructMember} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterStructMemberItemProvider parameterStructMemberItemProvider;
+	protected ParameterStructMemberItemProvider parameterStructMemberItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterStructMember}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterStructMemberAdapter() {
+	@Override
+	public Adapter createParameterStructMemberAdapter() {
 		if (parameterStructMemberItemProvider == null) {
 			parameterStructMemberItemProvider = new ParameterStructMemberItemProvider(this);
 		}
@@ -1244,22 +1244,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterStructMemberItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ParameterDate} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ParameterDateItemProvider parameterDateItemProvider;
+	protected ParameterDateItemProvider parameterDateItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.ParameterDate}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createParameterDateAdapter() {
+	@Override
+	public Adapter createParameterDateAdapter() {
 		if (parameterDateItemProvider == null) {
 			parameterDateItemProvider = new ParameterDateItemProvider(this);
 		}
@@ -1267,22 +1267,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return parameterDateItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.AmentPackage} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected AmentPackageItemProvider amentPackageItemProvider;
+	protected AmentPackageItemProvider amentPackageItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.AmentPackage}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createAmentPackageAdapter() {
+	@Override
+	public Adapter createAmentPackageAdapter() {
 		if (amentPackageItemProvider == null) {
 			amentPackageItemProvider = new AmentPackageItemProvider(this);
 		}
@@ -1290,22 +1290,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return amentPackageItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.QualityOfService} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected QualityOfServiceItemProvider qualityOfServiceItemProvider;
+	protected QualityOfServiceItemProvider qualityOfServiceItemProvider;
 
-    /**
+	/**
 	 * This creates an adapter for a {@link ros.QualityOfService}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createQualityOfServiceAdapter() {
+	@Override
+	public Adapter createQualityOfServiceAdapter() {
 		if (qualityOfServiceItemProvider == null) {
 			qualityOfServiceItemProvider = new QualityOfServiceItemProvider(this);
 		}
@@ -1313,22 +1313,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return qualityOfServiceItemProvider;
 	}
 
-    /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.TopicSpecMsgRef} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected TopicSpecMsgRefItemProvider topicSpecMsgRefItemProvider;
+	protected TopicSpecMsgRefItemProvider topicSpecMsgRefItemProvider;
 
-                /**
+	/**
 	 * This creates an adapter for a {@link ros.TopicSpecMsgRef}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createTopicSpecMsgRefAdapter() {
+	@Override
+	public Adapter createTopicSpecMsgRefAdapter() {
 		if (topicSpecMsgRefItemProvider == null) {
 			topicSpecMsgRefItemProvider = new TopicSpecMsgRefItemProvider(this);
 		}
@@ -1336,22 +1336,22 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return topicSpecMsgRefItemProvider;
 	}
 
-                /**
+	/**
 	 * This keeps track of the one adapter used for all {@link ros.ArrayTopicSpecMsgRef} instances.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected ArrayTopicSpecMsgRefItemProvider arrayTopicSpecMsgRefItemProvider;
+	protected ArrayTopicSpecMsgRefItemProvider arrayTopicSpecMsgRefItemProvider;
 
-                                                                /**
+	/**
 	 * This creates an adapter for a {@link ros.ArrayTopicSpecMsgRef}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter createArrayTopicSpecMsgRefAdapter() {
+	@Override
+	public Adapter createArrayTopicSpecMsgRefAdapter() {
 		if (arrayTopicSpecMsgRefItemProvider == null) {
 			arrayTopicSpecMsgRefItemProvider = new ArrayTopicSpecMsgRefItemProvider(this);
 		}
@@ -1359,56 +1359,56 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return arrayTopicSpecMsgRefItemProvider;
 	}
 
-                                                                /**
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public ComposeableAdapterFactory getRootAdapterFactory() {
+	@Override
+	public ComposeableAdapterFactory getRootAdapterFactory() {
 		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
 	}
 
-    /**
+	/**
 	 * This sets the composed adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
+	@Override
+	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
 		this.parentAdapterFactory = parentAdapterFactory;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public boolean isFactoryForType(Object type) {
+	@Override
+	public boolean isFactoryForType(Object type) {
 		return supportedTypes.contains(type) || super.isFactoryForType(type);
 	}
 
-    /**
+	/**
 	 * This implementation substitutes the factory itself as the key for the adapter.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Adapter adapt(Notifier notifier, Object type) {
+	@Override
+	public Adapter adapt(Notifier notifier, Object type) {
 		return super.adapt(notifier, this);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Object adapt(Object object, Object type) {
+	@Override
+	public Object adapt(Object object, Object type) {
 		if (isFactoryForType(type)) {
 			Object adapter = super.adapt(object, type);
 			if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
@@ -1419,36 +1419,36 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		return null;
 	}
 
-    /**
+	/**
 	 * This adds a listener.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public void addListener(INotifyChangedListener notifyChangedListener) {
+	@Override
+	public void addListener(INotifyChangedListener notifyChangedListener) {
 		changeNotifier.addListener(notifyChangedListener);
 	}
 
-    /**
+	/**
 	 * This removes a listener.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public void removeListener(INotifyChangedListener notifyChangedListener) {
+	@Override
+	public void removeListener(INotifyChangedListener notifyChangedListener) {
 		changeNotifier.removeListener(notifyChangedListener);
 	}
 
-    /**
+	/**
 	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public void fireNotifyChanged(Notification notification) {
+	@Override
+	public void fireNotifyChanged(Notification notification) {
 		changeNotifier.fireNotifyChanged(notification);
 
 		if (parentAdapterFactory != null) {
@@ -1456,14 +1456,14 @@ public class RosItemProviderAdapterFactory extends RosAdapterFactory implements 
 		}
 	}
 
-    /**
+	/**
 	 * This disposes all of the item providers created by this factory. 
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public void dispose() {
+	@Override
+	public void dispose() {
 		if (extensionBlockItemProvider != null) extensionBlockItemProvider.dispose();
 		if (extensionEntryItemProvider != null) extensionEntryItemProvider.dispose();
 		if (extensionScalarValueItemProvider != null) extensionScalarValueItemProvider.dispose();

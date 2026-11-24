@@ -150,7 +150,7 @@ public abstract class SpecBaseImpl extends MinimalEObjectImpl.Container implemen
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	@Override
 	public String getFullname() {

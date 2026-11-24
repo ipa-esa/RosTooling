@@ -2,8 +2,6 @@
  */
 package primitives.impl;
 
-import java.lang.String;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -32,71 +30,71 @@ import primitives.PrimitivesPackage;
  * @generated
  */
 public class MessagePartImpl extends MinimalEObjectImpl.Container implements MessagePart {
-    /**
+	/**
 	 * The cached value of the '{@link #getType() <em>Type</em>}' containment reference.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getType()
 	 * @generated
 	 * @ordered
 	 */
-    protected AbstractType type;
+	protected AbstractType type;
 
-    /**
+	/**
 	 * The default value of the '{@link #getData() <em>Data</em>}' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getData()
 	 * @generated
 	 * @ordered
 	 */
-    protected static final String DATA_EDEFAULT = null;
+	protected static final String DATA_EDEFAULT = null;
 
-    /**
+	/**
 	 * The cached value of the '{@link #getData() <em>Data</em>}' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getData()
 	 * @generated
 	 * @ordered
 	 */
-    protected String data = DATA_EDEFAULT;
+	protected String data = DATA_EDEFAULT;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected MessagePartImpl() {
+	protected MessagePartImpl() {
 		super();
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    protected EClass eStaticClass() {
+	@Override
+	protected EClass eStaticClass() {
 		return PrimitivesPackage.Literals.MESSAGE_PART;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public AbstractType getType() {
+	@Override
+	public AbstractType getType() {
 		return type;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public NotificationChain basicSetType(AbstractType newType, NotificationChain msgs) {
+	public NotificationChain basicSetType(AbstractType newType, NotificationChain msgs) {
 		AbstractType oldType = type;
 		type = newType;
 		if (eNotificationRequired()) {
@@ -106,13 +104,13 @@ public class MessagePartImpl extends MinimalEObjectImpl.Container implements Mes
 		return msgs;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public void setType(AbstractType newType) {
+	@Override
+	public void setType(AbstractType newType) {
 		if (newType != type) {
 			NotificationChain msgs = null;
 			if (type != null)
@@ -126,36 +124,36 @@ public class MessagePartImpl extends MinimalEObjectImpl.Container implements Mes
 			eNotify(new ENotificationImpl(this, Notification.SET, PrimitivesPackage.MESSAGE_PART__TYPE, newType, newType));
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public String getData() {
+	@Override
+	public String getData() {
 		return data;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public void setData(String newData) {
+	@Override
+	public void setData(String newData) {
 		String oldData = data;
 		data = newData;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, PrimitivesPackage.MESSAGE_PART__DATA, oldData, data));
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case PrimitivesPackage.MESSAGE_PART__TYPE:
 				return basicSetType(null, msgs);
@@ -163,13 +161,13 @@ public class MessagePartImpl extends MinimalEObjectImpl.Container implements Mes
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Object eGet(int featureID, boolean resolve, boolean coreType) {
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case PrimitivesPackage.MESSAGE_PART__TYPE:
 				return getType();
@@ -179,13 +177,13 @@ public class MessagePartImpl extends MinimalEObjectImpl.Container implements Mes
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public void eSet(int featureID, Object newValue) {
+	@Override
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case PrimitivesPackage.MESSAGE_PART__TYPE:
 				setType((AbstractType)newValue);
@@ -197,13 +195,13 @@ public class MessagePartImpl extends MinimalEObjectImpl.Container implements Mes
 		super.eSet(featureID, newValue);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public void eUnset(int featureID) {
+	@Override
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case PrimitivesPackage.MESSAGE_PART__TYPE:
 				setType((AbstractType)null);
@@ -215,13 +213,13 @@ public class MessagePartImpl extends MinimalEObjectImpl.Container implements Mes
 		super.eUnset(featureID);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public boolean eIsSet(int featureID) {
+	@Override
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case PrimitivesPackage.MESSAGE_PART__TYPE:
 				return type != null;
@@ -231,13 +229,13 @@ public class MessagePartImpl extends MinimalEObjectImpl.Container implements Mes
 		return super.eIsSet(featureID);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

@@ -1,0 +1,3 @@
+# Classes in the generated packages that the generator no longer writes: leftovers of older
+# metamodel versions. None left; emf_generated.py --check fails for any that appears, because such a
+# class can shadow java.lang.String inside the generated packages.

@@ -1,0 +1,6 @@
+# Members of generated EMF code that are written by hand and tagged "@generated NOT".
+# One per line: <plugin>/src/<path of the file> <method name>. Anything else that differs from
+# what the generator writes is reported by emf_generated.py --check.
+# EMF cannot carry an isSet body in the model (only the getter body, as a GenModel annotation on
+# the feature in ros.ecore), so this one stays by hand.
+de.fraunhofer.ipa.ros/src/ros/impl/SpecBaseImpl.java isSetFullname

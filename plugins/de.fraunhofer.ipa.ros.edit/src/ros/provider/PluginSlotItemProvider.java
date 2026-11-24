@@ -108,7 +108,7 @@ public class PluginSlotItemProvider
 				 RosPackage.Literals.PLUGIN_SLOT__BASE,
 				 true,
 				 false,
-				 false,
+				 true,
 				 null,
 				 null,
 				 null));
@@ -152,7 +152,7 @@ public class PluginSlotItemProvider
 				 RosPackage.Literals.PLUGIN_SLOT__DEFAULT_PLUGIN,
 				 true,
 				 false,
-				 false,
+				 true,
 				 null,
 				 null,
 				 null));
@@ -241,9 +241,7 @@ public class PluginSlotItemProvider
 
 		switch (notification.getFeatureID(PluginSlot.class)) {
 			case RosPackage.PLUGIN_SLOT__NAME:
-			case RosPackage.PLUGIN_SLOT__BASE:
 			case RosPackage.PLUGIN_SLOT__PARAMETER:
-			case RosPackage.PLUGIN_SLOT__DEFAULT_PLUGIN:
 			case RosPackage.PLUGIN_SLOT__MULTIPLE:
 			case RosPackage.PLUGIN_SLOT__VALUE_FORMAT:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));

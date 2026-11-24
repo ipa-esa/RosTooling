@@ -5,8 +5,11 @@ package primitives.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
 import primitives.ByteArray;
 import primitives.Header;
 import primitives.MessagePart;
@@ -48,13 +51,13 @@ import primitives.uint8Array;
  * @generated
  */
 public class PrimitivesFactoryImpl extends EFactoryImpl implements PrimitivesFactory {
-  /**
+	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public static PrimitivesFactory init() {
+	public static PrimitivesFactory init() {
 		try {
 			PrimitivesFactory thePrimitivesFactory = (PrimitivesFactory)EPackage.Registry.INSTANCE.getEFactory(PrimitivesPackage.eNS_URI);
 			if (thePrimitivesFactory != null) {
@@ -67,23 +70,23 @@ public class PrimitivesFactoryImpl extends EFactoryImpl implements PrimitivesFac
 		return new PrimitivesFactoryImpl();
 	}
 
-  /**
+	/**
 	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public PrimitivesFactoryImpl() {
+	public PrimitivesFactoryImpl() {
 		super();
 	}
 
-  /**
+	/**
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  @Override
-  public EObject create(EClass eClass) {
+	@Override
+	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case PrimitivesPackage.MESSAGE_PART: return createMessagePart();
 			case PrimitivesPackage.BOOL: return createbool();
@@ -122,377 +125,377 @@ public class PrimitivesFactoryImpl extends EFactoryImpl implements PrimitivesFac
 		}
 	}
 
-  /**
+	/**
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  @Override
-  public bool createbool() {
-		boolImpl bool = new boolImpl();
-		return bool;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public int8 createint8() {
-		int8Impl int8 = new int8Impl();
-		return int8;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public uint8 createuint8() {
-		uint8Impl uint8 = new uint8Impl();
-		return uint8;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public int16 createint16() {
-		int16Impl int16 = new int16Impl();
-		return int16;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public uint16 createuint16() {
-		uint16Impl uint16 = new uint16Impl();
-		return uint16;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public int32 createint32() {
-		int32Impl int32 = new int32Impl();
-		return int32;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public uint32 createuint32() {
-		uint32Impl uint32 = new uint32Impl();
-		return uint32;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public int64 createint64() {
-		int64Impl int64 = new int64Impl();
-		return int64;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public uint64 createuint64() {
-		uint64Impl uint64 = new uint64Impl();
-		return uint64;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public float32 createfloat32() {
-		float32Impl float32 = new float32Impl();
-		return float32;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public float64 createfloat64() {
-		float64Impl float64 = new float64Impl();
-		return float64;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public string createstring() {
-		stringImpl string = new stringImpl();
-		return string;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public time createtime() {
-		timeImpl time = new timeImpl();
-		return time;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public duration createduration() {
-		durationImpl duration = new durationImpl();
-		return duration;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public boolArray createboolArray() {
-		boolArrayImpl boolArray = new boolArrayImpl();
-		return boolArray;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public int8Array createint8Array() {
-		int8ArrayImpl int8Array = new int8ArrayImpl();
-		return int8Array;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public uint8Array createuint8Array() {
-		uint8ArrayImpl uint8Array = new uint8ArrayImpl();
-		return uint8Array;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public int16Array createint16Array() {
-		int16ArrayImpl int16Array = new int16ArrayImpl();
-		return int16Array;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public uint16Array createuint16Array() {
-		uint16ArrayImpl uint16Array = new uint16ArrayImpl();
-		return uint16Array;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public int32Array createint32Array() {
-		int32ArrayImpl int32Array = new int32ArrayImpl();
-		return int32Array;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public uint32Array createuint32Array() {
-		uint32ArrayImpl uint32Array = new uint32ArrayImpl();
-		return uint32Array;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public int64Array createint64Array() {
-		int64ArrayImpl int64Array = new int64ArrayImpl();
-		return int64Array;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public uint64Array createuint64Array() {
-		uint64ArrayImpl uint64Array = new uint64ArrayImpl();
-		return uint64Array;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public float32Array createfloat32Array() {
-		float32ArrayImpl float32Array = new float32ArrayImpl();
-		return float32Array;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public float64Array createfloat64Array() {
-		float64ArrayImpl float64Array = new float64ArrayImpl();
-		return float64Array;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public stringArray createstringArray() {
-		stringArrayImpl stringArray = new stringArrayImpl();
-		return stringArray;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public Header createHeader() {
-		HeaderImpl header = new HeaderImpl();
-		return header;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public primitives.Byte createByte() {
-		ByteImpl byte_ = new ByteImpl();
-		return byte_;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public ByteArray createByteArray() {
-		ByteArrayImpl byteArray = new ByteArrayImpl();
-		return byteArray;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public char0 createchar0() {
-		char0Impl char0 = new char0Impl();
-		return char0;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public charArray createcharArray() {
-		charArrayImpl charArray = new charArrayImpl();
-		return charArray;
-	}
-
-  /**
-	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-	 * @generated
-	 */
-  @Override
-  public MessagePart createMessagePart() {
+	@Override
+	public MessagePart createMessagePart() {
 		MessagePartImpl messagePart = new MessagePartImpl();
 		return messagePart;
 	}
 
-  /**
+	/**
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  @Override
-  public PrimitivesPackage getPrimitivesPackage() {
+	@Override
+	public bool createbool() {
+		boolImpl bool = new boolImpl();
+		return bool;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int8 createint8() {
+		int8Impl int8 = new int8Impl();
+		return int8;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public uint8 createuint8() {
+		uint8Impl uint8 = new uint8Impl();
+		return uint8;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int16 createint16() {
+		int16Impl int16 = new int16Impl();
+		return int16;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public uint16 createuint16() {
+		uint16Impl uint16 = new uint16Impl();
+		return uint16;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int32 createint32() {
+		int32Impl int32 = new int32Impl();
+		return int32;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public uint32 createuint32() {
+		uint32Impl uint32 = new uint32Impl();
+		return uint32;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int64 createint64() {
+		int64Impl int64 = new int64Impl();
+		return int64;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public uint64 createuint64() {
+		uint64Impl uint64 = new uint64Impl();
+		return uint64;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public float32 createfloat32() {
+		float32Impl float32 = new float32Impl();
+		return float32;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public float64 createfloat64() {
+		float64Impl float64 = new float64Impl();
+		return float64;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public string createstring() {
+		stringImpl string = new stringImpl();
+		return string;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public time createtime() {
+		timeImpl time = new timeImpl();
+		return time;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public duration createduration() {
+		durationImpl duration = new durationImpl();
+		return duration;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolArray createboolArray() {
+		boolArrayImpl boolArray = new boolArrayImpl();
+		return boolArray;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int8Array createint8Array() {
+		int8ArrayImpl int8Array = new int8ArrayImpl();
+		return int8Array;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public uint8Array createuint8Array() {
+		uint8ArrayImpl uint8Array = new uint8ArrayImpl();
+		return uint8Array;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int16Array createint16Array() {
+		int16ArrayImpl int16Array = new int16ArrayImpl();
+		return int16Array;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public uint16Array createuint16Array() {
+		uint16ArrayImpl uint16Array = new uint16ArrayImpl();
+		return uint16Array;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int32Array createint32Array() {
+		int32ArrayImpl int32Array = new int32ArrayImpl();
+		return int32Array;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public uint32Array createuint32Array() {
+		uint32ArrayImpl uint32Array = new uint32ArrayImpl();
+		return uint32Array;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int64Array createint64Array() {
+		int64ArrayImpl int64Array = new int64ArrayImpl();
+		return int64Array;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public uint64Array createuint64Array() {
+		uint64ArrayImpl uint64Array = new uint64ArrayImpl();
+		return uint64Array;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public float32Array createfloat32Array() {
+		float32ArrayImpl float32Array = new float32ArrayImpl();
+		return float32Array;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public float64Array createfloat64Array() {
+		float64ArrayImpl float64Array = new float64ArrayImpl();
+		return float64Array;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public stringArray createstringArray() {
+		stringArrayImpl stringArray = new stringArrayImpl();
+		return stringArray;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Header createHeader() {
+		HeaderImpl header = new HeaderImpl();
+		return header;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public primitives.Byte createByte() {
+		ByteImpl byte_ = new ByteImpl();
+		return byte_;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ByteArray createByteArray() {
+		ByteArrayImpl byteArray = new ByteArrayImpl();
+		return byteArray;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public char0 createchar0() {
+		char0Impl char0 = new char0Impl();
+		return char0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public charArray createcharArray() {
+		charArrayImpl charArray = new charArrayImpl();
+		return charArray;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public PrimitivesPackage getPrimitivesPackage() {
 		return (PrimitivesPackage)getEPackage();
 	}
 
-  /**
+	/**
 	 * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @deprecated
 	 * @generated
 	 */
-  @Deprecated
-  public static PrimitivesPackage getPackage() {
+	@Deprecated
+	public static PrimitivesPackage getPackage() {
 		return PrimitivesPackage.eINSTANCE;
 	}
 
-} // PrimitivesFactoryImpl
+} //PrimitivesFactoryImpl

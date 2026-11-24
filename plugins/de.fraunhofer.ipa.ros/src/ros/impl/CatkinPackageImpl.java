@@ -18,9 +18,9 @@ public class CatkinPackageImpl extends PackageImpl implements CatkinPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
-	public CatkinPackageImpl() {
+	protected CatkinPackageImpl() {
 		super();
 	}
 
