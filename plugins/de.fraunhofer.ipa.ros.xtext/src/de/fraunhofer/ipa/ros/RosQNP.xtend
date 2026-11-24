@@ -72,6 +72,13 @@ class RosQNP extends DefaultDeclarativeQualifiedNameProvider{
     if (obj instanceof InterfaceType) {
       return artifactScopedName(obj, obj.name);
     }
+    // A package is named by its own name, so that "dependencies: [pkg]" can find it among the packages
+    // of the workspace and the catalogue; without this the index held no name for a package at all.
+    if (obj instanceof Package) {
+      if (obj.name !== null && !obj.name.empty) {
+        return QualifiedName.create(obj.name)
+      }
+    }
 
     return super.qualifiedName(obj);
     }
