@@ -44,6 +44,16 @@ public class CreateRosNodeOperationHandler extends EMFCreateOperationHandler<Cre
         system.System sys = sysOpt.get();
         Map<String, String> args = operation.getArgs();
 
+        // A "from" naming a catalogue node (e.g. amcl.amcl) is not among the workspace resources;
+        // load the catalogue model that declares it before the command runs (not undoable state).
+        String requestedFrom = args != null ? args.get("from") : null;
+        if (requestedFrom != null && !requestedFrom.isBlank() && rosModelState.getSemanticResource() != null) {
+            var rs = rosModelState.getSemanticResource().getResourceSet();
+            if (RosElementResolver.resolveOriginNode(rs, requestedFrom).isEmpty()) {
+                de.fraunhofer.ipa.ros.glsp.model.RosCatalogueResolver.loadDeclaring(rs, requestedFrom.replace("\"", ""));
+            }
+        }
+
         return Optional.of(new ChangeCommand(rosModelState.getSemanticResource()) {
             @Override
             protected void doExecute() {

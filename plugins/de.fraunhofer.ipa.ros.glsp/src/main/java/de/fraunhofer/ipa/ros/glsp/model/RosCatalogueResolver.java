@@ -128,6 +128,36 @@ public final class RosCatalogueResolver {
     }
 
     /**
+     * Loads the catalogue models that declare the package (or system) named by the first segment of
+     * {@code spec} (e.g. {@code amcl.amcl} -> package {@code amcl}), so a {@code from:} reference to a
+     * catalogue node can be resolved. Returns true when at least one new model was loaded.
+     */
+    public static boolean loadDeclaring(final ResourceSet resourceSet, final String spec) {
+        String name = firstSegment(spec);
+        List<File> roots = catalogueRoots();
+        if (resourceSet == null || name.isEmpty() || roots.isEmpty()) {
+            return false;
+        }
+        boolean loaded = false;
+        for (Path file : index(roots).getOrDefault(name, List.of())) {
+            URI uri = URI.createFileURI(file.toAbsolutePath().toString());
+            if (resourceSet.getResource(uri, false) == null) {
+                try {
+                    resourceSet.getResource(uri, true);
+                    loaded = true;
+                } catch (RuntimeException e) {
+                    LOGGER.debug("Skipping catalogue model " + file + ": " + e.getMessage());
+                }
+            }
+        }
+        if (loaded) {
+            forgetFailedLinks(resourceSet);
+            resolveFromCatalogue(resourceSet);
+        }
+        return loaded;
+    }
+
+    /**
      * First name segment of every cross-reference that does not resolve with the resources loaded
      * now: {@code sensor_msgs/msg/Image} -> sensor_msgs, {@code amcl.amcl} -> amcl,
      * {@code artifact::iface} -> artifact, {@code turtlebot} -> turtlebot.
