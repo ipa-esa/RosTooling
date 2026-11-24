@@ -11,7 +11,13 @@ import ros.Artifact
 import ros.Node
 import ros.Package
 import ros.Parameter
+import ros.ParameterAnyType
 import ros.ParameterArrayType
+import ros.ParameterBase64Type
+import ros.ParameterBooleanType
+import ros.ParameterDateType
+import ros.ParameterDoubleType
+import ros.ParameterIntegerType
 import ros.ParameterListType
 import ros.ParameterValue
 import ros.ParameterStringType
@@ -113,12 +119,39 @@ class GeneratorHelpers {
         return false
     }
 
+    /**
+     * The value a system parameter starts with: its {@code value:}, else the {@code default:} of its
+     * type (a parameter that states only a default used to start empty).
+     */
+    def ParameterValue effectiveParameterValue(Parameter param) {
+        if (param === null) {
+            return null
+        }
+        if (param.value !== null) {
+            return param.value
+        }
+        val t = param.type
+        switch (t) {
+            ParameterBooleanType: t.getDefault()
+            ParameterIntegerType: t.getDefault()
+            ParameterStringType: t.getDefault()
+            ParameterDoubleType: t.getDefault()
+            ParameterArrayType: t.getDefault()
+            ParameterListType: t.getDefault()
+            ParameterDateType: t.getDefault()
+            ParameterBase64Type: t.getDefault()
+            ParameterAnyType: t.getDefault()
+            default: null
+        }
+    }
+
     def boolean isSubstitutionParameter(Parameter param) {
-        if (param === null || param.value === null) {
+        val value = effectiveParameterValue(param)
+        if (param === null || value === null) {
             return false
         }
-        if (param.value instanceof ParameterString || param.value instanceof ParameterStringImpl || param.value.eClass.name.contains("ParameterString")) {
-            val strVal = get_param_value(param.value, param.name)
+        if (value instanceof ParameterString || value instanceof ParameterStringImpl || value.eClass.name.contains("ParameterString")) {
+            val strVal = get_param_value(value, param.name)
             if (strVal !== null && strVal.contains("$(")) {
                 return true
             }

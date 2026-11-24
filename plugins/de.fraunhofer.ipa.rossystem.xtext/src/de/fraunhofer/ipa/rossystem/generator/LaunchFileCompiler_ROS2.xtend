@@ -63,7 +63,7 @@ def generate_launch_description():
   # *** PARAMETERS ***
   «FOR parameter:system.parameter»«IF !isSubstitutionParameter(parameter as ros.Parameter)»
   «pyIdentifier((parameter as ros.Parameter).name)»_arg = DeclareLaunchArgument(
-    "«(parameter as ros.Parameter).name»", default_value=TextSubstitution(text="«get_param_value((parameter as ros.Parameter).value,(parameter as ros.Parameter).name)»")
+    "«(parameter as ros.Parameter).name»", default_value=TextSubstitution(text="«get_param_value(effectiveParameterValue(parameter as ros.Parameter),(parameter as ros.Parameter).name)»")
   )
   ld.add_action(«pyIdentifier((parameter as ros.Parameter).name)»_arg)
   «ENDIF»«ENDFOR»
