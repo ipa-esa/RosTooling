@@ -19,6 +19,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.generator.InMemoryFileSystemAccess;
@@ -49,7 +53,9 @@ import de.fraunhofer.ipa.rossystem.generator.RosSystemGenerator;
  * <p>{@code ROSTOOLING_COMPAT_UNITS} names a file with one unit per line,
  * {@code name|subject-dir|library-dir,library-dir}. All model files under the subject and
  * library directories are loaded into one resource set; only subject files are reported.
- * For each subject file the snapshot holds its SHA-256 and its validation issues; {@code .ros2}
+ * For each subject file the snapshot holds its SHA-256, its validation issues and a dump of the
+ * parsed model tree ({@code model.txt}: every object with its set attributes and the names of the
+ * objects it refers to, in document order); {@code .ros2}
  * and {@code .rossystem} files also get their generated output ({@code .ros2}: C++ and Python in
  * separate runs, newest LTS distro, so the result does not depend on {@code $ROS_DISTRO}). Generator
  * exceptions are recorded instead of failing the run. {@code ROSTOOLING_COMPAT_OUT} is the
@@ -128,6 +134,8 @@ public class CompatibilitySnapshotTest {
             report.add("issues " + issues.size());
             report.addAll(issues);
 
+            Files.write(fileOut.resolve("model.txt"), modelDump(resource), StandardCharsets.UTF_8);
+
             String fileName = file.getFileName().toString();
             if (fileName.endsWith(".ros2")) {
                 // One run per language: with "both" the Python pass replaces the C++ output.
@@ -145,6 +153,50 @@ public class CompatibilitySnapshotTest {
             Files.write(fileOut.resolve("report.txt"), report, StandardCharsets.UTF_8);
         }
         return name + ": " + loaded.size() + " file(s), " + errors + " error(s)";
+    }
+
+    /** One line per object: class, set attributes, referenced objects; indented by containment depth. */
+    private static List<String> modelDump(Resource resource) {
+        List<String> lines = new ArrayList<>();
+        for (EObject root : resource.getContents()) {
+            dump(root, 0, lines);
+        }
+        return lines;
+    }
+
+    private static void dump(EObject object, int depth, List<String> lines) {
+        StringBuilder line = new StringBuilder("  ".repeat(depth))
+                .append(object.eClass().getEPackage().getName()).append('.').append(object.eClass().getName());
+        for (EStructuralFeature feature : object.eClass().getEAllStructuralFeatures()) {
+            if (feature.isTransient() || feature.isDerived() || feature.isVolatile() || !object.eIsSet(feature)) {
+                continue;
+            }
+            if (feature instanceof EAttribute) {
+                line.append(' ').append(feature.getName()).append('=')
+                        .append(String.valueOf(object.eGet(feature)).replace("\n", "\\n"));
+            } else if (feature instanceof EReference reference && !reference.isContainment()
+                    && !reference.isContainer()) {
+                Object value = object.eGet(feature, false);
+                List<?> targets = value instanceof List<?> list ? list : List.of(value);
+                line.append(' ').append(feature.getName()).append("->[");
+                for (Object target : targets) {
+                    line.append(describe((EObject) target)).append(';');
+                }
+                line.append(']');
+            }
+        }
+        lines.add(line.toString());
+        for (EObject child : object.eContents()) {
+            dump(child, depth + 1, lines);
+        }
+    }
+
+    private static String describe(EObject target) {
+        if (target.eIsProxy()) {
+            return "unresolved:" + ((org.eclipse.emf.ecore.InternalEObject) target).eProxyURI().fragment();
+        }
+        EStructuralFeature name = target.eClass().getEStructuralFeature("name");
+        return target.eClass().getName() + (name != null && target.eGet(name) != null ? " " + target.eGet(name) : "");
     }
 
     private static String generate(String label, Runnable generation) {
