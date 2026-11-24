@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Fixed-size and bounded arrays in `.ros` message specs**: a field type can now be `T[N]` (exactly N elements) or `T[<=N]` (at most N), as ROS interface definitions allow, for any element type: the primitives, `time`, `duration`, `Header`, and message references (`float64[9] covariance`, `'geometry_msgs/msg/Point'[<=10] points`). The new metamodel class `primitives.SizedArray` holds the element type, the size and a `bounded` flag. The validator rejects a size below 1 and nested arrays. The unbounded forms (`T[]`) are unchanged, and models that parsed before parse and generate the same. Bounded strings (`string<=N`) are not covered. The brackets are now always the two tokens `[` and `]`: the keywords that fused them to a type (`int32[]`, `bool[]` and the rest) and the `[]` keyword are gone, so `int32[3]`, `int32 [3]` and `int32[]` lex alike, and an empty list can be written `[]` or `[ ]` without special rules. Every existing model parses to the same tree as before (checked across 52 corpora).
 
+### Fixed
+- **Base64 parameter values**: a `0b…` binary literal is accepted as the value of a Base64 parameter and stored as a string.
+- **`dependencies:` package references**: packages are indexed under their own name, so `dependencies:` entries resolve against the workspace and the catalogue.
+- **System-level parameter `default:`**: a system parameter without its own value now falls back to the type's default in the generated launch file and README, instead of an empty value. The generated launch hint changes for such parameters (for example `controller:=joint_trajectory` instead of `controller:=`).
+- **Catalogue node import**: `createNode` (Studio "Import Node", `ros_add_node`) resolves `from: "<package>.<node>"` against the catalogue when the model is not in the workspace, instead of silently doing nothing.
+- **Namespaced node parameter files**: a node with `namespace:` and a parameter file now loads `config/<ns>_<name>.yaml` in the launch file (it used to load a file that was never written), and the yaml's top key is the qualified name (`/my_ns/node1:`). Nodes without a namespace are unchanged.
+
 ## [3.6.0] - 2026-11-18
 
 ### Added
