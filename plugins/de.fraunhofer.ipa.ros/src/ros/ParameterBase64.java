@@ -25,12 +25,12 @@ public interface ParameterBase64 extends ParameterValue {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Value</em>' attribute.
-	 * @see #setValue(byte[])
+	 * @see #setValue(String)
 	 * @see ros.RosPackage#getParameterBase64_Value()
-	 * @model dataType="org.eclipse.emf.ecore.xml.type.Base64Binary" required="true"
+	 * @model required="true"
 	 * @generated
 	 */
-	byte[] getValue();
+	String getValue();
 
 	/**
 	 * Sets the value of the '{@link ros.ParameterBase64#getValue <em>Value</em>}' attribute.
@@ -40,6 +40,6 @@ public interface ParameterBase64 extends ParameterValue {
 	 * @see #getValue()
 	 * @generated
 	 */
-	void setValue(byte[] value);
+	void setValue(String value);
 
 } // ParameterBase64

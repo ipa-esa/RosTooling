@@ -1219,7 +1219,9 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "de.fraunhofer.ipa.ros.Basics.Base64Binary");
 		private final RuleCall cBINARYTerminalRuleCall = (RuleCall)rule.eContents().get(1);
 		
-		//Base64Binary returns type::Base64Binary:
+		//// The value is the binary literal as written ("0b01000001"), kept as text: the data type this used
+		//// to return (XML Base64Binary) accepts base64 text only, so every "0b..." literal was rejected.
+		//Base64Binary returns ecore::EString:
 		//    BINARY ;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -3766,7 +3768,9 @@ public class BasicsGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return tDATE_TIME;
 	}
 	
-	//Base64Binary returns type::Base64Binary:
+	//// The value is the binary literal as written ("0b01000001"), kept as text: the data type this used
+	//// to return (XML Base64Binary) accepts base64 text only, so every "0b..." literal was rejected.
+	//Base64Binary returns ecore::EString:
 	//    BINARY ;
 	public Base64BinaryElements getBase64BinaryAccess() {
 		return pBase64Binary;

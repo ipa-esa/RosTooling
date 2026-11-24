@@ -2377,7 +2377,9 @@ public class RosSystemGrammarAccess extends AbstractElementFinder.AbstractGramma
 		return gaBasics.getDATE_TIMERule();
 	}
 	
-	//Base64Binary returns type::Base64Binary:
+	//// The value is the binary literal as written ("0b01000001"), kept as text: the data type this used
+	//// to return (XML Base64Binary) accepts base64 text only, so every "0b..." literal was rejected.
+	//Base64Binary returns ecore::EString:
 	//    BINARY ;
 	public BasicsGrammarAccess.Base64BinaryElements getBase64BinaryAccess() {
 		return gaBasics.getBase64BinaryAccess();

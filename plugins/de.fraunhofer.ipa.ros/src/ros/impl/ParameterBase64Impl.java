@@ -33,7 +33,7 @@ public class ParameterBase64Impl extends ParameterValueImpl implements Parameter
 	 * @generated
 	 * @ordered
 	 */
-	protected static final byte[] VALUE_EDEFAULT = null;
+	protected static final String VALUE_EDEFAULT = null;
 
 	/**
 	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
@@ -43,7 +43,7 @@ public class ParameterBase64Impl extends ParameterValueImpl implements Parameter
 	 * @generated
 	 * @ordered
 	 */
-	protected byte[] value = VALUE_EDEFAULT;
+	protected String value = VALUE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -70,7 +70,7 @@ public class ParameterBase64Impl extends ParameterValueImpl implements Parameter
 	 * @generated
 	 */
 	@Override
-	public byte[] getValue() {
+	public String getValue() {
 		return value;
 	}
 
@@ -80,8 +80,8 @@ public class ParameterBase64Impl extends ParameterValueImpl implements Parameter
 	 * @generated
 	 */
 	@Override
-	public void setValue(byte[] newValue) {
-		byte[] oldValue = value;
+	public void setValue(String newValue) {
+		String oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, RosPackage.PARAMETER_BASE64__VALUE, oldValue, value));
@@ -110,7 +110,7 @@ public class ParameterBase64Impl extends ParameterValueImpl implements Parameter
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case RosPackage.PARAMETER_BASE64__VALUE:
-				setValue((byte[])newValue);
+				setValue((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

@@ -180,7 +180,9 @@ terminal HOUR: ('0'..'1')('0'..'9') | ('2')('0'..'3');
 terminal MIN_SEC:('0'..'5')('0'..'9');
 terminal DATE_TIME: YEAR'-'MONTH'-'DAY'T'HOUR':'MIN_SEC':'MIN_SEC;
 
-Base64Binary returns type::Base64Binary:
+// The value is the binary literal as written ("0b01000001"), kept as text: the data type this used
+// to return (XML Base64Binary) accepts base64 text only, so every "0b..." literal was rejected.
+Base64Binary returns ecore::EString:
     BINARY ;
 
 boolean0 returns type::Boolean:
