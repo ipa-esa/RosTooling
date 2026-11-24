@@ -9,7 +9,7 @@ class YamlFileCompiler_ROS2 {
     @Inject extension GeneratorHelpers
 
     def compile_toROS2yaml(RosNode component)'''
-    «component.name»:
+    «parameterFileNodeKey(component)»:
       ros__parameters:
         «FOR param:component.rosparameters»«IF !isSubstitutionValue(param)»
         «param.from.name»: «get_param_value(param.value,param.name)»

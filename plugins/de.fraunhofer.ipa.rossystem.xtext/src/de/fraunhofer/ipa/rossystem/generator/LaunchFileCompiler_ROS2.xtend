@@ -71,7 +71,7 @@ def generate_launch_description():
   «component.name»_config = os.path.join(
     get_package_share_directory('«system.getName().toLowerCase»'),
     'config',
-    '«component.name».yaml'
+    '«parameterFileName(component as RosNode)»'
   )
   «ENDIF»«ENDFOR»
   «FOR parameter:getUniqueLaunchParameters(system)»
