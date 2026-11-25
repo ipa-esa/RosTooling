@@ -6,6 +6,7 @@ import de.fraunhofer.ipa.ros.plugin.spi.HookLocation;
 import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
 import de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin;
 import de.fraunhofer.ipa.ros.plugin.spi.SchemaHints;
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,6 +20,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.CrossReference;
+import org.eclipse.xtext.GrammarUtil;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ide.editor.contentassist.ContentAssistEntry;
@@ -39,6 +44,26 @@ public class RosExtensionIdeContentProposalProvider extends IdeContentProposalPr
             String label,
             String description,
             String kind) {
+    }
+
+    @Inject
+    private QuotingCrossrefProposalProvider quotingCrossrefProposalProvider;
+
+    /** Same as the default, but proposals for quoted references include the quotes. */
+    @Override
+    protected void _createProposals(
+            final CrossReference reference,
+            final ContentAssistContext context,
+            final IIdeContentProposalAcceptor acceptor) {
+        EObject model = context.getCurrentModel();
+        if (model != null) {
+            EReference ereference = GrammarUtil.getReference(reference, model.eClass());
+            if (ereference != null) {
+                IScope scope = getScopeProvider().getScope(model, ereference);
+                quotingCrossrefProposalProvider.lookupCrossReference(
+                        scope, reference, context, acceptor, getCrossrefFilter(reference, context));
+            }
+        }
     }
 
     @Override

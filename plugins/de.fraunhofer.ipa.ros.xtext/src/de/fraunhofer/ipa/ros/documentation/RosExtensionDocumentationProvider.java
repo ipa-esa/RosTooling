@@ -39,7 +39,12 @@ public class RosExtensionDocumentationProvider extends MultiLineCommentDocumenta
             }
             return own == null || own.isBlank() ? loaderDoc : own + "\n\n" + loaderDoc;
         }
-        return super.getDocumentation(o);
+        String own = super.getDocumentation(o);
+        String described = ModelElementDescriber.describe(o);
+        if (described == null) {
+            return own;
+        }
+        return own == null || own.isBlank() ? described : own + "\n\n" + described;
     }
 
     /** The loader of a plugin base: built into core, or registered by a plugin. */
