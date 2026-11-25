@@ -113,7 +113,9 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
             val isPurePython = (hasPySrc || hasSetupPy) && !hasCppSrc && !hasCMake
 
             val readmeBase = compile_toREADME(system).toString().replace("\t", "  ")
-            val pumlText = compile_plantuml(system)
+            emitCoreFile(fsa, outcome, pkgName + "/README.md", readmeBase)
+            emitCoreFile(fsa, outcome, pkgName + "/resource/" + pkgName + ".puml",
+                compile_plantuml(system))
 
             if (system.fromFile.isNullOrEmpty) {
                 for (component : system.components) {
@@ -272,9 +274,10 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
             }
 
             val List<AcceptedStartupClaim> effectiveClaims = if (noConflicts) acceptedClaims else List.of()
-            emitCoreFile(fsa, outcome, pkgName + "/README.md",
-                readmeBase + compile_startupClaimsReadme(effectiveClaims).toString().replace("\t", "  "))
-            emitCoreFile(fsa, outcome, pkgName + "/resource/" + pkgName + ".puml", pumlText)
+            if (!effectiveClaims.empty) {
+                emitCoreFile(fsa, outcome, pkgName + "/README.md",
+                    readmeBase + compile_startupClaimsReadme(effectiveClaims).toString().replace("\t", "  "))
+            }
 
             if (system.fromFile.isNullOrEmpty) {
                 emitCoreFile(fsa, outcome, pkgName + "/launch/" + system.getName() + ".launch.py",
