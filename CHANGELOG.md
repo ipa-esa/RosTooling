@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **System-level parameter `default:`**: a system parameter without its own value now falls back to the type's default in the generated launch file and README, instead of an empty value. The generated launch hint changes for such parameters (for example `controller:=joint_trajectory` instead of `controller:=`).
 - **Catalogue node import**: `createNode` (Studio "Import Node", `ros_add_node`) resolves `from: "<package>.<node>"` against the catalogue when the model is not in the workspace, instead of silently doing nothing.
 - **Namespaced node parameter files**: a node with `namespace:` and a parameter file now loads `config/<ns>_<name>.yaml` in the launch file (it used to load a file that was never written), and the yaml's top key is the qualified name (`/my_ns/node1:`). Nodes without a namespace are unchanged.
+- **Interfaces of other nodes**: a system node that lists an interface its own package model (or an attached plugin) does not declare, for example `pub-> "other_node::topic"`, is now an error (`rosnode.foreignInterface`). It used to be accepted silently. Same-named nodes of different packages are not told apart, and models in the studio catalogue and test fixtures are unaffected.
 
 ## [3.6.0] - 2026-11-18
 

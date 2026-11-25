@@ -190,6 +190,56 @@ class RosSystemValidator extends AbstractRosSystemValidator {
     }
   }
 
+  public static val FOREIGN_INTERFACE = 'rosnode.foreignInterface'
+
+  /**
+   * An interface of a system node must be one that the node's own package model defines, on the node
+   * in {@code from:} or on a plugin attached to it. The reference itself resolves against every
+   * interface that is visible, so it can point at another node's interface without any link error.
+   */
+  @Check
+  def void checkInterfacesBelongToNode(RosNode rosNode) {
+    var owner = rosNode.from
+    if (owner !== null && owner.eIsProxy) {
+      owner = EcoreUtil.resolve(owner, rosNode) as Node
+    }
+    if (owner === null || owner.eIsProxy) {
+      return
+    }
+    val List<EObject> holders = newArrayList
+    holders.add(owner)
+    for (plugin : RosSystemScopeProvider.attachedPlugins(rosNode)) {
+      holders.add(if (plugin !== null && plugin.eIsProxy) EcoreUtil.resolve(plugin, rosNode) else plugin)
+    }
+    for (RosInterface iface : rosNode.rosinterfaces) {
+      val ref = iface.reference
+      if (ref !== null) {
+        val feature = ref.eClass.getEStructuralFeature('from')
+        var target = if (feature !== null) ref.eGet(feature, true) as EObject else null
+        val declaring = if (target !== null && !target.eIsProxy) target.eContainer else null
+        if (declaring !== null && !holders.contains(declaring) && !sameNodeName(declaring, owner)) {
+          error(
+            "Interface '" + iface.name + "' of node '" + rosNode.name + "' refers to an interface that "
+              + (if (declaring instanceof Node) "node '" + declaring.name + "'" else "another element")
+              + " declares; a node can only use the interfaces its own package model defines (from: '"
+              + owner.name + "'), or those of its attached plugins",
+            iface,
+            RossystemPackage.Literals.ROS_INTERFACE__REFERENCE,
+            FOREIGN_INTERFACE
+          )
+        }
+      }
+    }
+  }
+
+  /**
+   * Interface references resolve by name, so a node name that several packages define can resolve to
+   * the other package's node of that name. That is the same node as far as the model can tell.
+   */
+  def private boolean sameNodeName(EObject declaring, Node owner) {
+    return declaring instanceof Node && (declaring as Node).name == owner.name
+  }
+
   public static val INCOMPATIBLE_PLUGIN = 'rosnode.incompatiblePlugin'
   public static val SLOT_TOO_MANY_PLUGINS = 'rosnode.slotTooManyPlugins'
   public static val SLOT_DUPLICATE_PLUGIN = 'rosnode.slotDuplicatePlugin'
