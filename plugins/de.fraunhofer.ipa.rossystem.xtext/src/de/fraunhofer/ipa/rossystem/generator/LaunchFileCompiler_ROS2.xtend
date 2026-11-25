@@ -63,7 +63,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 «IF hasSubstitutionValues(system) || hasPluginIncludeSubstitutions(pluginIncludes)»from launch.frontend.parse_substitution import parse_substitution«ENDIF»
 «IF !getSubsystems(system).empty || !pluginIncludes.empty»from ament_index_python.packages import get_package_share_directory«ENDIF»
 «IF !claims.empty»from launch.conditions import UnlessCondition«ENDIF»
-from launch.actions import «IF !pluginIncludes.empty»GroupAction, «ENDIF»IncludeLaunchDescription, DeclareLaunchArgument
+from launch.actions import «IF !pluginIncludes.empty || !claims.empty»GroupAction, «ENDIF»IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoinSubstitution, TextSubstitution
 
@@ -153,7 +153,7 @@ def generate_launch_description():
   # *** ROS 2 subsystems (include launch files)***
   «FOR subsystem:getSubsystems(system)»
   «IF subsystem.fromFile.nullOrEmpty»
-  include_«subsystem.name»= IncludeLaunchDescription(
+  include_«subsystem.name»«IF isClaimed(claims, subsystem.name)»_native«ENDIF»= IncludeLaunchDescription(
     PythonLaunchDescriptionSource([ get_package_share_directory('«subsystem.name»') + '/launch/«subsystem.name».launch.py'])«IF has_matching_parameters(system, subsystem) || isClaimed(claims, subsystem.name)»,
     launch_arguments={
       «FOR param : system.parameter»«IF subsystem_references_parameter(subsystem, (param as ros.Parameter).name)»
@@ -161,10 +161,17 @@ def generate_launch_description():
       «IF isClaimed(claims, subsystem.name)»
       '«StartupClaim.NATIVE_SWITCH_ARGUMENT»': 'true',
       «ENDIF»
-    }.items()«ENDIF»«claimCondition(claims, subsystem.name)»
+    }.items()«ENDIF»
   )
+  «IF isClaimed(claims, subsystem.name)»
+  include_«subsystem.name» = GroupAction(
+    actions=[include_«subsystem.name»_native],
+    scoped=True,
+    condition=UnlessCondition(LaunchConfiguration('«escapePythonString(claimArgumentOf(claims, subsystem.name))»'))
+  )
+  «ENDIF»
   «ELSE»
-  include_«subsystem.name»= IncludeLaunchDescription(
+  include_«subsystem.name»«IF isClaimed(claims, subsystem.name)»_native«ENDIF»= IncludeLaunchDescription(
     PythonLaunchDescriptionSource([get_package_share_directory('«subsystem.fromFile.split("/",2).get(0)»') + '/«subsystem.fromFile.split("/",2).get(1)»'])«IF has_matching_parameters(system, subsystem) || isClaimed(claims, subsystem.name)»,
     launch_arguments={
       «FOR param : system.parameter»«IF subsystem_references_parameter(subsystem, (param as ros.Parameter).name)»
@@ -172,8 +179,15 @@ def generate_launch_description():
       «IF isClaimed(claims, subsystem.name)»
       '«StartupClaim.NATIVE_SWITCH_ARGUMENT»': 'true',
       «ENDIF»
-    }.items()«ENDIF»«claimCondition(claims, subsystem.name)»
+    }.items()«ENDIF»
   )
+  «IF isClaimed(claims, subsystem.name)»
+  include_«subsystem.name» = GroupAction(
+    actions=[include_«subsystem.name»_native],
+    scoped=True,
+    condition=UnlessCondition(LaunchConfiguration('«escapePythonString(claimArgumentOf(claims, subsystem.name))»'))
+  )
+  «ENDIF»
   «ENDIF»«ENDFOR»«IF !pluginIncludes.empty»
   «FOR i : 0 ..< pluginIncludes.size»
   «val inc = pluginIncludes.get(i)»
@@ -217,6 +231,15 @@ def generate_launch_description():
         val claim = claims.findFirst[it.element == element]
         if (claim === null) return ""
         return ",\ncondition=UnlessCondition(LaunchConfiguration('" + escapePythonString(claim.argument) + "'))"
+    }
+
+    /**
+     * Launch argument of the claim on the element. A claimed subsystem's native include sets
+     * {@code run_claimed_natively} for the subsystem only: it runs inside a scoped group, so the
+     * setting does not reach the includes that follow.
+     */
+    def String claimArgumentOf(List<AcceptedStartupClaim> claims, String element) {
+        return claims.findFirst[it.element == element].argument
     }
 
     /** True if a plugin claims the element; its native include then switches the claims inside it on natively too. */

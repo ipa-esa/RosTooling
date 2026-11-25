@@ -212,10 +212,14 @@ public class StartupClaimTest {
         assertTrue(out.errors.toString(), out.errors.isEmpty());
         String l = launch(fsa);
         assertTrue(l, l.contains(defaultOf("inner_sys_in_runner", true)));
-        String inc = actionBlock(l, "include_inner_sys");
+        String inc = actionBlock(l, "include_inner_sys_native");
         assertTrue(inc, inc.contains("launch_arguments={\n      'run_claimed_natively': 'true',\n    }.items()"));
         assertTrue(inc, inc.contains("IncludeLaunchDescription("));
-        assertTrue(inc, inc.contains("condition=UnlessCondition(LaunchConfiguration('inner_sys_in_runner'))"));
+        assertFalse("the condition sits on the group", inc.contains("condition"));
+        assertEquals("  include_inner_sys = GroupAction(\n    actions=[include_inner_sys_native],\n    scoped=True,\n"
+                + "    condition=UnlessCondition(LaunchConfiguration('inner_sys_in_runner'))", actionBlock(l, "include_inner_sys"));
+        assertTrue(l, l.contains("from launch.actions import GroupAction, IncludeLaunchDescription"));
+        assertTrue(l, l.contains("ld.add_action(include_inner_sys)"));
         assertFalse(actionBlock(l, "camera").contains("UnlessCondition"));
         assertTrue(readme(fsa), readme(fsa).contains("`inner_sys`: argument `inner_sys_in_runner`"));
     }
@@ -236,6 +240,33 @@ public class StartupClaimTest {
         assertEquals(actionBlock(launch(plain), "include_inner_sys"), inc);
     }
 
+    /** The claimed native include is scoped, so the switch it sets does not reach the sibling includes after it. */
+    @Test
+    public void claimedSubsystemDoesNotLeakTheSwitchIntoItsSiblings() throws Exception {
+        String two = """
+                claim_sys:
+                  nodes:
+                    camera:
+                      from: "claim_type.cam_node"
+                  subSystems:
+                    inner_sys
+                    mid_sys
+                """;
+        InMemoryFileSystemAccess plain = new InMemoryFileSystemAccess();
+        run(load(two), plain);
+        PluginRegistry.INSTANCE.register(plugin("de.example.runner", List.of(new StartupClaim("inner_sys", true)), null));
+        InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
+        var out = run(load(two), fsa);
+        assertTrue(out.errors.toString(), out.errors.isEmpty());
+        String l = launch(fsa);
+        assertTrue(l, l.contains("scoped=True"));
+        assertEquals("only the claimed include carries the switch", 1, l.split("'run_claimed_natively': 'true'", -1).length - 1);
+        assertEquals("sibling include unchanged", actionBlock(launch(plain), "include_mid_sys"), actionBlock(l, "include_mid_sys"));
+        assertFalse(actionBlock(l, "include_mid_sys").contains("GroupAction"));
+        assertTrue("claimed group is added before the sibling",
+                l.indexOf("ld.add_action(include_inner_sys)") < l.indexOf("ld.add_action(include_mid_sys)"));
+    }
+
     @Test
     public void claimedSubsystemWithParametersMergesSwitchAfterThem() throws Exception {
         PluginRegistry.INSTANCE.register(plugin("de.example.runner", List.of(new StartupClaim("inner_sys", true)), null));
@@ -243,7 +274,7 @@ public class StartupClaimTest {
         String body = SYSTEM.replace("claim_sys:\n", "claim_sys:\n  parameters:\n    speed:\n      type: Integer\n      value: 1\n");
         var out = run(loadWithInnerParameter(body), fsa);
         assertTrue(out.errors.toString(), out.errors.isEmpty());
-        String inc = actionBlock(launch(fsa), "include_inner_sys");
+        String inc = actionBlock(launch(fsa), "include_inner_sys_native");
         int p = inc.indexOf("'speed': LaunchConfiguration('speed')");
         int sw = inc.indexOf("'run_claimed_natively': 'true'");
         assertTrue(inc, p >= 0 && sw > p);
@@ -309,7 +340,7 @@ public class StartupClaimTest {
         assertTrue(out.errors.toString(), out.errors.isEmpty());
         assertEquals("startupClaims called once per system", 1, calls.get());
         String l = launch(fsa);
-        assertTrue(actionBlock(l, "include_mid_sys").contains("'run_claimed_natively': 'true'"));
+        assertTrue(actionBlock(l, "include_mid_sys_native").contains("'run_claimed_natively': 'true'"));
 
         // the claimed subsystem is generated on its own: it declares the switch itself and passes it on
         calls.set(0);
@@ -322,7 +353,7 @@ public class StartupClaimTest {
         assertTrue(m, m.contains("run_claimed_natively_arg = "));
         assertTrue(m, m.contains(defaultOf("inner_sys_in_runner", true)));
         assertTrue(m, m.contains(defaultOf("mid_cam_in_runner", true)));
-        assertTrue(actionBlock(m, "include_inner_sys").contains("'run_claimed_natively': 'true'"));
+        assertTrue(actionBlock(m, "include_inner_sys_native").contains("'run_claimed_natively': 'true'"));
         assertTrue(actionBlock(m, "mid_cam").contains("UnlessCondition(LaunchConfiguration('mid_cam_in_runner'))"));
     }
 
