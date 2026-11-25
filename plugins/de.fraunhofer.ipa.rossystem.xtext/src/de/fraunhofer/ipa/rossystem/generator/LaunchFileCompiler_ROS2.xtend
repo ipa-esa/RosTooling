@@ -41,7 +41,15 @@ class LaunchFileCompiler_ROS2 {
      * required keyword argument on every supported distribution, so lifecycle nodes always get
      * one ({@code ""} when the model sets none); plain Node and ComposableNode keep it optional.
      */
-    def compile_toROS2launch(System system, List<SystemGenerationContext.LaunchInclude> pluginIncludes) '''
+    def compile_toROS2launch(System system, List<SystemGenerationContext.LaunchInclude> pluginIncludes) {
+        return compile_toROS2launch(system, pluginIncludes, List.of())
+    }
+
+    /**
+     * Elements claimed by plugins ({@code claims}) get a launch argument and an
+     * {@code UnlessCondition} on their native start; without claims the output is unchanged.
+     */
+    def compile_toROS2launch(System system, List<SystemGenerationContext.LaunchInclude> pluginIncludes, List<AcceptedStartupClaim> claims) '''
 «IF YamlFileGenerated(system)»import os«ENDIF»
 from launch import LaunchDescription
 «IF !getStandaloneRos2Nodes(system).empty || !hasComponentContainers(system)»from launch_ros.actions import Node«ENDIF»
@@ -53,6 +61,7 @@ from launch_ros.descriptions import ComposableNode
 from launch_ros.parameter_descriptions import ParameterValue
 «IF hasSubstitutionValues(system) || hasPluginIncludeSubstitutions(pluginIncludes)»from launch.frontend.parse_substitution import parse_substitution«ENDIF»
 «IF !getSubsystems(system).empty || !pluginIncludes.empty»from ament_index_python.packages import get_package_share_directory«ENDIF»
+«IF !claims.empty»from launch.conditions import UnlessCondition«ENDIF»
 from launch.actions import «IF !pluginIncludes.empty»GroupAction, «ENDIF»IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoinSubstitution, TextSubstitution
@@ -80,6 +89,16 @@ def generate_launch_description():
   )
   ld.add_action(«pyIdentifier(parameter.name)»_arg)
   «ENDFOR»
+  «IF !claims.empty»
+  # *** STARTUP CLAIMS: elements started by a plugin instead of this launch file ***
+  «FOR claim:claims»
+  «pyIdentifier(claim.argument)»_arg = DeclareLaunchArgument(
+    "«claim.argument»", default_value="«claim.defaultClaimed»",
+    description="«escapePythonString(claimDescription(claim))»"
+  )
+  ld.add_action(«pyIdentifier(claim.argument)»_arg)
+  «ENDFOR»
+  «ENDIF»
 
   «IF hasComponentContainers(system)»
   # *** ROS 2 component containers ***
@@ -120,7 +139,7 @@ def generate_launch_description():
     name="«(component as RosNode).name»"«compile_remappings_str(component as RosNode, system.connections)»«IF !component.rosparameters.nullOrEmpty || hasAutoSlotParameters(component as RosNode)»«IF generate_yaml(component)»,
     parameters = [«component.name»_config«IF hasSubstitutionParameters(component)», {«FOR param:component.rosparameters»«IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ENDIF»«ENDFOR»}«ENDIF»]«ELSE»,
     parameters=[{«FOR param:component.rosparameters»
-      «IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ELSE»«IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDIF»«ENDFOR»«compile_slot_params_str(component as RosNode)»}]«ENDIF»«ENDIF»
+      «IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ELSE»«IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDIF»«ENDFOR»«compile_slot_params_str(component as RosNode)»}]«ENDIF»«ENDIF»«claimCondition(claims, (component as RosNode).name)»
   )
   «ENDFOR»
 
@@ -132,7 +151,7 @@ def generate_launch_description():
     launch_arguments={
       «FOR param : system.parameter»«IF subsystem_references_parameter(subsystem, (param as ros.Parameter).name)»
       '«(param as ros.Parameter).name»': LaunchConfiguration('«(param as ros.Parameter).name»'),«ENDIF»«ENDFOR»
-    }.items()«ENDIF»
+    }.items()«ENDIF»«claimCondition(claims, subsystem.name)»
   )
   «ELSE»
   include_«subsystem.name»= IncludeLaunchDescription(
@@ -140,7 +159,7 @@ def generate_launch_description():
     launch_arguments={
       «FOR param : system.parameter»«IF subsystem_references_parameter(subsystem, (param as ros.Parameter).name)»
       '«(param as ros.Parameter).name»': LaunchConfiguration('«(param as ros.Parameter).name»'),«ENDIF»«ENDFOR»
-    }.items()«ENDIF»
+    }.items()«ENDIF»«claimCondition(claims, subsystem.name)»
   )
   «ENDIF»«ENDFOR»«IF !pluginIncludes.empty»
   «FOR i : 0 ..< pluginIncludes.size»
@@ -179,6 +198,18 @@ def generate_launch_description():
 
   return ld
     '''
+
+    /** Trailing keyword argument that keeps a claimed element from starting while its claim is on. */
+    def String claimCondition(List<AcceptedStartupClaim> claims, String element) {
+        val claim = claims.findFirst[it.element == element]
+        if (claim === null) return ""
+        return ",\ncondition=UnlessCondition(LaunchConfiguration('" + escapePythonString(claim.argument) + "'))"
+    }
+
+    def String claimDescription(AcceptedStartupClaim claim) {
+        return "Start of '" + claim.element + "' is handled by plugin " + claim.pluginId
+            + " when true; set false to start it natively"
+    }
 
     def boolean hasPluginIncludeSubstitutions(List<SystemGenerationContext.LaunchInclude> pluginIncludes) {
         if (pluginIncludes === null) return false

@@ -83,6 +83,7 @@ public final class SystemGenerationContext extends GenerationContext {
     private final List<ros.Package> resolvedPackages;
     private final boolean fromFileSystem;
     private final Set<String> declaredSystemLaunchArgs;
+    private final Map<String, String> startupClaimArguments = new LinkedHashMap<>();
     private final Map<String, LaunchInclude> sharedLaunchIncludes;
 
     public SystemGenerationContext(
@@ -161,8 +162,8 @@ public final class SystemGenerationContext extends GenerationContext {
         this.resolvedNodes = resolvedNodes == null ? List.of() : Collections.unmodifiableList(resolvedNodes);
         this.resolvedPackages = resolvedPackages == null ? List.of() : Collections.unmodifiableList(resolvedPackages);
         this.declaredSystemLaunchArgs = declaredSystemLaunchArgs == null
-                ? Set.of()
-                : Collections.unmodifiableSet(new LinkedHashSet<>(declaredSystemLaunchArgs));
+                ? new LinkedHashSet<>()
+                : new LinkedHashSet<>(declaredSystemLaunchArgs);
         this.sharedLaunchIncludes = sharedLaunchIncludes != null ? sharedLaunchIncludes : new LinkedHashMap<>();
     }
 
@@ -237,7 +238,25 @@ public final class SystemGenerationContext extends GenerationContext {
      * launch file (for use with {@link LaunchArgumentKind#SYSTEM_LAUNCH_ARG}).
      */
     public Set<String> declaredSystemLaunchArguments() {
-        return declaredSystemLaunchArgs;
+        return Collections.unmodifiableSet(declaredSystemLaunchArgs);
+    }
+
+    /**
+     * Launch argument core declared for this plugin's accepted {@link StartupClaim} on
+     * {@code element}, or {@code null} if this plugin has no accepted claim on it. The argument is
+     * part of {@link #declaredSystemLaunchArguments()}.
+     */
+    public String startupClaimArgument(final String element) {
+        return startupClaimArguments.get(element);
+    }
+
+    /**
+     * Called by core, not by plugins, after it accepted this plugin's startup claims: records the
+     * launch argument of each claimed element and declares it as a system launch argument.
+     */
+    public void registerStartupClaimArguments(final Map<String, String> argumentsByElement) {
+        startupClaimArguments.putAll(argumentsByElement);
+        declaredSystemLaunchArgs.addAll(argumentsByElement.values());
     }
 
     /**

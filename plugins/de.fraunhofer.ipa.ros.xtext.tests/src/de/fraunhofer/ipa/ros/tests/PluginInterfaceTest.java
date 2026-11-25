@@ -69,6 +69,7 @@ import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry;
 import de.fraunhofer.ipa.ros.plugin.spi.PluginToolDescriptor;
 import de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin;
 import de.fraunhofer.ipa.ros.plugin.spi.SchemaHints;
+import de.fraunhofer.ipa.ros.plugin.spi.StartupClaim;
 import de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext;
 import de.fraunhofer.ipa.ros.plugin.spi.ToolExecutionContext;
 import de.fraunhofer.ipa.ros.plugin.spi.ToolResult;
@@ -90,7 +91,7 @@ public class PluginInterfaceTest {
 
     /** The types of the plugin interface, as listed in the {@code spi} package documentation. */
     private static final List<Class<?>> INTERFACE_TYPES = List.of(
-            RosToolingPlugin.class, BlockDescriptor.class, LoaderDescriptor.class, PluginToolDescriptor.class,
+            RosToolingPlugin.class, StartupClaim.class, BlockDescriptor.class, LoaderDescriptor.class, PluginToolDescriptor.class,
             HookLocation.class, MergeStrategy.class, SchemaHints.class, GenerationContext.class,
             PackageGenerationContext.class, SystemGenerationContext.class, PackageBuild.class,
             ValidationContext.class, ValidationIssue.class, ToolExecutionContext.class, ToolResult.class,

@@ -11,6 +11,7 @@ import system.impl.RosServiceServerReferenceImpl
 import system.impl.RosSubscriberReferenceImpl
 import com.google.inject.Inject
 import ros.Parameter
+import java.util.List
 
 class READMECompiler {
 
@@ -107,6 +108,19 @@ ros2 launch «system.fromFile.split("/",2).get(0)» «system.fromFile.substring(
 
 
      '''
+
+     /** Section appended to the README for elements started by plugins; empty without claims. */
+     def compile_startupClaimsReadme(List<AcceptedStartupClaim> claims) '''
+«IF !claims.empty»
+## Elements started by plugins
+
+The following elements are started by a plugin instead of this launch file while their launch argument is `true`. Passing `<argument>:=false` starts the element natively from this launch file.
+
+«FOR claim:claims»
+- `«claim.element»`: argument `«claim.argument»` (default `«claim.defaultClaimed»`, started by plugin `«claim.pluginId»`); `«claim.argument»:=false` starts it natively
+«ENDFOR»
+«ENDIF»
+'''
 
      def IsInterfacesEmpty(System system){
          for(node: getRos2Nodes(system)){
