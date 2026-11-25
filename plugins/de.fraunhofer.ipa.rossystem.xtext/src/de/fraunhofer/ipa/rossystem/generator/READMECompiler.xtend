@@ -114,7 +114,7 @@ ros2 launch «system.fromFile.split("/",2).get(0)» «system.fromFile.substring(
 «IF !claims.empty»
 ## Elements started by plugins
 
-The following elements are started by a plugin instead of this launch file while their launch argument is `true`. Passing `<argument>:=false` starts the element natively from this launch file; for a subsystem this also starts the parts of it that a plugin claims natively.
+The following elements are started by a plugin instead of this launch file while their launch argument is `true`. Passing `<argument>:=false` starts a single element natively from this launch file; a subsystem switched to native this way also starts the parts of it that a plugin claims natively. Passing `run_claimed_natively:=true` starts the whole system natively: every claimed element, including those inside subsystems. An explicit `<argument>:=...` takes precedence over it.
 
 «FOR claim:claims»
 - `«claim.element»`: argument `«claim.argument»` (default `«claim.defaultClaimed»`, started by plugin `«claim.pluginId»`); `«claim.argument»:=false` starts it natively

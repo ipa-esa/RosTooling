@@ -219,6 +219,7 @@ SchemaHints static java.util.List<org.eclipse.emf.ecore.EStructuralFeature> orde
 SchemaHints static void set(org.eclipse.emf.ecore.EModelElement, java.lang.String, java.lang.String)
 StartupClaim boolean defaultClaimed()
 StartupClaim boolean equals(java.lang.Object)
+StartupClaim field java.lang.String NATIVE_SWITCH_ARGUMENT
 StartupClaim int hashCode()
 StartupClaim java.lang.String argumentName(java.lang.String)
 StartupClaim java.lang.String element()
@@ -238,7 +239,6 @@ SystemGenerationContext type LaunchInclude
 SystemGenerationContext void addLaunchInclude(java.lang.String)
 SystemGenerationContext void addLaunchInclude(java.lang.String, java.util.List<de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext$LaunchArgument>)
 SystemGenerationContext void addLaunchInclude(java.lang.String, java.util.Map<java.lang.String, de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext$LaunchArgumentValue>)
-SystemGenerationContext void registerStartupClaimArguments(java.util.Map<java.lang.String, java.lang.String>)
 SystemGenerationContext.LaunchArgument boolean equals(java.lang.Object)
 SystemGenerationContext.LaunchArgument de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext$LaunchArgumentValue value()
 SystemGenerationContext.LaunchArgument int hashCode()

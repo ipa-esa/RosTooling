@@ -43,9 +43,9 @@
  *       {@link RosToolingPlugin#startupClaims(SystemGenerationContext)}. Core keeps the element in
  *       the launch file behind the launch argument {@code <element>_in_<plugin label>} (default from
  *       the claim; {@code UnlessCondition} on the native start), declares that argument as a system
- *       launch argument for the plugin to forward, and lists the claim in the system README. When a
- *       claimed subsystem is started natively, core also passes {@code false} for the claims inside it. Core
- *       knows nothing about what the plugin does with the element.</li>
+ *       launch argument for the plugin to forward, and lists the claim in the system README. The
+ *       generic argument {@link StartupClaim#NATIVE_SWITCH_ARGUMENT} turns all claims off, inside
+ *       subsystems too. Core knows nothing about what the plugin does with the element.</li>
  *   <li><b>Schema hints:</b> labels, help text, field order and choice lists are Ecore annotations
  *       on the block's classes and features (see {@link SchemaHints}); they never change what
  *       validates.</li>

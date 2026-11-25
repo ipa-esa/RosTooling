@@ -4,8 +4,8 @@ import com.google.inject.Inject
 import de.fraunhofer.ipa.ros.generator.IPluginAwareGenerator
 import de.fraunhofer.ipa.ros.plugin.spi.PluginRegistry
 import de.fraunhofer.ipa.ros.plugin.spi.RosToolingPlugin
+import de.fraunhofer.ipa.ros.plugin.spi.StartupClaim
 import de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext
-import de.fraunhofer.ipa.ros2.distro.Ros2Distro
 import de.fraunhofer.ipa.ros2.distro.Ros2Distros
 import de.fraunhofer.ipa.rossystem.scoping.RosSystemScopeProvider
 import java.nio.file.Path
@@ -208,6 +208,7 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                 val resolvedNodesList = new ArrayList(resolvedNodeSet)
                 val resolvedPkgsList = new ArrayList(resolvedPkgSet)
                 for (plugin : activePlugins) {
+                    val Map<String, String> claimArguments = new LinkedHashMap()
                     val ctx = new SystemGenerationContext(
                         plugin.id,
                         system.getName(),
@@ -225,15 +226,21 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                         coreOwnedPaths,
                         allPluginOwnedFiles,
                         sharedIncludes,
+                        claimArguments,
                         sysConflictErrors,
                         PluginRegistry.INSTANCE
                     )
                     acceptedClaims.addAll(acceptStartupClaims(plugin, ctx, system, declaredSystemLaunchArgs,
-                        acceptedClaims, sysConflictErrors))
+                        acceptedClaims, claimArguments, sysConflictErrors))
                     plugin.generateSystem(ctx)
                     sysContexts.add(ctx)
                     outcome.notices.addAll(ctx.notices)
                 }
+            }
+
+            if (!acceptedClaims.empty && declaredSystemLaunchArgs.contains(StartupClaim.NATIVE_SWITCH_ARGUMENT)) {
+                sysConflictErrors.add("System '" + system.name + "' has startup claims, so core declares the launch argument '"
+                    + StartupClaim.NATIVE_SWITCH_ARGUMENT + "', but the system already declares a parameter or launch argument of that name")
             }
 
             outcome.pluginConflictErrors.addAll(sysConflictErrors)
@@ -274,9 +281,7 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                 }
             }
 
-            val List<AcceptedStartupClaim> effectiveClaims = if (noConflicts)
-                withInnerClaimArguments(acceptedClaims, system, activePlugins, resource, distro, outputRoot, existingList)
-            else List.of()
+            val List<AcceptedStartupClaim> effectiveClaims = if (noConflicts) acceptedClaims else List.of()
             if (!effectiveClaims.empty) {
                 emitCoreFile(fsa, outcome, pkgName + "/README.md",
                     readmeBase + compile_startupClaimsReadme(effectiveClaims).toString().replace("\t", "  "))
@@ -414,7 +419,8 @@ install(DIRECTORY config
 
     /**
      * Collects the plugin's startup claims, validates them against the system, and registers the
-     * accepted ones' launch arguments on the plugin's context. Problems are added to {@code errors}.
+     * accepted ones' launch arguments in {@code claimArguments}, which the plugin's context reads.
+     * Problems are added to {@code errors}, which fail the generation run like any plugin conflict.
      */
     private def List<AcceptedStartupClaim> acceptStartupClaims(
         RosToolingPlugin plugin,
@@ -422,6 +428,7 @@ install(DIRECTORY config
         System system,
         Set<String> declaredArgs,
         List<AcceptedStartupClaim> previous,
+        Map<String, String> claimArguments,
         List<String> errors)
     {
         val List<AcceptedStartupClaim> accepted = new ArrayList()
@@ -458,119 +465,17 @@ install(DIRECTORY config
                         + "' both claim startup of '" + element + "'")
                 } else if (declaredArgs.contains(arg) || previous.exists[it.argument == arg]) {
                     errors.add("Plugin '" + plugin.id + "' claims startup of '" + element + "', but its launch argument '"
-                        + arg + "' is already declared in system '" + system.name + "'")
+                        + arg + "' is already declared in system '" + system.name
+                        + "'; the name is '<element>_in_<last segment of the plugin id>', so rename the parameter"
+                        + " or give the plugin an id with a different last segment")
                 } else {
                     arguments.put(element, arg)
                     accepted.add(new AcceptedStartupClaim(element, plugin.id, arg, claim.defaultClaimed))
                 }
             }
         }
-        ctx.registerStartupClaimArguments(arguments)
+        claimArguments.putAll(arguments)
         return accepted
-    }
-
-    /**
-     * For each claimed subsystem, adds the launch arguments of the startup claims inside that
-     * subsystem, computed as the subsystem's own generation computes them: every active plugin is
-     * asked for its claims on a context built for the subsystem's System, and the same validity
-     * rules apply. A subsystem whose claims would be rejected, or that is a prebuilt launch file
-     * ({@code fromFile}), contributes none.
-     */
-    private def List<AcceptedStartupClaim> withInnerClaimArguments(
-        List<AcceptedStartupClaim> claims,
-        System system,
-        List<RosToolingPlugin> activePlugins,
-        Resource resource,
-        Ros2Distro distro,
-        Path outputRoot,
-        List<String> existingList)
-    {
-        if (claims.empty) {
-            return claims
-        }
-        val subsystemsByName = new LinkedHashMap<String, System>()
-        for (sub : getSubsystems(system)) {
-            subsystemsByName.put(sub.name, sub)
-        }
-        val List<AcceptedStartupClaim> result = new ArrayList()
-        for (claim : claims) {
-            val sub = subsystemsByName.get(claim.element)
-            if (sub === null || !sub.fromFile.isNullOrEmpty) {
-                result.add(claim)
-            } else {
-                result.add(claim.withInnerArguments(innerClaimArguments(sub, activePlugins, resource, distro, outputRoot, existingList)))
-            }
-        }
-        return result
-    }
-
-    private def List<String> innerClaimArguments(
-        System sub,
-        List<RosToolingPlugin> activePlugins,
-        Resource resource,
-        Ros2Distro distro,
-        Path outputRoot,
-        List<String> existingList)
-    {
-        val List<Extensible> nodes = new ArrayList()
-        val Map<Extensible, Node> nodeTypes = new LinkedHashMap()
-        val Set<Node> resolvedNodeSet = new LinkedHashSet()
-        val Set<ros.Package> resolvedPkgSet = new LinkedHashSet()
-        for (component : sub.components) {
-            if (component instanceof RosNode) {
-                val rnode = component as RosNode
-                nodes.add(rnode)
-                if (rnode.from !== null && !rnode.from.eIsProxy) {
-                    nodeTypes.put(rnode, rnode.from)
-                    resolvedNodeSet.add(rnode.from)
-                    val p = enclosingPackage(rnode.from)
-                    if (p !== null) {
-                        resolvedPkgSet.add(p)
-                    }
-                }
-            }
-        }
-        val Set<String> declared = new LinkedHashSet()
-        if (sub.parameter !== null) {
-            for (p : sub.parameter) {
-                if (p instanceof ros.Parameter && !isSubstitutionParameter(p as ros.Parameter)) {
-                    declared.add((p as ros.Parameter).name)
-                }
-            }
-        }
-        for (lp : getUniqueLaunchParameters(sub)) {
-            declared.add(lp.name)
-        }
-        val List<AcceptedStartupClaim> accepted = new ArrayList()
-        val List<String> errors = new ArrayList()
-        val subResource = if (sub.eResource !== null) sub.eResource else resource
-        for (plugin : activePlugins) {
-            val ctx = new SystemGenerationContext(
-                plugin.id,
-                sub.getName(),
-                sub,
-                !sub.fromFile.isNullOrEmpty,
-                nodes,
-                nodeTypes,
-                new ArrayList(resolvedNodeSet),
-                new ArrayList(resolvedPkgSet),
-                declared,
-                subResource,
-                distro,
-                outputRoot,
-                existingList,
-                new LinkedHashSet<String>(),
-                new LinkedHashMap<String, String>(),
-                new LinkedHashMap<String, SystemGenerationContext.LaunchInclude>(),
-                errors,
-                PluginRegistry.INSTANCE
-            )
-            accepted.addAll(acceptStartupClaims(plugin, ctx, sub, declared, accepted, errors))
-        }
-        if (!errors.empty) {
-            return List.of()
-        }
-        return accepted.map[argument]
     }
 
     private def void emitCoreFile(

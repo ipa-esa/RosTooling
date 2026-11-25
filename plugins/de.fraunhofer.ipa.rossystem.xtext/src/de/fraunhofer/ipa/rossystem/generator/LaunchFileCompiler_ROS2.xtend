@@ -1,6 +1,7 @@
 package de.fraunhofer.ipa.rossystem.generator
 
 import com.google.inject.Inject
+import de.fraunhofer.ipa.ros.plugin.spi.StartupClaim
 import de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext
 import java.util.ArrayList
 import java.util.List
@@ -91,9 +92,15 @@ def generate_launch_description():
   «ENDFOR»
   «IF !claims.empty»
   # *** STARTUP CLAIMS: elements started by a plugin instead of this launch file ***
+  run_claimed_natively_arg = DeclareLaunchArgument(
+    "«StartupClaim.NATIVE_SWITCH_ARGUMENT»", default_value="false",
+    description="Start every element claimed by a plugin natively, including those inside subsystems"
+  )
+  ld.add_action(run_claimed_natively_arg)
   «FOR claim:claims»
   «pyIdentifier(claim.argument)»_arg = DeclareLaunchArgument(
-    "«claim.argument»", default_value="«claim.defaultClaimed»",
+    "«claim.argument»",
+    default_value=PythonExpression(["'false' if '", LaunchConfiguration("«StartupClaim.NATIVE_SWITCH_ARGUMENT»"), "'.lower() == 'true' else '«claim.defaultClaimed»'"]),
     description="«escapePythonString(claimDescription(claim))»"
   )
   ld.add_action(«pyIdentifier(claim.argument)»_arg)
@@ -145,27 +152,26 @@ def generate_launch_description():
 
   # *** ROS 2 subsystems (include launch files)***
   «FOR subsystem:getSubsystems(system)»
-  «val inner = claimInnerArguments(claims, subsystem.name)»
   «IF subsystem.fromFile.nullOrEmpty»
   include_«subsystem.name»= IncludeLaunchDescription(
-    PythonLaunchDescriptionSource([ get_package_share_directory('«subsystem.name»') + '/launch/«subsystem.name».launch.py'])«IF has_matching_parameters(system, subsystem) || !inner.empty»,
+    PythonLaunchDescriptionSource([ get_package_share_directory('«subsystem.name»') + '/launch/«subsystem.name».launch.py'])«IF has_matching_parameters(system, subsystem) || isClaimed(claims, subsystem.name)»,
     launch_arguments={
       «FOR param : system.parameter»«IF subsystem_references_parameter(subsystem, (param as ros.Parameter).name)»
       '«(param as ros.Parameter).name»': LaunchConfiguration('«(param as ros.Parameter).name»'),«ENDIF»«ENDFOR»
-      «FOR innerArg : inner»
-      '«escapePythonString(innerArg)»': 'false',
-      «ENDFOR»
+      «IF isClaimed(claims, subsystem.name)»
+      '«StartupClaim.NATIVE_SWITCH_ARGUMENT»': 'true',
+      «ENDIF»
     }.items()«ENDIF»«claimCondition(claims, subsystem.name)»
   )
   «ELSE»
   include_«subsystem.name»= IncludeLaunchDescription(
-    PythonLaunchDescriptionSource([get_package_share_directory('«subsystem.fromFile.split("/",2).get(0)»') + '/«subsystem.fromFile.split("/",2).get(1)»'])«IF has_matching_parameters(system, subsystem) || !inner.empty»,
+    PythonLaunchDescriptionSource([get_package_share_directory('«subsystem.fromFile.split("/",2).get(0)»') + '/«subsystem.fromFile.split("/",2).get(1)»'])«IF has_matching_parameters(system, subsystem) || isClaimed(claims, subsystem.name)»,
     launch_arguments={
       «FOR param : system.parameter»«IF subsystem_references_parameter(subsystem, (param as ros.Parameter).name)»
       '«(param as ros.Parameter).name»': LaunchConfiguration('«(param as ros.Parameter).name»'),«ENDIF»«ENDFOR»
-      «FOR innerArg : inner»
-      '«escapePythonString(innerArg)»': 'false',
-      «ENDFOR»
+      «IF isClaimed(claims, subsystem.name)»
+      '«StartupClaim.NATIVE_SWITCH_ARGUMENT»': 'true',
+      «ENDIF»
     }.items()«ENDIF»«claimCondition(claims, subsystem.name)»
   )
   «ENDIF»«ENDFOR»«IF !pluginIncludes.empty»
@@ -213,14 +219,9 @@ def generate_launch_description():
         return ",\ncondition=UnlessCondition(LaunchConfiguration('" + escapePythonString(claim.argument) + "'))"
     }
 
-    /**
-     * Launch arguments of the startup claims inside a claimed subsystem, which the native include
-     * of that subsystem turns off; empty for an unclaimed subsystem.
-     */
-    def List<String> claimInnerArguments(List<AcceptedStartupClaim> claims, String subsystem) {
-        val claim = claims.findFirst[it.element == subsystem]
-        if (claim === null) return List.of()
-        return claim.innerArguments
+    /** True if a plugin claims the element; its native include then switches the claims inside it on natively too. */
+    def boolean isClaimed(List<AcceptedStartupClaim> claims, String element) {
+        return claims.exists[it.element == element]
     }
 
     def String claimDescription(AcceptedStartupClaim claim) {
