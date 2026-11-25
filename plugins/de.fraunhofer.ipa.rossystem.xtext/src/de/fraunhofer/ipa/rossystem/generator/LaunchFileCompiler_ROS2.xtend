@@ -145,20 +145,27 @@ def generate_launch_description():
 
   # *** ROS 2 subsystems (include launch files)***
   «FOR subsystem:getSubsystems(system)»
+  «val inner = claimInnerArguments(claims, subsystem.name)»
   «IF subsystem.fromFile.nullOrEmpty»
   include_«subsystem.name»= IncludeLaunchDescription(
-    PythonLaunchDescriptionSource([ get_package_share_directory('«subsystem.name»') + '/launch/«subsystem.name».launch.py'])«IF has_matching_parameters(system, subsystem)»,
+    PythonLaunchDescriptionSource([ get_package_share_directory('«subsystem.name»') + '/launch/«subsystem.name».launch.py'])«IF has_matching_parameters(system, subsystem) || !inner.empty»,
     launch_arguments={
       «FOR param : system.parameter»«IF subsystem_references_parameter(subsystem, (param as ros.Parameter).name)»
       '«(param as ros.Parameter).name»': LaunchConfiguration('«(param as ros.Parameter).name»'),«ENDIF»«ENDFOR»
+      «FOR innerArg : inner»
+      '«escapePythonString(innerArg)»': 'false',
+      «ENDFOR»
     }.items()«ENDIF»«claimCondition(claims, subsystem.name)»
   )
   «ELSE»
   include_«subsystem.name»= IncludeLaunchDescription(
-    PythonLaunchDescriptionSource([get_package_share_directory('«subsystem.fromFile.split("/",2).get(0)»') + '/«subsystem.fromFile.split("/",2).get(1)»'])«IF has_matching_parameters(system, subsystem)»,
+    PythonLaunchDescriptionSource([get_package_share_directory('«subsystem.fromFile.split("/",2).get(0)»') + '/«subsystem.fromFile.split("/",2).get(1)»'])«IF has_matching_parameters(system, subsystem) || !inner.empty»,
     launch_arguments={
       «FOR param : system.parameter»«IF subsystem_references_parameter(subsystem, (param as ros.Parameter).name)»
       '«(param as ros.Parameter).name»': LaunchConfiguration('«(param as ros.Parameter).name»'),«ENDIF»«ENDFOR»
+      «FOR innerArg : inner»
+      '«escapePythonString(innerArg)»': 'false',
+      «ENDFOR»
     }.items()«ENDIF»«claimCondition(claims, subsystem.name)»
   )
   «ENDIF»«ENDFOR»«IF !pluginIncludes.empty»
@@ -204,6 +211,16 @@ def generate_launch_description():
         val claim = claims.findFirst[it.element == element]
         if (claim === null) return ""
         return ",\ncondition=UnlessCondition(LaunchConfiguration('" + escapePythonString(claim.argument) + "'))"
+    }
+
+    /**
+     * Launch arguments of the startup claims inside a claimed subsystem, which the native include
+     * of that subsystem turns off; empty for an unclaimed subsystem.
+     */
+    def List<String> claimInnerArguments(List<AcceptedStartupClaim> claims, String subsystem) {
+        val claim = claims.findFirst[it.element == subsystem]
+        if (claim === null) return List.of()
+        return claim.innerArguments
     }
 
     def String claimDescription(AcceptedStartupClaim claim) {

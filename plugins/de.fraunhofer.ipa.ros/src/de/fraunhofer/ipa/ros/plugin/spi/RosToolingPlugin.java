@@ -83,7 +83,10 @@ public interface RosToolingPlugin {
      * Declares the elements of the system being generated (nodes and subsystems) that this plugin
      * starts itself. Called by core once per system, before
      * {@link #generateSystem(SystemGenerationContext)}, so the claim arguments are already declared
-     * when the plugin registers its launch include. See {@link StartupClaim}. Defaults to no claims.
+     * when the plugin registers its launch include. See {@link StartupClaim}. Core also calls it
+     * with a context for each subsystem of a system whose subsystem the plugin claims, to find the
+     * claims inside that subsystem; it must therefore depend only on the context's system.
+     * Defaults to no claims.
      */
     default List<StartupClaim> startupClaims(final SystemGenerationContext context) {
         return List.of();

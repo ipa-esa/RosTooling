@@ -17,6 +17,13 @@ import java.util.Objects;
  * {@link SystemGenerationContext.LaunchArgumentValue#systemLaunchArgument(String)}. The generated
  * system README lists every claimed element.
  *
+ * <p>When core includes a claimed subsystem natively ({@code <argument>:=false}), it also turns
+ * off the startup claims inside that subsystem: it passes {@code 'false'} for each launch argument
+ * the subsystem's own launch file declares for its claims. To find them core calls
+ * {@link RosToolingPlugin#startupClaims(SystemGenerationContext)} of every enabled plugin with a
+ * context for the subsystem's system, so switching a subsystem to native starts its claimed parts
+ * natively too.
+ *
  * <p>Generation fails if the element is unknown, is a node inside a {@code processes:} entry (not
  * supported), is claimed twice by the same plugin, or is claimed by two plugins.
  *
