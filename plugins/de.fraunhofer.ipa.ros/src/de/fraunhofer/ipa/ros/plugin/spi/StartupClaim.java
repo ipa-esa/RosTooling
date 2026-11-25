@@ -8,7 +8,7 @@ import java.util.Objects;
  * Returned from {@link RosToolingPlugin#startupClaims(SystemGenerationContext)}.
  *
  * <p>Core keeps the element in the generated system launch file, but behind a switch: it declares
- * the launch argument {@link #argumentName(String)} and attaches
+ * the launch argument {@link #argumentName(String, String)} and attaches
  * {@code UnlessCondition(LaunchConfiguration('<argument>'))} to the element's native start. With
  * the argument {@code true} core does not start the element, the claiming plugin does; with
  * {@code false} core starts it natively. The argument's default is {@link #defaultClaimed()},
@@ -33,8 +33,10 @@ import java.util.Objects;
  * <p>Generation fails (the run reports the message as a plugin conflict error and produces no
  * claim output, like any other plugin conflict) if the element is unknown, is a node inside a
  * {@code processes:} entry (not supported), is claimed twice by the same plugin, is claimed by two
- * plugins (this includes two plugin ids whose sanitized last segment is equal), or if the argument
- * name is already declared in the system.
+ * plugins (this includes two plugin ids whose sanitized last segment is equal), if the argument
+ * name is already declared in the system, or if the system includes the same subsystem more than
+ * once anywhere in its subsystem tree: the start-up switches of the subsystem's elements would then
+ * carry one name for all instances.
  *
  * @param element name of a node instance or subsystem of the system
  * @param defaultClaimed default of the launch argument: {@code true} means the plugin starts the
@@ -53,19 +55,27 @@ public record StartupClaim(String element, boolean defaultClaimed) {
     }
 
     /**
-     * Name of the launch argument core declares for this claim: {@code <element>_in_<label>}, where
-     * {@code <label>} is the last dot-separated segment of {@code pluginId}, with every character
-     * outside {@code [A-Za-z0-9_]} replaced by {@code _} (and a leading {@code _} if it would
-     * start with a digit). Plugin id {@code de.example.runner} and element {@code camera} give
-     * {@code camera_in_runner}. The scheme is stable plugin API; plugins compute the name with
+     * Name of the launch argument core declares for this claim:
+     * {@code <system>.<element>_in_<label>}, where {@code <system>} is the name of the system that
+     * owns the element, with every character outside {@code [A-Za-z0-9_]} replaced by {@code _},
+     * and {@code <label>} is the last dot-separated segment of {@code pluginId}, sanitized the
+     * same way (and with a leading {@code _} if it would start with a digit). System
+     * {@code cell}, plugin id {@code de.example.runner} and element {@code camera} give
+     * {@code cell.camera_in_runner}.
+     *
+     * <p>Launch arguments given on the command line reach every launch file of the run, so the
+     * owning system is part of the name: elements of the same name in different systems get
+     * different arguments. A system's launch file uses the same names whether it runs alone or is
+     * included by another system. The scheme is stable plugin API; plugins compute the name with
      * this method instead of spelling it out.
      */
-    public String argumentName(final String pluginId) {
+    public String argumentName(final String systemName, final String pluginId) {
+        Objects.requireNonNull(systemName, "systemName");
         Objects.requireNonNull(pluginId, "pluginId");
         String label = pluginId.substring(pluginId.lastIndexOf('.') + 1).replaceAll("[^A-Za-z0-9_]", "_");
         if (label.isEmpty() || Character.isDigit(label.charAt(0))) {
             label = "_" + label;
         }
-        return element + "_in_" + label;
+        return systemName.replaceAll("[^A-Za-z0-9_]", "_") + "." + element + "_in_" + label;
     }
 }

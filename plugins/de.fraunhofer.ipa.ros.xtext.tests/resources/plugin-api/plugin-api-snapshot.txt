@@ -221,7 +221,7 @@ StartupClaim boolean defaultClaimed()
 StartupClaim boolean equals(java.lang.Object)
 StartupClaim field java.lang.String NATIVE_SWITCH_ARGUMENT
 StartupClaim int hashCode()
-StartupClaim java.lang.String argumentName(java.lang.String)
+StartupClaim java.lang.String argumentName(java.lang.String, java.lang.String)
 StartupClaim java.lang.String element()
 StartupClaim java.lang.String toString()
 SystemGenerationContext java.lang.String startupClaimArgument(java.lang.String)

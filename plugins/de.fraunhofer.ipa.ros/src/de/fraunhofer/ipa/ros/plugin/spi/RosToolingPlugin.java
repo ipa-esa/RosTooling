@@ -86,8 +86,8 @@ public interface RosToolingPlugin {
      * when the plugin registers its launch include. It must derive the claims from
      * {@link SystemGenerationContext#systemModel()} only. See {@link StartupClaim}.
      *
-     * <p>The launch argument of a claim is named {@code <element>_in_<label>}
-     * ({@link StartupClaim#argumentName(String)}); this scheme is stable API. A claim whose
+     * <p>The launch argument of a claim is named {@code <system>.<element>_in_<label>}
+     * ({@link StartupClaim#argumentName(String, String)}); this scheme is stable API. A claim whose
      * argument name is already declared in the system, or that two plugins make for one element
      * (including two plugin ids with the same sanitized last segment), is rejected: the generation
      * run fails with a plugin conflict error, like other plugin conflicts. A subsystem included

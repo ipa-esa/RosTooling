@@ -41,7 +41,7 @@
  *   <li><b>Startup claims:</b> a plugin that starts a node or subsystem of the system itself
  *       returns a {@link StartupClaim} for it from
  *       {@link RosToolingPlugin#startupClaims(SystemGenerationContext)}. Core keeps the element in
- *       the launch file behind the launch argument {@code <element>_in_<plugin label>} (default from
+ *       the launch file behind the launch argument {@code <system>.<element>_in_<plugin label>} (default from
  *       the claim; {@code UnlessCondition} on the native start), declares that argument as a system
  *       launch argument for the plugin to forward, and lists the claim in the system README. The
  *       generic argument {@link StartupClaim#NATIVE_SWITCH_ARGUMENT} turns all claims off, inside

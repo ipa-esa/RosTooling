@@ -243,6 +243,18 @@ class RosSystemGenerator extends AbstractGenerator implements IPluginAwareGenera
                     + StartupClaim.NATIVE_SWITCH_ARGUMENT + "', but the system already declares a parameter or launch argument of that name")
             }
 
+            if (!acceptedClaims.empty) {
+                val Map<String, Integer> subsystemUses = new LinkedHashMap()
+                collectSubsystemUses(system, subsystemUses, new LinkedHashSet<System>())
+                for (use : subsystemUses.entrySet) {
+                    if (use.value > 1) {
+                        sysConflictErrors.add("System '" + system.name + "' has startup claims, but includes subsystem '" + use.key
+                            + "' " + use.value + " times in its subsystem tree; the launch arguments of the elements inside it"
+                            + " would carry one name for all instances, so include it once")
+                    }
+                }
+            }
+
             outcome.pluginConflictErrors.addAll(sysConflictErrors)
             outcome.errors.addAll(sysConflictErrors)
             val noConflicts = sysConflictErrors.empty
@@ -417,6 +429,19 @@ install(DIRECTORY config
         return outcome
     }
 
+    /** Counts how often each subsystem name occurs in the subsystem tree below {@code system}. */
+    private def void collectSubsystemUses(System system, Map<String, Integer> uses, Set<System> path) {
+        for (sub : getSubsystems(system)) {
+            if (sub !== null) {
+                uses.put(sub.name, uses.getOrDefault(sub.name, 0) + 1)
+                if (path.add(sub)) {
+                    collectSubsystemUses(sub, uses, path)
+                    path.remove(sub)
+                }
+            }
+        }
+    }
+
     /**
      * Collects the plugin's startup claims, validates them against the system, and registers the
      * accepted ones' launch arguments in {@code claimArguments}, which the plugin's context reads.
@@ -447,7 +472,7 @@ install(DIRECTORY config
                 val element = claim.element
                 val isNode = nodeNames.contains(element)
                 val isSubsystem = subsystemNames.contains(element)
-                val arg = claim.argumentName(plugin.id)
+                val arg = claim.argumentName(system.name, plugin.id)
                 val owner = previous.findFirst[it.element == element]
                 if (!isNode && !isSubsystem) {
                     errors.add("Plugin '" + plugin.id + "' claims startup of unknown element '" + element
@@ -466,7 +491,7 @@ install(DIRECTORY config
                 } else if (declaredArgs.contains(arg) || previous.exists[it.argument == arg]) {
                     errors.add("Plugin '" + plugin.id + "' claims startup of '" + element + "', but its launch argument '"
                         + arg + "' is already declared in system '" + system.name
-                        + "'; the name is '<element>_in_<last segment of the plugin id>', so rename the parameter"
+                        + "'; the name is '<system>.<element>_in_<last segment of the plugin id>', so rename the parameter"
                         + " or give the plugin an id with a different last segment")
                 } else {
                     arguments.put(element, arg)

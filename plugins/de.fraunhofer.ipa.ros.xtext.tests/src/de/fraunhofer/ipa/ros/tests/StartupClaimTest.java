@@ -88,6 +88,12 @@ public class StartupClaimTest {
                   subSystems:
                     inner_sys
                 """);
+        res(rs, "inmemory:/side_sys.rossystem", """
+                side_sys:
+                  nodes:
+                    side_cam:
+                      from: "claim_type.cam_node"
+                """);
         Resource sys = res(rs, "inmemory:/claim_sys.rossystem", body);
         EcoreUtil.resolveAll(rs);
         return sys;
@@ -174,20 +180,20 @@ public class StartupClaimTest {
         assertTrue(out.errors.toString(), out.errors.isEmpty());
         String l = launch(fsa);
         assertTrue(l, l.contains("from launch.conditions import UnlessCondition"));
-        assertTrue(l, l.contains(defaultOf("camera_in_runner", true)));
+        assertTrue(l, l.contains(defaultOf("claim_sys.camera_in_runner", true)));
         assertTrue(l, l.contains("\"run_claimed_natively\", default_value=\"false\""));
         assertTrue(l, l.contains("description=\"Start every element claimed by a plugin natively, including those inside subsystems\""));
-        assertTrue("switch declared before the claim", l.indexOf("run_claimed_natively_arg = ") < l.indexOf("camera_in_runner_arg = "));
+        assertTrue("switch declared before the claim", l.indexOf("run_claimed_natively_arg = ") < l.indexOf("claim_sys_camera_in_runner_arg = "));
         assertEquals("switch declared once", 1, l.split("run_claimed_natively_arg = ", -1).length - 1);
         assertTrue(l, l.contains("DeclareLaunchArgument("));
         assertTrue(actionBlock(l, "camera"),
-                actionBlock(l, "camera").contains("condition=UnlessCondition(LaunchConfiguration('camera_in_runner'))"));
+                actionBlock(l, "camera").contains("condition=UnlessCondition(LaunchConfiguration('claim_sys.camera_in_runner'))"));
         assertFalse(actionBlock(l, "lidar").contains("UnlessCondition"));
         assertEquals("only one condition", 1, l.split("condition=UnlessCondition", -1).length - 1);
         String r = readme(fsa);
         assertTrue(r, r.contains("## Elements started by plugins"));
-        assertTrue(r, r.contains("`camera`: argument `camera_in_runner` (default `true`, started by plugin `de.example.runner`)"));
-        assertTrue(r, r.contains("camera_in_runner:=false"));
+        assertTrue(r, r.contains("`camera`: argument `claim_sys.camera_in_runner` (default `true`, started by plugin `de.example.runner`)"));
+        assertTrue(r, r.contains("claim_sys.camera_in_runner:=false"));
         assertTrue(r, r.contains("run_claimed_natively:=true"));
     }
 
@@ -198,8 +204,8 @@ public class StartupClaimTest {
         var out = run(load(SYSTEM), fsa);
         assertTrue(out.errors.toString(), out.errors.isEmpty());
         String l = launch(fsa);
-        assertTrue(l, l.contains(defaultOf("lidar_in_runner", false)));
-        assertTrue(actionBlock(l, "lidar").contains("UnlessCondition(LaunchConfiguration('lidar_in_runner'))"));
+        assertTrue(l, l.contains(defaultOf("claim_sys.lidar_in_runner", false)));
+        assertTrue(actionBlock(l, "lidar").contains("UnlessCondition(LaunchConfiguration('claim_sys.lidar_in_runner'))"));
         assertFalse(actionBlock(l, "camera").contains("UnlessCondition"));
         assertTrue(readme(fsa), readme(fsa).contains("(default `false`"));
     }
@@ -211,17 +217,17 @@ public class StartupClaimTest {
         var out = run(load(SYSTEM), fsa);
         assertTrue(out.errors.toString(), out.errors.isEmpty());
         String l = launch(fsa);
-        assertTrue(l, l.contains(defaultOf("inner_sys_in_runner", true)));
+        assertTrue(l, l.contains(defaultOf("claim_sys.inner_sys_in_runner", true)));
         String inc = actionBlock(l, "include_inner_sys_native");
         assertTrue(inc, inc.contains("launch_arguments={\n      'run_claimed_natively': 'true',\n    }.items()"));
         assertTrue(inc, inc.contains("IncludeLaunchDescription("));
         assertFalse("the condition sits on the group", inc.contains("condition"));
         assertEquals("  include_inner_sys = GroupAction(\n    actions=[include_inner_sys_native],\n    scoped=True,\n"
-                + "    condition=UnlessCondition(LaunchConfiguration('inner_sys_in_runner'))", actionBlock(l, "include_inner_sys"));
+                + "    condition=UnlessCondition(LaunchConfiguration('claim_sys.inner_sys_in_runner'))", actionBlock(l, "include_inner_sys"));
         assertTrue(l, l.contains("from launch.actions import GroupAction, IncludeLaunchDescription"));
         assertTrue(l, l.contains("ld.add_action(include_inner_sys)"));
         assertFalse(actionBlock(l, "camera").contains("UnlessCondition"));
-        assertTrue(readme(fsa), readme(fsa).contains("`inner_sys`: argument `inner_sys_in_runner`"));
+        assertTrue(readme(fsa), readme(fsa).contains("`inner_sys`: argument `claim_sys.inner_sys_in_runner`"));
     }
 
     @Test
@@ -250,7 +256,7 @@ public class StartupClaimTest {
                       from: "claim_type.cam_node"
                   subSystems:
                     inner_sys
-                    mid_sys
+                    side_sys
                 """;
         InMemoryFileSystemAccess plain = new InMemoryFileSystemAccess();
         run(load(two), plain);
@@ -261,10 +267,10 @@ public class StartupClaimTest {
         String l = launch(fsa);
         assertTrue(l, l.contains("scoped=True"));
         assertEquals("only the claimed include carries the switch", 1, l.split("'run_claimed_natively': 'true'", -1).length - 1);
-        assertEquals("sibling include unchanged", actionBlock(launch(plain), "include_mid_sys"), actionBlock(l, "include_mid_sys"));
-        assertFalse(actionBlock(l, "include_mid_sys").contains("GroupAction"));
+        assertEquals("sibling include unchanged", actionBlock(launch(plain), "include_side_sys"), actionBlock(l, "include_side_sys"));
+        assertFalse(actionBlock(l, "include_side_sys").contains("GroupAction"));
         assertTrue("claimed group is added before the sibling",
-                l.indexOf("ld.add_action(include_inner_sys)") < l.indexOf("ld.add_action(include_mid_sys)"));
+                l.indexOf("ld.add_action(include_inner_sys)") < l.indexOf("ld.add_action(include_side_sys)"));
     }
 
     @Test
@@ -298,6 +304,12 @@ public class StartupClaimTest {
                 inner_sys:
                   nodes:
                     inner_cam:
+                      from: "claim_type.cam_node"
+                """);
+        res(rs, "inmemory:/side_sys.rossystem", """
+                side_sys:
+                  nodes:
+                    side_cam:
                       from: "claim_type.cam_node"
                 """);
         Resource sys = res(rs, "inmemory:/claim_sys.rossystem", body);
@@ -351,10 +363,10 @@ public class StartupClaimTest {
         assertEquals(1, calls.get());
         String m = launch(midFsa, "mid_sys");
         assertTrue(m, m.contains("run_claimed_natively_arg = "));
-        assertTrue(m, m.contains(defaultOf("inner_sys_in_runner", true)));
-        assertTrue(m, m.contains(defaultOf("mid_cam_in_runner", true)));
+        assertTrue(m, m.contains(defaultOf("mid_sys.inner_sys_in_runner", true)));
+        assertTrue(m, m.contains(defaultOf("mid_sys.mid_cam_in_runner", true)));
         assertTrue(actionBlock(m, "include_inner_sys_native").contains("'run_claimed_natively': 'true'"));
-        assertTrue(actionBlock(m, "mid_cam").contains("UnlessCondition(LaunchConfiguration('mid_cam_in_runner'))"));
+        assertTrue(actionBlock(m, "mid_cam").contains("UnlessCondition(LaunchConfiguration('mid_sys.mid_cam_in_runner'))"));
     }
 
     private Resource loadMid() throws Exception {
@@ -419,12 +431,30 @@ public class StartupClaimTest {
     }
 
     @Test
-    public void argumentNameClashMentionsTheNamingScheme() throws Exception {
+    public void argumentNameIsQualifiedBySystemAndSanitized() {
+        StartupClaim claim = new StartupClaim("camera", true);
+        assertEquals("cell.camera_in_runner", claim.argumentName("cell", "de.example.runner"));
+        assertEquals("cell_2.camera_in__1x", claim.argumentName("cell-2", "de.example.1x"));
+        assertFalse(claim.argumentName("a", "p.x").equals(claim.argumentName("b", "p.x")));
+    }
+
+    @Test
+    public void subsystemIncludedTwiceInTheTreeFailsAGenerationWithClaims() throws Exception {
         PluginRegistry.INSTANCE.register(plugin("de.example.runner", List.of(new StartupClaim("camera", true)), null));
-        String body = SYSTEM.replace("claim_sys:\n", "claim_sys:\n  parameters:\n    camera_in_runner:\n      type: Integer\n      value: 1\n");
+        // inner_sys is included directly and through mid_sys
+        String body = SYSTEM.replace("  subSystems:\n    inner_sys\n", "  subSystems:\n    mid_sys\n    inner_sys\n");
         var out = run(load(body), new InMemoryFileSystemAccess());
         assertTrue(out.errors.toString(), out.errors.stream().anyMatch(e ->
-                e.contains("camera_in_runner") && e.contains("last segment of the plugin id")));
+                e.contains("inner_sys") && e.contains("2 times") && e.contains("include it once")));
+        assertEquals(out.errors, out.pluginConflictErrors);
+    }
+
+    @Test
+    public void subsystemIncludedTwiceIsFineWithoutClaims() throws Exception {
+        PluginRegistry.INSTANCE.register(plugin("de.example.runner", List.of(), null));
+        String body = SYSTEM.replace("  subSystems:\n    inner_sys\n", "  subSystems:\n    mid_sys\n    inner_sys\n");
+        var out = run(load(body), new InMemoryFileSystemAccess());
+        assertTrue(out.errors.toString(), out.errors.isEmpty());
     }
 
     @Test
@@ -439,7 +469,7 @@ public class StartupClaimTest {
     @Test
     public void claimContextExposesArgumentsAndSwitch() throws Exception {
         PluginRegistry.INSTANCE.register(plugin("de.example.runner", List.of(new StartupClaim("camera", true)), c -> {
-            assertTrue(c.declaredSystemLaunchArguments().contains("camera_in_runner"));
+            assertTrue(c.declaredSystemLaunchArguments().contains("claim_sys.camera_in_runner"));
             assertTrue(c.declaredSystemLaunchArguments().contains(StartupClaim.NATIVE_SWITCH_ARGUMENT));
             assertEquals(null, c.startupClaimArgument("lidar"));
             return null;
@@ -452,7 +482,7 @@ public class StartupClaimTest {
     public void pluginForwardsClaimArgumentIntoItsInclude() throws Exception {
         PluginRegistry.INSTANCE.register(plugin("de.example.fwd.box_runner", List.of(new StartupClaim("camera", true)), c -> {
             String arg = c.startupClaimArgument("camera");
-            assertEquals("camera_in_box_runner", arg);
+            assertEquals("claim_sys.camera_in_box_runner", arg);
             assertTrue(c.declaredSystemLaunchArguments().contains(arg));
             c.writeFile("launch/" + c.pluginFolder() + "/run.launch.py", "# run");
             c.addLaunchInclude("launch/" + c.pluginFolder() + "/run.launch.py", List.of(
@@ -464,7 +494,7 @@ public class StartupClaimTest {
         var out = run(load(SYSTEM), fsa);
         assertTrue(out.errors.toString(), out.errors.isEmpty());
         String l = launch(fsa);
-        assertTrue(l, l.contains("'enabled': LaunchConfiguration('camera_in_box_runner')"));
+        assertTrue(l, l.contains("'enabled': LaunchConfiguration('claim_sys.camera_in_box_runner')"));
         assertTrue(l, l.contains("scoped=True"));
         assertFalse(out.pluginFiles.isEmpty());
     }
