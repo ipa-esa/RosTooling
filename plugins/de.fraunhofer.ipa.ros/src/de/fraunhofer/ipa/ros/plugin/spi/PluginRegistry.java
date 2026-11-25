@@ -47,7 +47,7 @@ public final class PluginRegistry {
      * Adding something bumps the minor version, removing or changing something the major version.
      * A plugin JAR declares the versions it understands as {@code pluginApiVersionRange}.
      */
-    public static final String PLUGIN_API_VERSION = "1.0.0";
+    public static final String PLUGIN_API_VERSION = "1.1.0";
     public static final String PROP_PLUGINS_DIR = "ros.plugins.dir";
     public static final String ENV_PLUGINS_DIR = "ROS_PLUGINS_DIR";
     public static final String PROP_PLUGINS_ENABLED = "ros.plugins.enabled";

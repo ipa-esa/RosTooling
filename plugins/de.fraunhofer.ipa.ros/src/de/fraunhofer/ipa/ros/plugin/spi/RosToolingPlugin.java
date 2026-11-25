@@ -80,6 +80,26 @@ public interface RosToolingPlugin {
     }
 
     /**
+     * Declares the elements of the system being generated (nodes and subsystems) that this plugin
+     * starts itself. Called by core exactly once per system, before
+     * {@link #generateSystem(SystemGenerationContext)}, so the claim arguments are already declared
+     * when the plugin registers its launch include. It must derive the claims from
+     * {@link SystemGenerationContext#systemModel()} only. See {@link StartupClaim}.
+     *
+     * <p>The launch argument of a claim is named {@code <system>.<element>_in_<label>}
+     * ({@link StartupClaim#argumentName(String, String)}); this scheme is stable API. A claim whose
+     * argument name is already declared in the system, or that two plugins make for one element
+     * (including two plugin ids with the same sanitized last segment), is rejected: the generation
+     * run fails with a plugin conflict error, like other plugin conflicts. A subsystem included
+     * {@code fromFile} is outside core's control: core still passes
+     * {@link StartupClaim#NATIVE_SWITCH_ARGUMENT}, but only launch files that declare it honour it.
+     * Defaults to no claims.
+     */
+    default List<StartupClaim> startupClaims(final SystemGenerationContext context) {
+        return List.of();
+    }
+
+    /**
      * MCP/LSP authoring tools dynamically exposed when this plugin is active.
      */
     default List<PluginToolDescriptor> tools() {

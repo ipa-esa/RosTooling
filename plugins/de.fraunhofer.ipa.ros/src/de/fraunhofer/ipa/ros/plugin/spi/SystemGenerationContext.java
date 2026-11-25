@@ -83,6 +83,7 @@ public final class SystemGenerationContext extends GenerationContext {
     private final List<ros.Package> resolvedPackages;
     private final boolean fromFileSystem;
     private final Set<String> declaredSystemLaunchArgs;
+    private final Map<String, String> startupClaimArguments;
     private final Map<String, LaunchInclude> sharedLaunchIncludes;
 
     public SystemGenerationContext(
@@ -120,6 +121,7 @@ public final class SystemGenerationContext extends GenerationContext {
                 coreOwnedPaths,
                 allPluginOwnedFiles,
                 sharedLaunchIncludes,
+                null,
                 errors,
                 registry);
     }
@@ -141,6 +143,7 @@ public final class SystemGenerationContext extends GenerationContext {
             final Set<String> coreOwnedPaths,
             final Map<String, String> allPluginOwnedFiles,
             final Map<String, LaunchInclude> sharedLaunchIncludes,
+            final Map<String, String> startupClaimArguments,
             final List<String> errors,
             final PluginRegistry registry) {
         super(
@@ -163,6 +166,7 @@ public final class SystemGenerationContext extends GenerationContext {
         this.declaredSystemLaunchArgs = declaredSystemLaunchArgs == null
                 ? Set.of()
                 : Collections.unmodifiableSet(new LinkedHashSet<>(declaredSystemLaunchArgs));
+        this.startupClaimArguments = startupClaimArguments != null ? startupClaimArguments : new LinkedHashMap<>();
         this.sharedLaunchIncludes = sharedLaunchIncludes != null ? sharedLaunchIncludes : new LinkedHashMap<>();
     }
 
@@ -237,7 +241,23 @@ public final class SystemGenerationContext extends GenerationContext {
      * launch file (for use with {@link LaunchArgumentKind#SYSTEM_LAUNCH_ARG}).
      */
     public Set<String> declaredSystemLaunchArguments() {
-        return declaredSystemLaunchArgs;
+        if (startupClaimArguments.isEmpty()) {
+            return declaredSystemLaunchArgs;
+        }
+        Set<String> all = new LinkedHashSet<>(declaredSystemLaunchArgs);
+        all.addAll(startupClaimArguments.values());
+        all.add(StartupClaim.NATIVE_SWITCH_ARGUMENT);
+        return Collections.unmodifiableSet(all);
+    }
+
+    /**
+     * Launch argument core declared for this plugin's accepted {@link StartupClaim} on
+     * {@code element}, or {@code null} if this plugin has no accepted claim on it. The argument is
+     * part of {@link #declaredSystemLaunchArguments()}, which then also contains
+     * {@link StartupClaim#NATIVE_SWITCH_ARGUMENT}.
+     */
+    public String startupClaimArgument(final String element) {
+        return startupClaimArguments.get(element);
     }
 
     /**
@@ -333,7 +353,7 @@ public final class SystemGenerationContext extends GenerationContext {
                                     + argVal.value() + "' for argument '" + argName + "'");
                             return;
                         }
-                        if (!declaredSystemLaunchArgs.contains(argVal.value())) {
+                        if (!declaredSystemLaunchArguments().contains(argVal.value())) {
                             recordError("Plugin '" + pluginId() + "' referenced undeclared system launch argument '"
                                     + argVal.value() + "' for argument '" + argName + "' on include '" + subPath + "'");
                             return;

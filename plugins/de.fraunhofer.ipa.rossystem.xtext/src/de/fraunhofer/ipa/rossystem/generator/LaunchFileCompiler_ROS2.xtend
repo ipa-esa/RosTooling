@@ -1,6 +1,7 @@
 package de.fraunhofer.ipa.rossystem.generator
 
 import com.google.inject.Inject
+import de.fraunhofer.ipa.ros.plugin.spi.StartupClaim
 import de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext
 import java.util.ArrayList
 import java.util.List
@@ -41,7 +42,15 @@ class LaunchFileCompiler_ROS2 {
      * required keyword argument on every supported distribution, so lifecycle nodes always get
      * one ({@code ""} when the model sets none); plain Node and ComposableNode keep it optional.
      */
-    def compile_toROS2launch(System system, List<SystemGenerationContext.LaunchInclude> pluginIncludes) '''
+    def compile_toROS2launch(System system, List<SystemGenerationContext.LaunchInclude> pluginIncludes) {
+        return compile_toROS2launch(system, pluginIncludes, List.of())
+    }
+
+    /**
+     * Elements claimed by plugins ({@code claims}) get a launch argument and an
+     * {@code UnlessCondition} on their native start; without claims the output is unchanged.
+     */
+    def compile_toROS2launch(System system, List<SystemGenerationContext.LaunchInclude> pluginIncludes, List<AcceptedStartupClaim> claims) '''
 «IF YamlFileGenerated(system)»import os«ENDIF»
 from launch import LaunchDescription
 «IF !getStandaloneRos2Nodes(system).empty || !hasComponentContainers(system)»from launch_ros.actions import Node«ENDIF»
@@ -53,7 +62,8 @@ from launch_ros.descriptions import ComposableNode
 from launch_ros.parameter_descriptions import ParameterValue
 «IF hasSubstitutionValues(system) || hasPluginIncludeSubstitutions(pluginIncludes)»from launch.frontend.parse_substitution import parse_substitution«ENDIF»
 «IF !getSubsystems(system).empty || !pluginIncludes.empty»from ament_index_python.packages import get_package_share_directory«ENDIF»
-from launch.actions import «IF !pluginIncludes.empty»GroupAction, «ENDIF»IncludeLaunchDescription, DeclareLaunchArgument
+«IF !claims.empty»from launch.conditions import UnlessCondition«ENDIF»
+from launch.actions import «IF !pluginIncludes.empty || !claims.empty»GroupAction, «ENDIF»IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoinSubstitution, TextSubstitution
 
@@ -80,6 +90,22 @@ def generate_launch_description():
   )
   ld.add_action(«pyIdentifier(parameter.name)»_arg)
   «ENDFOR»
+  «IF !claims.empty»
+  # *** STARTUP CLAIMS: elements started by a plugin instead of this launch file ***
+  run_claimed_natively_arg = DeclareLaunchArgument(
+    "«StartupClaim.NATIVE_SWITCH_ARGUMENT»", default_value="false",
+    description="Start every element claimed by a plugin natively, including those inside subsystems"
+  )
+  ld.add_action(run_claimed_natively_arg)
+  «FOR claim:claims»
+  «pyIdentifier(claim.argument)»_arg = DeclareLaunchArgument(
+    "«claim.argument»",
+    default_value=PythonExpression(["'false' if '", LaunchConfiguration("«StartupClaim.NATIVE_SWITCH_ARGUMENT»"), "'.lower() == 'true' else '«claim.defaultClaimed»'"]),
+    description="«escapePythonString(claimDescription(claim))»"
+  )
+  ld.add_action(«pyIdentifier(claim.argument)»_arg)
+  «ENDFOR»
+  «ENDIF»
 
   «IF hasComponentContainers(system)»
   # *** ROS 2 component containers ***
@@ -120,28 +146,48 @@ def generate_launch_description():
     name="«(component as RosNode).name»"«compile_remappings_str(component as RosNode, system.connections)»«IF !component.rosparameters.nullOrEmpty || hasAutoSlotParameters(component as RosNode)»«IF generate_yaml(component)»,
     parameters = [«component.name»_config«IF hasSubstitutionParameters(component)», {«FOR param:component.rosparameters»«IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ENDIF»«ENDFOR»}«ENDIF»]«ELSE»,
     parameters=[{«FOR param:component.rosparameters»
-      «IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ELSE»«IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDIF»«ENDFOR»«compile_slot_params_str(component as RosNode)»}]«ENDIF»«ENDIF»
+      «IF isSubstitutionValue(param)»"«param.from.name»": ParameterValue(parse_substitution("«escapePythonString(get_param_value(param.value,param.name))»"), value_type=str),«ELSE»«IF isStringParameter(param)»"«param.from.name»": ParameterValue(LaunchConfiguration("«param.name»"), value_type=str),«ELSE»"«param.from.name»": LaunchConfiguration("«param.name»"),«ENDIF»«ENDIF»«ENDFOR»«compile_slot_params_str(component as RosNode)»}]«ENDIF»«ENDIF»«claimCondition(claims, (component as RosNode).name)»
   )
   «ENDFOR»
 
   # *** ROS 2 subsystems (include launch files)***
   «FOR subsystem:getSubsystems(system)»
   «IF subsystem.fromFile.nullOrEmpty»
-  include_«subsystem.name»= IncludeLaunchDescription(
-    PythonLaunchDescriptionSource([ get_package_share_directory('«subsystem.name»') + '/launch/«subsystem.name».launch.py'])«IF has_matching_parameters(system, subsystem)»,
+  include_«subsystem.name»«IF isClaimed(claims, subsystem.name)»_native«ENDIF»= IncludeLaunchDescription(
+    PythonLaunchDescriptionSource([ get_package_share_directory('«subsystem.name»') + '/launch/«subsystem.name».launch.py'])«IF has_matching_parameters(system, subsystem) || isClaimed(claims, subsystem.name)»,
     launch_arguments={
       «FOR param : system.parameter»«IF subsystem_references_parameter(subsystem, (param as ros.Parameter).name)»
       '«(param as ros.Parameter).name»': LaunchConfiguration('«(param as ros.Parameter).name»'),«ENDIF»«ENDFOR»
+      «IF isClaimed(claims, subsystem.name)»
+      '«StartupClaim.NATIVE_SWITCH_ARGUMENT»': 'true',
+      «ENDIF»
     }.items()«ENDIF»
   )
+  «IF isClaimed(claims, subsystem.name)»
+  include_«subsystem.name» = GroupAction(
+    actions=[include_«subsystem.name»_native],
+    scoped=True,
+    condition=UnlessCondition(LaunchConfiguration('«escapePythonString(claimArgumentOf(claims, subsystem.name))»'))
+  )
+  «ENDIF»
   «ELSE»
-  include_«subsystem.name»= IncludeLaunchDescription(
-    PythonLaunchDescriptionSource([get_package_share_directory('«subsystem.fromFile.split("/",2).get(0)»') + '/«subsystem.fromFile.split("/",2).get(1)»'])«IF has_matching_parameters(system, subsystem)»,
+  include_«subsystem.name»«IF isClaimed(claims, subsystem.name)»_native«ENDIF»= IncludeLaunchDescription(
+    PythonLaunchDescriptionSource([get_package_share_directory('«subsystem.fromFile.split("/",2).get(0)»') + '/«subsystem.fromFile.split("/",2).get(1)»'])«IF has_matching_parameters(system, subsystem) || isClaimed(claims, subsystem.name)»,
     launch_arguments={
       «FOR param : system.parameter»«IF subsystem_references_parameter(subsystem, (param as ros.Parameter).name)»
       '«(param as ros.Parameter).name»': LaunchConfiguration('«(param as ros.Parameter).name»'),«ENDIF»«ENDFOR»
+      «IF isClaimed(claims, subsystem.name)»
+      '«StartupClaim.NATIVE_SWITCH_ARGUMENT»': 'true',
+      «ENDIF»
     }.items()«ENDIF»
   )
+  «IF isClaimed(claims, subsystem.name)»
+  include_«subsystem.name» = GroupAction(
+    actions=[include_«subsystem.name»_native],
+    scoped=True,
+    condition=UnlessCondition(LaunchConfiguration('«escapePythonString(claimArgumentOf(claims, subsystem.name))»'))
+  )
+  «ENDIF»
   «ENDIF»«ENDFOR»«IF !pluginIncludes.empty»
   «FOR i : 0 ..< pluginIncludes.size»
   «val inc = pluginIncludes.get(i)»
@@ -179,6 +225,32 @@ def generate_launch_description():
 
   return ld
     '''
+
+    /** Trailing keyword argument that keeps a claimed element from starting while its claim is on. */
+    def String claimCondition(List<AcceptedStartupClaim> claims, String element) {
+        val claim = claims.findFirst[it.element == element]
+        if (claim === null) return ""
+        return ",\ncondition=UnlessCondition(LaunchConfiguration('" + escapePythonString(claim.argument) + "'))"
+    }
+
+    /**
+     * Launch argument of the claim on the element. A claimed subsystem's native include sets
+     * {@code run_claimed_natively} for the subsystem only: it runs inside a scoped group, so the
+     * setting does not reach the includes that follow.
+     */
+    def String claimArgumentOf(List<AcceptedStartupClaim> claims, String element) {
+        return claims.findFirst[it.element == element].argument
+    }
+
+    /** True if a plugin claims the element; its native include then switches the claims inside it on natively too. */
+    def boolean isClaimed(List<AcceptedStartupClaim> claims, String element) {
+        return claims.exists[it.element == element]
+    }
+
+    def String claimDescription(AcceptedStartupClaim claim) {
+        return "Start of '" + claim.element + "' is handled by plugin " + claim.pluginId
+            + " when true; set false to start it natively"
+    }
 
     def boolean hasPluginIncludeSubstitutions(List<SystemGenerationContext.LaunchInclude> pluginIncludes) {
         if (pluginIncludes === null) return false

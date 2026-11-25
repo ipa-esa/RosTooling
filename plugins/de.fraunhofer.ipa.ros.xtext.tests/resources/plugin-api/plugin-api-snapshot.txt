@@ -1,4 +1,4 @@
-version=1.0.0
+version=1.1.0
 BlockDescriptor java.lang.String description()
 BlockDescriptor java.lang.String name()
 BlockDescriptor java.util.Map<java.lang.String, de.fraunhofer.ipa.ros.plugin.spi.MergeStrategy> fieldMergeRules()
@@ -200,6 +200,7 @@ RosToolingPlugin java.lang.String version() default
 RosToolingPlugin java.util.List<de.fraunhofer.ipa.ros.plugin.spi.BlockDescriptor> blocks()
 RosToolingPlugin java.util.List<de.fraunhofer.ipa.ros.plugin.spi.LoaderDescriptor> loaders() default
 RosToolingPlugin java.util.List<de.fraunhofer.ipa.ros.plugin.spi.PluginToolDescriptor> tools() default
+RosToolingPlugin java.util.List<de.fraunhofer.ipa.ros.plugin.spi.StartupClaim> startupClaims(de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext) default
 RosToolingPlugin java.util.List<java.lang.String> dependencies() default
 RosToolingPlugin void generatePackage(de.fraunhofer.ipa.ros.plugin.spi.PackageGenerationContext) default
 RosToolingPlugin void generateSystem(de.fraunhofer.ipa.ros.plugin.spi.SystemGenerationContext) default
@@ -216,6 +217,14 @@ SchemaHints static java.lang.String label(org.eclipse.emf.ecore.ENamedElement)
 SchemaHints static java.util.List<java.lang.String> choices(org.eclipse.emf.ecore.EStructuralFeature)
 SchemaHints static java.util.List<org.eclipse.emf.ecore.EStructuralFeature> orderedFeatures(org.eclipse.emf.ecore.EClass)
 SchemaHints static void set(org.eclipse.emf.ecore.EModelElement, java.lang.String, java.lang.String)
+StartupClaim boolean defaultClaimed()
+StartupClaim boolean equals(java.lang.Object)
+StartupClaim field java.lang.String NATIVE_SWITCH_ARGUMENT
+StartupClaim int hashCode()
+StartupClaim java.lang.String argumentName(java.lang.String, java.lang.String)
+StartupClaim java.lang.String element()
+StartupClaim java.lang.String toString()
+SystemGenerationContext java.lang.String startupClaimArgument(java.lang.String)
 SystemGenerationContext java.util.List<ros.Extensible> rosNodes()
 SystemGenerationContext java.util.List<ros.Node> resolvedNodes()
 SystemGenerationContext java.util.List<ros.Package> resolvedPackages()
