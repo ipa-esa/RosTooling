@@ -11,6 +11,9 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.ChangeCommand;
 import org.eclipse.glsp.server.emf.EMFOperationHandler;
+import ros.ParameterSequence;
+import ros.ParameterListType;
+import ros.ParameterArrayType;
 import ros.Artifact;
 import ros.Extensible;
 import ros.InterfaceType;
@@ -258,10 +261,98 @@ public class EditRosPropertyOperationHandler extends EMFOperationHandler<EditRos
         }
     }
 
+    /**
+     * {@code [a, "b", [c]]} as a list value, when the parameter is declared as an array or list (or
+     * {@code explicitType} says so). Null otherwise, and for text that is not such a list: the
+     * grammar has no empty list, so {@code []} is not one either.
+     */
+    private static ParameterSequence parseParameterList(
+            final String rawVal,
+            final String explicitType,
+            final ParameterType originType) {
+        String hint = explicitType != null ? explicitType.trim().toLowerCase() : "";
+        boolean declared = hint.isEmpty()
+                && (originType instanceof ParameterArrayType || originType instanceof ParameterListType);
+        if (!declared && !"array".equals(hint) && !"list".equals(hint)) {
+            return null;
+        }
+        List<String> items = splitList(rawVal);
+        if (items == null || items.isEmpty()) {
+            return null;
+        }
+        ParameterSequence sequence = RosFactory.eINSTANCE.createParameterSequence();
+        for (int i = 0; i < items.size(); i++) {
+            ParameterType itemType = null;
+            if (originType instanceof ParameterArrayType array) {
+                itemType = array.getType();
+            } else if (originType instanceof ParameterListType types && !types.getSequence().isEmpty()) {
+                itemType = types.getSequence().get(Math.min(i, types.getSequence().size() - 1));
+            }
+            String item = items.get(i);
+            boolean quoted = item.length() >= 2 && (item.charAt(0) == '"' || item.charAt(0) == '\'')
+                    && item.charAt(item.length() - 1) == item.charAt(0);
+            if (quoted) {
+                item = item.substring(1, item.length() - 1)
+                        .replace("\\\"", "\"").replace("\\'", "'").replace("\\\\", "\\");
+            }
+            if (quoted && itemType == null) {
+                ParameterString text = RosFactory.eINSTANCE.createParameterString();
+                text.setValue(item);
+                sequence.getValue().add(text);
+            } else {
+                sequence.getValue().add(createTypedParameterValue(item, "", itemType));
+            }
+        }
+        return sequence;
+    }
+
+    /** The top-level items of {@code [..]}, quotes kept; null when {@code raw} is not a closed list. */
+    private static List<String> splitList(final String raw) {
+        String text = raw == null ? "" : raw.trim();
+        if (text.length() < 2 || text.charAt(0) != '[' || text.charAt(text.length() - 1) != ']') {
+            return null;
+        }
+        String body = text.substring(1, text.length() - 1);
+        List<String> items = new ArrayList<>();
+        int depth = 0;
+        int from = 0;
+        char quote = 0;
+        for (int i = 0; i < body.length(); i++) {
+            char c = body.charAt(i);
+            if (quote != 0) {
+                if (c == '\\') {
+                    i++;
+                } else if (c == quote) {
+                    quote = 0;
+                }
+            } else if ((c == '"' || c == '\'') && body.substring(from, i).isBlank()) {
+                quote = c;
+            } else if (c == '[') {
+                depth++;
+            } else if (c == ']') {
+                depth--;
+            } else if (c == ',' && depth == 0) {
+                items.add(body.substring(from, i).trim());
+                from = i + 1;
+            }
+        }
+        if (quote != 0 || depth != 0) {
+            return null;
+        }
+        if (!body.isBlank()) {
+            items.add(body.substring(from).trim());
+        }
+        return items.stream().anyMatch(String::isEmpty) ? null : items;
+    }
+
     public static ParameterValue createTypedParameterValue(
             final String rawVal,
             final String explicitType,
             final ParameterType originType) {
+        ParameterSequence list = parseParameterList(rawVal, explicitType, originType);
+        if (list != null) {
+            return list;
+        }
         String typeHint = explicitType != null ? explicitType.trim().toLowerCase() : "";
         if (typeHint.isEmpty() && originType != null) {
             if (originType instanceof ParameterIntegerType) {

@@ -22,6 +22,7 @@ import de.fraunhofer.ipa.ros2.distro.Ros2Distros;
 import de.fraunhofer.ipa.ros2.distro.UnknownDistroException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -213,15 +214,22 @@ public final class RosPluginCommandSupport {
         final String finalModelPath = modelPath;
         final String finalModelText = modelText;
 
-        if (fileUri != null && !fileUri.isBlank() && access != null && (finalModelText == null || finalModelText.isBlank())) {
+        // The tool gets its own copy of the model: references into other files resolve through the
+        // workspace index, and a handler that edits the model cannot touch the server's resource.
+        if (fileUri != null && !fileUri.isBlank() && access != null) {
             try {
                 return access.doRead(fileUri, (context) -> {
-                    Resource res = context.getResource();
-                    EcoreUtil.resolveAll(res);
-                    String txt = extractResourceText(res, finalModelPath);
-                    ToolExecutionContext execCtx = new ToolExecutionContext(res, finalModelPath, txt, toolArgs);
-                    ToolResult result = matchedTool.handler().execute(execCtx);
-                    return formatToolResult(result, fileUri);
+                    try {
+                        Resource served = context.getResource();
+                        String txt = finalModelText != null && !finalModelText.isBlank()
+                                ? finalModelText : extractResourceText(served, finalModelPath);
+                        Resource res = loadToolResource(served, txt, rspRegistry);
+                        ToolExecutionContext execCtx = new ToolExecutionContext(res, finalModelPath, txt, toolArgs);
+                        ToolResult result = matchedTool.handler().execute(execCtx);
+                        return formatToolResult(result, fileUri);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
                 }).get();
             } catch (Exception e) {
                 return Map.of("success", false, "error", "Tool execution failed: " + e.getMessage());
@@ -506,6 +514,20 @@ public final class RosPluginCommandSupport {
         }
     }
 
+    private static Resource loadToolResource(
+            final Resource served,
+            final String text,
+            final IResourceServiceProvider.Registry rspRegistry) throws IOException {
+        URI uri = served.getURI();
+        IResourceServiceProvider rsp = rspRegistry.getResourceServiceProvider(uri);
+        XtextResourceSet rs = rsp != null ? rsp.get(XtextResourceSet.class) : new XtextResourceSet();
+        copyWorkspaceView(served, rs);
+        Resource res = rs.createResource(uri);
+        res.load(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)), Map.of());
+        EcoreUtil.resolveAll(res);
+        return res;
+    }
+
     private static Resource loadStandaloneResource(
             final String fileUri,
             final String modelPath,
@@ -537,6 +559,45 @@ public final class RosPluginCommandSupport {
         return res;
     }
 
+    /**
+     * Gives {@code target} the view of the workspace that {@code original}'s resource set has (project
+     * settings, index and the text of the other open models), so that references into other files
+     * resolve in {@code target} without touching the language server's own resources.
+     */
+    private static void copyWorkspaceView(final Resource original, final XtextResourceSet target)
+            throws IOException {
+        ResourceSet origRs = original.getResourceSet();
+        if (origRs == null) {
+            return;
+        }
+        target.getLoadOptions().putAll(origRs.getLoadOptions());
+        ProjectDescription origProj = ProjectDescription.findInEmfObject(origRs);
+        if (origProj != null && ProjectDescription.findInEmfObject(target) == null) {
+            ProjectDescription projCopy = new ProjectDescription();
+            projCopy.setName(origProj.getName());
+            projCopy.setDependencies(new ArrayList<>(origProj.getDependencies()));
+            projCopy.attachToEmfObject(target);
+        }
+        ProjectConfigAdapter origCfg = ProjectConfigAdapter.findInEmfObject(origRs);
+        if (origCfg != null && ProjectConfigAdapter.findInEmfObject(target) == null) {
+            ProjectConfigAdapter.install(target, origCfg.getProjectConfig());
+        }
+        ChunkedResourceDescriptions origIndex = ChunkedResourceDescriptions.findInEmfObject(origRs);
+        if (origIndex != null && ChunkedResourceDescriptions.findInEmfObject(target) == null) {
+            origIndex.createShallowCopyWith(target);
+        }
+        for (Resource sibling : new ArrayList<>(origRs.getResources())) {
+            if (sibling == original || sibling.getURI() == null) {
+                continue;
+            }
+            String siblingText = extractResourceText(sibling, null);
+            if (siblingText != null) {
+                Resource copy = target.createResource(sibling.getURI());
+                copy.load(new ByteArrayInputStream(siblingText.getBytes(StandardCharsets.UTF_8)), Map.of());
+            }
+        }
+    }
+
     private static void validateUpdatedText(
             final Resource originalResource,
             final String updatedText,
@@ -550,35 +611,7 @@ public final class RosPluginCommandSupport {
                 return;
             }
             XtextResourceSet checkRs = rsp.get(XtextResourceSet.class);
-            ResourceSet origRs = originalResource.getResourceSet();
-            if (origRs != null) {
-                checkRs.getLoadOptions().putAll(origRs.getLoadOptions());
-                ProjectDescription origProj = ProjectDescription.findInEmfObject(origRs);
-                if (origProj != null && ProjectDescription.findInEmfObject(checkRs) == null) {
-                    ProjectDescription projCopy = new ProjectDescription();
-                    projCopy.setName(origProj.getName());
-                    projCopy.setDependencies(new ArrayList<>(origProj.getDependencies()));
-                    projCopy.attachToEmfObject(checkRs);
-                }
-                ProjectConfigAdapter origCfg = ProjectConfigAdapter.findInEmfObject(origRs);
-                if (origCfg != null && ProjectConfigAdapter.findInEmfObject(checkRs) == null) {
-                    ProjectConfigAdapter.install(checkRs, origCfg.getProjectConfig());
-                }
-                ChunkedResourceDescriptions origIndex = ChunkedResourceDescriptions.findInEmfObject(origRs);
-                if (origIndex != null && ChunkedResourceDescriptions.findInEmfObject(checkRs) == null) {
-                    origIndex.createShallowCopyWith(checkRs);
-                }
-                for (Resource sibling : new ArrayList<>(origRs.getResources())) {
-                    if (sibling == originalResource || sibling.getURI() == null) {
-                        continue;
-                    }
-                    String siblingText = extractResourceText(sibling, null);
-                    if (siblingText != null) {
-                        Resource copy = checkRs.createResource(sibling.getURI());
-                        copy.load(new ByteArrayInputStream(siblingText.getBytes(StandardCharsets.UTF_8)), Map.of());
-                    }
-                }
-            }
+            copyWorkspaceView(originalResource, checkRs);
             Resource updatedRes = checkRs.createResource(uri);
             updatedRes.load(new ByteArrayInputStream(updatedText.getBytes(StandardCharsets.UTF_8)), Map.of());
             EcoreUtil.resolveAll(checkRs);
